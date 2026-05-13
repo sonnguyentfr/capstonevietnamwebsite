@@ -92,72 +92,64 @@
 <script type="text/javascript">
     var moduleId = <%= ModuleId %>;
     var sf = $.ServicesFramework(moduleId);
-    //var serviceRoot = sf.getServiceRoot("/DesktopModules/NVCMS/API/Account/");
     var serviceRoot = "/DesktopModules/NVCMS/API/Account/";
 
-    $(document).ready(function() {
+    $(document).ready(function () {
         loadAccounts();
     });
 
-    // =========================
-    // LOAD ALL ACCOUNTS
-    // =========================
     function loadAccounts() {
         $("#loading").show();
         $.ajax({
             type: "GET",
-            //url: serviceRoot + "GetAll",
             url: serviceRoot + "GetAll",
             beforeSend: sf.setModuleHeaders,
-            success: function(response) {
+            success: function (response) {
                 $("#loading").hide();
                 if (response.Success) {
                     renderAccounts(response.Data);
                     $("#totalRecords").text(response.TotalRecords);
                 } else {
-                    alert("Lỗi: " + response.Message);
+                    NioApp.Toast(response.Message, 'danger', { position: 'top-right' });
                 }
             },
-            error: function(xhr, status, error) {
+            error: function (xhr, status, error) {
                 $("#loading").hide();
                 console.error("Error:", error);
-                alert("Lỗi khi tải dữ liệu: " + error);
+                NioApp.Toast("Lỗi khi tải dữ liệu: " + error, 'danger', { position: 'top-right' });
             }
         });
     }
 
-    // =========================
-    // RENDER ACCOUNTS
-    // =========================
     function renderAccounts(accounts) {
         var html = '';
         if (accounts && accounts.length > 0) {
-            accounts.forEach(function(account) {
+            accounts.forEach(function (account) {
                 html += '<div class="col-sm-6 col-lg-4 col-xxl-3">';
-                html += '    <div class="card card-bordered h-100">';
-                html += '        <div class="card-inner">';
-                html += '            <div class="project">';
-                html += '                <div class="project-head">';
-                html += '                    <a href="javascript:void(0);" class="project-title btn-edit" data-id="' + account.id + '">';
-                html += '                        <div class="user-avatar sq bg-purple"><span>DD</span></div>';
-                html += '                        <div class="project-info">';
-                html += '                            <h6 class="title">' + (account.Name || '') + '</h6>';
-                html += '                            <span class="sub-text">' + (account.Mail || '') + '</span>';
-                html += '                        </div>';
-                html += '                    </a>';
-                html += '                    <div class="drodown">';
-                html += '                        <a href="#" class="dropdown-toggle btn btn-sm btn-icon btn-trigger mt-n1 mr-n1" data-toggle="dropdown"><em class="icon ni ni-more-h"></em></a>';
-                html += '                        <div class="dropdown-menu dropdown-menu-right">';
-                html += '                            <ul class="link-list-opt no-bdr">';
-                html += '                                <li><a href="javascript:void(0);" class="btn-edit" data-id="' + account.id + '"><em class="icon ni ni-edit-fill"></em><span>Sửa</span></a></li>';
-                html += '                                <li><a href="javascript:void(0);" class="btn-delete" data-id="' + account.id + '"><em class="icon ni ni-cross-sm"></em><span>Xóa</span></a></li>';
-                html += '                            </ul>';
-                html += '                        </div>';
-                html += '                    </div>';
-                html += '                </div>';
+                html += '  <div class="card card-bordered h-100">';
+                html += '    <div class="card-inner">';
+                html += '      <div class="project">';
+                html += '        <div class="project-head">';
+                html += '          <a href="javascript:void(0);" class="project-title btn-edit" data-id="' + account.id + '">';
+                html += '            <div class="user-avatar sq bg-purple"><span>DD</span></div>';
+                html += '            <div class="project-info">';
+                html += '              <h6 class="title">' + (account.Name || '') + '</h6>';
+                html += '              <span class="sub-text">' + (account.Mail || '') + '</span>';
                 html += '            </div>';
+                html += '          </a>';
+                html += '          <div class="drodown">';
+                html += '            <a href="#" class="dropdown-toggle btn btn-sm btn-icon btn-trigger mt-n1 mr-n1" data-toggle="dropdown"><em class="icon ni ni-more-h"></em></a>';
+                html += '            <div class="dropdown-menu dropdown-menu-right">';
+                html += '              <ul class="link-list-opt no-bdr">';
+                html += '                <li><a href="javascript:void(0);" class="btn-edit" data-id="' + account.id + '"><em class="icon ni ni-edit-fill"></em><span>Sửa</span></a></li>';
+                html += '                <li><a href="javascript:void(0);" class="btn-delete" data-id="' + account.id + '"><em class="icon ni ni-cross-sm"></em><span>Xóa</span></a></li>';
+                html += '              </ul>';
+                html += '            </div>';
+                html += '          </div>';
                 html += '        </div>';
+                html += '      </div>';
                 html += '    </div>';
+                html += '  </div>';
                 html += '</div>';
             });
         } else {
@@ -166,10 +158,7 @@
         $("#accountList").html(html);
     }
 
-    // =========================
-    // ADD NEW
-    // =========================
-    $(document).on("click", ".btn-add-new", function() {
+    $(document).on("click", ".btn-add-new", function () {
         $("#hdfId").val("0");
         $("#txtName").val("");
         $("#txtMail").val("");
@@ -179,18 +168,14 @@
         $("#modalEdit").modal("show");
     });
 
-    // =========================
-    // EDIT
-    // =========================
-    $(document).on("click", ".btn-edit", function() {
+    $(document).on("click", ".btn-edit", function () {
         const id = $(this).data("id");
         $("#loading").show();
-        
         $.ajax({
             type: "GET",
             url: serviceRoot + "GetById?id=" + id,
             beforeSend: sf.setModuleHeaders,
-            success: function(response) {
+            success: function (response) {
                 $("#loading").hide();
                 if (response.Success && response.Data) {
                     $("#hdfId").val(response.Data.id);
@@ -201,40 +186,35 @@
                     $("#modalTitle").text("Chỉnh sửa Account");
                     $("#modalEdit").modal("show");
                 } else {
-                    alert("Lỗi: " + response.Message);
+                    NioApp.Toast(response.Message, 'danger', { position: 'top-right' });
                 }
             },
-            error: function(xhr, status, error) {
+            error: function (xhr, status, error) {
                 $("#loading").hide();
                 console.error("Error:", error);
-                alert("Lỗi khi tải thông tin: " + error);
+                NioApp.Toast("Lỗi khi tải thông tin: " + error, 'danger', { position: 'top-right' });
             }
         });
     });
 
-    // =========================
-    // SAVE (INSERT/UPDATE)
-    // =========================
-    $("#btnSave").click(function(e) {
+    $("#btnSave").click(function (e) {
         e.preventDefault();
-
-        // Validation
         var name = $("#txtName").val().trim();
         var mail = $("#txtMail").val().trim();
         var pass = $("#txtPass").val().trim();
 
         if (name == "") {
-            alert("Nhập tên hiển thị");
+            NioApp.Toast("Nhập tên hiển thị", 'warning', { position: 'top-right' });
             $("#txtName").focus();
             return false;
         }
         if (mail == "") {
-            alert("Nhập địa chỉ email");
+            NioApp.Toast("Nhập địa chỉ email", 'warning', { position: 'top-right' });
             $("#txtMail").focus();
             return false;
         }
         if (pass == "") {
-            alert("Nhập mật khẩu email");
+            NioApp.Toast("Nhập mật khẩu email", 'warning', { position: 'top-right' });
             $("#txtPass").focus();
             return false;
         }
@@ -248,103 +228,114 @@
             UserId: <%= UserId %>,
             PortalId: <%= PortalId %>
         };
-
-        const url = id > 0 ? serviceRoot + "Update" : serviceRoot + "Insert";
+        const url    = id > 0 ? serviceRoot + "Update" : serviceRoot + "Insert";
         const action = id > 0 ? "Cập nhật" : "Thêm mới";
 
         $("#loading").show();
-        
         $.ajax({
             type: "POST",
             url: url,
             beforeSend: sf.setModuleHeaders,
             contentType: "application/json",
             data: JSON.stringify(model),
-            success: function(response) {
+            success: function (response) {
                 $("#loading").hide();
                 if (response.Success) {
                     $("#modalEdit").modal("hide");
-                    alert(action + " thành công!");
+                    UpdateSuccess(action + " thành công!");
                     loadAccounts();
                 } else {
-                    alert("Lỗi: " + response.Message);
+                    NioApp.Toast(response.Message, 'danger', { position: 'top-right' });
                 }
             },
-            error: function(xhr, status, error) {
+            error: function (xhr, status, error) {
                 $("#loading").hide();
                 console.error("Error:", error);
-                alert("Lỗi khi " + action.toLowerCase() + ": " + error);
+                NioApp.Toast("Lỗi khi " + action.toLowerCase() + ": " + error, 'danger', { position: 'top-right' });
             }
         });
     });
 
-    // =========================
-    // DELETE IN MODAL
-    // =========================
-    $("#btnDelete").click(function() {
-        if (!confirm("Bạn có muốn xoá account này không?"))
-            return;
-
-        const id = parseInt($("#hdfId").val());
-        
-        $("#loading").show();
-        
-        $.ajax({
-            type: "POST",
-            url: serviceRoot + "Delete?id=" + id,
-            beforeSend: sf.setModuleHeaders,
-            contentType: "application/json",
-            success: function(response) {
-                $("#loading").hide();
-                if (response.Success) {
-                    $("#modalEdit").modal("hide");
-                    alert("Xóa thành công!");
-                    loadAccounts();
-                } else {
-                    alert("Lỗi: " + response.Message);
+    $("#btnDelete").click(function () {
+        Swal.fire({
+            title: 'Xác nhận xoá?',
+            text: 'Bạn có muốn xoá account này không?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Xoá',
+            cancelButtonText: 'Huỷ'
+        }).then(function (result) {
+            if (!result.isConfirmed) return;
+            const id = parseInt($("#hdfId").val());
+            $("#loading").show();
+            $.ajax({
+                type: "POST",
+                url: serviceRoot + "Delete?id=" + id,
+                beforeSend: sf.setModuleHeaders,
+                contentType: "application/json",
+                success: function (response) {
+                    $("#loading").hide();
+                    if (response.Success) {
+                        $("#modalEdit").modal("hide");
+                        UpdateSuccess("Xóa thành công!");
+                        loadAccounts();
+                    } else {
+                        NioApp.Toast(response.Message, 'danger', { position: 'top-right' });
+                    }
+                },
+                error: function (xhr, status, error) {
+                    $("#loading").hide();
+                    console.error("Error:", error);
+                    NioApp.Toast("Lỗi khi xóa: " + error, 'danger', { position: 'top-right' });
                 }
-            },
-            error: function(xhr, status, error) {
-                $("#loading").hide();
-                console.error("Error:", error);
-                alert("Lỗi khi xóa: " + error);
-            }
+            });
         });
     });
 
-    // =========================
-    // DELETE IN DROPDOWN
-    // =========================
-    $(document).on("click", ".btn-delete", function() {
-        if (!confirm("Bạn có muốn xoá account này không?"))
-            return;
-
+    $(document).on("click", ".btn-delete", function () {
         const id = $(this).data("id");
-        
-        $("#loading").show();
-        
-        $.ajax({
-            type: "POST",
-            url: serviceRoot + "Delete?id=" + id,
-            beforeSend: sf.setModuleHeaders,
-            contentType: "application/json",
-            success: function(response) {
-                $("#loading").hide();
-                if (response.Success) {
-                    alert("Xóa thành công!");
-                    loadAccounts();
-                } else {
-                    alert("Lỗi: " + response.Message);
+        Swal.fire({
+            title: 'Xác nhận xoá?',
+            text: 'Bạn có muốn xoá account này không?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Xoá',
+            cancelButtonText: 'Huỷ'
+        }).then(function (result) {
+            if (!result.isConfirmed) return;
+            $("#loading").show();
+            $.ajax({
+                type: "POST",
+                url: serviceRoot + "Delete?id=" + id,
+                beforeSend: sf.setModuleHeaders,
+                contentType: "application/json",
+                success: function (response) {
+                    $("#loading").hide();
+                    if (response.Success) {
+                        UpdateSuccess("Xóa thành công!");
+                        loadAccounts();
+                    } else {
+                        NioApp.Toast(response.Message, 'danger', { position: 'top-right' });
+                    }
+                },
+                error: function (xhr, status, error) {
+                    $("#loading").hide();
+                    console.error("Error:", error);
+                    NioApp.Toast("Lỗi khi xóa: " + error, 'danger', { position: 'top-right' });
                 }
-            },
-            error: function(xhr, status, error) {
-                $("#loading").hide();
-                console.error("Error:", error);
-                alert("Lỗi khi xóa: " + error);
-            }
+            });
         });
     });
 </script>
+
+
+
+
+
 
 
 
