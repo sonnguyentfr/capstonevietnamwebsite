@@ -1,0 +1,29 @@
+[LIST_ITEM]
+<article class="row mb-20 pb-20">
+    <div class="col-md-4">
+        <div class="post-thumb position-relative mr-10">
+            <div class="img-hover-slide border-radius-5 position-relative" style="background-image: url([IMAGE])">
+                <a class="img-link" href="[URL]"></a>
+            </div>
+            <ul class="social-share">
+                <li><a href="#"><i class="ti-sharethis"></i></a></li>
+                <li><a class="fb" href="#" title="Share on Facebook" target="_blank"><i class="ti-facebook"></i></a></li>
+                <li><a class="tw" href="#" target="_blank" title="Tweet now"><i class="ti-twitter-alt"></i></a></li>
+                <li><a class="pt" href="#" target="_blank" title="Pin it"><i class="ti-pinterest"></i></a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="col-md-8 align-center-vertical">
+        <div class="post-content">
+        
+            <h4 class="post-title">
+                <a href="[URL]">[NAME]</a>
+            </h4>
+            <div class="entry-meta meta-1 font-small color-grey mt-15 mb-15">
+                <span class="post-on"><i class="ti-marker-alt"></i> Ngày đăng: [DATE]</span>
+            </div>
+            <p class="font-medium">[DESCRIPTION]</p>
+            <a class="readmore-btn font-small text-uppercase font-weight-ultra" href="[URL]">đọc tiếp<i class="ti-arrow-right ml-5 transition-02s"></i></a>
+        </div>
+    </div>
+</article>[/LIST_ITEM]

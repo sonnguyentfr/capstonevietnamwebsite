@@ -1,0 +1,23 @@
+<div class='row'>
+<div class="section-title">
+    <h2>VIDEO - CLIPS</h2>
+    <div class="bar"></div>
+</div>
+[LIST_ITEM]
+<div class="col-lg-3 col-md-6">
+    <div class="single-blog">
+    <div class="blog-image">
+    <a href="[URL]">
+    <img src="[IMAGE]" alt="[NAMEALT]"></a>
+    <span>21/02/2022</span>
+    </div>
+    <div class="blog-content">
+    <h3 class="text-limit-3-row">
+    <a href="[URL]">[NAME]</a>
+    </h3>
+    <p class="text-limit-3-row">[DESCRIPTION]</p>
+    <a href="[URL]" class="blog-btn">xem tiếp +</a>
+    </div>
+    </div>
+</div>
+[/LIST_ITEM]</div>

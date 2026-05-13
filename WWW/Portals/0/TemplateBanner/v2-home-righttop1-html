@@ -1,0 +1,9 @@
+<div class="box-quangcao">
+	[LIST]
+    <div class="box-indiv-tmp-1a text-center">
+        <a class="d-block" href="[URL]" target=_blank>
+            <img src="[IMAGE]" alt="[NAMEALT]" class="lazy" />
+        </a>
+    </div>
+    [/LIST]
+</div>

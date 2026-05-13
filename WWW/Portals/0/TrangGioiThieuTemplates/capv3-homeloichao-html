@@ -1,0 +1,38 @@
+<section class="ttm-row broken-section bg-layer clearfix">
+            <div class="container">
+                <div class="row no-gutters">
+                    <div class="col-lg-6 col-md-12">
+                        <!-- col-bg-img-three -->
+                        <div class="col-bg-img-eight ttm-col-bgimage-yes ttm-left-span ttm-bg spacing-16">
+                            <div class="ttm-col-wrapper-bg-layer ttm-bg-layer" style="background-image:url('[IMAGE]') !important">
+                                <div class="ttm-col-wrapper-bg-layer-inner"></div>
+                            </div>
+                            <div class="layer-content"></div>
+                        </div>
+                        <!-- col-bg-img-three end-->
+                        <img class="img-fluid ttm-equal-height-image" src="[IMAGE]" alt="[NAME]">
+                    </div>
+                    <div class="col-lg-6 col-md-12">
+                        <!-- col-bgcolor-yes-->
+                        <div class="ttm-bg ttm-col-bgcolor-yes ttm-right-span spacing-17">
+                            <div class="ttm-col-wrapper-bg-layer ttm-bg-layer">
+                                <div class="ttm-col-wrapper-bg-layer-inner"></div>
+                            </div>
+                            <div class="layer-content">
+                                <!-- section title -->
+                                <div class="section-title">
+                                    <div class="title-header">
+                                        <h5>[NAMEPHU]</h5>
+                                        <h2 class="title">[NAME]</h2>
+                                    </div>
+                                    <div class="heading-seperator"><span></span></div>
+                                </div>
+                                <!-- section title end -->
+                                [CONTENT]
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>

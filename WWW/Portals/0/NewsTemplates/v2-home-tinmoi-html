@@ -1,0 +1,14 @@
+<div class="main-title-tmp-1 mb-3"><a href="/tin-tuc-24h"><span>Bài mới</span></a></div>
+<div class="box-side-bar box-news-new">
+    [LIST_TOP]
+    <div class="item-news">
+        <div class="side-bar-img">
+            <a href="[URL]">
+                <img class="lazyload blur-up" alt="[NAMEALT]" src='https://thuongtruong-fileserver.nvcms.net/loader.gif' data-src="[IMAGE]"  /></a>
+        </div>
+        <h5 class="title-clamp">
+            <a href="[URL]">[NAME]</a>
+        </h5>
+    </div>
+    [/LIST_TOP]
+</div>

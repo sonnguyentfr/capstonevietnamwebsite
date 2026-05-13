@@ -1,0 +1,8 @@
+<div class="main-item-slider-top">
+   [LIST]
+            <div class="topslider-item-box">
+               <a href="[URL]" target=_blank><img src="[IMAGE]" alt="[NAMEALT]" class="blur-up lazyload" /></a>
+            </li>
+</div>
+   [/LIST]
+</div>

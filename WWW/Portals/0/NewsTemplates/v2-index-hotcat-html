@@ -1,0 +1,113 @@
+<div class="box-content">
+  <div class="row">
+    <div class="col-md-8">
+      [TOP_1]
+      <div class="item-main pb-4">
+        <a class="item-image" href="[URL]">
+          <img data-src="[IMAGE]" alt="[NAMEALT]" class="lazyload blur-up" />
+        </a>
+        <h3 class="title-clamp-26 mt-3">
+          <a href="[URL]">[NAME]</a>
+        </h3>
+        <div class="start-date my-2">
+          [DATE]
+        </div>
+        <div class="content-dec mt-2">
+          <a href="[URL]">
+            [DESCRIPTION]
+          </a>
+        </div>
+      </div>
+      [/TOP_1]
+    </div>
+
+    <div class="col-md-4 news-similar-cate bd-left-2 pb-4">
+      [TOP_2]
+      <div class="item mt-3 border-top">
+        <div class="row">
+          <div class="col-12 order-md-2 txt-related mt-0">
+            <div class="start-date my-2">
+              [DATE]
+            </div>
+            <h3 class="title-clamp-18">
+              <a href="[URL]">[NAME]</a>
+            </h3>
+          </div>
+          <div class="col-5 col-md-12 mt-2 mt-md-3 order-md-1">
+            <a class="item-image" href="[URL]">
+              <img data-src="[IMAGE]" alt="[NAMEALT]" class="lazyload blur-up" />
+            </a>
+          </div>
+          <div class="col-7 order-3 txt-dec mt-2 d-md-none ">
+            <a href="[URL]" class='text-limit-3-row'>[DESCRIPTION]</a>
+          </div>
+        </div>
+      </div>
+      [/TOP_2]
+      [TOP_3]
+      <div class="item mt-3 border-top">
+        <div class="row">
+          <div class="col-12 txt-related order-md-2 mt-0">
+            <div class="start-date my-2">
+              [DATE]
+            </div>
+            <h3 class="title-clamp-18">
+              <a href="[URL]">[NAME]</a>
+            </h3>
+          </div>
+          <div class="col-5 col-md-12 mt-2 mt-md-3 order-md-1">
+            <a class="item-image" href="[URL]">
+              <img data-src="[IMAGE]" alt="[NAMEALT]" class="lazyload blur-up" />
+            </a>
+          </div>
+          <div class="col-7 order-3 txt-dec mt-2 d-md-none">
+            <a href="[URL]" class='text-limit-3-row'>[DESCRIPTION]</a>
+          </div>
+        </div>
+      </div>
+      [/TOP_3]
+    </div>
+  </div>
+</div>
+
+<!-- list items small -->
+<div class="box-list-items border-top d-md-block">
+  <div class="row">
+    [LIST_MORE]
+    <div class="col-md-6 item-news">
+      <div class="inner">
+        <div class="row g-3 g-xl-4">
+          <div class="txt-related col-lg-8 order-md-2">
+            <h5 class="title-clamp">
+              <a href="[URL]">[NAME]</a>
+            </h5>
+            <div class="start-date mt-2 d-none d-md-block">
+              [DATE]
+            </div>
+          </div>
+          <div class="col-5 col-md-12 col-lg-4 side-bar-img order-md-1">
+            <a href="[URL]">
+              <img data-src="[IMAGE]" alt="[NAMEALT]" class="lazyload blur-up" />
+            </a>
+          </div>
+          <div class="txt-dec col-7 order-3 d-md-none">
+            <a href="[URL]">[NAME]</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    [/LIST_MORE]
+
+  </div>
+</div>
+<div class="text-center" style='margin-top:20px;'>
+    <ins class="adsbygoogle"
+        style="display: block; text-align: center;"
+        data-ad-layout="in-article"
+        data-ad-format="fluid"
+        data-ad-client="ca-pub-3311450421751656"
+        data-ad-slot="1792804105"></ins>
+    <script>
+        (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+</div>

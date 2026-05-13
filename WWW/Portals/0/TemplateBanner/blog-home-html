@@ -1,0 +1,26 @@
+<div id="sliderFrame">
+                            <div id="slider" class="no-controls">
+[LIST_TOP]
+                                <a class="video" href="[LINK]">
+                                    <b data-src="IMAGE]"></b>
+                                    <div class="titlevideo">[NAME]</div>
+                                </a>
+                                [/LIST_TOP]
+
+                            </div>
+                            <!--thumbnails-->
+                            <div id="thumbs">
+[LIST_MORE]
+ <div class="thumb">
+                                    <div class="frame">
+                                        <img src="[IMAGE]" />
+                                    </div>
+                                    <div class="thumb-content">
+                                        <p>[NAME]</p>
+                                    </div>
+                                    <div style="clear: both;"></div>
+                                </div>
+                                [/LIST_MORE]
+                            <!--clear above float:left elements. It is required if above #slider is styled as float:left. -->
+                            <div style="clear: both; height: 0;"></div>
+                        </div>

@@ -1,0 +1,302 @@
+﻿<?xml version="1.0"?>
+<doc>
+<assembly>
+<name>
+NVCMS.Modules.School
+</name>
+</assembly>
+<members>
+<member name="T:My.Resources.Resources">
+<summary>
+  A strongly-typed resource class, for looking up localized strings, etc.
+</summary>
+</member>
+<member name="P:My.Resources.Resources.ResourceManager">
+<summary>
+  Returns the cached ResourceManager instance used by this class.
+</summary>
+</member>
+<member name="P:My.Resources.Resources.Culture">
+<summary>
+  Overrides the current thread's CurrentUICulture property for all
+  resource lookups using this strongly typed resource class.
+</summary>
+</member>
+<member name="P:NVCMS.Modules.School.MarketingSchoolInfo.CountryName">
+ <summary>
+ Tên Quốc Gia
+ </summary>
+ <returns></returns>
+</member>
+<member name="P:NVCMS.Modules.School.MarketingSchoolInfo.CountryFlag">
+ <summary>
+ Quốc Gia Cờ
+ </summary>
+ <returns></returns>
+</member>
+<member name="P:NVCMS.Modules.School.MarketingSchoolInfo.StateCityName">
+ <summary>
+ Tên Bang
+ </summary>
+ <returns></returns>
+</member>
+<member name="P:NVCMS.Modules.School.MarketingSchoolInfo.CaoDangHanNopHoSo">
+ <summary>
+ CAO ĐẲNG  - Hạn nộp hồ sơ
+ </summary>
+ <returns></returns>
+</member>
+<member name="P:NVCMS.Modules.School.MarketingSchoolInfo.COSTuitionfeeAss">
+ <summary>
+ CAO ĐẲNG -Chi phí Học phí
+ </summary>
+ <returns></returns>
+</member>
+<member name="P:NVCMS.Modules.School.MarketingSchoolInfo.COSBooksuppliesAss">
+ <summary>
+ CAO ĐẲNG - Chi Phí Sách vở
+ </summary>
+ <returns></returns>
+</member>
+<member name="P:NVCMS.Modules.School.MarketingSchoolInfo.COSHealthAss">
+ <summary>
+ CAO ĐẲNG - Chi Phí Bảo Hiểm
+ </summary>
+ <returns></returns>
+</member>
+<member name="P:NVCMS.Modules.School.MarketingSchoolInfo.COSRoomAss">
+ <summary>
+ CAO ĐẲNG - Chi Phí Ăn ở
+ </summary>
+ <returns></returns>
+</member>
+<member name="P:NVCMS.Modules.School.MarketingSchoolInfo.COSTransportAss">
+ <summary>
+ CAO ĐẲNG - Chi Phí Đi lại
+ </summary>
+ <returns></returns>
+</member>
+<member name="P:NVCMS.Modules.School.MarketingSchoolInfo.COSOtherAss">
+ <summary>
+ CAO ĐẲNG - Chi Phí Khác
+ </summary>
+ <returns></returns>
+</member>
+<member name="P:NVCMS.Modules.School.MarketingSchoolInfo.AssMajorCount">
+ <summary>
+ CAO ĐẲNG - Tính số ngành học
+ </summary>
+ <returns></returns>
+</member>
+<member name="P:NVCMS.Modules.School.MarketingSchoolInfo.NOSStudentFacultyRatioAss">
+ <summary>
+ CAO ĐẲNG - Sỉ số lớp học
+ </summary>
+ <returns></returns>
+</member>
+<member name="P:NVCMS.Modules.School.MarketingSchoolInfo.NOSTotalAss">
+ <summary>
+ CAO ĐẲNG -  Tổng số học sinh
+ </summary>
+ <returns></returns>
+</member>
+<member name="P:NVCMS.Modules.School.MarketingSchoolInfo.IELTSAss">
+ <summary>
+ CAO ĐẲNG - Điểm IELTS
+ </summary>
+ <returns></returns>
+</member>
+<member name="P:NVCMS.Modules.School.MarketingSchoolInfo.CaoDangYeuCauDiemChuanHoaToiThieu">
+ <summary>
+ Đại học Yêu Cầu điểm chuẩn hóa tối thiểu
+ </summary>
+ <returns></returns>
+</member>
+<member name="P:NVCMS.Modules.School.MarketingSchoolInfo.CaoDangYeuCauTiengAnh">
+ <summary>
+ CAO ĐẲNG Yêu Cầu Tiếng Anh
+ </summary>
+ <returns></returns>
+</member>
+<member name="P:NVCMS.Modules.School.MarketingSchoolInfo.CaoDangHocBong">
+ <summary>
+ CAO ĐẲNG Học bổng
+ </summary>
+ <returns></returns>
+</member>
+<member name="P:NVCMS.Modules.School.MarketingSchoolInfo.COSTuitionfeeUnder">
+ <summary>
+ Đại học - Chi Phí Học phí
+ </summary>
+ <returns></returns>
+</member>
+<member name="P:NVCMS.Modules.School.MarketingSchoolInfo.UnderMajorCount">
+ <summary>
+ Đại học - Tính số ngành học
+ </summary>
+ <returns></returns>
+</member>
+<member name="P:NVCMS.Modules.School.MarketingSchoolInfo.NOSStudentFacultyRatioUnder">
+ <summary>
+ Đại hoc - Sỉ số lớp 
+ </summary>
+ <returns></returns>
+</member>
+<member name="P:NVCMS.Modules.School.MarketingSchoolInfo.NOSTotalUnder">
+ <summary>
+ Đại hoc - Tổng số học sinh
+ </summary>
+ <returns></returns>
+</member>
+<member name="P:NVCMS.Modules.School.MarketingSchoolInfo.IELTSUnder">
+ <summary>
+Đại học - Điểm IELTS
+ </summary>
+ <returns></returns>
+</member>
+<member name="P:NVCMS.Modules.School.MarketingSchoolInfo.DaihocHanNopHoSo">
+ <summary>
+Đại học - Hạn nộp hồ sơ
+ </summary>
+ <returns></returns>
+</member>
+<member name="P:NVCMS.Modules.School.MarketingSchoolInfo.DaihocYeuCauDiemChuanHoaToiThieu">
+ <summary>
+ Đại học Yêu Cầu điểm chuẩn hóa tối thiểu
+ </summary>
+ <returns></returns>
+</member>
+<member name="P:NVCMS.Modules.School.MarketingSchoolInfo.COSBooksuppliesUnder">
+ <summary>
+ Đại học - Chi Phí Sách vở
+ </summary>
+ <returns></returns>
+</member>
+<member name="P:NVCMS.Modules.School.MarketingSchoolInfo.COSHealthUnder">
+ <summary>
+ Đại học - Chi Phí Bảo Hiểm
+ </summary>
+ <returns></returns>
+</member>
+<member name="P:NVCMS.Modules.School.MarketingSchoolInfo.COSRoomUnder">
+ <summary>
+ Đại học - Chi Phí Ăn ở
+ </summary>
+ <returns></returns>
+</member>
+<member name="P:NVCMS.Modules.School.MarketingSchoolInfo.COSTransportUnder">
+ <summary>
+ Đại học - Chi Phí Đi lại
+ </summary>
+ <returns></returns>
+</member>
+<member name="P:NVCMS.Modules.School.MarketingSchoolInfo.COSOtherUnder">
+ <summary>
+ Đại học - Chi Phí Khác
+ </summary>
+ <returns></returns>
+</member>
+<member name="P:NVCMS.Modules.School.MarketingSchoolInfo.DaihocYeuCauTiengAnh">
+ <summary>
+ Đại học Yêu Cầu Tiếng Anh
+ </summary>
+ <returns></returns>
+</member>
+<member name="P:NVCMS.Modules.School.MarketingSchoolInfo.DaiHocHocBong">
+ <summary>
+Đại học Học bổng
+ </summary>
+ <returns></returns>
+</member>
+<member name="P:NVCMS.Modules.School.MarketingSchoolInfo.TopMostMajor">
+ <summary>
+ Chung Học bổng
+ </summary>
+ <returns></returns>
+</member>
+<member name="P:NVCMS.Modules.School.MarketingSchoolInfo.TrungHocHanNopHoSo">
+ <summary>
+ TRUNG HỌC  - Hạn nộp hồ sơ
+ </summary>
+ <returns></returns>
+</member>
+<member name="P:NVCMS.Modules.School.MarketingSchoolInfo.TrungHocYeuCauTiengAnh">
+ <summary>
+ TRUNG HỌC Yêu Cầu Tiếng Anh
+ </summary>
+ <returns></returns>
+ 
+</member>
+<member name="P:NVCMS.Modules.School.MarketingSchoolInfo.TrungHocHocbong">
+ <summary>
+ TRUNG HỌC Học Bổng
+ </summary>
+ <returns></returns>
+ 
+</member>
+<member name="P:NVCMS.Modules.School.MarketingSchoolInfo.TrungHocChiPhi">
+ <summary>
+ TRUNG HỌC Chi Phí
+ </summary>
+ <returns></returns>
+ 
+</member>
+<member name="P:NVCMS.Modules.School.MarketingSchoolInfo.TruongHocToptruongDH">
+ <summary>
+ TRUNG HỌC Top Trường ĐH
+ </summary>
+ <returns></returns>
+ 
+</member>
+<member name="P:NVCMS.Modules.School.MarketingSchoolInfo.TruongHocTongChiPhi">
+ <summary>
+ TRUNG HỌC Tổng chi phí
+ </summary>
+ <returns></returns>
+ 
+</member>
+<member name="P:NVCMS.Modules.School.MarketingSchoolInfo.TruongHocDiemTrungBinhSAT">
+ <summary>
+ TRUNG HỌC Điểm trung binh SAT
+ </summary>
+ <returns></returns>
+ 
+</member>
+<member name="P:NVCMS.Modules.School.MarketingSchoolInfo.TruongHocSiSoLopHop">
+ <summary>
+ TRUNG HỌC Sỉ số lớp học
+ </summary>
+ <returns></returns>
+ 
+</member>
+<member name="P:NVCMS.Modules.School.MarketingSchoolInfo.TruongHocTongSoHocSinh">
+ <summary>
+ TRUNG HỌC Tổng số học sinh
+ </summary>
+ <returns></returns>
+ 
+</member>
+<member name="T:NVCMS.Modules.School.DataProvider">
+ -----------------------------------------------------------------------------
+ <summary>
+ An abstract class for the data access layer
+ </summary>
+ <remarks>
+ </remarks>
+ <history>
+ </history>
+ -----------------------------------------------------------------------------
+</member>
+<member name="T:NVCMS.Modules.School.SqlDataProvider">
+ -----------------------------------------------------------------------------
+ <summary>
+ SQL Server implementation of the abstract DataProvider class
+ </summary>
+ <remarks>
+ </remarks>
+ <history>
+ </history>
+ -----------------------------------------------------------------------------
+</member>
+</members>
+</doc>

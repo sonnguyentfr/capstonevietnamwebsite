@@ -1,0 +1,32 @@
+<div class="style5">
+    <div class="title-style02">
+        <h3>
+            <a href="[CATURL]">[CATNAME]</a></h3>
+    </div>
+    <div class="sidebar-scroll">
+        <div class="scroll-item">
+            [LIST_TOP]
+            <div class="item">
+                <a href="[URL]" title="[NAMEALT]"><img class='img-responsive img-full lazy' src='//f.thuongtruong.com.vn/nophoto251-160.png' data-src="[IMAGE]" alt="[NAMEALT]" /></a>
+                <h2>
+                    <a href="[URL]" title="[NAMEALT]">[NAME]</a></h2>
+                <p>
+                    [DESCRIPTION]
+                </p>
+            </div>
+            [/LIST_TOP]
+        </div>
+        <div class="scroll-item">
+            [LIST_MORE]
+                    <div class="item">
+                        <div class="item-content-1">
+                            <h3>
+                                <a title="[NAMEALT]" href="[URL]">
+                                    <i class="fa fa-angle-double-right"></i>[NAME]</a>
+                            </h3>
+                        </div>
+                    </div>
+                [/LIST_MORE]
+        </div>
+    </div>
+</div>

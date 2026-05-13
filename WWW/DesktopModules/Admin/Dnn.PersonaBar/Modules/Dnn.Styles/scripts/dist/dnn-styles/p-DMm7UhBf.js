@@ -1,0 +1,1 @@
+function e(e,n){let t=0,o=0;if(e instanceof MouseEvent&&(t=e.movementX,o=e.movementY),"undefined"!=typeof TouchEvent&&e instanceof TouchEvent){let u=e.touches[0];null!=n&&(t=u.pageX-n.pageX,o=u.pageY-n.pageY),n=u}return{movementX:t,movementY:o}}export{e as g}

@@ -1,0 +1,32 @@
+<div class="entry-header entry-header-1 mb-30">
+    <h1 class="post-title">
+        <a href="[URL]">[NAME]</a>
+    </h1>
+    <div class="single-social-share clearfix ">
+        <div class="entry-meta meta-1 font-small color-grey float-left mt-10">
+            <span class="hit-count"><i class="ti-comment mr-5"></i>[DATE]</span>
+            <span class="hit-count"><i class="ti-heart mr-5"></i>[VIEW]</span>
+        </div>
+        <ul class="d-inline-block list-inline float-right">
+            <li class="list-inline-item"><a class="social-icon facebook-icon text-xs-center color-white" target="_blank" href="#"><i class="ti-facebook"></i></a></li>
+            <li class="list-inline-item"><a class="social-icon twitter-icon text-xs-center color-white" target="_blank" href="#"><i class="ti-twitter-alt"></i></a></li>
+            <li class="list-inline-item"><a class="social-icon pinterest-icon text-xs-center color-white" target="_blank" href="#"><i class="ti-pinterest"></i></a></li>
+            <li class="list-inline-item"><a class="social-icon instagram-icon text-xs-center color-white" target="_blank" href="#"><i class="ti-instagram"></i></a></li>
+        </ul>
+    </div>
+</div>
+<div class="entry-main-content">
+    <strong>[DESCRIPTION]</strong>
+    [CONTENT]
+    [SOURCE]
+</div>
+<div class="entry-bottom mt-50 mb-30">
+    <div class="tags">
+        [TAGS]
+    </div>
+</div>
+<div class="entry-bottom mt-50 mb-30">
+    <div class="tags">
+        [ATTACH_FILE]
+    </div>
+</div>

@@ -1,0 +1,10 @@
+<div class="section-title mb-20">
+    <h2 class="title-clamp mb-20 uppercase font-bold"><a class="font-color" href="#">[NAME]</a></h2>
+    <div class="bar"></div>
+</div>
+<div class="section-content">
+    [CONTENT]
+</div>
+<div class="about-btn">
+    <a href="[URL]" class="default-btn">xem chi tiết</a>
+</div>

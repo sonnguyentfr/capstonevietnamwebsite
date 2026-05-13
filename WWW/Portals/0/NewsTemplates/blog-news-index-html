@@ -1,0 +1,24 @@
+<div class="how-news">
+    [LIST_ITEM]
+    <div class="single-post-list-wrap style-two border-bt0">
+        <div class="media">
+            <div class="media-left">
+                <a href="[URL]">
+                <img src="[IMAGE]" alt="[NAMEALT]"></a>
+            </div>
+            <div class="media-body align-self-center">
+                <div class="details">
+                    <h6 class="title"><a href="[URL]">[NAME]</a></h6>
+                    <div class="post-meta-single">
+                        <ul>
+                            <li>[DATE]</li>
+                        </ul>
+                    </div>
+                    <p>[DESCRIPTION] </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    [/LIST_ITEM]
+
+</div>

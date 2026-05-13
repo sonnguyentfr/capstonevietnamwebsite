@@ -1,0 +1,21 @@
+<section class="home-courses section-large bg-neutral-50">
+    <div class="container">
+<h2 class="site-title text-center" data-aos="fade-right">[NAME]</h2>
+<p>[CONTENT]</p>
+<div class="home-courses-list mt-8">[LIST_ITEM]
+  <div class="home-courses-item" data-aos="flip-left">
+    <div class="image img-cover">
+      <a href="[URL]">
+        <img data-src="[IMAGE]" alt="[NAMEALT]" src="/data/nophoto.png?width=[WIDTH]&height=[HEIGHT]&mode=crop&anchor=middlecenter" class="blur-up lazyload" />
+      </a>
+    </div>
+    <div class="caption">
+      <h3 class="title">
+        <a href="[URL]">[NAME]</a>
+      </h3>
+    </div>
+  </div>
+  [/LIST_ITEM]
+</div>
+</div>
+</section> 

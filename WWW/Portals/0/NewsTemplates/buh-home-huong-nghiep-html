@@ -1,0 +1,26 @@
+<div class="home-news-huongnghiep">
+    <div class="khunganh">
+        <a href="/huong-nghiep.html">
+            <img class="anhrdaidien" src='//fileserver.buh.edu.vn/2016/09/huongnghiep-11_53_26_119.png?width=288&height=201&mode=crop&anchor=middle' />
+        </a>
+    </div>
+    <div class='noidungvd'>
+        <div class='catname mb-10'>
+            <h1>[CATNAME]</h1>
+        </div>
+        <div class='noidungvdnews'>
+            <ul>
+                [LIST_TOP]
+                <li>
+                    <a href="[URL]"><i class="fa fa-angle-double-right" aria-hidden="true"></i>[NAME]</a>
+                </li>
+                [/LIST_TOP]
+            </ul>
+        </div>
+        <div class="more">
+            <a href="[CATURL]">Xem thêm <i class="flaticon-right"></i>
+            </a>
+        </div>
+    </div>
+
+</div>

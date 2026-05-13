@@ -1,0 +1,11 @@
+<div class="wrapper doitacb press">
+    <div class="wrapper">
+        <ul class="recuitbotton owl-carousel">
+            [LIST]
+            <li class="item">
+                <a href="[URL]" title="[NAMEALT"><img src="[IMAGE]" alt="[NAMEALT" /></a>
+            </li>
+            [/LIST]
+        </ul>
+    </div>
+</div>

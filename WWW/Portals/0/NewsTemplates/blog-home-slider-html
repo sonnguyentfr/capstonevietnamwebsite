@@ -1,0 +1,97 @@
+<div class="row">
+    <div class="col-lg-8">
+        [TOP_1]
+        <div class="single-post-wrap">
+            <div class="thumb">
+                <a href="[URL]">
+                    <img src="[IMAGEFULL]?width=570&height=350&mode=crop&anchor=middle" alt="[NAMEALT]">
+                </a>
+                <a class="tag-base tag-blue" href="[URLCAT]">[NAMECAT]</a>
+            </div>
+            <div class="details">
+
+                <h1 class="title"><a href="[URL]">[NAME]</a></h1>
+                <div class="post-meta-single">
+                    <p><i class="fa fa-clock-o"></i>[DATE]</p>
+                </div>
+                <p>
+                    [DESCRIPTION] 
+                </p>
+            </div>
+        </div>
+        [/TOP_1]
+    </div>
+    <div class="col-lg-4">
+        [TOP_2]
+        <div class="single-post-wrap">
+            <div class="thumb">
+                <a href="[URL]">
+                    <img src="[IMAGEFULL]?width=272&height=360&mode=crop&anchor=middle" alt="[NAMEALT]">
+                </a>
+                <a class="tag-base tag-red" href="[URLCAT]">[NAMECAT]</a>
+            </div>
+            <div class="details">
+                <h2 class="title"><a href="[URL]">[NAME]</a></h2>
+                <div class="post-meta-single">
+                    <p>
+                        <i class="fa fa-clock-o"></i>[DATE]
+                    </p>
+                </div>
+            </div>
+        </div>
+        [/TOP_2]
+    </div>
+</div>
+<div class="row">
+    [TOP_3]
+    <div class="col-lg-4 col-sm-4">
+        <div class="single-post-wrap">
+            <div class="thumb">
+              <a href="[URL]">
+                <img src="[IMAGEFULL]?width=272&height=150&mode=crop&anchor=middle" alt="[NAMEALT]">
+              </a>
+            </div>
+            <div class="details">
+                <div class="post-meta-single">
+                    <p><i class="fa fa-clock-o"></i>[DATE]</p>
+                </div>
+                <h3 class="title text-limit-2-row"><a href="[URL]">[NAME]</a></h3>
+            </div>
+        </div>
+    </div>
+    [/TOP_3]
+    [TOP_4]
+    <div class="col-lg-4 col-sm-4">
+        <div class="single-post-wrap">
+            <div class="thumb">
+              <a href="[URL]">
+                <img src="[IMAGEFULL]?width=272&height=150&mode=crop&anchor=middle" alt="[NAMEALT]" />
+              </a>
+            </div>
+            <div class="details">
+                <div class="post-meta-single">
+                    <p><i class="fa fa-clock-o"></i>[DATE]</p>
+                </div>
+                <h3 class="title text-limit-2-row"><a href="[URL]">[NAME]</a></h3>
+            </div>
+        </div>
+    </div>
+    [/TOP_4]
+    [TOP_5]
+    <div class="col-lg-4 col-sm-4">
+        <div class="single-post-wrap">
+            <div class="thumb">
+              <a href="[URL]">
+                <img src="[IMAGEFULL]?width=272&height=150&mode=crop&anchor=middle" alt="[NAMEALT]">
+              </a>
+            </div>
+            <div class="details">
+                <div class="post-meta-single">
+                    <p><i class="fa fa-clock-o"></i>[DATE]</p>
+                </div>
+                <h3 class="title text-limit-2-row"><a href="[URL]">[NAME]</a></h3>
+            </div>
+        </div>
+    </div>
+    [/TOP_5]
+</div>

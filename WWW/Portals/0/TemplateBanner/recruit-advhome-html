@@ -1,0 +1,9 @@
+<div id="RecruitAdvHome" class="owl-carousel">
+[LIST]
+        <div class='item'>
+            <a href="[URL]">
+                <img src="[IMAGE]" alt="[NAME]" />
+</a>
+        </div>
+[/LIST]
+</div>

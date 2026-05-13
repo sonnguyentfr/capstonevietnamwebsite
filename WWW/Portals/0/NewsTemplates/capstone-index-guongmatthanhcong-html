@@ -1,0 +1,13 @@
+<div class="guongmathanhcong">
+    <ul class="cbp_tmtimeline">
+        [LIST_ITEM]
+        <li>
+            <time class="cbp_tmtime"><span>[NAME]</span></time>
+            <div class="cbp_tmicon cbp_tmicon-phone" style="background: url([IMAGE]) no-repeat !important"></div>
+            <div class="cbp_tmlabel">
+                <p>[DESCRIPTION]</p>
+            </div>
+        </li>
+        [/LIST_ITEM]
+    </ul>
+</div>

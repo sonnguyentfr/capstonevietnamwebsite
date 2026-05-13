@@ -1,0 +1,1 @@
+import{D as o,d as r}from"./dnn-color-picker2.js";const s=o,c=r;export{s as DnnColorPicker,c as defineCustomElement}

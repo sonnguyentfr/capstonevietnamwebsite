@@ -1,0 +1,22 @@
+<div id="news-sliderm" class="owl-carousel">
+    [LIST_TOP]
+            <div class="news-slide">
+                <div class="entry-media">
+                    <a href="[URL]?utm_source=home&utm_medium=slider&utm_campaign=tt" title="[NAMEALT]">
+                        <img class="img-responsive img-full"
+                            src="[IMAGE]"
+                            alt="[NAMEALT]" />
+                    </a>
+                    <div class="title">
+                        <h2>
+                            <a href="[URL]?utm_source=home&utm_medium=slider&utm_campaign=tt" title="[NAMEALT]">[NAME]
+                            </a>
+                        </h2>
+                        <p>
+                            [DESCRIPTION]
+                        </p>
+                    </div>
+                </div>
+            </div>
+    [/LIST_TOP]
+</div>

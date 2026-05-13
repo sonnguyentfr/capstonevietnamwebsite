@@ -1,0 +1,26 @@
+<section id="updates1" style="position: relative; z-index: 9999;">
+<div class="container">
+<div class="row">
+<div class="wrapper">
+<div class="col-lg-8 list-newstest">
+<div class="list-newstest">
+<div class="post-titletest">
+<h2 style="color: #000000; font-size: 20px;">
+Capstone Vietnam cordially invites you to participate in one or more of the following upcoming events in Viet Nam
+</h2>
+</div>
+<div class="maycaithongbao">
+[LIST_TOP] 
+<p><a href="[URL]" target="_blank"><em class="fa fa-angle-double-right"></em>[NAME2]  [NAME]</a></p>
+[/LIST_TOP] 
+
+
+</div>
+<div class="maycaithongbaof"></div>
+</div>
+</div>
+<div class="col-lg-4"></div>
+</div>
+</div>
+</div>
+</section>

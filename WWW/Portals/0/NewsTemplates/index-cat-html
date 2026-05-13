@@ -1,0 +1,24 @@
+<div class="news listnews">
+	[LIST_ITEM]
+	<div class="item">
+		<div class="item-image-3">
+			<a class="img-link" href="[URL]" title="[NAMEALT]">
+				<img class="img-responsive img-full" src="[IMAGE]" alt="[NAMEALT]" />
+			</a>
+		</div>
+		<div class="item-content">
+			<div class="title-left title-style04 underline04">
+				<h3><a href="[URL]" title="[NAMEALT]">
+					<strong>[NAME]</strong>
+				</a></h3>
+			</div>
+			<div class="post-meta-elements">
+				<div class="post-meta-date">
+					<i class="fa fa-calendar"></i>[DATE]
+				</div>
+			</div>
+			<p>[DESCRIPTION]</p>
+		</div>
+	</div>
+	[/LIST_ITEM]
+</div>

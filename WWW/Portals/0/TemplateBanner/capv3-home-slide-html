@@ -1,0 +1,7 @@
+<div class="banner-slider slick_slider slick-arrows-style1" data-slick='{"slidesToShow": 1, "slidesToScroll": 1, "arrows":true, "autoplay":true, "responsive": [{"breakpoint":870,"settings":{"slidesToShow": 1}} , {"breakpoint":525,"settings":{"slidesToShow": 1}}]}'>
+        [LIST]
+        <div class="banner-slide">
+                    <img class="img-fluid" src="[IMAGE]" alt="[NAMEALT]" />
+        </div>
+        [/LIST]
+    </div>

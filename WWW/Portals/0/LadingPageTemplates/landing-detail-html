@@ -1,0 +1,35 @@
+<style>header {display:none!important;}
+.back-btn {
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: white;
+  color: #333;
+  padding: 8px 12px;
+  border-radius: 8px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+.back-btn:hover {
+  background: #f3f3f3;
+  transform: translateY(-1px);
+}
+.back-btn svg {
+  width: 18px;
+  height: 18px;
+}
+</style>
+<a href="/webinars" class="back-btn">
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+  </svg>
+  Quay lại
+</a>
+[CONTENT] 

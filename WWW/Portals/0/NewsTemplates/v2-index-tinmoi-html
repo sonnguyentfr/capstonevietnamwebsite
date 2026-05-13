@@ -1,0 +1,16 @@
+<div class="tmp-title-header d-flex justify-content-between ">
+  <h2 class="title-clamp m-0">
+    <a href="#">Bài mới</a>
+  </h2>
+</div>
+<div class="mt-4 mb-20">
+  [LIST_TOP]
+  <div class="item-most">
+    <div class="txt-number"><img data-src="[IMAGE]" alt="[NAMEALT]" class="lazyload blur-up" /></div>
+    <div class="txt-content">
+      <div class="title-cate">[NAMECAT]</div>
+      <a href="[URL]">[NAME]</a>
+    </div>
+  </div>
+  [/LIST_TOP]
+</div>

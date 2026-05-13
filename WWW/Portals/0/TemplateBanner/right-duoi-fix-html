@@ -1,0 +1,11 @@
+<div class="sidebar-fixed no-mobile ">
+    <div id="BannerAdv" style="text-align: center;">
+    <ul>
+    [LIST]
+            <li style="display: block; padding-bottom: 10px;">
+                <a href="[URL]" target=_blank><img src="[IMAGE]" alt="[NAMEALT]" /></a>
+            </li>
+        [/LIST]
+</ul></div>
+    
+    </div>

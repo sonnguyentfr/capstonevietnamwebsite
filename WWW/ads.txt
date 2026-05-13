@@ -1,0 +1,69 @@
+google.com, pub-3311450421751656, DIRECT, f08c47fec0942fa0
+adbro.me, 6e7b1d6c-cd69-4160-af31-96ba701243e7, DIRECT
+# Managed by ADOP START #
+google.com, pub-5111137191506013, RESELLER, f08c47fec0942fa0
+google.com, pub-5111137191506013, DIRECT, f08c47fec0942fa0
+# google.com, pub-1111111111111111, DIRECT, f08c47fec0942fa0  # AdSense Publisher
+google.com, pub-5354750935377761, RESELLER, f08c47fec0942fa0
+appnexus.com, 7418, RESELLER, f5ab79cb980f11d1
+appnexus.com, 1001, RESELLER, f5ab79cb980f11d1
+appnexus.com, 10239, RESELLER, f5ab79cb980f11d1
+appnexus.com, 1024, DIRECT, f5ab79cb980f11d1
+appnexus.com, 10617, RESELLER
+appnexus.com, 11197, RESELLER, f5ab79cb980f11d1
+appnexus.com, 1314, RESELLER
+appnexus.com, 1356, RESELLER, f5ab79cb980f11d1
+appnexus.com, 1360, RESELLER, f5ab79cb980f11d1
+appnexus.com, 1538, RESELLER, f5ab79cb980f11d1
+appnexus.com, 1908, RESELLER, f5ab79cb980f11d1
+appnexus.com, 1942, RESELLER, f5ab79cb980f11d1
+appnexus.com, 2758, RESELLER, f5ab79cb980f11d1
+appnexus.com, 3135, RESELLER, f5ab79cb980f11d1
+appnexus.com, 3691, RESELLER
+appnexus.com, 3703, RESELLER, f5ab79cb980f11d1
+appnexus.com, 3783, RESELLER, f5ab79cb980f11d1
+appnexus.com, 3911, RESELLER, f5ab79cb980f11d1
+appnexus.com, 6953, RESELLER
+appnexus.com, 7418, RESELLER, f5ab79cb980f11d1
+appnexus.com, 7445, RESELLER
+appnexus.com, 7597, RESELLER, f5ab79cb980f11d1
+appnexus.com, 7666, RESELLER, f5ab79cb980f11d1
+appnexus.com, 7837, RESELLER, f5ab79cb980f11d1#NS
+appnexus.com, 7944, RESELLER, f5ab79cb980f11d1
+appnexus.com, 8610, RESELLER, f5ab79cb980f11d1#BCM
+appnexus.com, 8738, RESELLER
+appnexus.com, 926, RESELLER, f5ab79cb980f11d1
+appnexus.com, 9316, RESELLER, f5ab79cb980f11d1
+appnexus.com, 9382, RESELLER, f5ab79cb980f11d1#G2R
+appnexus.com, 9393, DIRECT
+appnexus.com, 9393, RESELLER
+appnexus.com, 9623, RESELLER
+mgid.com, 296459, DIRECT, d4c29acad76ce94f
+mgid.com, 381156, DIRECT, d4c29acad76ce94f
+mgid.com, 5640258, RESELLER
+mgid.com, 381156, DIRECT, d4c29acad76ce94f
+openx.com, 537120048, DIRECT, 6a698e2ec38604c6#NS
+openx.com, 537120563, RESELLER, 6a698e2ec38604c6#33A
+openx.com, 537120960, RESELLER, 6a698e2ec38604c6
+openx.com, 537141601, RESELLER, 6a698e2ec38604c6
+openx.com, 537143708, RESELLER, 6a698e2ec38604c6#VDO
+openx.com, 537143737, RESELLER, 6a698e2ec38604c6
+openx.com, 537145117, RESELLER, 6a698e2ec38604c6
+openx.com, 537149888, RESELLER, 6a698e2ec38604c6
+openx.com, 538959099, RESELLER, 6a698e2ec38604c6
+openx.com, 539078156, RESELLER, 6a698e2ec38604c6
+openx.com, 540066557, RESELLER, 6a698e2ec38604c6
+openx.com, 540156784, RESELLER, 6a698e2ec38604c6#G2R
+openx.com, 540259865, RESELLER, 6a698e2ec38604c6
+openx.com, 540338038, RESELLER, 6a698e2ec38604c6#BCM
+openx.com, 540362347, RESELLER, 6a698e2ec38604c6
+openx.com, 540423120, RESELLER, 6a698e2ec38604c6
+openx.com, 540447820, DIRECT, 6a698e2ec38604c6
+openx.com, 540529433, RESELLER, 6a698e2ec38604c6#VDO
+openx.com, 540653789, RESELLER, 6a698e2ec38604c6
+openx.com, 540862677, RESELLER, 6a698e2ec38604c6
+openx.com, 83499, RESELLER, 6a698e2ec38604c6
+adbro.me, 6e7b1d6c-cd69-4160-af31-96ba701243e7, DIRECT
+# Managed by ADOP END # Create Date : 2020-07-15
+dable.io, pub-m09wzry85dp5176l, DIRECT
+adbro.me, cd82d2b2-358b-4919-b644-c56a6bda395d, DIRECT

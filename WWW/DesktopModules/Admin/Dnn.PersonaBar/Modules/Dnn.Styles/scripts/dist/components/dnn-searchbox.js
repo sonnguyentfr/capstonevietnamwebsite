@@ -1,0 +1,1 @@
+import{D as o,d as s}from"./dnn-searchbox2.js";const r=o,a=s;export{r as DnnSearchbox,a as defineCustomElement}

@@ -1,0 +1,1 @@
+import{D as s,d as o}from"./dnn-fieldset2.js";const t=s,d=o;export{t as DnnFieldset,d as defineCustomElement}

@@ -1,0 +1,81 @@
+<div class="rev_slider_wrapper fullwidthbanner-container">
+  <div id="slider" class="rev_slider fullwidthbanner" data-version="5.0.7">
+    <ul>
+      [LIST]
+      <!-- Slide 1 -->
+      <li>
+        <!-- MAIN IMAGE -->
+        <img src="[IMAGE]" data-lazyload="[IMAGE]" alt="" data-bgposition="center center" data-bgfit="cover" data-bgrepeat="no-repeat" data-bgparallax="10" class="rev-slidebg" data-no-retina="" />
+          <!-- Overlay-->
+          <div class="tp-caption tp-shape tp-shapewrapper tp-resizeme rs-parallaxlevel-0"></div>
+        <!-- Small Text -->
+        <div class="tp-caption tp-resizeme rs-parallaxlevel-0 color2"
+             id="layer-2-small-text"
+             data-x="['left','left','left','left']" data-hoffset="['50','50','50','30']"
+             data-y="['middle','middle','middle','middle']" data-voffset="['-120','-120','-120','-120']"
+             data-width="none"
+             data-fontsize="['22', '22', '22', '16']"
+             data-height="28"
+             data-whitespace="nowrap"
+             data-transform_idle="o:1;"
+             data-transform_in="y:[-100%];z:0;rX:0deg;rY:0;rZ:0;sX:1;sY:1;skX:0;skY:0;s:1500;e:Power3.easeInOut;"
+             data-transform_out="auto:auto;s:1000;e:Power3.easeInOut;"
+             data-mask_in="x:0px;y:0px;s:inherit;e:inherit;"
+             data-mask_out="x:0;y:0;s:inherit;e:inherit;"
+             data-start="1000"
+             data-splitin="none"
+             data-splitout="none"
+             data-responsive_offset="on"
+             style="z-index: 10; white-space: nowrap; font-weight:bold; font-family: 'Libre Baskerville', serif;">
+          [NAME]
+        </div>
+        <!-- Main Text -->
+        <div class="tp-caption tp-resizeme rs-parallaxlevel-0"
+             id="slide-2-main-text"
+             data-x="['left','left','left','left']" data-hoffset="['50','50','50','30']"
+             data-y="['middle','middle','middle','middle']" data-voffset="['-50','-50','-50','-50']"
+             data-fontsize="['46','46','46','32']"
+             data-lineheight="['55','55','55','35']"
+             data-color="['#fff']"
+             data-width="['600','600','600','420']"
+             data-height="none"
+             data-whitespace="normal"
+             data-transform_idle="o:1;"
+             data-transform_in="y:[-100%];z:0;rX:0deg;rY:0;rZ:0;sX:1;sY:1;skX:0;skY:0;s:1500;e:Power3.easeInOut;"
+             data-transform_out="auto:auto;s:1000;e:Power3.easeInOut;"
+             data-mask_in="x:0px;y:0px;s:inherit;e:inherit;"
+             data-mask_out="x:0;y:0;s:inherit;e:inherit;"
+             data-start="1000"
+             data-splitin="none"
+             data-splitout="none"
+             data-responsive_offset="on"
+             style="z-index: 11; min-width: 600px; max-width: 600px; white-space: normal; text-shadow:0px 2px 2px #000; text-transform:capitalize; font-weight:600; text-align:left; font-family: 'Montserrat', sans-serif;">
+          [DESCRIPTION]
+        </div>
+        <!-- Button -->
+        <a href="#" class="tp-caption btn btn-primary rs-parallaxlevel-0 hidden-xs"
+           id="slide-2-button"
+           data-x="['left','left','left','left']" data-hoffset="['53','53','53','30']"
+           data-y="['middle','middle','middle','middle']" data-voffset="['50','50','50','50']"
+           data-width="none"
+           data-height="none"
+           data-whitespace="nowrap"
+           data-transform_idle="o:1;"
+           data-transform_in="y:[-100%];z:0;rX:0deg;rY:0;rZ:0;sX:1;sY:1;skX:0;skY:0;s:1500;e:Power3.easeInOut;"
+           data-transform_out="auto:auto;s:1000;e:Power3.easeInOut;"
+           data-mask_in="x:0px;y:0px;"
+           data-mask_out="x:0;y:0;"
+           data-start="1000"
+           data-splitin="none"
+           data-splitout="none"
+           data-responsive_offset="on"
+           data-responsive="off"
+           style="z-index: 12;">
+          XEM TIẾP
+        </a>
+        </li>
+      <!-- Slide 2 -->
+      [/LIST]
+    </ul>
+  </div>
+</div>

@@ -1,0 +1,19 @@
+<div class="loop-grid row thongbaoindex">
+    [LIST_ITEM]
+    <article class="col-lg-12 mb-30 d-flex">
+        <div class="post-thumb d-flex">
+            <div class='khungbao'></div>
+            <div class='khungnen'>
+                <span class="day">[THU]</span>
+                <span class="date">[NGAY]/[YEAR]</span>
+            </div>
+        </div>
+        <div class="post-content">
+            <h3 class="post-title text-limit-3-row">
+                <a href="[URL]" title='[NAMEALT]'>[NAME]</a>
+            </h3>
+            
+        </div>
+    </article>
+    [/LIST_ITEM]
+</div>

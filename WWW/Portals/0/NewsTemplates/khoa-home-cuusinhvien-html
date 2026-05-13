@@ -1,0 +1,45 @@
+<!--   CUU HOC SINH-->
+                <div class="row" style="padding-top: 60px">
+                    <div class="col-lg-12">
+                        <!-- section title -->
+                        <div class="section-title">
+                            <div class="title-header">
+                                <h5>why BUH</h5>
+                                <h3 class="title">[CATNAME]</h3>
+                            </div>
+                            <div class="heading-seperator"><span></span></div>
+                        </div>
+                        <!-- section title end -->
+                    </div>
+                </div>
+                <!-- row end -->
+                <!-- slick_slider -->
+                <div class="row home-news-cuusv slick_slider">
+                    [LIST_TOP]
+                    <div class="ttm-box-col-wrapper col-lg-12">
+                        <!-- testimonials -->
+                        <div class="testimonials ttm-testimonial-box-view-style2">
+                            <div class="testimonial-content">
+                                <div class="testimonial-avatar">
+                                    <div class="testimonial-img">
+                                        <a href="[URL]" title="[NAMEALT]"><img class="img-center lazyload" data-src="[IMAGE]" src="/data/no-image.png" alt="[NAMEALT]" /></a> 
+                                    </div>
+                                </div>
+                                <div class="testimonial-caption">
+                                    <h5><a href="[URL]" title="[NAMEALT]">[NAME]</a></h5>
+                                </div>
+                                <blockquote>[DESCRIPTION]</blockquote>
+                            </div>
+                        </div>
+                        <!-- testimonials end -->
+                    </div>
+                    [/LIST_TOP]
+                </div>
+                <!-- row end -->
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="mt-30 res-991-mt-15 mb_25 text-center">
+                            <a class="ttm-btn ttm-btn-size-md ttm-btn-shape-square ttm-btn-style-border ttm-btn-color-dark mb-15" href="[CATURL]">Xem tất cả</a>
+                        </div>
+                    </div>
+                </div>

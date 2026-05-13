@@ -1,0 +1,46 @@
+<div class="news newsindexhotcat">
+    [LIST_TOP]
+    <div class="item">
+        <div class="item-image-1">
+            <a href='[URL]' title='[NAMEALT]'>
+                <img class='img-responsive img-full' src='[IMAGE]' alt='[NAMEALT]' /></a>
+        </div>
+        <div class="item-content">
+            <div class="title-left title-style04 underline04">
+                <a href='[URL]' title='[NAMEALT]'><strong>[NAME]</strong></a>
+            </div>
+            <br>
+            <div class="post-meta-elements">
+                <div class="post-meta-date">
+                    <i class="fa fa-calendar"></i>
+                    [DATE]
+                </div>
+            </div>
+            <p>
+                [DESCRIPTION]
+            </p>
+            <div>
+                <a href='[URL]' title='[NAMEALT]'><span class='read-more'>đọc tiếp</span></a>
+            </div>
+        </div>
+    </div>
+    [/LIST_TOP]
+    <div class="news-block">
+        [LIST_MORE]
+               
+        <div class="item-block">
+            <div class="item-image">
+                <a class="img-link" title="[NAMEALT]" href="[URL]">
+                    <img class="img-responsive img-full" src="[IMAGE]" alt="[NAMEALT]">
+                </a>
+            </div>
+            <div class="item-content">
+                <p>
+                    <a title="[NAMEALT]" href="[URL]">[NAME]</a>
+                </p>
+            </div>
+        </div>
+        [/LIST_MORE]
+   
+    </div>
+</div>

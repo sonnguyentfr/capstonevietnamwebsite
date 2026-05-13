@@ -1,0 +1,4 @@
+[LIST]
+<div style='background: url("[IMAGE]")no-repeat;background-size: cover;height: auto; width: 100%;    background-position: center;'>
+<a href="[URL]"><img src="[IMAGE]" alt="[NAME]" class="img-responsive lazy" /></a></div>
+[/LIST]

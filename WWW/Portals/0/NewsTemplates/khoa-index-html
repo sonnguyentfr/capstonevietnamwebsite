@@ -1,0 +1,25 @@
+<div class='row'>
+[LIST_ITEM]
+    <div class="ttm-box-col-wrapper col-lg-4 col-md-4 col-sm-6">
+        <!-- featured-imagebox-post -->
+        <div class="featured-imagebox featured-imagebox-post style1">
+            <div class="ttm-post-thumbnail featured-thumbnail">
+                <a href="[URL]" title='[NAMEALT]'><img class="img-fluid lazyload" data-src="[IMAGE]" src="/DATA/no-photo.png" alt="[NAMEALT]" /></a>
+            </div>
+            <div class="featured-content featured-content-post">
+                <div class="ttm-box-post-date">
+                    <span class="ttm-entry-date">
+                        <time class="entry-date" datetime="2019-08-12T08:47:17+00:00">[DATE]</time>
+                    </span>
+                </div>
+                <div class="post-title featured-title">
+                    <h5 class='text-limit-2-row'><a title='[NAMEALT]' href="[URL]">[NAME]</a></h5>
+                </div>
+                <div class="post-desc featured-desc">
+                    <p class='text-limit-4-row'>[DESCRIPTION]</p>
+                </div>
+            </div>
+        </div><!-- featured-imagebox-post end-->
+    </div>
+[/LIST_ITEM]
+</div>

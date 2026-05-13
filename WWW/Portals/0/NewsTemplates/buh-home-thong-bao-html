@@ -1,0 +1,42 @@
+<div class="home-thongbaomain widget-taber-content background-white border-radius-5 pt-20 pr-10 pl-10">
+    <div class="justify-content-between">
+        <div class="widget-header position-relative0">
+            <h5 class="widget-title  text-uppercase color4 font-weight-ultra"><a href="[CATURL]">[CATNAME]</a></h5>
+        </div>
+    </div>
+    <!--Tab Popular-->
+    <div class="home-thongbao post-block-list">
+        <div class="list-post">
+            [LIST_TOP]
+            <div class="d-flex mb-10 pb-10">
+                <div class="post-thumb mr-15">
+                    <span class="day">[THU]</span>
+                    <span class="date">[NGAY]/[YEAR]</span>
+                </div>
+                <div class="post-content media-body">
+                    <h6 class="post-title text-limit-3-row"><a href="[URL]">[NAME]</a></h6>
+                    
+                </div>
+            </div>
+            
+            [/LIST_TOP]
+        </div>
+        <div class="list-post more">
+            [LIST_MORE]
+            
+            <div class="d-flex mb-10 pb-10">
+                <div class="post-thumb mr-15">
+                    <span class="day">[THU]</span>
+                    <span class="date">[NGAY]/[YEAR]</span>
+                </div>
+                <div class="post-content media-body">
+                    <h6 class="post-title text-limit-3-row"><a href="[URL]">[NAME]</a></h6>
+                    
+                </div>
+            </div>
+            [/LIST_MORE]
+        </div>
+    </div>
+    <div class="arrow-thongtbao"></div>
+
+</div>

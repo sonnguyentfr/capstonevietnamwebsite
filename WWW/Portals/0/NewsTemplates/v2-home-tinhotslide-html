@@ -1,0 +1,19 @@
+<div class="main-item-slider-top">
+    [LIST_TOP]
+    <div class="item-main">
+        <div class="item">
+            <a class="item-image" href="[URL]">
+                <img class='lazyload blur-up' src='https://thuongtruong-fileserver.nvcms.net/loader.gif' data-src="[IMAGE]" alt='[NAMEALT]' /></a>
+            <a class="title_cate text-uppercase" href="[URLCAT]">[NAMECAT]</a>
+            <div class="ps-4">
+                <h2 class="title-clamp-28 mt-3 bd-r-red">
+                    <a href="[URL]">[NAME]</a>
+                </h2>
+                <div class="txt-dec-default mt-2">
+                    <a href="[URL]">[DESCRIPTION]</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    [/LIST_TOP]
+</div>

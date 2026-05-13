@@ -1,0 +1,41 @@
+<section class="ttm-row course-section_3 ttm-bgcolor-grey clearfix">
+    <div class="container">
+        <!-- row -->
+        <div class="row">
+            <div class="col-lg-12">
+                <!-- section title -->
+                <div class="section-title title-style-center_text">
+                    <div class="title-header">
+                        <h2 class="title">Đội ngũ tư vấn </h2>
+                    </div>
+                    <div class="heading-seperator"><span></span></div>
+                </div><!-- section title end -->
+            </div>
+        </div><!-- row end -->
+        <!-- slick_slider -->
+        <div class="row slick_slider" data-slick='{"slidesToShow": 2, "slidesToScroll": 2, "arrows":false, "autoplay":true, "centerMode":true, "centerPadding":0, "infinite":true, "initialSlide":2, "responsive": [{"breakpoint":1100,"settings":{"slidesToShow": 3}} , {"breakpoint":777,"settings":{"slidesToShow": 2}},
+        {"breakpoint":590,"settings":{"slidesToShow": 1}}]}'>
+            [LIST_TOP]
+            <div class="ttm-box-col-wrapper col-lg-6">
+                <!-- featured-imagebox-course -->
+                <div class="featured-imagebox featured-imagebox-course">
+                    <div class="ttm-post-thumbnail featured-thumbnail">
+                        <img class="img-fluid lazyload" src="/data/no-photo.png?width=526&height=470&mode=crop&anchor=middle" data-src="[IMAGE]" alt="[NAMEALT]">
+                    </div>
+                    <div class="featured-content featured-content-post">
+                        <div class="featured-content-post-inner">
+                            <div class="post-title featured-title">
+                                <h5><a href="[URL]">[NAME]</a></h5>
+                            </div>
+                            <div class="post-desc featured-desc">
+                                <p>[DESCRIPTION] </p>
+                            </div>
+                        </div>
+                    </div>
+                </div><!-- featured-imagebox-course end-->
+            </div>
+            [/LIST_TOP]
+
+        </div>
+    </div>
+</section>

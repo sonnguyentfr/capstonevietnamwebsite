@@ -1,0 +1,29 @@
+<div class="tinmoi">
+    <div class="block-title-1">
+        <h3><a href="#">Tin mới</a></h3>
+    </div>
+    <div class="sidebar-newsfeed">
+        <!-- Begin .newsfeed -->
+        <div class="newsfeed-3">
+            <ul>
+                [LIST_TOP]
+                        <li>
+                            <div class="item">
+                                <div class="item-image">
+                                    <a class="img-link" href="[URL]?utm_source=home&utm_medium=tinmoiright&utm_campaign=tt">
+                                        <img class="img-responsive img-full"
+                                            src="[IMAGE]"
+                                            alt="[NAMEALT]" />
+                                    </a>
+                                </div>
+                                <div class="item-content">
+                                    <h4 class="ellipsis"><a title="[NAMEALT]" href="[URL]?utm_source=home&utm_medium=tinmoiright&utm_campaign=tt">
+                                        [NAME]</a></h4>
+                                </div>
+                            </div>
+                        </li>
+                   [/LIST_TOP]
+            </ul>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,30 @@
+<section id="tintucmoi">
+    <div class="container">
+        <div class="col-lg-4"></div>
+        <div class="col-lg-4">
+            <div class="headerz">
+                <h1>News - Events</h1>
+            </div>
+        </div>
+        <div class="col-lg-4"></div>
+    </div>
+    <div class="container">
+        <ul id="tintuchocbong" class="owl-carousel">
+            [LIST_TOP]
+                    <li class="item">
+                        <div class="newsmoi">
+                            <a href="[URL]" title="[NAMEALT]">
+                                <img src="[IMAGE]" alt="[NAMEALT]" />
+                            </a>
+                            <a href="[URL]" title="[NAMEALT]">
+                                <h1>[NAME]</h1>
+                            </a>
+                            <p>[DESCRIPTION]</p>
+                            <div class="xemtiep"><span><a href="[URL]" title="[NAMEALT]">Read more</a></span></div>
+                        </div>
+                    </li>
+            [/LIST_TOP]
+        </ul>
+    </div>
+</section>
+

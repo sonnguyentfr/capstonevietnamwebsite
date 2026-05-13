@@ -1,0 +1,16 @@
+<div class="tmp-title-header d-flex justify-content-between">
+    <h2 class="title-clamp m-0"><a href="[CATURL]">[CATNAME]</a></h2>
+</div>
+<div class="module-tmp-2">
+    <div class="slider-4-items">
+        [LIST_TOP]
+        <div class="item-news">
+            <a class="item-image" href="[URL]" title="[NAMEALT]">
+                <img class='lazyload blur-up' src='https://thuongtruong-fileserver.nvcms.net/loader.gif' data-src="[IMAGE]" alt="[NAMEALT]"  /></a>
+            <h3 class="title-clamp-18 text-black mt-3">
+                <a href="[URL]" title="[NAMEALT]">[NAME]</a>
+            </h3>
+        </div>
+        [/LIST_TOP]
+    </div>
+</div>

@@ -1,0 +1,7 @@
+<div id="BannerAdv" style="text-align: center;" class='no-mobile '>
+    [LIST]
+            <div style="display: block; padding-bottom: 10px;">
+                <a href="[URL]" target=_blank><img src="[IMAGE]" alt="[NAMEALT]" /></a>
+            </div>
+        [/LIST]
+</div>

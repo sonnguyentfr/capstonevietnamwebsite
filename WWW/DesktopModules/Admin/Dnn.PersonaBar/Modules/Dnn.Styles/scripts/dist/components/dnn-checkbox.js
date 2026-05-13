@@ -1,0 +1,1 @@
+import{D as o,d as s}from"./dnn-checkbox2.js";const c=o,n=s;export{c as DnnCheckbox,n as defineCustomElement}

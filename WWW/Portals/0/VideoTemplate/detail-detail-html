@@ -1,0 +1,31 @@
+<div class="single-header-2 row no-gutters mb-50 background12">
+    <div class="col-lg-7 col-md-12">
+        [VIDEO]
+                    
+               
+    </div>
+    <div class="col-lg-5 col-md-12">
+        <div class="entry-header entry-header-1">
+            <h1 class="post-title">
+                [NAME]
+            </h1>
+            <div class="entry-meta meta-1  color-grey mt-15 mb-15">
+                [DESCRIPTION]
+            </div>
+            <div class="bt-1 border-color-1 mt-30 mb-30"></div>
+            <div class="single-social-share clearfix ">
+                <div class="entry-meta meta-1 font-small color-grey float-left mt-10">
+                    <span class="hit-count"><i class="ti-comment mr-5"></i>[DATE]</span>
+                    <span class="hit-count"><i class="ti-heart mr-5"></i>68 likes</span>
+                </div>
+                <ul class="d-inline-block list-inline float-right">
+                    <li class="list-inline-item"><a class="social-icon facebook-icon text-xs-center color-white" target="_blank" href="#"><i class="ti-facebook"></i></a></li>
+                    <li class="list-inline-item"><a class="social-icon twitter-icon text-xs-center color-white" target="_blank" href="#"><i class="ti-twitter-alt"></i></a></li>
+                    <li class="list-inline-item"><a class="social-icon pinterest-icon text-xs-center color-white" target="_blank" href="#"><i class="ti-pinterest"></i></a></li>
+                    <li class="list-inline-item"><a class="social-icon instagram-icon text-xs-center color-white" target="_blank" href="#"><i class="ti-instagram"></i></a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!--end entry header-->
+</div>

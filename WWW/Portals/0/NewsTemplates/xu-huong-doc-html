@@ -1,0 +1,20 @@
+<div class="style5">
+    <div class="title-style02">
+        <h3>
+            <strong>Xu hướng đọc</strong></h3>
+    </div>
+    <div class="sidebar-scroll">
+        <div class="scroll-item">
+            [LIST_TOP]
+                    <div class="item">
+                        <div class="item-content-1">
+                            <h3>
+                                <a title="[NAMEALT]" href="[URL]?utm_source=home&utm_medium=xuhuongdoc&utm_campaign=tt">
+                                    <i class="fa fa-angle-double-right"></i>[NAME]</a>
+                            </h3>
+                        </div>
+                    </div>
+                [/LIST_TOP]
+        </div>
+    </div>
+</div>

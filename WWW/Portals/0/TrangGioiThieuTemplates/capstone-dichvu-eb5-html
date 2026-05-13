@@ -1,0 +1,15 @@
+<div class="LoiichEb5">
+    <ul>
+        <li class="cta-text bgtnone mgr-5">[NAME]
+        </li>
+        [LIST_ITEM]
+        
+        <li class="liloiich">
+            <span>
+                <img src="[IMAGE]"></span>
+            <p>[CONTENT]</p>
+        </li>
+        [/LIST_ITEM]
+        
+    </ul>
+</div>

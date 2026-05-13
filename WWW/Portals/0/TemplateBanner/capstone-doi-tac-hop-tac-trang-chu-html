@@ -1,0 +1,56 @@
+<div id="doitacfooter">
+    [LIST]
+    <div class='item'>
+        <a href="http://capstonevietnam.com/vi/about/partners" target=_blank>
+            <img src="[IMAGE]" alt="[NAME]" />
+        </a>
+    </div>
+    [/LIST]
+</div>
+
+<style>
+    #doitacfooter {
+        width: 900px; margin: 0 auto;
+    }
+    #doitacfooter div img {
+        padding: 1px;
+        display: block;
+        height: auto;
+        border: 1px solid #eee;
+    }
+
+    #doitacfooter .item {
+        background: #fff;
+        margin: 10px 5px;
+        padding: 10px;
+        float: left;
+    }
+
+    #doitacfooter .owl-stage-outer {
+        position: relative;
+        overflow: hidden;
+        margin: 0;
+        padding: 0;
+        -webkit-transform: translate3d(0,0,0);
+    }
+
+    #doitacfooter .owl-controls .owl-nav .owl-prev {
+        left: -40px;
+        position: absolute;
+        top: 30%;
+    }
+
+    #doitacfooter .owl-controls .owl-nav [class*=owl-] {
+        color: #cfcfcf;
+        background: 0 0;
+        font-size: 14px;
+        display: inline-block;
+        cursor: pointer;
+    }
+
+    #doitacfooter .owl-controls .owl-nav .owl-next {
+        right: -40px;
+        top: 30%;
+        position: absolute;
+    }
+</style>

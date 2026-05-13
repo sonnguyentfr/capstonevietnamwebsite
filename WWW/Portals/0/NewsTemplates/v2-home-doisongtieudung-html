@@ -1,0 +1,96 @@
+<div class="tmp-title-header d-flex justify-content-between">
+            <h2 class="title-clamp m-0"><a href="[CATURL]">[CATNAME]</a></h2>
+            <!--<div class="sub-menu d-none d-lg-flex">
+                [LIST_CAT]
+                <a class="menu-link" href="[URL]">[NAME]</a>
+                [/LIST_CAT]
+            </div>-->
+        </div>
+        <div class="row-custom mt-3">
+            <div class="col-12">
+                <div class="module-tmp-1">
+                    <div class="box-content">
+                        <div class="row">
+                            <div class="col-lg-8">
+                                [TOP_1]
+                                <div class="item-main">
+                                    <a class="item-image" href="[URL]">
+                                        <img class='lazyload blur-up' src='https://thuongtruong-fileserver.nvcms.net/loader.gif' data-src="[IMAGE]" alt='[NAMEALT]' /></a>
+                                    <h3 class="title-clamp-26 mt-3">
+                                        <a href="[URL]">[NAME]</a>
+                                    </h3>
+                                </div>
+                                [/TOP_1]
+                                <div class="row my-4">
+                                    [TOP_2]
+                                    <div class="col-6">
+                                        <div class="item">
+                                            <a class="item-image" href="[URL]">
+                                                <img class='lazyload blur-up' src='https://thuongtruong-fileserver.nvcms.net/loader.gif' data-src="[IMAGE]" alt='[NAMEALT]' /></a>
+                                            <h3 class="title-clamp-20 mt-3">
+                                                <a href="[URL]">[NAME]</a>
+                                            </h3>
+                                        </div>
+                                    </div>
+                                    [/TOP_2]
+                                    [TOP_3]
+                                    <div class="col-6">
+                                        <div class="item">
+                                            <a class="item-image" href="[URL]">
+                                                <img class='lazyload blur-up' src='https://thuongtruong-fileserver.nvcms.net/loader.gif' data-src="[IMAGE]" alt='[NAMEALT]' /></a>
+                                            <h3 class="title-clamp-20 mt-3">
+                                                <a href="[URL]">[NAME]&nbsp;</a>
+                                            </h3>
+                                        </div>
+                                    </div>
+                                    [/TOP_3]
+                                </div>
+                                <div class="row my-4">
+                                    [TOP_4]
+                                    <div class="col-6">
+                                        <div class="item">
+                                            <a class="item-image" href="[URL]">
+                                                <img class='lazyload blur-up' src='https://thuongtruong-fileserver.nvcms.net/loader.gif' data-src="[IMAGE]" alt='[NAMEALT]' /></a>
+                                            <h3 class="title-clamp-20 mt-3">
+                                                <a  title="[NAMEALT]" href="[URL]">[NAME]</a>
+                                            </h3>
+                                        </div>
+                                    </div>
+                                    [/TOP_4]
+                                    [TOP_5]
+                                    <div class="col-6">
+                                        <div class="item">
+                                            <a class="item-image" href="[URL]">
+                                                <img class='lazyload blur-up' src='https://thuongtruong-fileserver.nvcms.net/loader.gif' data-src="[IMAGE]" alt='[NAMEALT]' /></a>
+                                            <h3 class="title-clamp-20 mt-3">
+                                                <a href="[URL]" title="[NAMEALT]">[NAME]&nbsp;</a>
+                                            </h3>
+                                        </div>
+                                    </div>
+                                    [/TOP_5]
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                [LIST_MORE]
+                                <div class="same-cate">
+                                    <div class="title-cate">[NAMECAT]</div>
+                                    <a href="[URL]">[NAME]</a>
+                                </div>
+                                [/LIST_MORE]
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-4 text-center">
+                        <!-- PC 930 x 180 -->
+                        <ins class="adsbygoogle"
+                             style="display:inline-block;width:930px;height:180px"
+                             data-ad-client="ca-pub-3311450421751656"
+                             data-ad-slot="8367255933"></ins>
+                        <script>
+                             (adsbygoogle = window.adsbygoogle || []).push({});
+                        </script>
+                    </div>
+                </div>
+            </div>
+            
+        </div>

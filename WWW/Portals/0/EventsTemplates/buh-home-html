@@ -1,0 +1,27 @@
+<div class="sidebar-widget">
+    <div class="widget-header position-relative mb-30">
+        <h5 class="widget-title mb-30 text-uppercase color1 font-weight-ultra">Sự kiện sắp diễn ra</h5>
+        <div class="letter-background">EVENTS</div>
+    </div>
+    <div class="post-carausel-2 post-module-1 row">
+        [LIST_TOP]
+        <div class="col">
+            <div class="post-thumb position-relative">
+                <div class="thumb-overlay img-hover-slide border-radius-5 position-relative" style="background-image: url([IMAGE])">
+                    <a class="img-link" href="[URL]"></a>
+                    <div class="post-content-overlay">
+                        <h6 class="post-title">
+                            <a class="color-white" href="[URL]">[NAME]</a>
+                        </h6>
+                        <div class="entry-meta meta-1 font-small color-grey mt-10 pr-5 pl-5">
+                            <span class="post-on"><i class="fa fa-clock-o" aria-hidden="true"></i> Thời gian: [NGAYDIENRA]</span>
+                            <span class="hit-count has-dot"><i class="fa fa-map-marker" aria-hidden="true"></i> Địa điểm: [DIADIEM]</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        [/LIST_TOP]
+        
+    </div>
+</div>

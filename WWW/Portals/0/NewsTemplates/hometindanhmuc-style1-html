@@ -1,0 +1,60 @@
+<div class="news style1">
+    <div class="module-title">
+        <h3 class="title fl">
+            <span class="bg-1">
+                <a href="[CATURL]">[CATNAME]</a></span></h3>
+        <div class="subtitlecat">
+            <ul>
+                [LIST_CAT]
+                        <li><a href="[URL]">[NAME]</a></li>
+                    [/LIST_CAT]
+            </ul>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+
+    [LIST_TOP]
+            <div class="item">
+                <div class="item-image-1">
+                    <a class="img-link" title="[NAMEALT]" href="[URL]?utm_source=home&utm_medium=style1&utm_campaign=tt">
+                        <img class="img-responsive img-full lazy"
+                            src="//f.thuongtruong.com.vn/nophoto240-180.png"
+                            data-src="[IMAGE]"
+                            alt="[NAMEALT]" />
+                    </a>
+                </div>
+                <div class="item-content">
+                    <div class="title-left title-style04 underline04">
+                        <h1><a title="[NAMEALT]" href="[URL]?utm_source=home&utm_medium=style1&utm_campaign=tt">
+                            [NAME]
+                        </a></h1>
+                    </div>
+                    <br>
+                    <div class="post-meta-elements">
+                        <div class="post-meta-date">
+                            <i class="fa fa-calendar"></i> [DATE]
+                        </div>
+                    </div>
+                    <p>[DESCRIPTION]</p>
+                </div>
+            </div>
+    [/LIST_TOP]
+    <!-- End .item -->
+    <div class="news-block">
+        [LIST_MORE]
+                <div class="item-block">
+                    <div class="item-image">
+                        <a class="img-link" title="[NAMEALT]" href="[URL]?utm_source=home&utm_medium=style1&utm_campaign=tt">
+                            <img class="img-responsive img-full lazy" src="//f.thuongtruong.com.vn/nophoto220-140.png"
+                                data-src="[IMAGE]" alt="[NAMEALT]" />
+                        </a>
+                    </div>
+                    <div class="item-content">
+                        <a title="[NAMEALT]" href="[URL]?utm_source=home&utm_medium=style1&utm_campaign=tt">
+                            [NAME]
+                        </a>
+                    </div>
+                </div>
+        [/LIST_MORE]
+    </div>
+</div>

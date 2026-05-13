@@ -1,0 +1,811 @@
+&lt;!-- NAME: SIMPLE TEXT --&gt;&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width&quot;&gt;&lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge&quot;&gt;&lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=UTF-8&quot;&gt;
+&lt;title&gt;&lt;/title&gt;
+&lt;style type=&quot;text/css&quot;&gt;p{
+			margin:1em 0;
+		}
+		table{
+			border-collapse:collapse;
+		}
+		img,a img{
+			border:0;
+			outline:none;
+			text-decoration:none;
+		}
+		h1,h2,h3,h4,h5,h6{
+			display:block;
+			margin:0;
+			padding:0;
+		}
+		body,#bodyTable,#bodyCell{
+			height:100% !important;
+			margin:0;
+			padding:0;
+			width:100% !important;
+		}
+		.mcnPreviewText{
+			display:none !important;
+		}
+		#outlook a{
+			padding:0;
+		}
+		img{
+			-ms-interpolation-mode:bicubic;
+		}
+		.ReadMsgBody{
+			width:100%;
+		}
+		.ExternalClass{
+			width:100%;
+		}
+		td,table{
+			mso-table-lspace:0pt;
+			mso-table-rspace:0pt;
+		}
+		p,a,li,td,body,table,blockquote{
+			-ms-text-size-adjust:100%;
+			-webkit-text-size-adjust:100%;
+		}
+		.ExternalClass,.ExternalClass p,.ExternalClass td,.ExternalClass div,.ExternalClass span,.ExternalClass font{
+			line-height:100%;
+		}
+		#templateHeader,#templateBody,#templateFooter{
+			min-width:100%;
+		}
+		table[align=left]{
+			float:left;
+		}
+		table[align=right]{
+			float:right;
+		}
+		a.mcnButton{
+			display:block;
+		}
+		.mcnImage,.mcnRetinaImage{
+			vertical-align:bottom;
+		}
+		.mcnTextContent img{
+			height:auto !important;
+		}
+	/*
+	@tab Page
+	@section background style
+	@tip Set the background color and top border for your email. You may want to choose colors that match your company&#39;s branding.
+	*/
+		body,#bodyTable{
+			/*@editable*/background-color:#ffffff;
+		}
+	/*
+	@tab Page
+	@section background style
+	@tip Set the background color and top border for your email. You may want to choose colors that match your company&#39;s branding.
+	*/
+		#bodyCell{
+			/*@editable*/border-top:0;
+		}
+	/*
+	@tab Page
+	@section email border
+	@tip Set the border for your email.
+	*/
+		#templateContainer{
+			/*@editable*/border:5px solid #0b2383;
+		}
+	/*
+	@tab Page
+	@section heading 1
+	@tip Set the styling for all first-level headings in your emails. These should be the largest of your headings.
+	@style heading 1
+	*/
+		h1{
+			/*@editable*/color:#202020 !important;
+			/*@editable*/font-family:Helvetica;
+			/*@editable*/font-size:24px;
+			/*@editable*/font-style:normal;
+			/*@editable*/font-weight:bold;
+			/*@editable*/line-height:125%;
+			/*@editable*/letter-spacing:normal;
+			/*@editable*/text-align:left;
+		}
+	/*
+	@tab Page
+	@section heading 2
+	@tip Set the styling for all second-level headings in your emails.
+	@style heading 2
+	*/
+		h2{
+			/*@editable*/color:#202020 !important;
+			/*@editable*/font-family:Helvetica;
+			/*@editable*/font-size:20px;
+			/*@editable*/font-style:normal;
+			/*@editable*/font-weight:bold;
+			/*@editable*/line-height:125%;
+			/*@editable*/letter-spacing:-.75px;
+			/*@editable*/text-align:left;
+		}
+	/*
+	@tab Page
+	@section heading 3
+	@tip Set the styling for all third-level headings in your emails.
+	@style heading 3
+	*/
+		h3{
+			/*@editable*/color:#202020 !important;
+			/*@editable*/font-family:Helvetica;
+			/*@editable*/font-size:18px;
+			/*@editable*/font-style:normal;
+			/*@editable*/font-weight:bold;
+			/*@editable*/line-height:125%;
+			/*@editable*/letter-spacing:normal;
+			/*@editable*/text-align:left;
+		}
+	/*
+	@tab Page
+	@section heading 4
+	@tip Set the styling for all fourth-level headings in your emails. These should be the smallest of your headings.
+	@style heading 4
+	*/
+		h4{
+			/*@editable*/color:#202020 !important;
+			/*@editable*/font-family:Helvetica;
+			/*@editable*/font-size:16px;
+			/*@editable*/font-style:normal;
+			/*@editable*/font-weight:bold;
+			/*@editable*/line-height:125%;
+			/*@editable*/letter-spacing:normal;
+			/*@editable*/text-align:left;
+		}
+	/*
+	@tab Header
+	@section header style
+	@tip Set the background color and borders for your email&#39;s header area.
+	*/
+		#templateHeader{
+			/*@editable*/border-bottom:0;
+		}
+	/*
+	@tab Header
+	@section header text
+	@tip Set the styling for your email&#39;s header text. Choose a size and color that is easy to read.
+	*/
+		.headerContainer .mcnTextContent,.headerContainer .mcnTextContent p{
+			/*@editable*/color:#202020;
+			/*@editable*/font-family:Helvetica;
+			/*@editable*/font-size:15px;
+			/*@editable*/line-height:150%;
+			/*@editable*/text-align:left;
+		}
+	/*
+	@tab Header
+	@section header link
+	@tip Set the styling for your email&#39;s header links. Choose a color that helps them stand out from your text.
+	*/
+		.headerContainer .mcnTextContent a{
+			/*@editable*/color:#202020;
+			/*@editable*/font-weight:normal;
+			/*@editable*/text-decoration:underline;
+		}
+	/*
+	@tab Body
+	@section body style
+	@tip Set the background color and borders for your email&#39;s body area.
+	*/
+		#templateBody{
+			/*@editable*/border-top:0;
+			/*@editable*/border-bottom:0;
+		}
+	/*
+	@tab Body
+	@section body text
+	@tip Set the styling for your email&#39;s body text. Choose a size and color that is easy to read.
+	*/
+		.bodyContainer .mcnTextContent,.bodyContainer .mcnTextContent p{
+			/*@editable*/color:#202020;
+			/*@editable*/font-family:Helvetica;
+			/*@editable*/font-size:15px;
+			/*@editable*/line-height:150%;
+			/*@editable*/text-align:left;
+		}
+	/*
+	@tab Body
+	@section body link
+	@tip Set the styling for your email&#39;s body links. Choose a color that helps them stand out from your text.
+	*/
+		.bodyContainer .mcnTextContent a{
+			/*@editable*/color:#202020;
+			/*@editable*/font-weight:normal;
+			/*@editable*/text-decoration:underline;
+		}
+	/*
+	@tab Footer
+	@section footer style
+	@tip Set the background color and borders for your email&#39;s footer area.
+	*/
+		#templateFooter{
+			/*@editable*/border-top:0;
+		}
+	/*
+	@tab Footer
+	@section footer text
+	@tip Set the styling for your email&#39;s footer text. Choose a size and color that is easy to read.
+	*/
+		.footerContainer .mcnTextContent,.footerContainer .mcnTextContent p{
+			/*@editable*/color:#202020;
+			/*@editable*/font-family:Helvetica;
+			/*@editable*/font-size:11px;
+			/*@editable*/line-height:125%;
+			/*@editable*/text-align:justify;
+		}
+	/*
+	@tab Footer
+	@section footer link
+	@tip Set the styling for your email&#39;s footer links. Choose a color that helps them stand out from your text.
+	*/
+		.footerContainer .mcnTextContent a{
+			/*@editable*/color:#202020;
+			/*@editable*/font-weight:normal;
+			/*@editable*/text-decoration:underline;
+		}
+	@media only screen and (max-width:480px){
+		body{
+			width:100% !important;
+			min-width:100% !important;
+		}
+
+}	@media only screen and (max-width:480px){
+		.mcnRetinaImage{
+			max-width:100% !important;
+		}
+
+}	@media only screen and (max-width:480px){
+		td[class=footerContainer] a[class=utilityLink]{
+			display:block !important;
+		}
+
+}	@media only screen and (max-width:480px){
+		td[class=mcnImageGroupContent]{
+			padding:9px !important;
+		}
+
+}	@media only screen and (max-width:480px){
+		td[class=mcnImageCardBottomImageContent]{
+			padding-bottom:9px !important;
+		}
+
+}	@media only screen and (max-width:480px){
+		table[class=mcpreview-image-uploader]{
+			display:none !important;
+			width:100% !important;
+		}
+
+}	@media only screen and (max-width:480px){
+		td[class=mcnImageGroupBlockInner]{
+			padding-top:0 !important;
+			padding-bottom:0 !important;
+		}
+
+}	@media only screen and (max-width:480px){
+		tbody[class=mcnImageGroupBlockOuter]{
+			padding-top:9px !important;
+			padding-bottom:9px !important;
+		}
+
+}	@media only screen and (max-width:480px){
+		td[class=mcnTextContent],td[class=mcnBoxedTextContentColumn]{
+			padding-right:18px !important;
+			padding-left:18px !important;
+		}
+
+}	@media only screen and (max-width:480px){
+		table[class=mcnCaptionLeftContentOuter] td[class=mcnTextContent],table[class=mcnCaptionRightContentOuter] td[class=mcnTextContent]{
+			padding-top:9px !important;
+		}
+
+}	@media only screen and (max-width:480px){
+		td[class=mcnImageCardLeftImageContent],td[class=mcnImageCardRightImageContent]{
+			padding-right:18px !important;
+			padding-bottom:0 !important;
+			padding-left:18px !important;
+		}
+
+}	@media only screen and (max-width:480px){
+		img[class=mcnImage],table[class=mcnCaptionTopContent],table[class=mcnCaptionBottomContent],table[class=mcnTextContentContainer],table[class=mcnImageGroupContentContainer],table[class=mcnCaptionLeftTextContentContainer],table[class=mcnCaptionRightTextContentContainer],table[class=mcnCaptionLeftImageContentContainer],table[class=mcnCaptionRightImageContentContainer],table[class=mcnImageCardLeftTextContentContainer],table[class=mcnImageCardRightTextContentContainer],table[class=socialContainer],.mcnImageCardLeftImageContentContainer,.mcnImageCardRightImageContentContainer{
+			width:100% !important;
+		}
+
+}	@media only screen and (max-width:480px){
+		.mcnBoxedTextContentContainer{
+			max-width:100% !important;
+			min-width:100% !important;
+			width:100% !important;
+		}
+
+}	@media only screen and (max-width:480px){
+	/*
+	@tab Mobile Styles
+	@section template width
+	@tip Make the template fluid for portrait or landscape view adaptability. If a fluid layout doesn&#39;t work for you, set the width to 300px instead.
+	*/
+		table[id=templateContainer],table[id=templatePreheader],table[id=templateHeader],table[id=templateBody],table[id=templateFooter]{
+			/*@tab Mobile Styles
+@section template width
+@tip Make the template fluid for portrait or landscape view adaptability. If a fluid layout doesn&#39;t work for you, set the width to 300px instead.*/max-width:600px !important;
+			/*@editable*/width:100% !important;
+		}
+
+}	@media only screen and (max-width:480px){
+	/*
+	@tab Mobile Styles
+	@section heading 1
+	@tip Make the first-level headings larger in size for better readability on small screens.
+	*/
+		h1{
+			/*@editable*/font-size:24px !important;
+			/*@editable*/line-height:125% !important;
+		}
+
+}	@media only screen and (max-width:480px){
+	/*
+	@tab Mobile Styles
+	@section heading 2
+	@tip Make the second-level headings larger in size for better readability on small screens.
+	*/
+		h2{
+			/*@editable*/font-size:20px !important;
+			/*@editable*/line-height:125% !important;
+		}
+
+}	@media only screen and (max-width:480px){
+	/*
+	@tab Mobile Styles
+	@section heading 3
+	@tip Make the third-level headings larger in size for better readability on small screens.
+	*/
+		h3{
+			/*@editable*/font-size:18px !important;
+			/*@editable*/line-height:125% !important;
+		}
+
+}	@media only screen and (max-width:480px){
+	/*
+	@tab Mobile Styles
+	@section heading 4
+	@tip Make the fourth-level headings larger in size for better readability on small screens.
+	*/
+		h4{
+			/*@editable*/font-size:16px !important;
+			/*@editable*/line-height:125% !important;
+		}
+
+}	@media only screen and (max-width:480px){
+	/*
+	@tab Mobile Styles
+	@section Header Text
+	@tip Make the header text larger in size for better readability on small screens.
+	*/
+		td[class=headerContainer] td[class=mcnTextContent],td[class=headerContainer] td[class=mcnTextContent] p{
+			/*@editable*/font-size:18px !important;
+			/*@editable*/line-height:125% !important;
+		}
+
+}	@media only screen and (max-width:480px){
+	/*
+	@tab Mobile Styles
+	@section Body Text
+	@tip Make the body text larger in size for better readability on small screens. We recommend a font size of at least 16px.
+	*/
+		td[class=bodyContainer] td[class=mcnTextContent],td[class=bodyContainer] td[class=mcnTextContent] p{
+			/*@editable*/font-size:18px !important;
+			/*@editable*/line-height:125% !important;
+		}
+
+}	@media only screen and (max-width:480px){
+	/*
+	@tab Mobile Styles
+	@section footer text
+	@tip Make the body content text larger in size for better readability on small screens.
+	*/
+		td[class=footerContainer] td[class=mcnTextContent],td[class=footerContainer] td[class=mcnTextContent] p{
+			/*@editable*/font-size:14px !important;
+			/*@editable*/line-height:115% !important;
+		}
+
+}	@media only screen and (max-width:480px){
+	/*
+	@tab Mobile Styles
+	@section Boxed Text
+	@tip Make the boxed text larger in size for better readability on small screens. We recommend a font size of at least 16px.
+	*/
+		table[class=mcnBoxedTextContentContainer] td[class=mcnTextContent],td[class=mcnBoxedTextContentContainer] td[class=mcnTextContent] p{
+			/*@editable*/font-size:18px !important;
+			/*@editable*/line-height:125% !important;
+		}
+
+}
+&lt;/style&gt;
+&lt;!--*|IF:MC_PREVIEW_TEXT|*--&gt;&lt;!--[if !gte mso 9]&gt;&lt;!----&gt;&lt;span class=&quot;mcnPreviewText&quot; style=&quot;display:none; font-size:0px; line-height:0px; max-height:0px; max-width:0px; opacity:0; overflow:hidden; visibility:hidden; mso-hide:all;&quot;&gt;*|MC_PREVIEW_TEXT|*&lt;/span&gt;&lt;!--&lt;![endif]--&gt;&lt;!--*|END:IF|*--&gt;
+&lt;center&gt;
+&lt;table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; height=&quot;100%&quot; id=&quot;bodyTable&quot; width=&quot;100%&quot;&gt;
+ &lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td align=&quot;left&quot; id=&quot;bodyCell&quot; valign=&quot;top&quot;&gt;&lt;!-- BEGIN TEMPLATE // --&gt;
+   &lt;table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; id=&quot;templateContainer&quot; width=&quot;600&quot;&gt;
+    &lt;tbody&gt;
+     &lt;tr&gt;
+      &lt;td align=&quot;left&quot; valign=&quot;top&quot;&gt;&lt;!-- BEGIN HEADER // --&gt;
+      &lt;table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; id=&quot;templateHeader&quot; width=&quot;600&quot;&gt;
+       &lt;tbody&gt;
+        &lt;tr&gt;
+         &lt;td class=&quot;headerContainer&quot; style=&quot;padding-top:9px; padding-bottom:9px;&quot; valign=&quot;top&quot;&gt;
+         &lt;table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;mcnImageBlock&quot; style=&quot;min-width:100%;&quot; width=&quot;100%&quot;&gt;
+          &lt;tbody class=&quot;mcnImageBlockOuter&quot;&gt;
+           &lt;tr&gt;
+            &lt;td class=&quot;mcnImageBlockInner&quot; style=&quot;padding:9px&quot; valign=&quot;top&quot;&gt;
+            &lt;table align=&quot;left&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;mcnImageContentContainer&quot; style=&quot;min-width:100%;&quot; width=&quot;100%&quot;&gt;
+             &lt;tbody&gt;
+              &lt;tr&gt;
+               &lt;td class=&quot;mcnImageContent&quot; style=&quot;padding-right: 9px; padding-left: 9px; padding-top: 0; padding-bottom: 0; text-align:center;&quot; valign=&quot;top&quot;&gt;&lt;a href=&quot;https://crm.capstonevietnam.com/fairs/register/e-178.html&quot; target=&quot;_blank&quot; title=&quot;&quot;&gt;&lt;img align=&quot;center&quot; alt=&quot;&quot; class=&quot;mcnImage&quot; src=&quot;https://mcusercontent.com/233fe974d3b671b2146daed74/images/87785864-fcca-24ad-40a4-b286c705abe4.png&quot; style=&quot;max-width:960px; padding-bottom: 0; display: inline !important; vertical-align: bottom;&quot; width=&quot;564&quot; /&gt; &lt;/a&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+             &lt;/tbody&gt;
+            &lt;/table&gt;
+            &lt;/td&gt;
+           &lt;/tr&gt;
+          &lt;/tbody&gt;
+         &lt;/table&gt;
+
+         &lt;table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;mcnBoxedTextBlock&quot; style=&quot;min-width:100%;&quot; width=&quot;100%&quot;&gt;&lt;!--[if gte mso 9]&gt;
+	&lt;table align=&quot;center&quot; border=&quot;0&quot; cellspacing=&quot;0&quot; cellpadding=&quot;0&quot; width=&quot;100%&quot;&gt;
+	&lt;![endif]--&gt;
+          &lt;tbody class=&quot;mcnBoxedTextBlockOuter&quot;&gt;
+           &lt;tr&gt;
+            &lt;td class=&quot;mcnBoxedTextBlockInner&quot; valign=&quot;top&quot;&gt;&lt;!--[if gte mso 9]&gt;
+				&lt;td align=&quot;center&quot; valign=&quot;top&quot; &quot;&gt;
+				&lt;![endif]--&gt;
+            &lt;table align=&quot;left&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;mcnBoxedTextContentContainer&quot; style=&quot;min-width:100%;&quot; width=&quot;100%&quot;&gt;
+             &lt;tbody&gt;
+              &lt;tr&gt;
+               &lt;td style=&quot;padding-top:9px; padding-left:18px; padding-bottom:9px; padding-right:18px;&quot;&gt;
+               &lt;table border=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;mcnTextContentContainer&quot; style=&quot;min-width: 100% !important;background-color: #FFFFFF;border: 1px none;&quot; width=&quot;100%&quot;&gt;
+                &lt;tbody&gt;
+                 &lt;tr&gt;
+                  &lt;td class=&quot;mcnTextContent&quot; style=&quot;padding: 18px;color: #00080A;font-family: Verdana, Geneva, sans-serif;font-size: 12px;font-style: normal;font-weight: normal;text-align: center;&quot; valign=&quot;top&quot;&gt;
+                  &lt;div style=&quot;text-align: justify;&quot;&gt;&lt;em&gt;&lt;strong id=&quot;docs-internal-guid-0e676054-7fff-308e-36cd-274184ffcfc6&quot;&gt;K&#237;nh gửi Qu&#253; phụ huynh v&#224; c&#225;c em học sinh,&lt;/strong&gt;&lt;/em&gt;&lt;br /&gt;
+                  &lt;br /&gt;
+                  &lt;span style=&quot;font-family:verdana,geneva,sans-serif&quot;&gt;L&#224;m sao để hồ sơ du học đủ thuyết phục để gi&#224;nh học bổng gi&#225; trị cao? N&#234;n bắt đầu từ đ&#226;u, chọn trường thế n&#224;o cho &amp;ldquo;best fit&amp;rdquo; v&#224; tận dụng hoạt động như tranh biện để nổi bật hồ sơ của m&#236;nh? &amp;nbsp;&lt;br /&gt;
+                  &lt;br /&gt;
+                  Capstone Vietnam tr&#226;n trọng mời Qu&#253; vị v&#224; c&#225;c em tham dự &lt;strong&gt;Talk c&#249;ng chuy&#234;n gia&lt;/strong&gt;:&amp;nbsp;&lt;/span&gt;&lt;/div&gt;
+
+                  &lt;div style=&quot;text-align: center;&quot;&gt;------------------------------------------------------------------------------------&lt;br /&gt;
+                  &lt;span style=&quot;font-size:16px&quot;&gt;&lt;span style=&quot;color:#000080&quot;&gt;&lt;strong&gt;&lt;span style=&quot;font-family:verdana,geneva,sans-serif&quot;&gt;T&#244;i Đ&#227; Nhận Học Bổng 100% &amp;ndash; Chiến Lược Hồ Sơ Từ Du Học Sinh &amp;amp; Chuy&#234;n Gia&lt;/span&gt;&lt;/strong&gt;&lt;/span&gt;&lt;/span&gt;&lt;/div&gt;
+
+                  &lt;ul&gt;
+                   &lt;li style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;font-family:verdana,geneva,sans-serif&quot;&gt;Ph&#226;n biệt v&#224; khai th&#225;c tối đa hai loại hỗ trợ t&#224;i ch&#237;nh: need-based v&#224; merit-based&lt;/span&gt;&lt;/li&gt;
+                   &lt;li style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;font-family:verdana,geneva,sans-serif&quot;&gt;X&#225;c định chiến lược chọn trường: l&#224;m sao để chọn đ&#250;ng trường ph&#249; hợp v&#224; c&#243; khả năng hỗ trợ tối đa học ph&#237;&lt;/span&gt;&lt;/li&gt;
+                   &lt;li style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;font-family:verdana,geneva,sans-serif&quot;&gt;Bắt đầu c&#224;ng sớm c&#224;ng tốt: X&#226;y dựng hồ sơ học thuật v&#224; ngoại kh&#243;a một c&#225;ch chiến lượt&lt;/span&gt;&lt;/li&gt;
+                   &lt;li style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;font-family:verdana,geneva,sans-serif&quot;&gt;Tips &amp;amp; tricks trong qu&#225; tr&#236;nh apply từ chuy&#234;n gia từng đồng h&#224;nh c&#249;ng nhiều học sinh Việt gi&#224;nh học bổng danh gi&#225;&lt;/span&gt;&lt;/li&gt;
+                   &lt;li style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;font-family:verdana,geneva,sans-serif&quot;&gt;C&#226;u chuyện thật của H&#224; Tuấn H&#249;ng &amp;ndash; người gi&#224;nh học bổng to&#224;n phần tại Williams College, trường #1 Liberal Arts của Mỹ&lt;/span&gt;&lt;/li&gt;
+                  &lt;/ul&gt;
+
+                  &lt;div style=&quot;text-align: left;&quot;&gt;&amp;nbsp;&lt;/div&gt;
+
+                  &lt;div style=&quot;text-align: center;&quot;&gt;&lt;span style=&quot;font-family:verdana,geneva,sans-serif&quot;&gt;&lt;strong&gt;&#128197; Thời gian: Thứ Bảy, 23/08/2025 | 09:30 &amp;ndash; 11:00&lt;br /&gt;
+                  &#127970; VP Capstone H&#224; Nội &amp;ndash; Số 2 L&#234; Qu&#253; Đ&#244;n, Hai B&#224; Trưng (Tea break, giao lưu&amp;nbsp;trực tiếp)&lt;br /&gt;
+                  hoặc online qua Zoom&lt;/strong&gt;&lt;/span&gt;&lt;/div&gt;
+                  &lt;/td&gt;
+                 &lt;/tr&gt;
+                &lt;/tbody&gt;
+               &lt;/table&gt;
+               &lt;/td&gt;
+              &lt;/tr&gt;
+             &lt;/tbody&gt;
+            &lt;/table&gt;
+            &lt;!--[if gte mso 9]&gt;
+				&lt;/td&gt;
+				&lt;![endif]--&gt;&lt;!--[if gte mso 9]&gt;
+                &lt;/tr&gt;
+                &lt;/table&gt;
+				&lt;![endif]--&gt;&lt;/td&gt;
+           &lt;/tr&gt;
+          &lt;/tbody&gt;
+         &lt;/table&gt;
+
+         &lt;table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;mcnButtonBlock&quot; style=&quot;min-width:100%;&quot; width=&quot;100%&quot;&gt;
+          &lt;tbody class=&quot;mcnButtonBlockOuter&quot;&gt;
+           &lt;tr&gt;
+            &lt;td align=&quot;center&quot; class=&quot;mcnButtonBlockInner&quot; style=&quot;padding-top:0; padding-right:18px; padding-bottom:18px; padding-left:18px;&quot; valign=&quot;top&quot;&gt;
+            &lt;table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;mcnButtonContentContainer&quot; style=&quot;border-collapse: separate !important;border-radius: 24px;background-color: #072567;&quot;&gt;
+             &lt;tbody&gt;
+              &lt;tr&gt;
+               &lt;td align=&quot;center&quot; class=&quot;mcnButtonContent&quot; style=&quot;font-family: Verdana, Geneva, sans-serif; font-size: 16px; padding: 18px;&quot; valign=&quot;middle&quot;&gt;&lt;a class=&quot;mcnButton &quot; href=&quot;https://crm.capstonevietnam.com/fairs/register/e-180.html&quot; style=&quot;font-weight: bold;letter-spacing: normal;line-height: 100%;text-align: center;text-decoration: none;color: #FFFFFF;&quot; target=&quot;_blank&quot; title=&quot;ĐĂNG K&#221; THAM GIA MIỄN PH&#205;&quot;&gt;ĐĂNG K&#221; THAM GIA MIỄN PH&#205;&lt;/a&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+             &lt;/tbody&gt;
+            &lt;/table&gt;
+            &lt;/td&gt;
+           &lt;/tr&gt;
+          &lt;/tbody&gt;
+         &lt;/table&gt;
+
+         &lt;table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;mcnBoxedTextBlock&quot; style=&quot;min-width:100%;&quot; width=&quot;100%&quot;&gt;&lt;!--[if gte mso 9]&gt;
+	&lt;table align=&quot;center&quot; border=&quot;0&quot; cellspacing=&quot;0&quot; cellpadding=&quot;0&quot; width=&quot;100%&quot;&gt;
+	&lt;![endif]--&gt;
+          &lt;tbody class=&quot;mcnBoxedTextBlockOuter&quot;&gt;
+           &lt;tr&gt;
+            &lt;td class=&quot;mcnBoxedTextBlockInner&quot; valign=&quot;top&quot;&gt;&lt;!--[if gte mso 9]&gt;
+				&lt;td align=&quot;center&quot; valign=&quot;top&quot; &quot;&gt;
+				&lt;![endif]--&gt;
+            &lt;table align=&quot;left&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;mcnBoxedTextContentContainer&quot; style=&quot;min-width:100%;&quot; width=&quot;100%&quot;&gt;
+             &lt;tbody&gt;
+              &lt;tr&gt;
+               &lt;td style=&quot;padding-top:9px; padding-left:18px; padding-bottom:9px; padding-right:18px;&quot;&gt;
+               &lt;table border=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;mcnTextContentContainer&quot; style=&quot;min-width: 100% !important;background-color: #072567;border: 1px none;&quot; width=&quot;100%&quot;&gt;
+                &lt;tbody&gt;
+                 &lt;tr&gt;
+                  &lt;td class=&quot;mcnTextContent&quot; style=&quot;padding: 18px;color: #F2F2F2;font-family: Verdana, Geneva, sans-serif;font-size: 12px;font-weight: normal;text-align: center;&quot; valign=&quot;top&quot;&gt;&lt;span style=&quot;font-family:verdana, geneva, sans-serif&quot;&gt;&lt;span style=&quot;font-size:14px&quot;&gt;&lt;strong&gt;&#128101;Diễn giả:&lt;/strong&gt;&lt;/span&gt;&lt;br /&gt;
+                  &lt;span style=&quot;font-size:12px&quot;&gt;&lt;strong&gt;TS. Mark A. Ashwill &lt;/strong&gt;&amp;ndash; Chuy&#234;n gia gi&#225;o dục quốc tế, Gi&#225;m đốc Capstone Education, cựu Gi&#225;m đốc Viện gi&#225;o dục Quốc tế Hoa Kỳ (IIE) tại Việt Nam.&lt;br /&gt;
+                  &lt;strong&gt;H&#224; Tuấn H&#249;ng&lt;/strong&gt; &amp;ndash; Sinh vi&#234;n Williams College (Liberal Arts #1 tại Mỹ) &amp;ndash; học bổng 100% trị gi&#225; 300.000 đ&#244;; Qu&#225;n qu&#226;n The Debaters VTV7.&lt;/span&gt;&lt;/span&gt;&lt;/td&gt;
+                 &lt;/tr&gt;
+                &lt;/tbody&gt;
+               &lt;/table&gt;
+               &lt;/td&gt;
+              &lt;/tr&gt;
+             &lt;/tbody&gt;
+            &lt;/table&gt;
+            &lt;!--[if gte mso 9]&gt;
+				&lt;/td&gt;
+				&lt;![endif]--&gt;&lt;!--[if gte mso 9]&gt;
+                &lt;/tr&gt;
+                &lt;/table&gt;
+				&lt;![endif]--&gt;&lt;/td&gt;
+           &lt;/tr&gt;
+          &lt;/tbody&gt;
+         &lt;/table&gt;
+
+         &lt;table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;mcnImageCardBlock&quot; width=&quot;100%&quot;&gt;
+          &lt;tbody class=&quot;mcnImageCardBlockOuter&quot;&gt;
+           &lt;tr&gt;
+            &lt;td class=&quot;mcnImageCardBlockInner&quot; style=&quot;padding-top:9px; padding-right:18px; padding-bottom:9px; padding-left:18px;&quot; valign=&quot;top&quot;&gt;
+            &lt;table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;mcnImageCardLeftContentOuter&quot; width=&quot;100%&quot;&gt;
+             &lt;tbody&gt;
+              &lt;tr&gt;
+               &lt;td align=&quot;center&quot; class=&quot;mcnImageCardLeftContentInner&quot; style=&quot;padding: 0px;border: 3px inset #082B78;&quot; valign=&quot;top&quot;&gt;
+               &lt;table align=&quot;right&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;mcnImageCardLeftImageContentContainer&quot; width=&quot;200&quot;&gt;
+                &lt;tbody&gt;
+                 &lt;tr&gt;
+                  &lt;td align=&quot;right&quot; class=&quot;mcnImageCardLeftImageContentE2E &quot; style=&quot;padding-top:0px; padding-right:0px; padding-bottom:0px; padding-left:0;&quot; valign=&quot;top&quot;&gt;&lt;a href=&quot;http://capstone.edu.vn/ff25-eold&quot; target=&quot;_blank&quot; title=&quot;&quot;&gt;&lt;img alt=&quot;&quot; class=&quot;mcnImage&quot; src=&quot;https://mcusercontent.com/233fe974d3b671b2146daed74/images/2a965f21-8a9c-5315-cd3c-d3c0f23a9a60.png&quot; style=&quot;max-width: 8334px;border: 1px none #FFFFFF;border-radius: 0%;&quot; width=&quot;194&quot; /&gt; &lt;/a&gt;&lt;/td&gt;
+                 &lt;/tr&gt;
+                &lt;/tbody&gt;
+               &lt;/table&gt;
+
+               &lt;table align=&quot;left&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;mcnImageCardLeftTextContentContainer&quot; width=&quot;346&quot;&gt;
+                &lt;tbody&gt;
+                 &lt;tr&gt;
+                  &lt;td class=&quot;mcnTextContent&quot; style=&quot;padding-left: 18px;padding-top: 18px;padding-bottom: 18px;color: #222222;font-family: Verdana, Geneva, sans-serif;font-size: 12px;font-weight: normal;text-align: center;&quot; valign=&quot;top&quot;&gt;
+                  &lt;div style=&quot;text-align: left;&quot;&gt;B&#234;n cạnh buổi Talk, bạn cũng đừng bỏ lỡ &lt;strong&gt;Triển l&#227;m Du học Quốc tế M&#249;a Thu 2025&lt;/strong&gt; của Capstone Education &amp;ndash; nơi quy tụ&amp;nbsp;30+ đại diện trường trung học, cao đẳng, đại học từ Mỹ, Anh, Ph&#225;p, Đức, Ireland, Singapore, Th&#225;i Lan v&#224; Slovakia. Sự kiện sẽ diễn ra tại H&#224; Nội, TP.HCM, Đ&#224; Nẵng v&#224; Cần Thơ từ ng&#224;y 25 - 30/09, mang đến cơ hội gặp gỡ trực tiếp, t&#236;m hiểu học bổng, chương tr&#236;nh học v&#224; nhận tư vấn 1:1 ho&#224;n to&#224;n miễn ph&#237; từ chuy&#234;n gia!&amp;nbsp;&lt;/div&gt;
+                  &lt;/td&gt;
+                 &lt;/tr&gt;
+                &lt;/tbody&gt;
+               &lt;/table&gt;
+               &lt;/td&gt;
+              &lt;/tr&gt;
+             &lt;/tbody&gt;
+            &lt;/table&gt;
+            &lt;/td&gt;
+           &lt;/tr&gt;
+          &lt;/tbody&gt;
+         &lt;/table&gt;
+
+         &lt;table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;mcnButtonBlock&quot; style=&quot;min-width:100%;&quot; width=&quot;100%&quot;&gt;
+          &lt;tbody class=&quot;mcnButtonBlockOuter&quot;&gt;
+           &lt;tr&gt;
+            &lt;td align=&quot;center&quot; class=&quot;mcnButtonBlockInner&quot; style=&quot;padding-top:0; padding-right:18px; padding-bottom:18px; padding-left:18px;&quot; valign=&quot;top&quot;&gt;
+            &lt;table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;mcnButtonContentContainer&quot; style=&quot;border-collapse: separate !important;border-radius: 22px;background-color: #072567;&quot;&gt;
+             &lt;tbody&gt;
+              &lt;tr&gt;
+               &lt;td align=&quot;center&quot; class=&quot;mcnButtonContent&quot; style=&quot;font-family: Arial; font-size: 16px; padding: 18px;&quot; valign=&quot;middle&quot;&gt;&lt;a class=&quot;mcnButton &quot; href=&quot;http://capstone.edu.vn/ff25-eold&quot; style=&quot;font-weight: bold;letter-spacing: normal;line-height: 100%;text-align: center;text-decoration: none;color: #FFFFFF;&quot; target=&quot;_blank&quot; title=&quot;XEM TH&#212;NG TIN CHI TIẾT VỀ TRIỂN L&#195;M DU HỌC QUỐC TẾ 2025&quot;&gt;XEM TH&#212;NG TIN CHI TIẾT VỀ TRIỂN L&#195;M DU HỌC QUỐC TẾ 2025&lt;/a&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+             &lt;/tbody&gt;
+            &lt;/table&gt;
+            &lt;/td&gt;
+           &lt;/tr&gt;
+          &lt;/tbody&gt;
+         &lt;/table&gt;
+
+         &lt;table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;mcnImageCardBlock&quot; width=&quot;100%&quot;&gt;
+          &lt;tbody class=&quot;mcnImageCardBlockOuter&quot;&gt;
+           &lt;tr&gt;
+            &lt;td class=&quot;mcnImageCardBlockInner&quot; style=&quot;padding-top:9px; padding-right:18px; padding-bottom:9px; padding-left:18px;&quot; valign=&quot;top&quot;&gt;
+            &lt;table align=&quot;right&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;mcnImageCardTopContent&quot; style=&quot;background-color: #940A0A;&quot; width=&quot;100%&quot;&gt;
+             &lt;tbody&gt;
+              &lt;tr&gt;
+               &lt;td class=&quot;mcnTextContent&quot; style=&quot;padding: 18px 18px 0px;color: #F2F2F2;font-family: Helvetica;font-size: 11px;font-weight: normal;text-align: center;&quot; valign=&quot;top&quot; width=&quot;546&quot;&gt;
+               &lt;h1 style=&quot;text-align: center;&quot;&gt;&lt;span style=&quot;font-size:11px&quot;&gt;&lt;span style=&quot;font-family:verdana, geneva, sans-serif&quot;&gt;&lt;span style=&quot;color:#FFFFFF&quot;&gt;Capstone Education -&amp;nbsp;Hơn 16&amp;nbsp;năm trong lĩnh vực Du học, Hướng nghiệp &amp;amp; Định cư&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/h1&gt;
+               &lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+               &lt;td align=&quot;left&quot; class=&quot;mcnImageCardTopImageContent&quot; style=&quot;padding-top:9px; padding-right:0px; padding-bottom:0px; padding-left:0px;&quot; valign=&quot;top&quot;&gt;&lt;img alt=&quot;&quot; class=&quot;mcnImage&quot; src=&quot;https://mcusercontent.com/233fe974d3b671b2146daed74/images/446929a6-670f-be0f-71e7-b4092966b638.jpg&quot; style=&quot;max-width: 1500px; border-radius: 0%;&quot; width=&quot;564&quot; /&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+             &lt;/tbody&gt;
+            &lt;/table&gt;
+            &lt;/td&gt;
+           &lt;/tr&gt;
+          &lt;/tbody&gt;
+         &lt;/table&gt;
+         &lt;/td&gt;
+        &lt;/tr&gt;
+       &lt;/tbody&gt;
+      &lt;/table&gt;
+      &lt;!-- // END HEADER --&gt;&lt;/td&gt;
+     &lt;/tr&gt;
+     &lt;tr&gt;
+      &lt;td align=&quot;left&quot; valign=&quot;top&quot;&gt;&lt;!-- BEGIN BODY // --&gt;
+      &lt;table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; id=&quot;templateBody&quot; width=&quot;600&quot;&gt;
+       &lt;tbody&gt;
+        &lt;tr&gt;
+         &lt;td class=&quot;bodyContainer&quot; style=&quot;padding-top:9px; padding-bottom:9px;&quot; valign=&quot;top&quot;&gt;
+         &lt;table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;mcnFollowBlock&quot; style=&quot;min-width:100%;&quot; width=&quot;100%&quot;&gt;
+          &lt;tbody class=&quot;mcnFollowBlockOuter&quot;&gt;
+           &lt;tr&gt;
+            &lt;td align=&quot;center&quot; class=&quot;mcnFollowBlockInner&quot; style=&quot;padding:9px&quot; valign=&quot;top&quot;&gt;
+            &lt;table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;mcnFollowContentContainer&quot; style=&quot;min-width:100%;&quot; width=&quot;100%&quot;&gt;
+             &lt;tbody&gt;
+              &lt;tr&gt;
+               &lt;td align=&quot;center&quot; style=&quot;padding-left:9px;padding-right:9px;&quot;&gt;
+               &lt;table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;mcnFollowContent&quot; style=&quot;min-width: 100%; border: 1px none;&quot; width=&quot;100%&quot;&gt;
+                &lt;tbody&gt;
+                 &lt;tr&gt;
+                  &lt;td align=&quot;center&quot; style=&quot;padding-top:9px; padding-right:9px; padding-left:9px;&quot; valign=&quot;top&quot;&gt;
+                  &lt;table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;&gt;
+                   &lt;tbody&gt;
+                    &lt;tr&gt;
+                     &lt;td align=&quot;center&quot; valign=&quot;top&quot;&gt;&lt;!--[if mso]&gt;
+                                    &lt;table align=&quot;center&quot; border=&quot;0&quot; cellspacing=&quot;0&quot; cellpadding=&quot;0&quot;&gt;
+                                    &lt;tr&gt;
+                                    &lt;![endif]--&gt;&lt;!--[if mso]&gt;
+                                        &lt;td align=&quot;center&quot; valign=&quot;top&quot;&gt;
+                                        &lt;![endif]--&gt;
+                     &lt;table align=&quot;left&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;mcnFollowStacked&quot; style=&quot;display:inline;&quot;&gt;
+                      &lt;tbody&gt;
+                       &lt;tr&gt;
+                        &lt;td align=&quot;center&quot; class=&quot;mcnFollowIconContent&quot; style=&quot;padding-right:10px; padding-bottom:9px;&quot; valign=&quot;top&quot;&gt;&lt;a href=&quot;https://www.facebook.com/CapstoneVN&quot; target=&quot;_blank&quot;&gt;&lt;img alt=&quot;Facebook&quot; class=&quot;mcnFollowBlockIcon&quot; src=&quot;https://cdn-images.mailchimp.com/icons/social-block-v2/color-facebook-96.png&quot; style=&quot;width:48px; max-width:48px; display:block;&quot; width=&quot;48&quot; /&gt;&lt;/a&gt;&lt;/td&gt;
+                       &lt;/tr&gt;
+                      &lt;/tbody&gt;
+                     &lt;/table&gt;
+                     &lt;!--[if mso]&gt;
+                                        &lt;/td&gt;
+                                        &lt;![endif]--&gt;&lt;!--[if mso]&gt;
+                                        &lt;td align=&quot;center&quot; valign=&quot;top&quot;&gt;
+                                        &lt;![endif]--&gt;
+
+                     &lt;table align=&quot;left&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;mcnFollowStacked&quot; style=&quot;display:inline;&quot;&gt;
+                      &lt;tbody&gt;
+                       &lt;tr&gt;
+                        &lt;td align=&quot;center&quot; class=&quot;mcnFollowIconContent&quot; style=&quot;padding-right:10px; padding-bottom:9px;&quot; valign=&quot;top&quot;&gt;&lt;a href=&quot;https://www.instagram.com/capstonevn/&quot; target=&quot;_blank&quot;&gt;&lt;img alt=&quot;Instagram&quot; class=&quot;mcnFollowBlockIcon&quot; src=&quot;https://cdn-images.mailchimp.com/icons/social-block-v2/color-instagram-96.png&quot; style=&quot;width:48px; max-width:48px; display:block;&quot; width=&quot;48&quot; /&gt;&lt;/a&gt;&lt;/td&gt;
+                       &lt;/tr&gt;
+                      &lt;/tbody&gt;
+                     &lt;/table&gt;
+                     &lt;!--[if mso]&gt;
+                                        &lt;/td&gt;
+                                        &lt;![endif]--&gt;&lt;!--[if mso]&gt;
+                                        &lt;td align=&quot;center&quot; valign=&quot;top&quot;&gt;
+                                        &lt;![endif]--&gt;
+
+                     &lt;table align=&quot;left&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;mcnFollowStacked&quot; style=&quot;display:inline;&quot;&gt;
+                      &lt;tbody&gt;
+                       &lt;tr&gt;
+                        &lt;td align=&quot;center&quot; class=&quot;mcnFollowIconContent&quot; style=&quot;padding-right:10px; padding-bottom:9px;&quot; valign=&quot;top&quot;&gt;&lt;a href=&quot;https://www.tiktok.com/@duhoccapstone&quot; target=&quot;_blank&quot;&gt;&lt;img alt=&quot;TikTok&quot; class=&quot;mcnFollowBlockIcon&quot; src=&quot;https://cdn-images.mailchimp.com/icons/social-block-v2/color-tiktok-96.png&quot; style=&quot;width:48px; max-width:48px; display:block;&quot; width=&quot;48&quot; /&gt;&lt;/a&gt;&lt;/td&gt;
+                       &lt;/tr&gt;
+                      &lt;/tbody&gt;
+                     &lt;/table&gt;
+                     &lt;!--[if mso]&gt;
+                                        &lt;/td&gt;
+                                        &lt;![endif]--&gt;&lt;!--[if mso]&gt;
+                                        &lt;td align=&quot;center&quot; valign=&quot;top&quot;&gt;
+                                        &lt;![endif]--&gt;
+
+                     &lt;table align=&quot;left&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;mcnFollowStacked&quot; style=&quot;display:inline;&quot;&gt;
+                      &lt;tbody&gt;
+                       &lt;tr&gt;
+                        &lt;td align=&quot;center&quot; class=&quot;mcnFollowIconContent&quot; style=&quot;padding-right:10px; padding-bottom:9px;&quot; valign=&quot;top&quot;&gt;&lt;a href=&quot;https://capstone.edu.vn/&quot; target=&quot;_blank&quot;&gt;&lt;img alt=&quot;Website&quot; class=&quot;mcnFollowBlockIcon&quot; src=&quot;https://cdn-images.mailchimp.com/icons/social-block-v2/color-link-96.png&quot; style=&quot;width:48px; max-width:48px; display:block;&quot; width=&quot;48&quot; /&gt;&lt;/a&gt;&lt;/td&gt;
+                       &lt;/tr&gt;
+                      &lt;/tbody&gt;
+                     &lt;/table&gt;
+                     &lt;!--[if mso]&gt;
+                                        &lt;/td&gt;
+                                        &lt;![endif]--&gt;&lt;!--[if mso]&gt;
+                                        &lt;td align=&quot;center&quot; valign=&quot;top&quot;&gt;
+                                        &lt;![endif]--&gt;
+
+                     &lt;table align=&quot;left&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;mcnFollowStacked&quot; style=&quot;display:inline;&quot;&gt;
+                      &lt;tbody&gt;
+                       &lt;tr&gt;
+                        &lt;td align=&quot;center&quot; class=&quot;mcnFollowIconContent&quot; style=&quot;padding-right:0; padding-bottom:9px;&quot; valign=&quot;top&quot;&gt;&lt;a href=&quot;mailto:info@capstonevietnam.com&quot; target=&quot;_blank&quot;&gt;&lt;img alt=&quot;Email&quot; class=&quot;mcnFollowBlockIcon&quot; src=&quot;https://cdn-images.mailchimp.com/icons/social-block-v2/color-forwardtofriend-96.png&quot; style=&quot;width:48px; max-width:48px; display:block;&quot; width=&quot;48&quot; /&gt;&lt;/a&gt;&lt;/td&gt;
+                       &lt;/tr&gt;
+                      &lt;/tbody&gt;
+                     &lt;/table&gt;
+                     &lt;!--[if mso]&gt;
+                                        &lt;/td&gt;
+                                        &lt;![endif]--&gt;&lt;!--[if mso]&gt;
+                                    &lt;/tr&gt;
+                                    &lt;/table&gt;
+                                    &lt;![endif]--&gt;&lt;/td&gt;
+                    &lt;/tr&gt;
+                   &lt;/tbody&gt;
+                  &lt;/table&gt;
+                  &lt;/td&gt;
+                 &lt;/tr&gt;
+                &lt;/tbody&gt;
+               &lt;/table&gt;
+               &lt;/td&gt;
+              &lt;/tr&gt;
+             &lt;/tbody&gt;
+            &lt;/table&gt;
+            &lt;/td&gt;
+           &lt;/tr&gt;
+          &lt;/tbody&gt;
+         &lt;/table&gt;
+         &lt;/td&gt;
+        &lt;/tr&gt;
+       &lt;/tbody&gt;
+      &lt;/table&gt;
+      &lt;!-- // END BODY --&gt;&lt;/td&gt;
+     &lt;/tr&gt;
+     &lt;tr&gt;
+      &lt;td align=&quot;left&quot; valign=&quot;top&quot;&gt;&lt;!-- BEGIN FOOTER // --&gt;
+      &lt;table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; id=&quot;templateFooter&quot; width=&quot;600&quot;&gt;
+       &lt;tbody&gt;
+        &lt;tr&gt;
+         &lt;td class=&quot;footerContainer&quot; style=&quot;padding-top:9px; padding-bottom:9px;&quot; valign=&quot;top&quot;&gt;
+         &lt;table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;mcnCaptionBlock&quot; width=&quot;100%&quot;&gt;
+          &lt;tbody class=&quot;mcnCaptionBlockOuter&quot;&gt;
+           &lt;tr&gt;
+            &lt;td class=&quot;mcnCaptionBlockInner&quot; style=&quot;padding:9px;&quot; valign=&quot;top&quot;&gt;
+            &lt;table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;mcnCaptionRightContentOuter&quot; width=&quot;100%&quot;&gt;
+             &lt;tbody&gt;
+              &lt;tr&gt;
+               &lt;td class=&quot;mcnCaptionRightContentInner&quot; style=&quot;padding:0 9px ;&quot; valign=&quot;top&quot;&gt;
+               &lt;table align=&quot;left&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;mcnCaptionRightImageContentContainer&quot; width=&quot;176&quot;&gt;
+                &lt;tbody&gt;
+                 &lt;tr&gt;
+                  &lt;td align=&quot;center&quot; class=&quot;mcnCaptionRightImageContent&quot; valign=&quot;top&quot;&gt;&lt;img alt=&quot;&quot; class=&quot;mcnImage&quot; src=&quot;https://mcusercontent.com/233fe974d3b671b2146daed74/images/aad4a410-f729-cd55-791c-901e256602de.jpg&quot; style=&quot;max-width: 946px; border: 1px none; border-radius: 0%;&quot; width=&quot;176&quot; /&gt;&lt;/td&gt;
+                 &lt;/tr&gt;
+                &lt;/tbody&gt;
+               &lt;/table&gt;
+
+               &lt;table align=&quot;right&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;mcnCaptionRightTextContentContainer&quot; width=&quot;352&quot;&gt;
+                &lt;tbody&gt;
+                 &lt;tr&gt;
+                  &lt;td class=&quot;mcnTextContent&quot; style=&quot;color: #000000;font-family: Arial, &amp;quot;Helvetica Neue&amp;quot;, Helvetica, sans-serif;line-height: 200%;&quot; valign=&quot;top&quot;&gt;
+                  &lt;div&gt;&lt;br /&gt;
+                  &lt;span style=&quot;font-size:12px&quot;&gt;&lt;span style=&quot;font-family:verdana,geneva,sans-serif&quot;&gt;&lt;strong&gt;Văn Ph&#242;ng H&#224; Nội:&lt;/strong&gt;&amp;nbsp;&lt;br /&gt;
+                  Địa chỉ: 2 L&#234; Qu&#253; Đ&#244;n, P. Hai B&#224; Trưng&lt;br /&gt;
+                  Hotline: 0936 701 696&lt;/span&gt;&lt;/span&gt;&lt;br /&gt;
+                  &amp;nbsp;&lt;/div&gt;
+
+                  &lt;div&gt;&lt;span style=&quot;font-size:12px&quot;&gt;&lt;span style=&quot;font-family:verdana,geneva,sans-serif&quot;&gt;&lt;strong&gt;Văn Ph&#242;ng Hồ Ch&#237; Minh:&lt;/strong&gt;&amp;nbsp;&lt;br /&gt;
+                  Địa chỉ: 22 Trần Qu&#253; Kho&#225;ch, P.T&#226;n Định&lt;br /&gt;
+                  Hotline: 0918 215 445&lt;/span&gt;&lt;/span&gt;&lt;/div&gt;
+                  &lt;/td&gt;
+                 &lt;/tr&gt;
+                &lt;/tbody&gt;
+               &lt;/table&gt;
+               &lt;/td&gt;
+              &lt;/tr&gt;
+             &lt;/tbody&gt;
+            &lt;/table&gt;
+            &lt;/td&gt;
+           &lt;/tr&gt;
+          &lt;/tbody&gt;
+         &lt;/table&gt;
+         &lt;/td&gt;
+        &lt;/tr&gt;
+       &lt;/tbody&gt;
+      &lt;/table&gt;
+      &lt;!-- // END FOOTER --&gt;&lt;/td&gt;
+     &lt;/tr&gt;
+    &lt;/tbody&gt;
+   &lt;/table&gt;
+   &lt;!-- // END TEMPLATE --&gt;&lt;/td&gt;
+  &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/center&gt;
+&lt;script type=&quot;text/javascript&quot;  src=&quot;/BOe5AqzrXaoai/30I34m-fgi/XLJo/JYiVwSJNV6JGLbta5Y/Qk1QICE/MD/8_IU4gYRsB&quot;&gt;&lt;/script&gt;

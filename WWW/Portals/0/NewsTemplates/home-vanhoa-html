@@ -1,0 +1,23 @@
+<div class="homevanhoa">
+    <div class="headervideo">
+        <h2><a href="[CATURL]"> [CATNAME]</a></h2>
+    </div>
+                                    
+    <div id="news-homevanhoa" class="owl-carousel">
+        [LIST_TOP]
+        <div class="entry-media">
+            <div class="title">
+                <h4>
+                    <a href="[URL]?utm_source=home&utm_medium=vanhoa&utm_campaign=cat" title="[NAMEALT]">[NAME]</a>
+                </h4>
+            </div>
+            <a href="[URL]?utm_source=home&utm_medium=vanhoa&utm_campaign=cat" title="[NAMEALT]">
+                <img class="img-responsive img-full"
+                    src="[IMAGE]"
+                    alt="[NAMEALT]" />
+            </a>
+        </div>
+        [/LIST_TOP]
+        <!--end slider single-->
+    </div>
+</div>

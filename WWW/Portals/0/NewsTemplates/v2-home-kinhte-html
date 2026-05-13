@@ -1,0 +1,60 @@
+<div class="module-tmp-1">
+    <div class="tmp-title-header d-flex justify-content-between">
+        <h2 class="title-clamp m-0"><a href="[CATURL]">[CATNAME]</a></h2>
+        <div class="sub-menu d-none d-lg-flex">
+            [LIST_CAT]
+            <a class="menu-link" href="[URL]">[NAME]</a>
+            [/LIST_CAT]
+        </div>
+    </div>
+    <div class="box-content mt-3">
+        [LIST_TOP]
+        <div class="item-main">
+            <div class="row">
+                <div class="col-lg-5">
+                    <a class="d-flex" href="[URL]" title="[NAMEALT]">
+                        <img src="[IMAGE]" alt="[NAMEALT]"></a>
+                </div>
+                <div class="col-lg-7">
+                    <h3 class="title-clamp-28 text-black mt-2 mt-lg-0">
+                        <a href="[URL]" title="[NAMEALT]">[NAME]</a>
+                    </h3>
+                    <div class="start-date"><span class="pe-1">13:24</span> [DATE]</div>
+                    <div class="content-dec mt-2">
+                        <a href="[URL]" title="[NAMEALT]">[DESCRIPTION]
+                            </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        [/LIST_TOP]
+        <div class="list-items item-3-not-bd">
+            <div class="row">
+                [LIST_MORE]
+                <div class="item col-lg-4 mt-3">
+                    <div class="inner-item">
+                        <div class="title-cate">[NAMECAT]</div>
+                        <a href="[URL]" title="[NAMEALT]">[NAME]</a>
+                    </div>
+                </div>
+                [/LIST_MORE]
+            </div>
+        </div>
+		
+		<div class="my-3 d-none d-md-block my-4 text-center">
+			<div class="container text-center">
+				<!-- PC.970x90 -->
+				<ins class="adsbygoogle"
+					 style="display:block"
+					 data-ad-client="ca-pub-3311450421751656"
+					 data-ad-slot="8429530491"
+					 data-ad-format="auto"
+					 data-full-width-responsive="true"></ins>
+				<script>
+					 (adsbygoogle = window.adsbygoogle || []).push({});
+				</script>
+			</div>
+		</div>
+        
+    </div>
+</div>

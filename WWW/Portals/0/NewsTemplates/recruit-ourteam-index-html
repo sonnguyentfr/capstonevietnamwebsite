@@ -1,0 +1,33 @@
+<div class="post-heading">
+<div class="fl title">
+<h1><a href="[CATURL]">[CATNAME]</a></h1>
+</div>
+<div class="cl"></div>
+</div>
+<div class="list-news ourteam">
+    [LIST_ITEM]
+    <div class="col-lg-4">
+        <div class="postlist" style="min-height: 490px !important">
+            <div class="post-title2" style="display: none;">
+                <h2>
+                    <a href="[URL]" title="[NAMEALT]"></a>
+                </h2>
+            </div>
+            <div class="news-image">
+                <a href="[URL]">
+                    <img class="responsive-img" src="[IMAGE]" alt="[NAMEALT]" />
+                </a>
+            </div>
+
+            <div class="post-title">
+                <h2>
+                    <a href="[URL]">[NAME]</a>
+                </h2>
+            </div>
+            <div class="post-entry">[DESCRIPTION]</div>
+            <p style="margin: 10px;"><a style="padding: 5px 7px; background: #ad1917; color: #fff; font-size: 14px;" href="[URL]">Read more</a></p>
+        </div>
+    </div>
+    [/LIST_ITEM]
+    <div class="cl"></div>
+</div>

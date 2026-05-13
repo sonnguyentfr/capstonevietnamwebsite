@@ -1,0 +1,33 @@
+﻿
+/**
+    Noto Serif
+    **/
+
+@font-face {
+    font-family: 'Noto Serif';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Noto Serif'), local('NotoSerif-Regular'), url(../fonts/Noto_Serif/NotoSerif-Regular.ttf) format('truetype');
+}
+
+@font-face {
+    font-family: 'Noto Serif';
+    font-style: italic;
+    font-weight: 400;
+    src: local('Noto Serif Italic'), local('NotoSerif-Italic'), url(../fonts/Noto_Serif/NotoSerif-Italic.ttf) format('truetype');
+}
+
+
+@font-face {
+    font-family: 'Noto Serif';
+    font-style: normal;
+    font-weight: 700;
+    src: local('Noto Serif Bold'), local('NotoSerif-Bold'), url(../fonts/Noto_Serif/NotoSerif-Bold.ttf) format('truetype');
+}
+
+@font-face {
+    font-family: 'Noto Serif';
+    font-style: italic;
+    font-weight: 700;
+    src: local('Noto Serif BoldItalic'), local('NotoSerif-BoldItalic'), url(../fonts/Noto_Serif/NotoSerif-BoldItalic.ttf) format('truetype');
+}

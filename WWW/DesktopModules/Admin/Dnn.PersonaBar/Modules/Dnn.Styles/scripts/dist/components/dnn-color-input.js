@@ -1,0 +1,1 @@
+import{D as o,d as n}from"./dnn-color-input2.js";const r=o,s=n;export{r as DnnColorInput,s as defineCustomElement}

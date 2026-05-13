@@ -1,0 +1,65 @@
+<div class="video-area background_dark area-padding pt-50 pb-50">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="sidebar-widget">
+                            <div class="widget-header position-relative mb-30">
+                                <div class="row">
+                                    <div class="col-7">
+                                        <h5 class="widget-title text-uppercase color4 font-weight-ultra">[CATNAME]</h5>
+                                        <div class="letter-background">[CATNAME]</div>
+                                    </div>
+                                    <div class="col-5 text-right">
+                                        <h6 class="text-uppercase font-medium">
+                                            <i class="ti-video-clapper color-white mr-5"></i>
+                                            <a class="color-white" href="[CATURL]">xem tất cả</a>
+                                        </h6>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="block-tab-item post-module-1 post-module-4 mt-50">
+                                <div class="row">
+                                    <div class="col-lg-5 col-md-6">
+                                        [LIST_TOP]
+                                        <div class="post-thumb position-relative">
+                                            <div class="thumb-overlay img-hover-slide border-radius-5 position-relative" style="background-image: url([IMAGE])">
+                                                <a class="img-link" href="[URL]?utm_source=dm&utm_medium=vanhoa&utm_campaign=cat"></a>
+                                                <div class="post-content-overlay">
+                                                    <h2 class="post-title">
+                                                        <a class="color-white" href="[URL]?utm_source=dm&utm_medium=vanhoa&utm_campaign=cat">[NAME]</a>
+                                                    </h2>
+                                                    <div class="entry-meta meta-1 font-small color-grey mt-10 pr-5 pl-5">
+                                                        <span class="post-on">[DATE]</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        [/LIST_TOP]
+                                    </div>
+                                    <div class="col-lg-7 col-md-6">
+                                        <div class="row">
+                                            [LIST_MORE]
+                                            <div class="slider-single col-lg-4 col-md-6 mb-30">
+                                                <div class="img-hover-scale border-radius-5">
+                                                    <span class="top-right-icon background10"><i class="mdi mdi-flash-on"></i></span>
+                                                    <a href="[URL]?utm_source=dm&utm_medium=vanhoa&utm_campaign=cat">
+                                                        <img class="border-radius-5" src="[IMAGE]" alt="[NAMEALT]">
+                                                    </a>
+                                                </div>
+                                                <h6 class="post-title pr-5 pl-5 mb-10 mt-15 text-limit-2-row">
+                                                    <a class="color-white" href="[URL]?utm_source=dm&utm_medium=vanhoa&utm_campaign=cat">[NAME]</a>
+                                                </h6>
+                                                <div class="entry-meta meta-1 font-small color-grey mt-10 pr-5 pl-5">
+                                                    <span class="post-on">[DATE]</span>
+                                                </div>
+                                            </div>
+                                            [/LIST_MORE]
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>

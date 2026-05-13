@@ -1,0 +1,17 @@
+<div class="camnhankhachhang pt-30 pb-30">
+    <div class="section-title mb-20 text-center">
+        <h2 class="title-clamp mb-20 font-bold"><a href="#">Cảm Nhận Của Khách Hàng</a></h2>
+        <div class="bar"></div>
+    </div>
+    <div class="camnhankhachanh-slider mt-3">
+       [LIST_TOP]
+        <div class="client-item">
+            <p class="text-limit-4-row">[DESCRIPTION] </p>
+            <div class="client-info">
+                <img src="[IMAGE]" alt="[NAMEALT]" class="blur-up lazyload" />
+                <h3>[NAME]</h3>
+            </div>
+        </div>
+       [/LIST_TOP]
+    </div>
+</div>

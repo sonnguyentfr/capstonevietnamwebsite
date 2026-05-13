@@ -1,0 +1,12 @@
+<div class="featured-slider-1">
+    <div class="home-slider">
+        [LIST]
+        <div class="slider-single">
+            <a href="[URL]">
+                <img src="[IMAGE]" alt="[NAMEALT]">
+            </a>
+        </div>
+        [/LIST]
+    </div>
+    <div class="arrow-cover"></div>
+</div>

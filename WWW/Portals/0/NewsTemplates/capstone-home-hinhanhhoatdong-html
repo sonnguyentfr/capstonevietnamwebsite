@@ -1,0 +1,7 @@
+[LIST_TOP]
+<div class="home-anhhoatdong">
+    <a href="[URL]">
+        <img src="[IMAGE]" alt="[NAMEALT]" class="blur-up lazyload" />
+    <h3>[NAME]</h3></a>
+</div>
+[/LIST_TOP]

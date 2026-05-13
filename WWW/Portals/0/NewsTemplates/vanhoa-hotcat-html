@@ -1,0 +1,21 @@
+<div class="post-carausel-3 post-module-1">
+    [LIST_TOP]
+    <div class="post-thumb position-relative">
+        <div class="thumb-overlay img-hover-slide position-relative" style="background-image: url([IMAGE])">
+            <a class="img-link" href="[URL]?utm_source=dm&utm_medium=vanhoa&utm_campaign=cat"></a>
+            <div class="post-content-overlay ml-30 mr-30">
+                <div class="entry-meta meta-0 font-small mb-20">
+                    <a href="[URLCAT]"><span class="post-cat background2 color-white">[NAMECAT]</span></a>
+                </div>
+                <h3 class="post-title text-limit-3-row">
+                    <a class="color-white" href="[URL]?utm_source=dm&utm_medium=vanhoa&utm_campaign=cat">[NAME]</a>
+                </h3>
+                <div class="entry-meta meta-1 font-small color-grey mt-10 pr-5 pl-5">
+                    <span class="post-on">[DATE]</span>
+                    <a class="float-right" href="#"><i class="ti-heart"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+    [/LIST_TOP]
+</div>

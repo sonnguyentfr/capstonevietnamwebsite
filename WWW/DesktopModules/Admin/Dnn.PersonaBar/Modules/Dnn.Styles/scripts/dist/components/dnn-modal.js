@@ -1,0 +1,1 @@
+import{D as o,d as s}from"./dnn-modal2.js";const a=o,d=s;export{a as DnnModal,d as defineCustomElement}

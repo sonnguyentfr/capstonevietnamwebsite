@@ -1,0 +1,29 @@
+[LIST_ITEM]
+<section id="updates">
+    <div class="container">
+        <div class="row">
+            <div class="wrapper">
+                <div class="col-lg-8 list-newstest">
+<div class="news-title"> <h2>
+                            <a href="[LINK]"  target="_blank">[NAME]</a>
+                        </h2></div>
+<div class="cl"></div>
+                    <div class="news-imagetest">
+                        <a href="[LINK]"  target="_blank">
+                            <img class="responsive-img" src="[IMAGE]" alt="news Image" />
+                        </a>
+                    </div>
+                    <div class="postlisttest">
+                       
+                        <div class="post-entrytest">[DESCRIPTION]</div>
+                        <span class="post-readmoretest"><a href="[LINK]" target="_blank">Read More 
+                        </a></span>
+                    </div>
+
+                </div>
+                <div class="col-lg-4"></div>
+            </div>
+        </div>
+    </div>
+</section>
+[/LIST_ITEM]

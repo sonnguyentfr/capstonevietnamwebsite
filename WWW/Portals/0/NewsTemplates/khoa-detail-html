@@ -1,0 +1,24 @@
+<article class="post ttm-blog-single clearfix">
+  <h1 class='title'>[NAME]</h1>
+  <div class="ttm-post-entry-header">
+    <div class="post-meta">
+      <span class="ttm-meta-line byline">
+        <i class="fa fa-user"></i>[DATE]
+      </span>
+    </div>
+  </div>
+  <div class="ttm-blog-single-content">
+    <strong>[DESCRIPTION]</strong>
+    [CONTENT]
+  </div>
+  <div class="news-slider" id="newsphotodetail">
+    <div class="album" data-jgallery-album-title="[NAME]">
+      [LIST_ANH]
+      <a href="[ANHURL]">
+        <img src="[ANHURL]" alt="[ANHTITLE]" />
+      </a>
+      [/LIST_ANH]
+    </div>
+  </div>
+  <!-- ttm-blog-single-content -->
+</article>

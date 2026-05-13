@@ -1,0 +1,5 @@
+<ul id="bottomslides" class="owl-carousel">
+            [LIST]
+<li class="item"><a href="[URL]"><img src="[IMAGE]" alt="[NAME]" class='owl-lazy' /></a></li>
+[/LIST]
+        </ul>

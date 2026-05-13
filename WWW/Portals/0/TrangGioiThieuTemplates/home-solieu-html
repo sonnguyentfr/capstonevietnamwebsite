@@ -1,0 +1,13 @@
+<div class="section-chiso row">
+    [LIST_ITEM]
+    <div class="col-lg-3 col-6">
+        <div class="banner-advs text-center">
+            <div class="img-outer"><img src='[IMAGE]' alt="Capstone Vietnam" /></div>
+            <div class="box-desc">
+                <span class="img-title title18 color font-bold">[NAME]</span>
+                <span class="">[DESCREPTION]</span>
+            </div>
+        </div>
+    </div>
+    [/LIST_ITEM]
+</div>

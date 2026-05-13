@@ -1,0 +1,24 @@
+<div class="songkhoe">
+    <h1 class="title"><a href="[CATURL]">[CATNAME]</a></h1>
+    <div class="songkhoe-slider owl-carousel owl-theme">
+        [LIST_TOP]
+        <div class="single-post-wrap style-overlay-bg">
+            <div class="thumb">
+                <a href="[URL]">
+                <img src="[IMAGE]" alt="[NAMEALT]"></a>
+            </div>
+            <div class="details">
+
+                <h6 class="title text-limit-2-row"><a href="[URL]">[NAME]</a></h6>
+                <div class="post-meta-single mb-3">
+                    <ul>
+                        <li>
+                            <p><i class="fa fa-clock-o"></i>[DATE]</p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        [/LIST_TOP]
+    </div>
+</div>

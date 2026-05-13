@@ -1,0 +1,16 @@
+<div class="blog-details-desc">
+  <h1>[NAME2] [NAME]</h1>
+
+<div class="top-article">
+<ul class="meta-post"><li><i class='fa fa-clock-o'></i> [DATE]</li><li>[SFB]</li><li>[SFBLike]</li><li> [SFBsave]</li></ul>
+</div>
+<p class='sapo'>[DESCRIPTION]</p>
+[CONTENT]
+</div>
+<div class="post-tag"><ul>[TAGS]</ul></div>
+<div class="top-releated">
+[RELATED_NEWS]
+</div>
+<div class="bottom-article">
+<ul class="meta-post"><li><i class='fa fa-clock-o'></i> [DATE]</li><li>[SFB]</li><li>[SFBLike]</li><li> [SFBsave]</li></ul>
+</div>

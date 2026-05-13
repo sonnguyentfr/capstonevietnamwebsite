@@ -1,0 +1,117 @@
+<script src="/static/nvcms/js/jquery.masonryGrid.js"></script>
+<style type="text/css">
+    .my-masonry-grid-item {
+        background-color: #fdfdfd;
+    margin: 0 6px 12px;
+    padding: 0px;
+    border: solid 1px #9a9a9a;
+    position: relative;
+    box-shadow: 2px 2px 6px 0px #9e9e9ecf;
+    }
+
+        .my-masonry-grid-item:hover {
+            background: #e0e0e0;
+        }
+
+            .my-masonry-grid-item:hover img {
+                opacity: 0.8;
+            }
+
+            .my-masonry-grid-item:hover span.cat {
+                background: #fff;
+            }
+
+                .my-masonry-grid-item:hover span.cat a {
+                    color: #000;
+                    font-size: 11px;
+                }
+
+        .my-masonry-grid-item img {
+            max-width: 100%;
+        }
+
+        .my-masonry-grid-item span.cat {
+            position: absolute;
+            right: 5px;
+            top: 5px;
+            background: #d4000ec9;
+            padding: 2px 5px;
+            border-radius: 10px;
+            color: #fff;
+        }
+
+            .my-masonry-grid-item span.cat a {
+                color: #fff;
+                font-size: 11px;
+            }
+
+        .my-masonry-grid-item .post-title {
+            padding: 10px 20px;
+            
+            font-size: 18px;
+        }
+.my-masonry-grid-item .post-title p {
+    overflow: hidden!important;
+    display: -webkit-box!important;
+    -webkit-line-clamp: 4!important;
+    -webkit-box-orient: vertical;
+}
+.my-masonry-grid-item .post-title h3 {
+    margin-bottom:15px;
+}
+            .my-masonry-grid-item .post-title h3 a {
+                color: #262626;font-weight: 600; font-size:20px;line-height: 25px;
+            }
+            .my-masonry-grid-item span.stt {
+            position: absolute;
+            right: 5px;
+            bottom: 5px;
+            color: #ccc;
+            font-size:12px;
+        }
+</style>
+<div class="container">
+    <div class="my-masonry-grid">
+        [LIST_ITEM]
+                <div class="my-masonry-grid-item">
+                    <a href='[URL]'>
+                        <img alt='[NAMEALT]' src='[IMAGE]' class="mCS_img_loaded" />
+                    </a>
+                    <div class="post-title">
+                        <h3><a href='[URL]'>[NAME]</a></h3>
+                        <p>[DESCRIPTION]</p>    
+                    </div>
+                    <span class="stt">
+                        [DATE]
+                    </span>
+                    <div class="cl"></div>
+                </div>
+		[/LIST_ITEM]
+    </div>
+    <div class='quangcaogoogle'>
+        <!-- For the demo ad -->
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-format="fluid"
+             data-ad-layout-key="-7i+f1-17-4w+dd"
+             data-ad-client="ca-pub-3311450421751656"
+             data-ad-slot="5706203773"></ins>
+        <script>
+             (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+    </div>
+</div>
+<script type="text/javascript">
+    $(function () {
+        $("div.my-masonry-grid-item:nth-child(10)").after('<div class="my-masonry-grid-item quangcaogoogle"><!-- PC.300x600 --><ins class="adsbygoogle" style="display:inline-block;width:300px;height:600px" data-ad-client="ca-pub-3311450421751656" data-ad-slot="8358212457"></' + 'ins><script>(adsbygoogle = window.adsbygoogle ||[]).push({});</' + 'script></' + 'div>');
+        $("div.my-masonry-grid-item:nth-child(25)").after('<div class="my-masonry-grid-item quangcaogoogle"><!-- Mobile Ngang - 300x100 --><ins class="adsbygoogle" style="display:inline-block;width:300px;height:100px" data-ad-client="ca-pub-3311450421751656" data-ad-slot="5452086747"></' + 'ins><script>(adsbygoogle = window.adsbygoogle || []).push({});</' + 'script></' + 'div>');
+        $("div.my-masonry-grid-item:nth-child(40)").after('<div class="my-masonry-grid-item quangcaogoogle"><!-- PC.300x600 --><ins class="adsbygoogle" style="display:inline-block;width:300px;height:600px" data-ad-client="ca-pub-3311450421751656" data-ad-slot="8358212457"></' + 'ins><script>(adsbygoogle = window.adsbygoogle ||[]).push({});</' + 'script></' + 'div>');
+    });
+</script>
+<script>
+    jQuery(document).ready(function ($) {
+        $('.my-masonry-grid').masonryGrid({
+            'columns': 4,
+        });
+    });
+</script>

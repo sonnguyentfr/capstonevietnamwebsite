@@ -1,0 +1,28 @@
+<div class="docnhieu">
+    <div class="block-title-1">
+        <h3><a href="#">Đọc nhiều</a></h3>
+    </div>
+    <div class="sidebar-newsfeed">
+        <!-- Begin .newsfeed -->
+        <div class="newsfeed-3">
+            <ul>
+                [LIST_TOP]
+                        <li>
+                            <div class="item">
+                                <div class="item-image">
+                                    <a class="img-link" href="[URL]?utm_source=home&utm_campaign=tt&utm_id=docnhieuright&utm_medium=[NEWID]">
+                                        <img class="img-responsive img-full lazy" src="https://f.thuongtruong.com.vn/nophoto100-80.png" data-src="[IMAGE]" alt="[NAMEALT]">
+                                    </a>
+                                </div>
+                                <div class="item-content">
+                                    <h4 class="ellipsis"><a title="[NAMEALT]" href="[URL]?utm_source=home&utm_campaign=tt&utm_id=docnhieuright&utm_medium=[NEWID]">
+                                        [NAME]</a></h4>
+                                </div>
+                            </div>
+                        </li>
+                   [/LIST_TOP]
+            </ul>
+        </div>
+        <!-- End .newsfeed -->
+    </div>
+</div>

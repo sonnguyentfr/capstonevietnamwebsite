@@ -1,0 +1,1 @@
+import{D as s,d as o}from"./dnn-tabs2.js";const t=s,a=o;export{t as DnnTabs,a as defineCustomElement}

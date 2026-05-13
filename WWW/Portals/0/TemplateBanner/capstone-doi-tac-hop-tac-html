@@ -1,0 +1,133 @@
+<div class="container">
+    
+    <div class="flud bgwht " style="display: none;">
+        <div class="con_pad">
+            <div class="hldr">
+                    <div class="hldr ">
+                        <p>
+                            Capstone Việt Nam cam kết đáp ứng tốt nhất nhu cầu của khách hàng, chúng tôi luôn nỗ lực hết mình nhằm giúp các học sinh, sinh viên lựa chọn trường đại học hoặc cao đẳng phù hợp nhất với học lực, sở thích, khả năng tài chính, mục tiêu và mong muốn của các bạn. Chúng tôi luôn mở rộng các hình thức liên kết với những đối tác giáo dục hàng đầu thế giới nhằm tạo ra mạng lưới hỗ trợ tốt nhất tới khách hàng. Chúng tôi đảm bảo tính rõ ràng trong tất cả các hoạt động, đối tác mà chúng tôi lựa chọn.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="con_pad pt0" style="display: none;">
+            <div class="hldr">
+                <div class="lft_cnt">	Trở thành đối tác của Capstone Việt Nam	</div>
+                <div class="rgt_cnt">
+                    <div class="hldr ">
+                        <p class="pb20">Hãy liên lạc với chúng tôi nếu bạn muốn trở thành đối tác của Capstone Việt Nam.</p>
+                    </div>
+                </div>
+            </div>	<!-- holder end here -->
+        </div>	<!-- container padding end here -->
+    </div>
+    <div class="flud bgwht" style="display: none;">
+        <div class="con_pad">
+            <h2 class="lft_cnt mt5">Đối tác trọng tâm</h2>
+            <ul class="rgt_cnt lsts">
+                <li><a href="#GSB" class="jumper">GoStudyBooking</a></li>
+                <li><a href="#vnedu" class="jumper">vnEdu</a></li>
+                <li><a href="#hnk" class="jumper">Language Link Việt Nam</a></li>
+                <li><a href="#educ" class="jumper">Scholarship Planet</a></li>
+                <li><a href="#stlc" class="jumper">StudentLifeCare</a></li>
+                <li><a href="#bmi" class="jumper">BMI</a></li>
+            </ul>
+        </div>
+    </div>
+<div class="profile">
+    <div class="pro_hd full">
+        <h1 class="mb10">Đối tác của chúng tôi</h1>
+    </div>
+</div>
+    [LIST]
+    <div class="flud bgwht">
+        <div class="con_pad ">
+            <div class="ipad_hldr">
+                <div class="lft_cnt">[NAME]</div>
+                <div class="rgt_cnt lfmg">
+                    <div class="omg">
+                        <a href="[URL]" target=_blank><img src="[IMAGE]" alt="[NAME]"></a>
+                    </div>
+                    <div>
+                        <p>
+                            [DESCRIPTION]
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    [/LIST]
+</div>
+<!--<style>
+    .container {
+        width: 900px;
+        margin: 0 auto;
+        font-family: Arial;
+        font-size: 13px;
+    }
+
+    .profile {
+        position: relative;
+    }
+
+    .bgwht {
+        background: #f9f9f9;
+        float: left;
+    }
+
+    .pro_hd {
+        float: left;
+        margin: -2px 0 0;
+        width: 76%;
+    }
+
+        .pro_hd h1 {
+            line-height: 24px;
+        }
+
+    .mb10 {
+        margin-bottom: 10px;
+    }
+
+    .flud {
+        margin-bottom: 20px;
+    }
+
+    .con_pad {
+            width: 850px;
+    padding: 10px 20px;
+    float: left;
+    font-family: Arial;
+    font-size: 14px;
+    line-height: 1.3em;
+    }
+
+    .hldr {
+        float: left;
+        width: 100%;
+    }
+
+    .lft_cnt {
+        font-weight: bold;
+        width: 225px;
+        font-size: 16px;
+        margin-right: 15px;
+font-family: Arial;
+        float: left;
+    }
+
+    .rgt_cnt {
+        width: 625px;
+        line-height: 1.3em;
+        float: right;
+        font-size: 14px;
+    }
+.rgt_cnt p {
+        line-height: 1.3em;
+        float: right;
+        font-size: 14px;
+font-family: Arial;
+    }
+</style>-->

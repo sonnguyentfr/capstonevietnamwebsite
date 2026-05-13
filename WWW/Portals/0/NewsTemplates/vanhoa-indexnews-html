@@ -1,0 +1,42 @@
+<div class="widget-header position-relative mb-30">
+    <h5 class="widget-title mb-30 text-uppercase color1 font-weight-ultra">[CATNAME]</h5>
+    <div class="letter-background">Latest</div>
+</div>
+<div class="loop-list">
+    [LIST_ITEM]
+    <article class="row mb-20">
+        <div class="col-md-4">
+            <div class="post-thumb position-relative thumb-overlay">
+                <div class="img-hover-slide border-radius-5 position-relative" style="background-image: url([IMAGE])">
+                    <a class="img-link" href="[URL]?utm_source=dm&utm_medium=vanhoa&utm_campaign=cat"></a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8 align-center-vertical">
+            <div class="post-content">
+                <h4 class="post-title text-limit-2-row">
+                    <a href="[URL]?utm_source=dm&utm_medium=vanhoa&utm_campaign=cat">[NAME]</a>
+                </h4>
+                <div class="entry-meta meta-1 font-small color-grey mt-15 mb-15">
+                    <span class="post-on"><i class="ti-marker-alt"></i>[DATE]</span>
+                </div>
+                <p class="font-medium text-limit-3-row">[DESCRIPTION] </p>
+            </div>
+        </div>
+    </article>
+    [/LIST_ITEM]
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        //chen quang cao
+        var countp = $(".loop-list").find('article').length;
+        if (countp > 20) {
+            $('.loop-list').each(function () {
+                var $this = $(this);
+                $this.children('.loop-list article:nth-child(5)').after('<!-- Trong bai viet --><div class="quangcaogoogle"><div class="middle_code_post"><div class="middle_code_post-inside"><ins class="adsbygoogle" style="display: block; text-align: center;"data-ad-layout="in-article"data-ad-format="fluid"data-ad-client="ca-pub-3311450421751656"data-ad-slot="2677822351"></ins><script>(adsbygoogle = window.adsbygoogle || []).push({});</' + 'script></' + 'div></' + 'div></' + 'div>');
+                $this.children('.loop-list article:nth-child(14)').after('<!-- Trong bai viet --><div class="quangcaogoogle"><div class="middle_code_post"><div class="middle_code_post-inside"><ins class="adsbygoogle" style="display: block; text-align: center;"data-ad-layout="in-article"data-ad-format="fluid"data-ad-client="ca-pub-3311450421751656"data-ad-slot="2677822351"></ins><script>(adsbygoogle = window.adsbygoogle || []).push({});</' + 'script></' + 'div></' + 'div></' + 'div>');
+                $this.children('.loop-list article:nth-child(22)').after('<!-- Trong bai viet --><div class="quangcaogoogle"><div class="middle_code_post"><div class="middle_code_post-inside"><ins class="adsbygoogle" style="display: block; text-align: center;"data-ad-layout="in-article"data-ad-format="fluid"data-ad-client="ca-pub-3311450421751656"data-ad-slot="2677822351"></ins><script>(adsbygoogle = window.adsbygoogle || []).push({});</' + 'script></' + 'div></' + 'div></' + 'div>');
+            });
+        }
+    });
+</script>

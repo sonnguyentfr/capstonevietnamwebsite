@@ -1,0 +1,46 @@
+<section class="ttm-row portfolio-section_3 ttm-bgcolor-grey clearfix">
+    <div class="container">
+        <!-- row -->
+        <div class="row ttm-boxes-spacing-15px">
+            <div class="col-lg-12">
+                <div class="section-title title-style-center_text">
+                    <div class="title-header">
+                        
+                        <h2 class="title">CÁC DỊCH VỤ CỦA CAPSTONE</h2>
+                    </div>
+                    <div class="heading-seperator"><span></span></div>
+                </div>
+            </div>
+            [LIST]
+            <div class="col-lg-4 col-md-6 col-sm-6 ttm-box-col-wrapper">
+                <!-- featured-imagebox-portfolio -->
+                <div class="featured-imagebox featured-imagebox-portfolio style2">
+                    <div class="ttm-box-view-overlay ttm-portfolio-box-view-overlay">
+                        <!-- featured-thumbnail -->
+                        <div class="featured-thumbnail">
+                            <img class="img-fluid" src="[IMAGE]" alt="[NAMEALT]">
+                        </div>
+                        <!-- featured-thumbnail end-->
+                        <div class="ttm-box-content-overlay">
+                            <div class="featured-title">
+                                <h5><a href="[URL]">[NAME]</a></h5>
+                            </div>
+                            <div class="featured-desc">
+                                <p>[DESCRIPTION]</p>
+                            </div>
+                            <a class="ttm-btn btn-inline ttm-btn-size-md ttm-icon-btn-right ttm-btn-color-skincolor" href="[URL]" title="">Đọc tiếp!</a>
+                        </div>
+                        <div class="featured-content featured-content-portfolio">
+                            <div class="featured-title">
+                                <h5><a href="[URL]">[NAME]</a></h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- featured-imagebox-portfolio end-->
+            </div>
+            [/LIST]
+        </div>
+        <!-- row end -->
+    </div>
+</section>

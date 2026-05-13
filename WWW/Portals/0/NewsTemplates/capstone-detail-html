@@ -1,0 +1,24 @@
+<div class="blog-details-desc">
+	<h1>[NAME2] [NAME]</h1>
+	<div class="top-article"><!--<ul class="meta-post"><li><i class='fa fa-clock-o'></i> [DATE]</li><li>[SFB]</li><li>[SFBLike]</li><li> [SFBsave]</li></ul>--></div>
+	<p><strong>[DESCRIPTION]</strong></p>
+	<p>[CONTENT]</p>
+	<div class="news-slider" id="newsphotodetail">
+		<div class="album" data-jgallery-album-title="[NAME]">
+		  [LIST_ANH]
+		  <a href="[ANHURL]">
+			<img src="[ANHURL]" alt="[ANHTITLE]" />
+		  </a>
+		  [/LIST_ANH]
+		</div>
+	</div>
+	
+	<p class="backz"><input action="action" onclick="window.history.go(-1); return false;" type="button" value="Back" /></p>
+</div>
+<div class="post-tag"><ul>[TAGS]</ul></div>
+<div class="top-releated">
+[RELATED_NEWS]
+</div>
+<div class="bottom-article">
+<!--<ul class="meta-post"><li><i class='fa fa-clock-o'></i> [DATE]</li><li>[SFB]</li><li>[SFBLike]</li><li> [SFBsave]</li></ul>-->
+</div>

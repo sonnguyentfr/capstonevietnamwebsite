@@ -1,0 +1,12 @@
+<div id="ketnoithuonghieu" class="ketnoithuonghieu">
+    <div class="module-title">
+        <h3 class="title"><span class="bg-1">Kết nối thương hiệu</span></h3>
+    </div>
+    <div id="footer-slider" class="owl-carousel">
+        [LIST]
+                <div style="display: block; padding-bottom: 10px;">
+                    <a href="[URL]" target=_blank><img src="[IMAGE]" alt="[NAMEALT]" /></a>
+                </div>
+            [/LIST]
+    </div>
+</div>

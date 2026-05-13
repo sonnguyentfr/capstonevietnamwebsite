@@ -1,0 +1,17 @@
+<article class="col-lg-4 mb-50 animate-conner">
+        <div class="post-thumb d-flex mb-30 border-radius-5">
+            <a href="https://tmdt.mic.gov.vn/su-kien/hoi-nghi-truc-tuyen-voi-cac-so-tttt-chuyen-de-cung-cap-thong-tin-trao-doi-kinh-nghiem-tot-trong-cong-tac-qlnn-ve-buu-chinh-1112.html">
+                <img src="[IMAGE]" alt="">
+            </a>
+        </div>
+        <div class="post-content">
+            
+            <h3 class="post-title">
+                <a href="[URL]">
+                    [NAME]</a>
+            </h3>
+            <div class="entry-meta meta-0 font-small mb-15">
+                01/12/2021 14:00 <strong>Online</strong> <span class="eventstatusoffine">Đã diễn ra</span>
+            </div>
+        </div>
+    </article>

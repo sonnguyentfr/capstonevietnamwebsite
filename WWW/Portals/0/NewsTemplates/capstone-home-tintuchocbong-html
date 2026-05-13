@@ -1,0 +1,83 @@
+<div class="col-lg-12 order-lg-12">
+  <div class="section-title text-center  mb-20">
+    <h2 class="title-clamp mb-20 uppercase font-bold">
+      <a class="font-color" href="/cam-nang-va-tin-tuc">Tin Tức - Học Bổng</a>
+    </h2>
+    <div class="bar"></div>
+  </div>
+</div>
+<div class="row">
+  [TOP_1]
+  <div class="col-lg-4 order-lg-12">
+    <div class="module-tmp-2">
+
+      <div class="item-news bgwhite">
+        <div class="item-image">
+          <a href="[URL]" title="[NAMEALT]">
+            <img src="[IMAGE]" alt="[NAMEALT]" class="blur-up lazyload" />
+          </a>
+        </div>
+        <h3 class="title-clamp-18 text-black mt-3">
+          <a href="[URL]" title="[NAMEALT]">[NAME]</a>
+        </h3>
+        <p class="small">
+          <i class="ti ti-calendar"></i>&nbsp;[DATE]
+        </p>
+        <p class="text-limit-4-row">[DESCRIPTION]</p>
+        
+      </div>
+
+    </div>
+  </div>
+  [/TOP_1]
+  [TOP_2]
+  <div class="col-lg-4 order-lg-12">
+    <div class="module-tmp-2">
+
+      <div class="item-news bgwhite">
+        <div class="item-image">
+          <a href="[URL]" title="[NAMEALT]">
+            <img src="[IMAGE]" alt="[NAMEALT]" class="blur-up lazyload" />
+          </a>
+        </div>
+        <h3 class="title-clamp-18 text-black mt-3">
+          <a href="[URL]" title="[NAMEALT]">[NAME]</a>
+        </h3>
+        <p class="text-limit-4-row">
+          <i class="ti-calendar"></i>&nbsp;[DATE]
+        </p>
+        <p class="text-limit-4-row">[DESCRIPTION]</p>
+
+      </div>
+
+    </div>
+  </div>
+  [/TOP_2]
+  <div class="col-lg-4 order-lg-12">
+    <div class="module-tmp-2">
+      [LIST_MORE]
+      <div class="item-news_more bgwhite">
+        <div class="item-image">
+          <a href="[URL]" title="[NAMEALT]">
+            <img src="[IMAGE]" alt="[NAMEALT]" class="blur-up lazyload" />
+          </a>
+        </div>
+        <h3 class="title-clamp-18 text-black mt-3 text-limit-5-row">
+          <a href="[URL]" title="[NAMEALT]">[NAME]</a>
+        </h3>
+        <p class="small">
+          <i class="ti ti-calendar"></i>&nbsp;[DATE]
+        </p>
+      </div>
+      [/LIST_MORE]
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-lg-12 order-lg-12">
+    <p class="tintuchocbong">
+      <a class="readmore" href="/cam-nang-va-tin-tuc" title="[NAMEALT]">Xem thêm ></a>
+    </p>
+  </div>
+
+</div>

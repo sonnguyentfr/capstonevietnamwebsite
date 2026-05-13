@@ -1,0 +1,22 @@
+<div class="blog-details-desc">
+  <h1>[NAME]</h1>
+  <div class="bottom-article">
+    <ul class="meta-post">
+      <li>
+        <i class='fa fa-clock-o'></i> [DATE]
+      </li>
+    </ul>
+  </div>
+  <div class="top-article">
+  </div>
+  <p>[DESCRIPTION]</p>
+  <p>
+    [VIDEO]
+  </p>
+  <p>[CONTENT]</p>
+  <p class="backz">
+    <input action="action" onclick="window.history.go(-1); return false;" type="button" value="Back" />
+  </p>
+</div>
+
+

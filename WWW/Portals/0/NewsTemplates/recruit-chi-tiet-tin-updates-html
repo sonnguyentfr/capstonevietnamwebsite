@@ -1,0 +1,15 @@
+<section id="updates" style="background: transparent;">
+    <div class="container">
+        <div class="row">
+            <div class="wrapper">
+<div class="col-lg-8  post">
+  <h1>[NAME2] [NAME]</h1>
+  <p style='font-style: italic;'>[DESCRIPTION]</p>
+  <p>[CONTENT]</p>
+<p class="backz"><input action="action" onclick="window.history.go(-1); return false;" type="button" value="Back" /></p>
+</div>
+<div class="col-lg-4"></div>
+            </div>
+        </div>
+    </div>
+</section>

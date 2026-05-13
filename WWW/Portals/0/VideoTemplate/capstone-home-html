@@ -1,0 +1,36 @@
+<div class="module-tmp-1">
+  [LIST_TOP]
+  <div class="item-main">
+    <div class="demo-adaptive ytb-video" style="width: 100%; height: 350px;">
+      <div class="ytb-video-wrap" style="">
+        <a data-fancybox title="[NAMEALT]" href="[URLVIDEO]">
+          <img src="[IMAGE]" alt="[NAMEALT]" />
+        </a>
+      </div>
+    </div>
+    <h3 class="title-clamp-26 mt-3">
+      <a title="[NAMEALT]" href="[URL]">[NAME]</a>
+    </h3>
+
+  </div>
+  [/LIST_TOP]
+  <div class="section_video_other">
+    <ul class="section_video_sliderhome">
+      [LIST_MORE]
+      <li class="item">
+        <a data-fancybox href="[URLVIDEO]" title="[NAMEALT]">
+          <img src="[IMAGE]" alt="[NAMEALT]">
+            <span class="iconplay">
+              <i class="fa fa-play" aria-hidden="true"></i>
+            </span>
+          </a>
+        <h3 class="text-limit-4-row">
+          <a title="[NAMEALT]"  href="[URL]">[NAME]</a>
+        </h3>
+
+      </li>
+      [/LIST_MORE]
+    </ul>
+
+  </div>
+</div>

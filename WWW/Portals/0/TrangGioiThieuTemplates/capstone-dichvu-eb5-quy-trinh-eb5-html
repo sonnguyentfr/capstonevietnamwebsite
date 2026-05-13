@@ -1,0 +1,9 @@
+<div class="post quytrinhhosoeb5 mt-4 mb-40">
+    <div class="section-title text-center">
+        <h2>[NAME]</h2>
+        <div class="bar"></div>
+        </div>
+    <div class="post-entry-full text-center">
+        <img src="[IMAGE]" alt="[NAMEALT]" />
+    </div>
+</div>

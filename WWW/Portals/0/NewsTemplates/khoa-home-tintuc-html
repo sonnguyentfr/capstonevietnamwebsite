@@ -1,0 +1,49 @@
+<div class="row" style="padding-top: 60px">
+    <div class="col-lg-12">
+        <!-- section title -->
+        <div class="section-title">
+            <div class="title-header">
+                <h3 class="title"><a href="[CATURL]">[CATNAME]</a></h3>
+            </div>
+            <div class="heading-seperator"><span></span></div>
+        </div>
+        <!-- section title end -->
+    </div>
+</div>
+<div class="row home-news slick_slider slick-arrows-style1">
+    [LIST_TOP]
+    <div class="ttm-box-col-wrapper col-lg-4">
+        <!-- featured-imagebox-course -->
+        <div class="featured-imagebox featured-imagebox-course">
+            <div class="ttm-post-thumbnail featured-thumbnail">
+                <a href="[URL]"><img class="img-fluid lazyload" data-src="[IMAGE]" alt="[NAMEALT]" /></a>
+            </div>
+            <div class="featured-content featured-content-post">
+                <div class="featured-content-post-inner">
+                    <div class="post-title featured-title">
+                        <h5><a href="[URL]">[NAME]</a></h5>
+                    </div>
+                    <div class="post-desc featured-desc">
+                        <p class="text-limit-4-row">[DESCRIPTION]</p>
+                    </div>
+                </div>
+                <div class="ttm-course-box-meta">
+                    <div class="ttm-enrolled">
+                        <span class="ttm-count ttm-meta-line"><i class="fa fa-clock-o" aria-hidden="true"></i>[DATE]</span>
+                    </div>
+                    <span class="ttm-lp-price"><ins>[NAMECAT]</ins></span>
+                </div>
+            </div>
+        </div>
+        <!-- featured-imagebox-course end-->
+    </div>
+    [/LIST_TOP]
+</div>  
+<div class="row">
+<div class="col-lg-12">
+    <div class="mt-30 res-991-mt-15 mb_25 text-right">
+        <a class="ttm-btn ttm-btn-size-md ttm-btn-shape-square ttm-btn-style-border ttm-btn-color-dark mb-15" href="[CATURL]">Xem tất cả</a>
+        <!--<a class="ttm-btn ttm-btn-size-md ttm-btn-shape-square ttm-btn-style-border2 ttm-btn-color-dark mb-15" href="#">More Events</a>-->
+    </div>
+</div>
+</div>

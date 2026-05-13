@@ -1,0 +1,44 @@
+<div class="module-tmp-1 mb-20">
+    <div class="tmp-title-header d-flex justify-content-between">
+        <h2 class="title-clamp m-0"><a href="[CATURL]">[CATNAME]</a></h2>
+        <div class="sub-menu d-none d-lg-flex">
+            [LIST_CAT]
+            <a class="menu-link" href="[URL]">[NAME]</a>
+            [/LIST_CAT]
+        </div>
+    </div>
+
+    <div class="box-content mt-3">
+        <div class="row">
+            <div class="col-lg-4">
+                [LIST_TOP]
+                <div class="item-main">
+                    <a class="item-image" href="[URL]" title="[NAMEALT]">
+                        <img class='lazyload blur-up' src='https://thuongtruong-fileserver.nvcms.net/loader.gif' data-src="[IMAGE]" alt='[NAMEALT]' /></a>
+                    <h3 class="title-clamp-26 mt-3">
+                        <a href="[URL]" title="[NAMEALT]">[NAME]</a>
+                    </h3>
+                    <div class="start-date"><span class="pe-1">[DATETIME]</span> [DATE]</div>
+                    <div class="content-dec mt-2">
+                        <a href="[URL]" title="[NAMEALT]">[DESCRIPTION]</a>
+                    </div>
+                </div>
+                [/LIST_TOP]
+            </div>
+            <div class="col-lg-8">
+                <div class="list-items item-4-not-bd">
+                    <div class="row">
+                        [LIST_MORE]
+                        <div class="item col-lg-6 mt-3">
+                            <div class="inner-item">
+                                <div class="title-cate">[NAMECAT]</div>
+                                <a href="[URL]" title="[NAMEALT]">[NAME]</a>
+                            </div>
+                        </div>
+                        [/LIST_MORE]
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

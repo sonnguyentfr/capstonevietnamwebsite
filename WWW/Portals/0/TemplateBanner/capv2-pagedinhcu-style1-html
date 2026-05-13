@@ -1,0 +1,5 @@
+<section id="dcmheader">
+    [LIST]
+    <img src="[IMAGE]" alt="[NAMEALT]" class="img-responsive">
+    [/LIST]
+</section>

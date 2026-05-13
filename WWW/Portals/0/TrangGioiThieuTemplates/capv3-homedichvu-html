@@ -1,0 +1,29 @@
+<section class="home_version_02 Welcome-area">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12 section-header-box">
+                <div class="section-header">
+                    <h2>Các dịch vụ của Capstone</h2>
+                    <p>Lorem ipsum dolor sit amet mollis felis dapibus arcu donec viverra Pede phasellus eget Etiam maecenas.</p>
+                </div>
+                <!-- ends: .section-header -->
+            </div>
+        </div>
+
+        <div class="row">
+            [LIST_ITEM]
+            <div class="col-sm-4 wel-ful-box-2">
+                <div class="wel-text-box">
+                    <div class="wel-icon">
+                        <img src="[IMAGE]" alt="">
+                    </div>
+                    <div class="wel-text">
+                        <h3>[NAME]</h3>
+                        <p>[DESCREPTION]</p>
+                        <a href="#">read more<i class="fa fa-long-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
+            [/LIST_ITEM]
+    </div>
+</section>

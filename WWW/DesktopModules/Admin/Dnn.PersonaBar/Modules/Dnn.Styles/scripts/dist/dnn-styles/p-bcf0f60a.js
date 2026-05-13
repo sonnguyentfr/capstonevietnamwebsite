@@ -1,0 +1,2 @@
+function t(t){let n=-1;const r=[" kB"," MB"," GB"," TB","PB","EB","ZB","YB"];if(t===0)return`0${r[0]}`;do{t=t/1024;n++}while(t>1024);return Math.max(t,.1).toFixed(1)+r[n]}function n(t){if(!t){return""}const n=document.createElement("textarea");n.innerHTML=t;return n.value}function r(t=16){const n="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";let r="";const e=n.length;const o=new Uint8Array(t);window.crypto.getRandomValues(o);for(let c=0;c<t;c++){const t=o[c];r+=n.charAt(t%e)}return r}export{t as a,n as d,r as g};
+//# sourceMappingURL=p-bcf0f60a.js.map

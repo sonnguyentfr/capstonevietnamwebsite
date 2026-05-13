@@ -1,0 +1,58 @@
+<section class="ttm-row blog-section_3 clearfix">
+    <div class="container">
+        <!-- row -->
+        <div class="row">
+            <div class="col-lg-7 col-md-10 col-sm-12 m-auto">
+                <!-- section-title -->
+                <div class="section-title with-sep title-style-center_text">
+                    <div class="title-header">
+                        <h2 class="title">TIN TỨC - HỌC BỔNG</h2>
+                    </div>
+                    <div class="heading-seperator"><span></span></div>
+                </div>
+                <!-- section-title end -->
+            </div>
+        </div>
+        <!-- row end -->
+        <div class="row">
+            [LIST_TOP]
+            <div class="col-lg-4">
+                <!-- featured-imagebox-post -->
+                <div class="featured-imagebox featured-imagebox-post style2">
+                    <div class="ttm-post-thumbnail featured-thumbnail">
+                        <a href="[URL]"><img class="img-fluid lazyload" src="/data/no-photo.png?width=370&height=280&mode=crop&anchor=middle" data-src="[IMAGE]" alt="[NAMEALT]" /></a>
+                    </div>
+                    <div class="featured-content">
+                         <div class="post-title featured-title">
+                            <h5><a href="[URL]">[NAME]</a></h5>
+                        </div>
+                        <div class="post-meta">
+                            <span class="ttm-meta-line byline"><i class="fa fa-user"></i>[DATE]</span>
+                            <span class="ttm-meta-line cat-link"><i class="fa fa-tag"></i>[NAMECAT]</span>
+                        </div>
+                       
+                        <div class="post-desc featured-desc">
+                             <p>[DESCRIPTION]</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- featured-imagebox-post end-->
+            </div>
+            [/LIST_TOP]
+            <div class="col-lg-4">
+                <div class="widget style2 widget-out-link clearfix">
+                        <ul class="widget-post ttm-recent-post-list pr-5">
+                            [LIST_MORE]
+                            <li>
+                                <a href="[URL]"><img class="img-fluid lazyload" src="/data/no-photo.png?width=370&height=280&mode=crop&anchor=middle" data-src="[IMAGE]" alt="[NAMEALT]" /></a>
+                                <a href="[URL]">[NAME]</a>
+                                <span class="post-date">[DATE]</span>
+                                
+                            </li>
+                            [/LIST_MORE]
+                        </ul>
+                    </div>
+            </div>
+        </div>
+    </div>
+</section>

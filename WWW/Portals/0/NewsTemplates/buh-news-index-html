@@ -1,0 +1,29 @@
+<div class="loop-grid row newsindex">
+    [LIST_ITEM]
+    <article class="col-lg-4 mb-20 animate-conner">
+        <div class="post-thumb d-flex img-hover-scale animate-conner-box">
+            <a href="[URL]">
+                <img class='lazy' src='https://fileserver.buh.edu.vn/no-photo.png?' data-src="[IMAGE]" alt="[NAMEALT]">
+            </a>
+            <ul class="social-share">
+                <li><a href="#"><i class="ti-sharethis"></i></a></li>
+                <li><a class="fb" href="#" title="Share on Facebook" target="_blank"><i class="ti-facebook"></i></a></li>
+                <li><a class="tw" href="#" target="_blank" title="Tweet now"><i class="ti-twitter-alt"></i></a></li>
+                <li><a class="pt" href="#" target="_blank" title="Pin it"><i class="ti-pinterest"></i></a></li>
+            </ul>
+        </div>
+        <div class="post-content">
+            <h3 class="post-title text-limit-3-row">
+                <a href="[URL]" title='[NAMEALT]'>[NAME]</a>
+            </h3>
+            <div class="entry-meta meta-1 font-small color-grey mt-15 mb-15">
+                <span class="post-on has-dot">[DATE]</span>
+                <span class="time-reading has-dot">[VIEWCOUNT]</span>
+            </div>
+            <div class="post-excerpt">
+                <p class='text-limit-4-row'>[DESCRIPTION]</p>
+            </div>
+        </div>
+    </article>
+    [/LIST_ITEM]
+</div>    

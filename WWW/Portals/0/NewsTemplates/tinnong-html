@@ -1,0 +1,26 @@
+<div class="outer">
+    <div class="breaking-ribbon">
+        <h4>Tin nóng: </h4>
+    </div>
+    <!-- Begin .newsticker -->
+    <div class="newsticker">
+        <ul>
+            [LIST_TOP]
+                    <li>
+                        <h4><span class="category">[NAMECAT]:</span><a href="[URL]?utm_source=home&utm_medium=tinnong&utm_campaign=tt" title="[NAMEALT]">
+                           [NAME]
+                        </a></h4>
+                    </li>
+            [/LIST_TOP]
+        </ul>
+        <div class="navi">
+            <button class="up">
+                <i class="fa fa-caret-left"></i>
+            </button>
+            <button class="down">
+                <i class="fa fa-caret-right"></i>
+            </button>
+        </div>
+    </div>
+    <!-- End .newsticker -->
+</div>

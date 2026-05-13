@@ -1,0 +1,1 @@
+import{D as o,d as t}from"./dnn-button2.js";const n=o,s=t;export{n as DnnButton,s as defineCustomElement}

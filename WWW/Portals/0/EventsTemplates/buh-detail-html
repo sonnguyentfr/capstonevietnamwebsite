@@ -1,0 +1,21 @@
+<div class="entry-header entry-header-1 mb-30">
+    <h1 class="post-title">
+        [NAME]
+    </h1>
+    <div class="bt-1 border-color-1 mt-30 mb-30"></div>
+    <div class="single-social-share clearfix ">
+        <img src="[NAME]" alt="">
+    </div>
+    <div class="sidebar-widget widget-about mb-20 pt-30 pr-30 pb-30 pl-30 background12 border-radius-5">
+            <p class="font-medium">
+                <i class="ti-timer mr-5"></i>[TXTTHOIGIAN]: [DATE]
+            </p>
+            <p class="font-medium">
+                <i class="ti-location-pin"></i>[TXTTHOIGIAN]: [DIADIEM]
+            </p>
+        </div>
+    <div class="p-20">
+        [DESCRIPTION]
+
+    </div>
+</div>

@@ -1,0 +1,27 @@
+﻿/*Ep luon CSS khung soan thao*/
+.nk-sidebar {
+    width: 80px
+}
+
+.nk-sidebar-main.is-light {
+    display: none;
+}
+
+.has-sidebar .nk-wrap {
+    padding-left: 80px;
+}
+
+.nk-header-fixed {
+    left: 80px;
+}
+
+.nk-content-body {
+    margin-bottom: 30px;
+}
+
+.nhuanbut table.table {
+    font-size: 12px;
+    margin-top:10px;
+}
+.nhuanbut table.table tr th {
+font-size:12px}

@@ -1,0 +1,1 @@
+import{D as o,d as s}from"./dnn-toggle2.js";const t=o,n=s;export{t as DnnToggle,n as defineCustomElement}

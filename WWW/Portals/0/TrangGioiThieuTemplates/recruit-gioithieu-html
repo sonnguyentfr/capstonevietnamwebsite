@@ -1,0 +1,11 @@
+<div class="post">
+<div class="post-heading">
+<div class="fl title">
+<h2 itemprop="headline">[NAME]</h2>
+</div>
+<div class="cl"></div>
+</div>
+<div class="post-entry">
+[CONTENT]
+</div>
+</div>

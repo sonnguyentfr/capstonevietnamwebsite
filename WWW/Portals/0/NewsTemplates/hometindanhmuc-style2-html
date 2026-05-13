@@ -1,0 +1,62 @@
+<div class="news style2">
+    <div class="module-title">
+        <h3 class="title fl">
+            <span class="bg-1">
+                <a href="[CATURL]">[CATNAME]</a></span></h3>
+        <div class="subtitlecat">
+            <ul>
+                
+            </ul>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            [LIST_TOP]
+                    <div class="item">
+                        <div class="item-image-3">
+                            <a class="img-link" title="[NAMEALT]" href="[URL]?utm_source=home&utm_medium=style2&utm_campaign=tt">
+                                <img class="img-responsive img-full lazy" 
+                                    src="//f.thuongtruong.com.vn/nophoto291-160.png"
+                                    data-src="[IMAGE]" 
+                            alt="[NAMEALT]" />
+                            </a>
+                        </div>
+                        <div class="item-content">
+                            <div class="title-left title-style04 underline04">
+                                <h3><a title="[NAMEALT]" href="[URL]?utm_source=home&utm_medium=style2&utm_campaign=tt">
+                                    [NAME]
+                                </a></h3>
+                            </div>
+                            <br>
+                            <div class="post-meta-elements">
+                                <div class="post-meta-date">
+                                    <i class="fa fa-calendar"></i>[DATE]
+                                </div>
+                            </div>
+                            <p>[DESCRIPTION]</p>
+                        </div>
+                    </div>
+               [/LIST_TOP]
+        </div>
+        <div class="col-md-8">
+            <div class="news-block">
+                [LIST_MORE]
+                        <div class="item-block">
+                            <div class="item-image">
+                                <a class="img-link" title="[NAMEALT]" href="[URL]?utm_source=home&utm_medium=style2&utm_campaign=tt">
+                                    <img class="img-responsive img-full lazy" src="//f.thuongtruong.com.vn/nophoto200-140.png"
+                                        data-src="[IMAGE]" alt="[NAMEALT]" />
+                                </a>
+                            </div>
+                            <div class="item-content">
+                                <a title="[NAMEALT]" href="[URL]?utm_source=home&utm_medium=style2&utm_campaign=tt">
+                                    [NAME]
+                                </a>
+                            </div>
+                        </div>
+                    [/LIST_MORE]
+            </div>
+        </div>
+    </div>
+</div>

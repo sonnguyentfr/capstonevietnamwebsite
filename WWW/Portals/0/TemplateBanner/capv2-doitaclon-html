@@ -1,0 +1,13 @@
+<div class="section-title mb-20 text-center">
+  <h2 class="title-clamp mb-20 uppercase font-bold">
+    <a href="#">Đối tác</a>
+  </h2>
+  <div class="bar"></div>
+</div>
+<div class="list-trademark mt-3">
+  [LIST]
+  <a href="[URL]">
+    <img src="[IMAGE]" alt="[NAMEALT]">
+  </a>
+  [/LIST]
+</div>

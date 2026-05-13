@@ -1,0 +1,30 @@
+<div class="row">
+    <div class="col-lg-12">
+        <div class="how-news  pd-top-20 bdt2-red">
+
+            [LIST_TOP]
+            <div class="single-post-list-wrap style-two border-bt0">
+                <div class="media">
+                    <div class="media-left">
+                        <a href="[URL]">
+                        <img src="[IMAGE]" alt="[NAMEALT]"></a>
+                    </div>
+                    <div class="media-body align-self-center">
+                        <div class="details">
+                            <h6 class="title"><a href="[URL]">[NAME]</a></h6>
+                            <div class="post-meta-single">
+                                <ul>
+                                    <li>[NAMECAT]</li>
+                                    <li>[DATE]</li>
+                                </ul>
+                            </div>
+                            <p>[DESCRIPTION]</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            [/LIST_TOP]
+        </div>
+    </div>
+
+</div>

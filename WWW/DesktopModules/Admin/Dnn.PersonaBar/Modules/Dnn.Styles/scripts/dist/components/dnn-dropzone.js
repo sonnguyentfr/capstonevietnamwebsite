@@ -1,0 +1,1 @@
+import{D as o,d as n}from"./dnn-dropzone2.js";const r=o,s=n;export{r as DnnDropzone,s as defineCustomElement}

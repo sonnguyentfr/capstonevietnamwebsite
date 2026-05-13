@@ -1,0 +1,9 @@
+<div class="tmp-title-header d-flex justify-content-between">
+    <h2 class="title-clamp m-0"><a href="#">Kết nối thương hiệu</a></h2>
+</div>
+<div class="list-trademark mt-3">
+    [LIST]
+    <a href="[URL]">
+        <img src="[IMAGE]"  alt="[NAMEALT]" class="lazy"></a>
+    [/LIST]
+</div>

@@ -1,0 +1,35 @@
+<div class="tmp-title-header d-flex justify-content-between">
+    <h2 class="title-clamp m-0"><a href="[CATURL]">[CATNAME]</a></h2>
+</div>
+[LIST_TOP]
+<div class="item-main mt-4">
+    <a class="item-image" href="[URL]">
+        <img class='lazyload blur-up' src='https://thuongtruong-fileserver.nvcms.net/loader.gif' data-src="[IMAGE]" alt='[NAMEALT]' /></a>
+    <h3 class="title-clamp-26 mt-3">
+        <a href="[URL]">[NAME]</a>
+    </h3>
+    <div class="start-date">[DATE]</div>
+    <div class="content-dec mt-2">
+        <a href="[URL]">[DESCRIPTION]
+            </a>
+    </div>
+</div>
+[/LIST_TOP]
+<div class="box-items-clubs">
+    [LIST_MORE]
+    <div class="item-news mt-3 pt-3 border-top">
+        <h5 class="title-clamp">
+            <a href="[URL]">[NAME]</a>
+        </h5>
+        <div class="d-flex mt-3">
+            <div class="side-bar-img">
+                <a href="[URL]">
+                    <img class='lazyload blur-up' src='https://thuongtruong-fileserver.nvcms.net/loader.gif' data-src="[IMAGE]" alt='[NAMEALT]' /></a>
+            </div>
+            <div class="txt-dec text-limit-4-row ">
+                <a href="[URL]">[DESCRIPTION]</a>
+            </div>
+        </div>
+    </div>
+    [/LIST_MORE]
+</div>

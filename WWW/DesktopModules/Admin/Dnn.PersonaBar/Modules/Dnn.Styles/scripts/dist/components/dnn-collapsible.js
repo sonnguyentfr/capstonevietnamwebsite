@@ -1,0 +1,1 @@
+import{D as o,d as s}from"./dnn-collapsible2.js";const a=o,l=s;export{a as DnnCollapsible,l as defineCustomElement}

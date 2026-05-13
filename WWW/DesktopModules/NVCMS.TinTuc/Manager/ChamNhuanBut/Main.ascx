@@ -1,0 +1,2 @@
+<%@ Control Language="VB" AutoEventWireup="false" CodeFile="Main.ascx.vb" Inherits="DesktopModules.TNReport.Main_NBReportDept" %>
+<asp:PlaceHolder id="phDynamicPlaceHolder" runat="server"></asp:PlaceHolder>
