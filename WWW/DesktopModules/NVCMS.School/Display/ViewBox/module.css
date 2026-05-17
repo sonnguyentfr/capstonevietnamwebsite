@@ -1,0 +1,9 @@
+﻿
+#news_details { line-height: 1.5em; position: relative; }
+#news_details .news-details .content img { padding: 10px; }
+#news_details .info .name { font-size: 1.4em; font-weight: bold; margin-bottom: 20px; }
+#news_details .info .date { margin-bottom: 5px; color: #696969; }
+#news_details .info .des { margin: 5px 0px; font-weight: bold; border-top: 1px solid #dcd8d9; padding-top: 10px; }
+.list-only-title { margin-bottom: 20px; }
+.list-only-title ul li { padding-left: 10px; margin-bottom: 6px;
+background: url("/images/arrow7.gif") no-repeat scroll left center transparent; }

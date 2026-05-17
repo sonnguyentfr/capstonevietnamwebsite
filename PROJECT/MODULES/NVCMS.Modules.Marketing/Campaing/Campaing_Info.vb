@@ -77,4 +77,16 @@ Namespace NVCMS.Modules.Marketing
 
         '------------------------------------------'
     End Class
+    Public Class Marketing_Mail_Campaing_ViewInfo
+        Inherits Marketing_Mail_CampaingInfo
+        Private _soluongemail As Integer
+        Public Property soluongemail() As Integer
+            Get
+                Return _soluongemail
+            End Get
+            Set(ByVal Value As Integer)
+                _soluongemail = Value
+            End Set
+        End Property
+    End Class
 End Namespace

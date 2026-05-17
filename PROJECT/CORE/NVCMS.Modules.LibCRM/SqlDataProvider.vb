@@ -701,23 +701,23 @@ Namespace NVCMS.Modules.LibCRM
 #Region "DM_Truong_LoaiTruong"
 
         Public Overrides Sub LoaiTruong_CRUD(ByVal Action As String, ByVal id As Integer, ByVal Loaitruong As String, ByVal Descreption As String, IsActive As Boolean, Ordernumber As Integer, ByVal PortalId As Integer, ByVal CreatedDate As DateTime)
-            SqlHelper.ExecuteNonQuery(ConnectionString, "DM_Truong_LoaiTruong_CRUD", Action, id, Loaitruong, Descreption, IsActive, Ordernumber, PortalId, CreatedDate)
+            SqlHelper.ExecuteNonQuery(ConnectionString, "Cap_Loaitruong_CRUD", Action, id, Loaitruong, Descreption, IsActive, Ordernumber, PortalId, CreatedDate)
         End Sub
         '------------------------------------------'
         Public Overrides Function LoaiTruong_GetAll(PortalId As Integer) As IDataReader
-            Return SqlHelper.ExecuteReader(ConnectionString, "DM_Truong_LoaiTruong_SelectAll", PortalId)
+            Return SqlHelper.ExecuteReader(ConnectionString, "Cap_Loaitruong_SelectAll", PortalId)
         End Function
         '------------------------------------------'
         Public Overrides Function LoaiTruong_GetAllShow(PortalId As Integer) As IDataReader
-            Return SqlHelper.ExecuteReader(ConnectionString, "DM_Truong_LoaiTruong_SelectAllShow", PortalId)
+            Return SqlHelper.ExecuteReader(ConnectionString, "Cap_Loaitruong_SelectAllShow", PortalId)
         End Function
         '------------------------------------------'
         Public Overrides Function LoaiTruong_GetById(Id As Integer) As IDataReader
-            Return SqlHelper.ExecuteReader(ConnectionString, "DM_Truong_LoaiTruong_SelectByID", Id)
+            Return SqlHelper.ExecuteReader(ConnectionString, "Cap_Loaitruong_SelectByID", Id)
         End Function
         '------------------------------------------'
         Public Overrides Sub LoaiTruong_UpdateOrdernumber(ByVal id As Integer, Ordernumber As Integer)
-            SqlHelper.ExecuteNonQuery(ConnectionString, "DM_Truong_LoaiTruong_Update_Ordernumer", id, Ordernumber)
+            SqlHelper.ExecuteNonQuery(ConnectionString, "Cap_Loaitruong_Update_Ordernumer", id, Ordernumber)
         End Sub
         '------------------------------------------'
 

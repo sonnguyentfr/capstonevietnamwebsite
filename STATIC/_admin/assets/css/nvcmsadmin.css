@@ -189,6 +189,30 @@ ul.anh-upload {
             animation-delay: -0.5s;
         }
 
+/*.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255,255,255,0.75);
+    z-index: 9998;
+}*/
+
+.loading-spinner {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+    text-align: center;
+    color: #6576ff;
+}
+#loading .spinner-border {
+    width: 5rem;
+    height: 5rem;
+}
+#loading p.loadingtext {color:#fff; font-size:15px;}
 ul.breadcrumb {
 }
 
@@ -199,6 +223,7 @@ ul.breadcrumb {
         letter-spacing: 0.05rem;
         margin: 0px 7px;
     }
+
 .icon-status-count {
     position: absolute;
     top: -7px;
@@ -210,29 +235,31 @@ ul.breadcrumb {
     color: white;
     border-radius: 50%;
 }
+
 .insertRelated {
     font-size: 12px;
     margin-right: 5px;
 }
+
 .tagreset {
-        margin: 5px 7px;
-        border: solid 1px #0062c5;
-        padding: 5px 10px;
-        border-radius: 10px;
-        background: #3c81c7;
+    margin: 5px 7px;
+    border: solid 1px #0062c5;
+    padding: 5px 10px;
+    border-radius: 10px;
+    background: #3c81c7;
+    color: #fff;
+    display: block;
+}
+
+    .tagreset:hover {
+        background: #c9a017;
         color: #fff;
-        display: block;
+        border: solid 1px #ffff;
     }
 
-        .tagreset:hover {
-            background: #c9a017;
-            color: #fff;
-            border: solid 1px #ffff;
-        }
-
-        .tagreset em {
-            margin-right: 4px;
-        }
+    .tagreset em {
+        margin-right: 4px;
+    }
 /*===============================*/
 @media (max-width: 480px) and (min-width: 320px) {
     ul .cc_button {

@@ -47,7 +47,15 @@
 </div>
 <!-- .card-preview -->
 
-<div class="loading" id="loading" style="display:none;">Loading&#8230;</div>
+<%--<div class="loading" id="loading" style="display:none;">Loading&#8230;</div>--%>
+<div id="loading" style="display:none;">
+    <div class="loading-spinner">   
+        <div class="spinner-border text-primary" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+        <p class="mt-2 loadingtext">Đang tải dữ liệu. Vui lòng đợi trong giây lát...</p>
+    </div>
+</div>
 
 <div class="modal fade zoom" tabindex="-1" id="modalEdit">
     <div class="modal-dialog" role="document">

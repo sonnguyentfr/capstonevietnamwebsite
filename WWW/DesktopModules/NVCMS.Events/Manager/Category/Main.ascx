@@ -1,0 +1,2 @@
+<%@ Control Language="VB" AutoEventWireup="false" CodeFile="Main.ascx.vb" Inherits="DesktopModules.NV_Events.Manager.Event_Cat.CategoriesMain" %>
+<asp:PlaceHolder id="phDynamicPlaceHolder" runat="server"></asp:PlaceHolder>

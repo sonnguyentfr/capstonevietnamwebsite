@@ -82,11 +82,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controller\Marketing\CampaignController.cs" />
     <Compile Include="Model\Response\ApiResponse.cs" />
     <Compile Include="Model\Response\ResponseExtensions.cs" />
     <Compile Include="Model\Response\ResponseHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Controller\Marketing\AccountController.cs" />
+    <Compile Include="Services\Marketing\CampaignServices.cs" />
     <Compile Include="Services\Marketing\AccountServices.cs" />
     <Compile Include="WebApi\RouteMapper.cs" />
   </ItemGroup>
