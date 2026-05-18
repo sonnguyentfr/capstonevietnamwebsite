@@ -231,6 +231,7 @@
   <ItemGroup>
     <Compile Include="DAL\DataProvider.vb" />
     <Compile Include="DAL\SqlDataProvider.vb" />
+    <Compile Include="CurrentPortalContext.vb" />
     <Compile Include="menu\menu.vb" />
     <Compile Include="menu\menuwebsite.ascx.designer.vb">
       <DependentUpon>menuwebsite.ascx</DependentUpon>
@@ -270,6 +271,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="PortalContextHelper.vb" />
     <Compile Include="Trang\PageSettings.ascx.designer.vb">
       <DependentUpon>PageSettings.ascx</DependentUpon>
     </Compile>

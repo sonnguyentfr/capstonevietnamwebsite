@@ -1,7 +1,9 @@
 ﻿<%@ Control Language="VB" AutoEventWireup="false" CodeFile="header.ascx.vb" Inherits="DesktopModules.TinTuc.Controls.Headersss" %>
 <%@ Register TagPrefix="dnn" TagName="BREADCRUMB" Src="~/Admin/Skins/BreadCrumb.ascx" %>
 <style>
-.color-red {color:red !important;}
+    .color-red {
+        color: red !important;
+    }
 </style>
 <div class="nk-header nk-header-fixed nk-header-fluid is-light">
     <div class="container-fluid">
@@ -26,8 +28,38 @@
             <!-- .nk-header-news -->
             <div class="nk-header-tools">
                 <ul class="nk-quick-nav">
-                    <li class="">
-                        <span id="pinggoogle"></span>
+                    <li class="">Bạn đang ở website:
+                        <strong class="color-red">
+                            <asp:Literal ID="ltrCurrentWebite" runat="server"></asp:Literal></strong>
+                    </li>
+                    <li class="dropdown chats-dropdown hide-mb-xs">
+                        <a href="#" class="dropdown-toggle mr-n1" data-toggle="dropdown">
+                            <div class="user-toggle">
+                                thay đổi
+                            </div>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-xl dropdown-menu-right">
+                            <div class="dropdown-head">
+                                <span class="sub-title nk-dropdown-title">Chọn Website Quản trị</span>
+                            </div>
+                            <div class="dropdown-body">
+                                <div class="nk-notification">
+                                    <div class="form-group" style="padding: 0px 10px;">
+                                        <asp:DropDownList
+                                            ID="ddlPortal"
+                                            runat="server"
+                                            AutoPostBack="true"
+                                            OnSelectedIndexChanged="ddlPortal_SelectedIndexChanged" CssClass="form-control">
+                                        </asp:DropDownList>
+                                    </div>
+                                </div>
+                                <!-- .nk-notification -->
+                            </div>
+                            <!-- .nk-dropdown-body -->
+                            <div class="dropdown-foot center">
+                                &nbsp;
+                            </div>
+                        </div>
                     </li>
                     <li class="dropdown chats-dropdown hide-mb-xs">
                         <asp:HyperLink NavigateUrl="/quan-tri/video-cap-cao/cho-xuat-ban" ID="hplvideochoxuatban" CssClass="dropdown-toggle nk-quick-nav-icon" data-toggle="dropdown" title="Video chờ xuất bản" runat="server" Visible="false">
@@ -199,5 +231,5 @@
     var day = currentTime.getDate()
     // returns the year (four digits)
     var year = currentTime.getFullYear()
-   // document.getElementById("pinggoogle").innerHTML = "<a href='https://www.google.com/webmasters/tools/ping?sitemap=https://thuongtruong.com.vn/sitemaps/newslist/"+ year + "-" + month + "-" + day+".xml' target=_blank>ping google</a>";
+    // document.getElementById("pinggoogle").innerHTML = "<a href='https://www.google.com/webmasters/tools/ping?sitemap=https://thuongtruong.com.vn/sitemaps/newslist/"+ year + "-" + month + "-" + day+".xml' target=_blank>ping google</a>";
 </script>

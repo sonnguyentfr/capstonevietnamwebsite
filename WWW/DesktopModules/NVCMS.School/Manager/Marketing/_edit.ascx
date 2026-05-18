@@ -1,5 +1,4 @@
 <%@ Control Language="vb" AutoEventWireup="false" Explicit="true" CodeFile="_edit.ascx.vb" Inherits="DesktopModules.TinTuc.Manager.news.newsedit" EnableViewState="true" %>
-<%@ Register TagPrefix="telerik" Namespace="Telerik.Web.UI" Assembly="Telerik.Web.UI" %>
 <script src="/Providers/HtmlEditorProviders/DNNConnect.CKE/js/ckeditor/4.15.1/ckeditor.js"></script>
 <link rel="stylesheet" href="/static/_admin/assets/css/nvcmsadmin.css" />
 <%@ Register TagPrefix="dnn" TagName="TextEditor" Src="~/controls/TextEditor.ascx" %>

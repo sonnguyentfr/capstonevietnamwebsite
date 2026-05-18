@@ -1,57 +1,59 @@
 ﻿Imports System
-Imports DotNetNuke
-Imports DotNetNuke.UI.Utilities
 Imports System.IO
-Imports DotNetNuke.Entities.Portals
 Imports System.Web
 Imports System.Web.UI
 Imports System.Web.UI.WebControls
-Imports DotNetNuke.Common.Globals
-Imports DotNetNuke.Common
-Imports DotNetNuke.Common.Utilities
-Imports DotNetNuke.Services.Exceptions
 Imports aejw.Network
+Imports DotNetNuke
+Imports DotNetNuke.Common
+Imports DotNetNuke.Common.Globals
+Imports DotNetNuke.Common.Utilities
+Imports DotNetNuke.Entities.Portals
+Imports DotNetNuke.Services.Exceptions
+Imports DotNetNuke.UI.Utilities
+Imports NVCMS.Modules.HeThong
 Public Class FilesSettings
     Inherits Entities.Modules.PortalModuleBase
-
+    Dim iPortalId = PortalContextHelper.CurrentPortal.PortalId
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         Try
             If Not Page.IsPostBack Then
-                txtAnhLuuTruVirtual.Text = PortalController.GetPortalSetting(nvcmsBL.settingAnhLuuTruVirtual, PortalId, Null.NullString)
-                txtAnhLuuTruPhysical.Text = PortalController.GetPortalSetting(nvcmsBL.settingAnhLuuTruPhysical, PortalId, Null.NullString)
-                txtFlashVirtual.Text = PortalController.GetPortalSetting(nvcmsBL.settingFlashVirtual, PortalId, Null.NullString)
-                txtFlashPhysical.Text = PortalController.GetPortalSetting(nvcmsBL.settingFlashPhysical, PortalId, Null.NullString)
-                txtMediaPathVirtual.Text = PortalController.GetPortalSetting(nvcmsBL.settingMediaPathVirtual, PortalId, Null.NullString)
-                txtMediaPathPhysical.Text = PortalController.GetPortalSetting(nvcmsBL.settingMediaPathPhysical, PortalId, Null.NullString)
-                txtMediaLuuTruVirtual.Text = PortalController.GetPortalSetting(nvcmsBL.settingMediaLuuTruVirtual, PortalId, Null.NullString)
-                txtMediaLuuTruPhysical.Text = PortalController.GetPortalSetting(nvcmsBL.settingMediaLuuTruPhysical, PortalId, Null.NullString)
 
-                txtDocumentLuuTruVirtual.Text = PortalController.GetPortalSetting(nvcmsBL.settingDocumentVirtual, PortalId, Null.NullString)
-                txtDocumentLuuTruPhysical.Text = PortalController.GetPortalSetting(nvcmsBL.settingDocumentPhysical, PortalId, Null.NullString)
+                txtAnhLuuTruVirtual.Text = PortalController.GetPortalSetting(nvcmsBL.settingAnhLuuTruVirtual, iPortalId, Null.NullString)
+                txtAnhLuuTruPhysical.Text = PortalController.GetPortalSetting(nvcmsBL.settingAnhLuuTruPhysical, iPortalId, Null.NullString)
+                txtFlashVirtual.Text = PortalController.GetPortalSetting(nvcmsBL.settingFlashVirtual, iPortalId, Null.NullString)
+                txtFlashPhysical.Text = PortalController.GetPortalSetting(nvcmsBL.settingFlashPhysical, iPortalId, Null.NullString)
+                txtMediaPathVirtual.Text = PortalController.GetPortalSetting(nvcmsBL.settingMediaPathVirtual, iPortalId, Null.NullString)
+                txtMediaPathPhysical.Text = PortalController.GetPortalSetting(nvcmsBL.settingMediaPathPhysical, iPortalId, Null.NullString)
+                txtMediaLuuTruVirtual.Text = PortalController.GetPortalSetting(nvcmsBL.settingMediaLuuTruVirtual, iPortalId, Null.NullString)
+                txtMediaLuuTruPhysical.Text = PortalController.GetPortalSetting(nvcmsBL.settingMediaLuuTruPhysical, iPortalId, Null.NullString)
+
+                txtDocumentLuuTruVirtual.Text = PortalController.GetPortalSetting(nvcmsBL.settingDocumentVirtual, iPortalId, Null.NullString)
+                txtDocumentLuuTruPhysical.Text = PortalController.GetPortalSetting(nvcmsBL.settingDocumentPhysical, iPortalId, Null.NullString)
 
 
-                txtSanPhamTruVirtual.Text = PortalController.GetPortalSetting(nvcmsBL.settingSanphamVirtual, PortalId, Null.NullString)
-                txtSanPhaTruPhysical.Text = PortalController.GetPortalSetting(nvcmsBL.settingSanphamPhysical, PortalId, Null.NullString)
-                txtBackupPathVirtual.Text = PortalController.GetPortalSetting(nvcmsBL.settingBackupPathVirtual, PortalId, Null.NullString)
-                txtBackupPathPhysical.Text = PortalController.GetPortalSetting(nvcmsBL.settingBackupPathPhysical, PortalId, Null.NullString)
-                txtBaiHatVirtual.Text = PortalController.GetPortalSetting(nvcmsBL.settingBaiHatVirtual, PortalId, Null.NullString)
-                txtBaiHatPhysical.Text = PortalController.GetPortalSetting(nvcmsBL.settingBaiHatPhysical, PortalId, Null.NullString)
-                txtVideoVirtual.Text = PortalController.GetPortalSetting(nvcmsBL.settingVideoVirtual, PortalId, Null.NullString)
-                txtVideoPhysical.Text = PortalController.GetPortalSetting(nvcmsBL.settingVideoPhysical, PortalId, Null.NullString)
-                txtSXCTVirtual.Text = PortalController.GetPortalSetting(nvcmsBL.settingSXCTVirtual, PortalId, Null.NullString)
-                txtSXCTPhysical.Text = PortalController.GetPortalSetting(nvcmsBL.settingSXCTPhysical, PortalId, Null.NullString)
-                txtFTPVirtual.Text = PortalController.GetPortalSetting(nvcmsBL.settingFTPVirtual, PortalId, Null.NullString)
-                txtFTPPhysical.Text = PortalController.GetPortalSetting(nvcmsBL.settingFTPPhysical, PortalId, Null.NullString)
-                txtDalet.Text = PortalController.GetPortalSetting(nvcmsBL.settingDalet, PortalId, Null.NullString)
-                chkDalet2XML.Checked = PortalController.GetPortalSetting(nvcmsBL.settingDalet2XML, PortalId, False)
-                txtNetia.Text = PortalController.GetPortalSetting(nvcmsBL.settingNetia, PortalId, Null.NullString)
-                chkNetia2XML.Checked = PortalController.GetPortalSetting(nvcmsBL.settingNetia2XML, PortalId, False)
-                txtMultiMediaCopyPath1.Text = PortalController.GetPortalSetting(nvcmsBL.settingMultiMediaCopyPath1, PortalId, Null.NullString)
-                txtMultiMediaCopyPath2.Text = PortalController.GetPortalSetting(nvcmsBL.settingMultiMediaCopyPath2, PortalId, Null.NullString)
-                txtMultiMediaCopyPath3.Text = PortalController.GetPortalSetting(nvcmsBL.settingMultiMediaCopyPath3, PortalId, Null.NullString)
-                txtAlertRequestDuration.Text = PortalController.GetPortalSetting(nvcmsBL.settingAlertRequestDuration, PortalId, Null.NullString)
-                txtAutoSaveRequestDuration.Text = PortalController.GetPortalSetting(nvcmsBL.settingAutoSaveRequestDuration, PortalId, Null.NullString)
-                txtDataRequestDuration.Text = PortalController.GetPortalSetting(nvcmsBL.settingDataRequestDuration, PortalId, Null.NullString)
+                txtSanPhamTruVirtual.Text = PortalController.GetPortalSetting(nvcmsBL.settingSanphamVirtual, iPortalId, Null.NullString)
+                txtSanPhaTruPhysical.Text = PortalController.GetPortalSetting(nvcmsBL.settingSanphamPhysical, iPortalId, Null.NullString)
+                txtBackupPathVirtual.Text = PortalController.GetPortalSetting(nvcmsBL.settingBackupPathVirtual, iPortalId, Null.NullString)
+                txtBackupPathPhysical.Text = PortalController.GetPortalSetting(nvcmsBL.settingBackupPathPhysical, iPortalId, Null.NullString)
+                txtBaiHatVirtual.Text = PortalController.GetPortalSetting(nvcmsBL.settingBaiHatVirtual, iPortalId, Null.NullString)
+                txtBaiHatPhysical.Text = PortalController.GetPortalSetting(nvcmsBL.settingBaiHatPhysical, iPortalId, Null.NullString)
+                txtVideoVirtual.Text = PortalController.GetPortalSetting(nvcmsBL.settingVideoVirtual, iPortalId, Null.NullString)
+                txtVideoPhysical.Text = PortalController.GetPortalSetting(nvcmsBL.settingVideoPhysical, iPortalId, Null.NullString)
+                txtSXCTVirtual.Text = PortalController.GetPortalSetting(nvcmsBL.settingSXCTVirtual, iPortalId, Null.NullString)
+                txtSXCTPhysical.Text = PortalController.GetPortalSetting(nvcmsBL.settingSXCTPhysical, iPortalId, Null.NullString)
+                txtFTPVirtual.Text = PortalController.GetPortalSetting(nvcmsBL.settingFTPVirtual, iPortalId, Null.NullString)
+                txtFTPPhysical.Text = PortalController.GetPortalSetting(nvcmsBL.settingFTPPhysical, iPortalId, Null.NullString)
+                txtDalet.Text = PortalController.GetPortalSetting(nvcmsBL.settingDalet, iPortalId, Null.NullString)
+                chkDalet2XML.Checked = PortalController.GetPortalSetting(nvcmsBL.settingDalet2XML, iPortalId, False)
+                txtNetia.Text = PortalController.GetPortalSetting(nvcmsBL.settingNetia, iPortalId, Null.NullString)
+                chkNetia2XML.Checked = PortalController.GetPortalSetting(nvcmsBL.settingNetia2XML, iPortalId, False)
+                txtMultiMediaCopyPath1.Text = PortalController.GetPortalSetting(nvcmsBL.settingMultiMediaCopyPath1, iPortalId, Null.NullString)
+                txtMultiMediaCopyPath2.Text = PortalController.GetPortalSetting(nvcmsBL.settingMultiMediaCopyPath2, iPortalId, Null.NullString)
+                txtMultiMediaCopyPath3.Text = PortalController.GetPortalSetting(nvcmsBL.settingMultiMediaCopyPath3, iPortalId, Null.NullString)
+                txtAlertRequestDuration.Text = PortalController.GetPortalSetting(nvcmsBL.settingAlertRequestDuration, iPortalId, Null.NullString)
+                txtAutoSaveRequestDuration.Text = PortalController.GetPortalSetting(nvcmsBL.settingAutoSaveRequestDuration, iPortalId, Null.NullString)
+                txtDataRequestDuration.Text = PortalController.GetPortalSetting(nvcmsBL.settingDataRequestDuration, iPortalId, Null.NullString)
 
                 If Not Request.UrlReferrer Is Nothing Then
                     If Request.UrlReferrer.AbsoluteUri = Request.Url.AbsoluteUri Then
@@ -72,38 +74,38 @@ Public Class FilesSettings
     Protected Sub lbtUpdate_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles lbtUpdate.Click
         Try
             'CheckValidFolder()
-            PortalController.UpdatePortalSetting(PortalId, nvcmsBL.settingAnhLuuTruVirtual, txtAnhLuuTruVirtual.Text, True)
-            PortalController.UpdatePortalSetting(PortalId, nvcmsBL.settingAnhLuuTruPhysical, txtAnhLuuTruPhysical.Text, True)
-            PortalController.UpdatePortalSetting(PortalId, nvcmsBL.settingFlashVirtual, txtFlashVirtual.Text, True)
-            PortalController.UpdatePortalSetting(PortalId, nvcmsBL.settingFlashPhysical, txtFlashPhysical.Text, True)
-            PortalController.UpdatePortalSetting(PortalId, nvcmsBL.settingMediaPathVirtual, txtMediaPathVirtual.Text, True)
-            PortalController.UpdatePortalSetting(PortalId, nvcmsBL.settingMediaPathPhysical, txtMediaPathPhysical.Text, True)
-            PortalController.UpdatePortalSetting(PortalId, nvcmsBL.settingMediaLuuTruVirtual, txtMediaLuuTruVirtual.Text, True)
-            PortalController.UpdatePortalSetting(PortalId, nvcmsBL.settingMediaLuuTruPhysical, txtMediaLuuTruPhysical.Text, True)
-            PortalController.UpdatePortalSetting(PortalId, nvcmsBL.settingDocumentVirtual, txtDocumentLuuTruVirtual.Text, True)
-            PortalController.UpdatePortalSetting(PortalId, nvcmsBL.settingDocumentPhysical, txtDocumentLuuTruPhysical.Text, True)
-            PortalController.UpdatePortalSetting(PortalId, nvcmsBL.settingSanphamVirtual, txtSanPhamTruVirtual.Text, True)
-            PortalController.UpdatePortalSetting(PortalId, nvcmsBL.settingSanphamPhysical, txtSanPhaTruPhysical.Text, True)
-            PortalController.UpdatePortalSetting(PortalId, nvcmsBL.settingBackupPathVirtual, txtBackupPathVirtual.Text, True)
-            PortalController.UpdatePortalSetting(PortalId, nvcmsBL.settingBackupPathPhysical, txtBackupPathPhysical.Text, True)
-            PortalController.UpdatePortalSetting(PortalId, nvcmsBL.settingBaiHatVirtual, txtBaiHatVirtual.Text, True)
-            PortalController.UpdatePortalSetting(PortalId, nvcmsBL.settingBaiHatPhysical, txtBaiHatPhysical.Text, True)
-            PortalController.UpdatePortalSetting(PortalId, nvcmsBL.settingVideoVirtual, txtVideoVirtual.Text, True)
-            PortalController.UpdatePortalSetting(PortalId, nvcmsBL.settingVideoPhysical, txtVideoPhysical.Text, True)
-            PortalController.UpdatePortalSetting(PortalId, nvcmsBL.settingSXCTVirtual, txtSXCTVirtual.Text, True)
-            PortalController.UpdatePortalSetting(PortalId, nvcmsBL.settingSXCTPhysical, txtSXCTPhysical.Text, True)
-            PortalController.UpdatePortalSetting(PortalId, nvcmsBL.settingFTPVirtual, txtFTPVirtual.Text, True)
-            PortalController.UpdatePortalSetting(PortalId, nvcmsBL.settingFTPPhysical, txtFTPPhysical.Text, True)
-            PortalController.UpdatePortalSetting(PortalId, nvcmsBL.settingDalet, txtDalet.Text, True)
-            PortalController.UpdatePortalSetting(PortalId, nvcmsBL.settingDalet2XML, Convert.ToString(chkDalet2XML.Checked), True)
-            PortalController.UpdatePortalSetting(PortalId, nvcmsBL.settingNetia, txtNetia.Text, True)
-            PortalController.UpdatePortalSetting(PortalId, nvcmsBL.settingNetia2XML, Convert.ToString(chkNetia2XML.Checked), True)
-            PortalController.UpdatePortalSetting(PortalId, nvcmsBL.settingMultiMediaCopyPath1, txtMultiMediaCopyPath1.Text, True)
-            PortalController.UpdatePortalSetting(PortalId, nvcmsBL.settingMultiMediaCopyPath2, txtMultiMediaCopyPath2.Text, True)
-            PortalController.UpdatePortalSetting(PortalId, nvcmsBL.settingMultiMediaCopyPath3, txtMultiMediaCopyPath3.Text, True)
-            PortalController.UpdatePortalSetting(PortalId, nvcmsBL.settingAlertRequestDuration, txtAlertRequestDuration.Text, True)
-            PortalController.UpdatePortalSetting(PortalId, nvcmsBL.settingAutoSaveRequestDuration, txtAutoSaveRequestDuration.Text, True)
-            PortalController.UpdatePortalSetting(PortalId, nvcmsBL.settingDataRequestDuration, txtDataRequestDuration.Text, True)
+            PortalController.UpdatePortalSetting(iPortalId, nvcmsBL.settingAnhLuuTruVirtual, txtAnhLuuTruVirtual.Text, True)
+            PortalController.UpdatePortalSetting(iPortalId, nvcmsBL.settingAnhLuuTruPhysical, txtAnhLuuTruPhysical.Text, True)
+            PortalController.UpdatePortalSetting(iPortalId, nvcmsBL.settingFlashVirtual, txtFlashVirtual.Text, True)
+            PortalController.UpdatePortalSetting(iPortalId, nvcmsBL.settingFlashPhysical, txtFlashPhysical.Text, True)
+            PortalController.UpdatePortalSetting(iPortalId, nvcmsBL.settingMediaPathVirtual, txtMediaPathVirtual.Text, True)
+            PortalController.UpdatePortalSetting(iPortalId, nvcmsBL.settingMediaPathPhysical, txtMediaPathPhysical.Text, True)
+            PortalController.UpdatePortalSetting(iPortalId, nvcmsBL.settingMediaLuuTruVirtual, txtMediaLuuTruVirtual.Text, True)
+            PortalController.UpdatePortalSetting(iPortalId, nvcmsBL.settingMediaLuuTruPhysical, txtMediaLuuTruPhysical.Text, True)
+            PortalController.UpdatePortalSetting(iPortalId, nvcmsBL.settingDocumentVirtual, txtDocumentLuuTruVirtual.Text, True)
+            PortalController.UpdatePortalSetting(iPortalId, nvcmsBL.settingDocumentPhysical, txtDocumentLuuTruPhysical.Text, True)
+            PortalController.UpdatePortalSetting(iPortalId, nvcmsBL.settingSanphamVirtual, txtSanPhamTruVirtual.Text, True)
+            PortalController.UpdatePortalSetting(iPortalId, nvcmsBL.settingSanphamPhysical, txtSanPhaTruPhysical.Text, True)
+            PortalController.UpdatePortalSetting(iPortalId, nvcmsBL.settingBackupPathVirtual, txtBackupPathVirtual.Text, True)
+            PortalController.UpdatePortalSetting(iPortalId, nvcmsBL.settingBackupPathPhysical, txtBackupPathPhysical.Text, True)
+            PortalController.UpdatePortalSetting(iPortalId, nvcmsBL.settingBaiHatVirtual, txtBaiHatVirtual.Text, True)
+            PortalController.UpdatePortalSetting(iPortalId, nvcmsBL.settingBaiHatPhysical, txtBaiHatPhysical.Text, True)
+            PortalController.UpdatePortalSetting(iPortalId, nvcmsBL.settingVideoVirtual, txtVideoVirtual.Text, True)
+            PortalController.UpdatePortalSetting(iPortalId, nvcmsBL.settingVideoPhysical, txtVideoPhysical.Text, True)
+            PortalController.UpdatePortalSetting(iPortalId, nvcmsBL.settingSXCTVirtual, txtSXCTVirtual.Text, True)
+            PortalController.UpdatePortalSetting(iPortalId, nvcmsBL.settingSXCTPhysical, txtSXCTPhysical.Text, True)
+            PortalController.UpdatePortalSetting(iPortalId, nvcmsBL.settingFTPVirtual, txtFTPVirtual.Text, True)
+            PortalController.UpdatePortalSetting(iPortalId, nvcmsBL.settingFTPPhysical, txtFTPPhysical.Text, True)
+            PortalController.UpdatePortalSetting(iPortalId, nvcmsBL.settingDalet, txtDalet.Text, True)
+            PortalController.UpdatePortalSetting(iPortalId, nvcmsBL.settingDalet2XML, Convert.ToString(chkDalet2XML.Checked), True)
+            PortalController.UpdatePortalSetting(iPortalId, nvcmsBL.settingNetia, txtNetia.Text, True)
+            PortalController.UpdatePortalSetting(iPortalId, nvcmsBL.settingNetia2XML, Convert.ToString(chkNetia2XML.Checked), True)
+            PortalController.UpdatePortalSetting(iPortalId, nvcmsBL.settingMultiMediaCopyPath1, txtMultiMediaCopyPath1.Text, True)
+            PortalController.UpdatePortalSetting(iPortalId, nvcmsBL.settingMultiMediaCopyPath2, txtMultiMediaCopyPath2.Text, True)
+            PortalController.UpdatePortalSetting(iPortalId, nvcmsBL.settingMultiMediaCopyPath3, txtMultiMediaCopyPath3.Text, True)
+            PortalController.UpdatePortalSetting(iPortalId, nvcmsBL.settingAlertRequestDuration, txtAlertRequestDuration.Text, True)
+            PortalController.UpdatePortalSetting(iPortalId, nvcmsBL.settingAutoSaveRequestDuration, txtAutoSaveRequestDuration.Text, True)
+            PortalController.UpdatePortalSetting(iPortalId, nvcmsBL.settingDataRequestDuration, txtDataRequestDuration.Text, True)
 
             System.Web.UI.ScriptManager.RegisterClientScriptBlock(Page, GetType(Page), "script", "NotifySuccess('Cập nhật Thành công!','Hệ thống Files lưu trữ đã được cập nhật thành công!');", True)
         Catch ex As Exception

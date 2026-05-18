@@ -2,8 +2,10 @@
 Imports System.Xml
 Imports DotNetNuke.Entities.Modules
 Imports DotNetNuke.Security.Permissions
+Imports DotNetNuke.UI.Utilities
 Imports NVCMS.Modules.TinTuc
 Imports NVCMS.Modules.Video
+Imports NVCMS.Modules.Hethong
 Namespace DesktopModules.TinTuc.Controls
     Partial Class Headersss
         Inherits PortalModuleBase
@@ -148,48 +150,75 @@ Namespace DesktopModules.TinTuc.Controls
 #End Region
         Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
             Try
-
-                'Lay thong tin user
-                Dim obju As UserInfo
-                Dim ctluser As New UserController
-                obju = ctluser.GetUser(PortalId, UserId)
-                If Not obju Is Nothing Then
-                    With obju
-                        imgAvtar.ImageUrl = .Profile.GetPropertyValue("Avatar")
-                        ltrname.Text = BL.GetButDanh(PortalId, UserId)
-                        ltremail.Text = .Email
-                    End With
+                If Not IsPostBack Then
+                    'Lay thong tin user
+                    BindPage()
+                    Me.ltrCurrentWebite.Text = PortalContextHelper.CurrentPortal.PortalName & " (" & PortalContextHelper.CurrentPortal.PortalId & ")"
+                    Dim obju As UserInfo
+                    Dim ctluser As New UserController
+                    obju = ctluser.GetUser(PortalId, UserId)
+                    If Not obju Is Nothing Then
+                        With obju
+                            imgAvtar.ImageUrl = .Profile.GetPropertyValue("Avatar")
+                            ltrname.Text = BL.GetButDanh(PortalId, UserId)
+                            ltremail.Text = .Email
+                        End With
+                    End If
+                    'chờ duyệt
+                    Dim ctlnews As New NV_NewsController
+                    If UserInfo.IsInRole("Phe duyet") Then
+                        Me.hplchopheduyet.Visible = True
+                        Me.ltrchobientap.Text = ctlnews.SelectApproveNews_Count(Datefrom, DateTo, KeySearch, CategoryId, NewsStatus.ChoPheDuyet, PortalId, CreatedUser, False)
+                        Me.rptchopheduyet.DataSource = ctlnews.SelectApproveNews_Index(Datefrom, DateTo, KeySearch, CategoryId, NewsStatus.ChoPheDuyet, PortalId, CreatedUser, 1, 10, False)
+                        Me.rptchopheduyet.DataBind()
+                    End If
+                    'cho xuat ban
+                    If UserInfo.IsInRole("Xuat ban") Then
+                        Me.hplchoxuatban.Visible = True
+                        ltrchoxuatban.Text = ctlnews.SelectApproveNews_Count(Datefrom, DateTo, KeySearch, CategoryId, NewsStatus.ChoPheDuyet, PortalId, CreatedUser, False)
+                        Me.rptchoxuatban.DataSource = ctlnews.SelectApproveNews_Index(Datefrom, DateTo, KeySearch, CategoryId, NewsStatus.ChoXuatBan, PortalId, CreatedUser, 1, 10, False)
+                        Me.rptchoxuatban.DataBind()
+                    End If
+                    'Vdeo chờ xuất bản
+                    Dim _Videos_Controller As New Videos_Controller
+                    If UserInfo.IsInRole("Xuat ban") Then
+                        Me.hplvideochoxuatban.Visible = True
+                        ltrvideochoxuatban.Text = _Videos_Controller.Find_Count(Datefrom, DateTo, KeySearch, CategoryId, PortalId, NewsStatus.ChoXuatBan, 0)
+                        Me.rptvideochoxuatban.DataSource = _Videos_Controller.Find_Index(Datefrom, DateTo, KeySearch, CategoryId, PortalId, NewsStatus.ChoXuatBan, 0, 1, 10, "")
+                        Me.rptvideochoxuatban.DataBind()
+                    End If
                 End If
-                'chờ duyệt
-                Dim ctlnews As New NV_NewsController
-                If UserInfo.IsInRole("Phe duyet") Then
-                    Me.hplchopheduyet.Visible = True
-                    Me.ltrchobientap.Text = ctlnews.SelectApproveNews_Count(Datefrom, DateTo, KeySearch, CategoryId, NewsStatus.ChoPheDuyet, PortalId, CreatedUser, False)
-                    Me.rptchopheduyet.DataSource = ctlnews.SelectApproveNews_Index(Datefrom, DateTo, KeySearch, CategoryId, NewsStatus.ChoPheDuyet, PortalId, CreatedUser, 1, 10, False)
-                    Me.rptchopheduyet.DataBind()
-                End If
-                'cho xuat ban
-                If UserInfo.IsInRole("Xuat ban") Then
-                    Me.hplchoxuatban.Visible = True
-                    ltrchoxuatban.Text = ctlnews.SelectApproveNews_Count(Datefrom, DateTo, KeySearch, CategoryId, NewsStatus.ChoPheDuyet, PortalId, CreatedUser, False)
-                    Me.rptchoxuatban.DataSource = ctlnews.SelectApproveNews_Index(Datefrom, DateTo, KeySearch, CategoryId, NewsStatus.ChoXuatBan, PortalId, CreatedUser, 1, 10, False)
-                    Me.rptchoxuatban.DataBind()
-                End If
-                'Vdeo chờ xuất bản
-                Dim _Videos_Controller As New Videos_Controller
-                If UserInfo.IsInRole("Xuat ban") Then
-                    Me.hplvideochoxuatban.Visible = True
-                    ltrvideochoxuatban.Text = _Videos_Controller.Find_Count(Datefrom, DateTo, KeySearch, CategoryId, PortalId, NewsStatus.ChoXuatBan, 0)
-                    Me.rptvideochoxuatban.DataSource = _Videos_Controller.Find_Index(Datefrom, DateTo, KeySearch, CategoryId, PortalId, NewsStatus.ChoXuatBan, 0, 1, 10, "")
-                    Me.rptvideochoxuatban.DataBind()
-                End If
-
-
-
             Catch ex As Exception
                 ProcessModuleLoadException(Me, ex)
             End Try
         End Sub
+        Protected Sub BindPage()
+            Dim arrpage As New ArrayList
+            arrpage = PortalController.Instance.GetPortals()
 
+            Me.ddlPortal.DataSource = arrpage
+            Me.ddlPortal.DataTextField = "PortalName"
+            Me.ddlPortal.DataValueField = "PortalId"
+            Me.ddlPortal.DataBind()
+            If Session("CurrentPortal") IsNot Nothing Then
+                Dim current = CType(Session("CurrentPortal"), CurrentPortalContextModel)
+                ddlPortal.SelectedValue = current.PortalId.ToString()
+                ltrCurrentWebite.Text = current.PortalName
+            Else
+                Me.ddlPortal.SelectedValue = PortalId
+            End If
+        End Sub
+        Protected Sub ddlPortal_SelectedIndexChanged(sender As Object, e As EventArgs)
+            Dim selectedPortalId As Integer = Convert.ToInt32(ddlPortal.SelectedValue)
+            Dim portal = PortalController.Instance.GetPortal(selectedPortalId)
+            Dim current As New CurrentPortalContextModel With {
+                .PortalId = portal.PortalID,
+                .PortalName = portal.PortalName
+            }
+            Session("CurrentPortal") = current
+            ltrCurrentWebite.Text = current.PortalName & " (" & current.PortalId & ")"
+            Dim script As String = "UpdateSuccess('Cập nhật thành công!');setTimeout(function () {    window.location.href = window.location.href;},2000);"
+            ClientAPI.RegisterStartUpScript(Me.Page, "UpdateSuccess", "<script>" & script & "</script>")
+        End Sub
     End Class
 End Namespace

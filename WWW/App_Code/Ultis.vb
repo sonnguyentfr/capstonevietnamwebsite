@@ -16,7 +16,7 @@ Imports NVCMS.Modules.School
 Public Class Ultis
 #Region "Chơi khô mãu, mr Dòi cho Reset Pool luôn"
     Public Shared ctlvideo As New Videos_Controller
-    Public Shared _MarketingSchoolController As New MarketingSchoolController
+    Public Shared _Marketing_Truong_Version_Controller As New MarketingSchoolController
     Public Shared Function RecycleApplicationPool(ByVal siteName As String) As Boolean
         If siteName Is Nothing Then siteName = System.Web.Hosting.HostingEnvironment.SiteName
 
@@ -2211,7 +2211,7 @@ Public Class Ultis
                 .CreatedDate = DateTime.Now
                 .UserId = userid
             End With
-            _MarketingSchoolController.Marketing_Truong_Version_Insert(objMarketingSchoolInfo)
+            _Marketing_Truong_Version_Controller.Marketing_Truong_Version_Insert(objMarketingSchoolInfo)
         Catch ex As Exception
             ProcessPageLoadException(ex)
         End Try
