@@ -66,7 +66,7 @@ Namespace NVCMS.Modules.Banner
                         ItemID = CInt(Request.Item("itemid"))
                         BindData(ItemID)
                     End If
-                    PhotoAbPath = nvcmsBL.GetImagePath(False, PortalContextHelper.CurrentPortal.PortalId, True)
+                    PhotoAbPath = nvcmsBL.GetImagePath(False, PortalId, True)
                 Catch ex As Exception
                     ProcessModuleLoadException(Me, ex)
                 End Try
@@ -114,7 +114,7 @@ Namespace NVCMS.Modules.Banner
         End Sub
         Private Sub BindVitri()
             Dim ctlVideos As New BannerAdv_VitriController
-            Me.ddlCategory.DataSource = ctlVideos._Vitri_GetAll(PortalContextHelper.CurrentPortal.PortalId)
+            Me.ddlCategory.DataSource = ctlVideos._Vitri_GetAll(PortalId)
             Me.ddlCategory.DataTextField = "Title"
             Me.ddlCategory.DataValueField = "id"
             Me.ddlCategory.DataBind()
@@ -189,9 +189,9 @@ Namespace NVCMS.Modules.Banner
                 End If
                 Dim iIsActive As Integer = CInt(IIf(Me.chkactive.Checked(), 1, 0))
                 If ItemID > 0 Then
-                    ctlAdvBanner.Update(ItemID, Me.Title.Value, ddlkieubanner.SelectedValue, strFileNamePath, ddlCategory.SelectedValue, txtCao.Value, txtdai.Value, PortalContextHelper.CurrentPortal.PortalId, UserId, iIsActive, DateTime.Now, IIf(IsNumeric(Me.thutu.Value), Me.thutu.Value, 0), txtLink.Value, sStart, sEnd, Me.Descreption.Value)
+                    ctlAdvBanner.Update(ItemID, Me.Title.Value, ddlkieubanner.SelectedValue, strFileNamePath, ddlCategory.SelectedValue, txtCao.Value, txtdai.Value, PortalId, UserId, iIsActive, DateTime.Now, IIf(IsNumeric(Me.thutu.Value), Me.thutu.Value, 0), txtLink.Value, sStart, sEnd, Me.Descreption.Value)
                 Else
-                    ctlAdvBanner.Insert(Me.Title.Value, ddlkieubanner.SelectedValue, strFileNamePath, ddlCategory.SelectedValue, txtCao.Value, txtdai.Value, PortalContextHelper.CurrentPortal.PortalId, UserId, iIsActive, DateTime.Now, IIf(IsNumeric(Me.thutu.Value), Me.thutu.Value, 0), txtLink.Value, sStart, sEnd, Me.Descreption.Value)
+                    ctlAdvBanner.Insert(Me.Title.Value, ddlkieubanner.SelectedValue, strFileNamePath, ddlCategory.SelectedValue, txtCao.Value, txtdai.Value, PortalId, UserId, iIsActive, DateTime.Now, IIf(IsNumeric(Me.thutu.Value), Me.thutu.Value, 0), txtLink.Value, sStart, sEnd, Me.Descreption.Value)
                 End If
                 Return True
             Catch ex As Exception

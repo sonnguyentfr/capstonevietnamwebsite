@@ -10,7 +10,7 @@ Imports NVCMS.Modules.HeThong
 
 Public Class PageSettings
     Inherits Entities.Modules.PortalModuleBase
-    Dim iPortalId = PortalContextHelper.CurrentPortal.PortalId
+    Dim iPortalId = PortalId
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         Try
             If Not Page.IsPostBack Then

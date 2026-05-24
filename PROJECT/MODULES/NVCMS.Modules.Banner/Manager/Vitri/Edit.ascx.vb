@@ -113,7 +113,7 @@ Namespace NVCMS.Modules.Banner
                 If ItemID > 0 Then
                     ctlAdvBanner._Vitri_Update(ItemID, Me.Title.Value, txtdai.Value, txtCao.Value, strFileNamePath, UserId, DateTime.Now)
                 Else
-                    ctlAdvBanner._Vitri_Insert(Me.Title.Value, txtdai.Value, txtCao.Value, strFileNamePath, UserId, DateTime.Now, UserId, DateTime.Now, ModuleId, PortalContextHelper.CurrentPortal.PortalId)
+                    ctlAdvBanner._Vitri_Insert(Me.Title.Value, txtdai.Value, txtCao.Value, strFileNamePath, UserId, DateTime.Now, UserId, DateTime.Now, ModuleId, PortalId)
                 End If
                 Return True
             Catch ex As Exception

@@ -1,0 +1,55 @@
+﻿<header>
+    <div class="header-top">
+        <div class="container flex items-center justify-between">
+            <div class="logo">
+                <a href="/"><img src="/static/img/logo.png" alt="Capstone Vietnam"></a>
+            </div>
+            <div class="header-right">
+                <div class="button-contact">
+                    <ul class="contact-list">
+                        <li>
+                            VP Ha Noi <a href="tel:0936701696">0936 701 696</a>
+                            <span class="small"><i class="flaticon-pin"></i> 2 Le Quy Don, P. Bach Dang, Q. Hai Ba Trung</span>
+                        </li>
+                        <li>
+                            VP Ho Chi Minh <a href="tel:0918215445">0918 215 445</a>
+                            <span class="small"><i class="flaticon-pin"></i> 22 Tran Quy Khoach, P. Tan Dinh, Q.1</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="button-language">
+                    <ul class="language-list">
+                        <li class="active"><a href="#">VN</a></li>
+                        <li><a href="#">EN</a></li>
+                    </ul>
+                </div>
+                <div class="button-search"><i class="fa-regular fa-search"></i></div>
+                <button id="buttonMenu" type="button" data-target="#toggleMenu" aria-controls="toggleMenu">
+                    <span class="line"></span><span class="line"></span><span class="line"></span>
+                    <span id="pulseMe">
+                        <span class="bar left"></span><span class="bar top"></span>
+                        <span class="bar right"></span><span class="bar bottom"></span>
+                    </span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="header-bot bg-primary-900">
+        <div class="container header-bot-wrap">
+            <nav class="navbar-nav">
+                @await Component.InvokeAsync("Menu")
+            </nav>
+        </div>
+    </div>
+</header>
+<div class="mobile-wrap">
+    <div class="navbar-nav-list"></div>
+</div>
+<div class="search-wrap">
+    <div class="container">
+        <form class="searchbox" action="/tim-kiem" method="get">
+            <input type="text" name="q" placeholder="Tim kiem...">
+            <button type="submit"><i class="fa-regular fa-magnifying-glass"></i></button>
+        </form>
+    </div>
+</div>

@@ -1,5 +1,6 @@
 Imports DotNetNuke.Security.Roles
 Imports DotNetNuke.UI.Utilities
+Imports NVCMS.Modules.Hethong
 Imports NVCMS.Modules.TinTuc
 Imports NVCMS.Vietnamnet2sao
 
@@ -159,7 +160,7 @@ Namespace DesktopModules.TinTuc.Manager.news
                     .IsAMP = isAMP
                     .IsHienQuangCao = isHienQuangCao
                     .IsAnNoiDung = isAnNoiDung
-                    .IsAnLink = isAnLink
+                    ''.IsAnLink = isAnLink
                     '.SourceInfo
                     '.Unit
                     .Type = BL.GetLoaiTinBai(mediaList, imgList)
@@ -189,9 +190,7 @@ Namespace DesktopModules.TinTuc.Manager.news
                 'Ultis.InsertMediaFiles(Server, PortalId, UserId, ajItemID, chuyenmucchinh, mediaList)
                 'Update lên Vietnam
                 'Dim objewvnns As NV_NewsInfo = ctlNews.GetByID(ItemID)
-                If (objNews.CategoryId = 74 Or objNews.CategoryId = 75 Or objNews.CategoryId = 76) Then
-                    VietNamnet2SaoPush(objNews)
-                End If
+
                 Return ajItemID
             Catch ex As Exception
                 ProcessModuleLoadException(Me, ex)
@@ -360,11 +359,11 @@ Namespace DesktopModules.TinTuc.Manager.news
                                 Else
                                     Me.chkAnNoiDung.Checked = False
                                 End If
-                                If .IsAnLink Then
-                                    Me.chkisAnLink.Checked = True
-                                Else
-                                    Me.chkisAnLink.Checked = False
-                                End If
+                                'If '.IsAnLink Then
+                                '    Me.chkisAnLink.Checked = True
+                                'Else
+                                '    Me.chkisAnLink.Checked = False
+                                'End If
                                 ddlImage.SelectedValue = CType(.NewsKind, String)
 
                                 Try
@@ -495,73 +494,7 @@ Namespace DesktopModules.TinTuc.Manager.news
                 ProcessModuleLoadException(Me, ex)
             End Try
         End Sub
-        Private Sub VietNamnet2SaoPush(ByVal objNews As NV_NewsInfo)
-            Try
-                Dim objrequest As New newsrequest
-                With objrequest
-                    .NewsId = objNews.NewId
-                    .CategoryId = objNews.CategoryId
-                    .Title = objNews.Title
-                    .ImagePath = objNews.ImagePath.Replace("/DATA", "https://thuongtruong-fileserver.nvcms.net")
-                    .Summary = objNews.Summary
-                    .Keyword = objNews.keyword
-                    .Content = objNews.Content.Replace("/DATA", "https://thuongtruong-fileserver.nvcms.net")
-                    .IsActive = objNews.isActive
-                    .Hotcat = objNews.Hotcat
-                    .Hotsite = objNews.Hotsite
-                    .Status = objNews.Status
-                    .Unit = objNews.Unit
-                    .NewsKind = objNews.NewsKind
-                    .Type = objNews.Type
-                    .TypeUrl = objNews.TypeUrl
-                    .Links = objNews.Links
-                    .Tags = objNews.Tags
-                    .IsImage = objNews.IsImage
-                    .IsVideo = objNews.IsVideo
-                    .IsPhoto = objNews.IsPhoto
-                    .IsPR = objNews.IsPR
-                    .IsAMP = objNews.IsAMP
-                    .IsHienQuangCao = objNews.IsHienQuangCao
-                    .IsAnNoiDung = objNews.IsAnNoiDung
-                    .IsAnLink = objNews.IsAnLink
-                    .KieuBai = objNews.KieuBai
-                    .ButDanh = objNews.ButDanh
-                    .Note = objNews.Note
-                    .SourceInfo = objNews.SourceInfo
-                    .SourceText = objNews.SourceText
-                    .StorageFolder = objNews.StorageFolder
-                    .AttachedFiles = objNews.AttachedFiles
-                    .IsEdited = objNews.IsEdited
-                    .EditedUser = objNews.EditedUser
-                    .EditedTime = objNews.EditedTime
-                    .VoteCount = objNews.VoteCount
-                    .ViewCount = objNews.ViewCount
-                    .IsArchived = objNews.IsArchived
-                    .ArchivedDate = objNews.ArchivedDate
-                    .Credit = objNews.Credit
-                    .CreateDate = objNews.CreateDate
-                    .ApprovalRequestDate = objNews.ApprovalRequestDate
-                    .ApprovalDate = objNews.ApprovalDate
-                    .ApprovalUser = objNews.ApprovalUser
-                    .ReturnedDate = objNews.ReturnedDate
-                    .ReturnedUser = objNews.ReturnedUser
-                    .CancelPublishDate = objNews.CancelPublishDate
-                    .CancelPublishUser = objNews.CancelPublishUser
-                    .PublishedDate = objNews.PublishedDate
-                    .PublishedUser = objNews.PublishedUser
-                    .UserId = objNews.UserId
-                    .Tacgia = objNews.Tacgia
-                    .LanguageId = objNews.LanguageId
-                    .PortalId = objNews.PortalId
-                End With
-                Dim response As Boolean = Vietnam2sao.SendArticleData(objrequest)
-                If (response) Then
-                    ClientAPI.RegisterStartUpScript(Me.Page, "UpdateSuccess", "<script>UpdateSuccess('Cập nhật lên 2sao thành công!');</script>")
-                End If
-            Catch ex As Exception
-                ProcessModuleLoadException(Me, ex)
-            End Try
-        End Sub
+
         Private Function CollectNewsInfo(ByVal obj As NV_NewsInfo) As NV_NewsInfo
             Try
                 If obj Is Nothing Then
@@ -597,7 +530,7 @@ Namespace DesktopModules.TinTuc.Manager.news
                     .IsAMP = CType(IIf(Me.chkAMP.Checked(), 1, 0), Boolean)
                     .IsHienQuangCao = CType(IIf(Me.chkQuangCao.Checked(), 1, 0), Boolean)
                     .IsAnNoiDung = CType(IIf(Me.chkAnNoiDung.Checked(), 1, 0), Boolean)
-                    .IsAnLink = CType(IIf(Me.chkisAnLink.Checked(), 1, 0), Boolean)
+                    '.IsAnLink = CType(IIf(Me.chkisAnLink.Checked(), 1, 0), Boolean)
                     .ButDanh = txtButDanh.Text
                     .Title = Me.txtTitle.Text
                     If Not String.IsNullOrEmpty(txtSummary.Text.Trim) Then
@@ -722,11 +655,7 @@ Namespace DesktopModules.TinTuc.Manager.news
                         Ultis.SendMailThongBaoBaiSuaBaiXB(obbjnews, PortalId, UserId)
                     End With
                 End If
-                'Update lên Vietnam
-                Dim objewvnns As NV_NewsInfo = ctlNews.GetByID(ItemID)
-                If (objewvnns.CategoryId = 74 Or objewvnns.CategoryId = 75 Or objewvnns.CategoryId = 76) Then
-                    VietNamnet2SaoPush(objewvnns)
-                End If
+
             Catch ex As Exception
                 ProcessModuleLoadException(Me, ex)
             End Try
@@ -756,12 +685,7 @@ Namespace DesktopModules.TinTuc.Manager.news
                 ctlNews.UpdateStatus(ItemID, NewsStatus.ChoPheDuyet, UserId)
                 '5. Unlock tin bai
                 Ultis.UnlockNews(ItemID, UserId)
-                'Update lên Vietnam
-                Dim objewvnns As NV_NewsInfo = ctlNews.GetByID(ItemID)
-                If (objewvnns.CategoryId = 74 Or objewvnns.CategoryId = 75 Or objewvnns.CategoryId = 76) Then
-                    objewvnns.Status = NewsStatus.ChoPheDuyet
-                    VietNamnet2SaoPush(objewvnns)
-                End If
+
                 '6 Gui mail cho tác giả
                 Dim obbjnews As NV_NewsInfo = ctlNews.GetByID(ItemID)
                 If Not obbjnews Is Nothing Then
@@ -812,12 +736,7 @@ Namespace DesktopModules.TinTuc.Manager.news
                     .PortalId = PortalId
                 End With
                 _NewsNoteController.News_Note_Insert(objNewsNote)
-                'Update lên Vietnam
-                Dim objewvnns As NV_NewsInfo = ctlNews.GetByID(ItemID)
-                If (objewvnns.CategoryId = 74 Or objewvnns.CategoryId = 75 Or objewvnns.CategoryId = 76) Then
-                    objewvnns.Status = NewsStatus.ChoPheDuyet
-                    VietNamnet2SaoPush(objewvnns)
-                End If
+
                 '8. Return
                 Response.Redirect(BL.pagePheDuyetXB, False)
                 'Return True
@@ -858,12 +777,7 @@ Namespace DesktopModules.TinTuc.Manager.news
                     .PortalId = PortalId
                 End With
                 _NewsNoteController.News_Note_Insert(objNewsNote)
-                'Update lên Vietnam
-                Dim objewvnns As NV_NewsInfo = ctlNews.GetByID(ItemID)
-                If (objewvnns.CategoryId = 74 Or objewvnns.CategoryId = 75 Or objewvnns.CategoryId = 76) Then
-                    objewvnns.Status = NewsStatus.HuyXuatBan
-                    VietNamnet2SaoPush(objewvnns)
-                End If
+
                 '7 Clear cache
                 DotNetNuke.Common.Utilities.DataCache.ClearCache()
                 DotNetNuke.Entities.Host.ServerController.ClearCachedServers()
@@ -900,12 +814,7 @@ Namespace DesktopModules.TinTuc.Manager.news
                 ctlNews.UpdateStatus(ItemID, NewsStatus.BiTraLai, UserId)
                 '5. Unlock tin bai
                 Ultis.UnlockNews(ItemID, UserId)
-                'Update lên Vietnam
-                Dim objewvnns As NV_NewsInfo = ctlNews.GetByID(ItemID)
-                If (objewvnns.CategoryId = 74 Or objewvnns.CategoryId = 75 Or objewvnns.CategoryId = 76) Then
-                    objewvnns.Status = NewsStatus.BiTraLai
-                    VietNamnet2SaoPush(objewvnns)
-                End If
+
                 '6 Gui mail cho tác giả
                 Dim obbjnews As NV_NewsInfo = ctlNews.GetByID(ItemID)
                 If Not obbjnews Is Nothing Then
@@ -944,12 +853,7 @@ Namespace DesktopModules.TinTuc.Manager.news
                 ctlNews.UpdateStatus(ItemID, NewsStatus.BiTraLai, UserId)
                 '5. Unlock tin bai
                 Ultis.UnlockNews(ItemID, UserId)
-                'Update lên Vietnam
-                Dim objewvnns As NV_NewsInfo = ctlNews.GetByID(ItemID)
-                If (objewvnns.CategoryId = 74 Or objewvnns.CategoryId = 75 Or objewvnns.CategoryId = 76) Then
-                    objewvnns.Status = NewsStatus.BiTraLai
-                    VietNamnet2SaoPush(objewvnns)
-                End If
+
                 '6 Gui mail cho tác giả
                 Dim obbjnews As NV_NewsInfo = ctlNews.GetByID(ItemID)
                 If Not obbjnews Is Nothing Then

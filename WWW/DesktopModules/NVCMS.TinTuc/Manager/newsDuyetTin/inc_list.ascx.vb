@@ -3,6 +3,7 @@ Imports System.Web.UI.WebControls
 Imports DotNetNuke
 Imports DotNetNuke.Security.Roles
 Imports DotNetNuke.UI.Utilities
+Imports NVCMS.Modules.Hethong
 Imports NVCMS.Modules.TinTuc
 
 Namespace DesktopModules.TinTuc.Manager.newsapprove
@@ -178,7 +179,7 @@ Namespace DesktopModules.TinTuc.Manager.newsapprove
                     PageSuaBai = BL.pageDaXuatBanSua
                 End If
                 If activetab = BL.pageHuyXuatBanId Then
-                    PageSuaBai = BL.pageSuaHuyXuatBan
+                    PageSuaBai = BL.pageDaXuatBanSua
                 End If
                 DotNetNuke.UI.Utilities.ClientAPI.RegisterKeyCapture(Me.Parent, Me.lbtFind, Asc(vbCr))
                 If Not IsPostBack Then
@@ -244,7 +245,7 @@ Namespace DesktopModules.TinTuc.Manager.newsapprove
         Private Sub BinddrgDataViewer()
             Try
                 Dim ctl As New NV_NewsController
-                TotalRecord = ctl.SelectApproveNews_Count(Datefrom, DateTo, KeySearch, CategoryId, Status, PortalId, CreatedUser, False, CatPermission) 'Hien tai: Load tat ca - Anh + text
+                TotalRecord = ctl.SelectApproveNews_Count(Datefrom, DateTo, KeySearch, CategoryId, Status, PortalId, CreatedUser, False) 'Hien tai: Load tat ca - Anh + text
                 ctlPagingControl.TotalRecords = TotalRecord
                 ctlPagingControl.PageSize = PageSize
                 ctlPagingControl.CurrentPage = CurrentPage
@@ -254,7 +255,7 @@ Namespace DesktopModules.TinTuc.Manager.newsapprove
                 Dim arrResult As New ArrayList
                 Dim arrChinhThong As New ArrayList
                 Dim arrNhoXL As New ArrayList
-                Dim arr As ArrayList = ctl.SelectApproveNews_Index(Datefrom, DateTo, KeySearch, CategoryId, Status, PortalId, CreatedUser, CurrentPage, PageSize, False, CatPermission)
+                Dim arr As ArrayList = ctl.SelectApproveNews_Index(Datefrom, DateTo, KeySearch, CategoryId, Status, PortalId, CreatedUser, CurrentPage, PageSize, False)
 
                 drgDataViewer.DataSource = arr
                 drgDataViewer.DataBind()

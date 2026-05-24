@@ -1,5 +1,6 @@
 Imports System
 Imports DotNetNuke
+Imports NVCMS.Modules.Hethong
 
 Namespace DesktopModules.TinTuc.Manager.categories
     Public MustInherit Class categoriesmenuout
@@ -13,7 +14,7 @@ Namespace DesktopModules.TinTuc.Manager.categories
             If Not IsPostBack Then
                 Try
                     Dim ds As DataSet
-                    ds = Vbuzz.Modules.TinTuc.DataProvider.Instance.NV_NewsCategories_selectall(PortalId)
+                    ds = NVCMS.Modules.TinTuc.DataProvider.Instance.NV_NewsCategories_selectall(PortalId)
                     Me.drgMenu.DataSource = ds
                     Me.drgMenu.DataBind()
                 Catch ex As Exception

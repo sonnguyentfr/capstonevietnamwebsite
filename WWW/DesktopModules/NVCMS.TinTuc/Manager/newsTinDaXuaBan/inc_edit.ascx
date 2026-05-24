@@ -272,11 +272,11 @@
         <div class="col-md-3 col-lg-3 col-xxl-3">
             <div class="card card-bordered h-100">
                 <div class="card-inner">
-                    <div class="form-group">
+                    <%--<div class="form-group">
                         <div class="card-inner2">
                             <a href="#" data-target="addProduct" class="toggle btn btn-sm btn-danger d-none d-md-inline-flex"><em class="icon ni ni-tags-fill"></em><span>Thư viện TAGs</span></a>
                         </div>
-                    </div>
+                    </div>--%>
                     <div class="form-group">
                         <div class="card-inner2">
                             <h6 class="overline-title title">Từ khóa chủ đạo</h6>
@@ -849,7 +849,7 @@
     <img id="LoadingImage" src="/images/loading.gif" alt="" style="position: absolute; top: 100px; left: 310px;" />
 </div>
 <!-- .nk-block -->
-<div class="nk-add-product toggle-slide toggle-slide-right" data-content="addProduct" data-toggle-screen="any" data-toggle-overlay="true" data-toggle-body="true" data-simplebar>
+<%--<div class="nk-add-product toggle-slide toggle-slide-right" data-content="addProduct" data-toggle-screen="any" data-toggle-overlay="true" data-toggle-body="true" data-simplebar>
     <div class="nk-block-head">
         <div class="nk-block-head-content">
             <div class="nk-block-des">
@@ -870,7 +870,7 @@
     <!-- .nk-block-head -->
 
     <!-- .nk-block -->
-</div>
+</div>--%>
 <asp:HiddenField ID="hdf_WF" runat="server" />
 <asp:HiddenField ID="hdf_WF_Text" runat="server" />
 <asp:HiddenField ID="hdf_list_files" runat="server" />

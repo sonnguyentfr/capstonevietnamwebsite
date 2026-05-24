@@ -153,7 +153,7 @@ Namespace DesktopModules.TinTuc.Controls
                 If Not IsPostBack Then
                     'Lay thong tin user
                     BindPage()
-                    Me.ltrCurrentWebite.Text = PortalContextHelper.CurrentPortal.PortalName & " (" & PortalContextHelper.CurrentPortal.PortalId & ")"
+                    Me.ltrCurrentWebite.Text = PortalContextHelper.CurrentPortal.PortalName & " (" & PortalId & ")"
                     Dim obju As UserInfo
                     Dim ctluser As New UserController
                     obju = ctluser.GetUser(PortalId, UserId)

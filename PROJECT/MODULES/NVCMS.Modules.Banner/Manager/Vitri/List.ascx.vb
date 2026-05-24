@@ -30,7 +30,7 @@ Namespace NVCMS.Modules.Banner
             '
             If Not IsPostBack Then
                 Try
-                    PortalCurrent = PortalContextHelper.CurrentPortal.PortalId
+                    PortalCurrent = PortalId
                     BindGridData()
                 Catch ex As Exception
                     ProcessModuleLoadException(Me, ex)

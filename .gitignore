@@ -410,3 +410,6 @@ FodyWeavers.xsd
 # JetBrains Rider
 *.sln.iml
 /client_app/.idea
+# npm
+node_modules/
+Capstone.View/package-lock.json

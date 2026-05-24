@@ -2,6 +2,7 @@
 Imports System.Web.UI.WebControls
 Imports DotNetNuke
 Imports DotNetNuke.UI.Utilities
+Imports NVCMS.Modules.Hethong
 Imports NVCMS.Modules.TinTuc
 
 Namespace DesktopModules.TinTuc.Manager.newsapprove

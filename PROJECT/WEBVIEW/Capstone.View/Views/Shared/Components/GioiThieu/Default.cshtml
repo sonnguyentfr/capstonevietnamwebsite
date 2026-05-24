@@ -1,0 +1,74 @@
+﻿@model NVCMS.WebView.Data.ViewModels.GioiThieuViewModel?
+@if (Model != null)
+{
+    <div class="page-gioi-thieu">
+        @* @if (!string.IsNullOrEmpty(Model.ImagePath))
+        {
+            <div class="page-banner img-cover">
+                <img src="@Model.ImagePath" alt="@Model.TrangDanhMuc" loading="lazy">
+            </div>
+        } *@
+        <div class="container section-large">
+            <div class="gt-layout">
+                @* Cot trai: sidebar menu co dinh *@
+                <aside class="gt-sidebar">
+                    <nav class="gt-sidebar-nav">
+                        <h3 class="gt-sidebar-title">Giới thiệu</h3>
+                        <ul class="gt-sidebar-menu">
+                            @foreach (var item in Model.SidebarMenu)
+                            {
+                                var isActive = Context.Request.Path.Value?.TrimEnd('/') == item.Url.TrimEnd('/');
+                                <li class="@(isActive ? "active" : "")">
+                                    <a href="@item.Url">@item.Title</a>
+                                    @if (item.Children.Count > 0)
+                                    {
+                                        <ul class="gt-sidebar-children">
+                                            @foreach (var child in item.Children)
+                                            {
+                                                var isChildActive = Context.Request.Path.Value?.TrimEnd('/') == child.Url.TrimEnd('/');
+                                                <li class="@(isChildActive ? "active" : "")">
+                                                    <a href="@child.Url">@child.Title</a>
+                                                </li>
+                                            }
+                                        </ul>
+                                    }
+                                </li>
+                            }
+                        </ul>
+                    </nav>
+                </aside>
+
+                @* Cot phai: noi dung *@
+                <div class="trangioithieu">
+                    <div class="post">
+                        <div class="section-title text-center">
+                            <h2>@Model.TrangDanhMuc</h2>
+                            <div class="bar"></div>
+                        </div>
+                        <div class="post-entry-full">
+                            @if (!string.IsNullOrEmpty(Model.Tieudephu))
+                            {
+                                <p class="page-subtitle text-muted">@Model.Tieudephu</p>
+                            }
+                            @if (!string.IsNullOrEmpty(Model.Tomtat))
+                            {
+                                <div class="page-tomtat mt-4">@Html.Raw(Model.Tomtat)</div>
+                            }
+                            @if (!string.IsNullOrEmpty(Model.Noidung))
+                            {
+                                <div class="page-noidung mt-4">@Html.Raw(System.Net.WebUtility.HtmlDecode(Model.Noidung))</div>
+                            }
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="container section-large">
+        <p>Nội dung đang cập nhật!</p>
+    </div>
+}

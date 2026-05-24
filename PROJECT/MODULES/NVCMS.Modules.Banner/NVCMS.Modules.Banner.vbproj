@@ -111,6 +111,7 @@
     <Import Include="System.Web.UI.HtmlControls" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DAL\_Banner\BannerAdvWebController.vb" />
     <Compile Include="DAL\_Banner\BannerAdvController.vb" />
     <Compile Include="DAL\_Banner\BannerAdvInfo.vb" />
     <Compile Include="DAL\BannerAdv_Static\BannerAdv_StaticController.vb" />
@@ -285,7 +286,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\CORE\NVCMS.Modules.System\NVCMS.Modules.Hethong.vbproj">
       <Project>{33516935-ee1c-47aa-a62f-7bcb24ee6110}</Project>
-      <Name>0. NVCMS.Modules.Hethong</Name>
+      <Name>NVCMS.Modules.Hethong</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

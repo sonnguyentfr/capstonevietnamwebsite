@@ -2,6 +2,7 @@
 Imports DotNetNuke.Services.Log.EventLog
 Imports DotNetNuke.UI.Utilities
 Imports DotNetNuke.Web.Client.ClientResourceManagement
+Imports NVCMS.Modules.Hethong
 Imports NVCMS.Modules.TinTuc
 
 Namespace DesktopModules.TinTuc.Configurations
@@ -47,7 +48,7 @@ Namespace DesktopModules.TinTuc.Configurations
         Protected Sub lbtUpdateOrder_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles lbtUpdateOrder.Click
             'DotNetNuke.UI.Utilities.ClientAPI.RegisterStartUpScript(Me.Page, "showError", "<script>alert('" & hdf_Value.Value & "');</script>")
             Dim ctlNewsCategories As New NewsSettingsController
-            ctlNewsCategories.Delete(drlSettings.SelectedValue)
+            ctlNewsCategories.Delete(drlSettings.SelectedValue, PortalId)
             Dim sSettings = hdf_Value.Value
             Dim strArr As String() = sSettings.Split(CType(",", Char))
             For i As Integer = 0 To strArr.Length - 1

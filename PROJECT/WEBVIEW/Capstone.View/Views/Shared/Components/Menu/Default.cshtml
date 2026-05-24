@@ -1,0 +1,67 @@
+@model List<NVCMS.WebView.Data.Models.MenuItemModel>
+@{
+    var currentPath = Context.Request.Path.Value?.TrimEnd('/') ?? string.Empty;
+
+    bool IsActive(string url)
+    {
+        var u = url.TrimEnd('/');
+        if (string.IsNullOrEmpty(u)) return false;
+        return currentPath.Equals(u, StringComparison.OrdinalIgnoreCase)
+            || currentPath.StartsWith(u + "/", StringComparison.OrdinalIgnoreCase);
+    }
+
+    bool HasActiveChild(MenuItemModel item) =>
+        item.Children.Any(c => IsActive(c.Url) || c.Children.Any(s => IsActive(s.Url)));
+}
+
+<ul class="main-menu">
+    <li><span class="dot"></span></li>
+    @foreach (var item in Model)
+    {
+        var parentActive = IsActive(item.Url) || HasActiveChild(item);
+        if (item.Children.Count > 0)
+        {
+            <li class="has-mega-menu @(parentActive ? "active" : "")">
+                <a href="@item.Url">@item.Title</a>
+                <span class="menu-toggle fa-light fa-chevron-down"></span>
+                <div class="mega-menu">
+                    <div class="container">
+                        <ul class="mega-list">
+                            @foreach (var child in item.Children)
+                            {
+                                var childActive = IsActive(child.Url) || child.Children.Any(s => IsActive(s.Url));
+                                if (child.Children.Count > 0)
+                                {
+                                    <li class="@(childActive ? "active" : "")">
+                                        <a href="@child.Url">@child.Title</a>
+                                        <ul class="children-menu">
+                                            @foreach (var sub in child.Children)
+                                            {
+                                                <li class="@(IsActive(sub.Url) ? "active" : "")">
+                                                    <a href="@sub.Url">@sub.Title</a>
+                                                </li>
+                                            }
+                                        </ul>
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li class="@(childActive ? "active" : "")">
+                                        <a href="@child.Url">@child.Title</a>
+                                    </li>
+                                }
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </li>
+        }
+        else
+        {
+            <li class="@(parentActive ? "active" : "")">
+                <a href="@item.Url">@item.Title</a>
+            </li>
+        }
+        <li><span class="dot"></span></li>
+    }
+</ul>

@@ -1,0 +1,375 @@
+﻿@{
+    ViewData["Title"] = "Trang chu";
+}
+
+<!-- Banner slider - vitri = 1 -->
+<section class="home-banner">
+    @await Component.InvokeAsync("Banner", new { vitriid = 4 })
+</section>
+
+<!-- Quick nav -->
+<section class="home-nav bg-primary-950 aos-init aos-animate">
+    <ul class="nav-list">
+        <li><a class="btn-solid" href="/tu-van-dinh-cu"><i class="fa-light fa-chalkboard-user"></i><span>Tu van dinh cu</span></a></li>
+        <li><a class="btn-solid" href="/capstone-vietnam/cac-dich-vu-capstone/tu-van-du-hoc-cac-nuoc"><i class="fa-light fa-file-certificate"></i><span>Tu van du hoc cac nuoc</span></a></li>
+        <li><a class="btn-solid" href="/capstone-vietnam/cac-dich-vu-capstone/tu-van-du-hoc-truong-top"><i class="fa-light fa-star"></i><span>Du hoc truong TOP</span></a></li>
+        <li><a class="btn-solid" href="/capstone-vietnam/cac-dich-vu-capstone/tu-van-nganh-nghe"><i class="fa-light fa-graduation-cap"></i><span>Tu van nganh nghe - Career Coach</span></a></li>
+        <li><a class="btn-solid" href="/capstone-vietnam/cac-dich-vu-capstone/dich-vu-chuyen-tien-du-hoc"><i class="fa-light fa-globe"></i><span>Dich vu chuyen tien du hoc</span></a></li>
+        <li><a class="btn-solid" href="/capstone-vietnam/cac-dich-vu-capstone/dich-vu-tim-nha"><i class="fa-light fa-building-columns"></i><span>Dich vu tim nha</span></a></li>
+    </ul>
+</section>
+
+<!-- Quoc gia du hoc -->
+<section class="home-quocgia section_listquocgia section-large">
+    <div class="container">
+        <h2 class="site-title text-center" data-aos="zoom-in" data-aos-delay="200">Bạn muốn du học Quốc gia nào</h2>
+        @await Component.InvokeAsync("Banner", new { vitriid = 113 })
+    </div>
+</section>
+
+<!-- Hoi thao su kien -->
+<section class="home-story section-large bg-neutral-50 overflow-hidden">
+    <div class="container">
+        <h2 class="site-title text-center">Hội thảo - Sự kiện</h2>
+        <!-- TODO: render danh sach su kien tu ViewBag/Model -->
+        <div class="row mt-8" id="su-kien-list">
+        </div>
+        <div class="button justify-center mt-8">
+            <a class="btn-solid" href="/su-kien"><span>Xem them</span><i class="fa-regular fa-plus"></i></a>
+        </div>
+    </div>
+</section>
+
+<!-- Truong dai hoc cao dang -->
+<section class="home-connectivity section-large">
+    <div class="container" data-aos="zoom-in" data-aos-delay="150">
+        <h2 class="site-title text-center uppercase">Cac truong dai hoc &amp; cao dang</h2>
+        <div class="site-desc mt-8 mx-auto text-center">
+            <p>Capstone chi hop tac voi cac truong duoc kiem dinh cap khu vuc (Kiem dinh vang) tai My,
+            va cac truong duoc kiem dinh chinh thong tai cac quoc gia khac</p>
+        </div>
+        <div class="button justify-center mt-8">
+            <a class="btn-solid active" href="/capstone-vietnam/truong-doi-tac"><span>Truong noi bat</span><i class="fa-regular fa-plus"></i></a>
+            <a class="btn-solid" href="/capstone-vietnam/truong-doi-tac/truong-tai-my"><span>My</span><i class="fa-regular fa-plus"></i></a>
+            <a class="btn-solid" href="/capstone-vietnam/truong-doi-tac/truong-dai-hoc-tai-canada"><span>Canada</span><i class="fa-regular fa-plus"></i></a>
+            <a class="btn-solid" href="/capstone-vietnam/truong-doi-tac/truong-dai-hoc-tai-uc"><span>Uc</span><i class="fa-regular fa-plus"></i></a>
+            <a class="btn-solid" href="/capstone-vietnam/truong-doi-tac/cac-truong-dai-hoc-tai-anh"><span>Anh</span><i class="fa-regular fa-plus"></i></a>
+            <a class="btn-solid" href="/thong-tin-du-hoc/du-hoc-ireland"><span>Ireland</span><i class="fa-regular fa-plus"></i></a>
+            <a class="btn-solid" href="/thong-tin-du-hoc/du-hoc-thuy-si"><span>Thuy si</span><i class="fa-regular fa-plus"></i></a>
+        </div>
+    </div>
+    <div class="container">
+        <div class="swiper-relative four-slider mt-8">
+            <div class="swiper" id="truong-dh-swiper">
+                <div class="swiper-wrapper">
+                    <!-- TODO: render truong doi tac tu ViewBag/Model -->
+                </div>
+            </div>
+            <div class="mobile-only"><div class="swiper-pagination"></div></div>
+            <div class="desktop-only">
+                <div class="swiper-button is-abs">
+                    <div class="button-prev"><i class="fa-light fa-chevron-left"></i></div>
+                    <div class="button-next"><i class="fa-light fa-chevron-right"></i></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Truong trung hoc -->
+<section class="home-connectivity section-large">
+    <div class="container" data-aos="zoom-in" data-aos-delay="150">
+        <h2 class="site-title text-center uppercase">Cac truong trung hoc</h2>
+        <div class="site-desc mt-8 mx-auto text-center">
+            <p>Capstone chi hop tac voi cac truong duoc kiem dinh cap khu vuc (Kiem dinh vang) tai My,
+            va cac truong duoc kiem dinh chinh thong tai cac quoc gia khac</p>
+        </div>
+        <div class="button justify-center mt-8">
+            <a class="btn-solid active" href="/capstone-vietnam/truong-doi-tac"><span>Truong noi bat</span><i class="fa-regular fa-plus"></i></a>
+            <a class="btn-solid" href="/capstone-vietnam/truong-doi-tac/truong-tai-my"><span>My</span><i class="fa-regular fa-plus"></i></a>
+            <a class="btn-solid" href="/capstone-vietnam/truong-doi-tac/truong-dai-hoc-tai-canada"><span>Canada</span><i class="fa-regular fa-plus"></i></a>
+            <a class="btn-solid" href="/capstone-vietnam/truong-doi-tac/truong-dai-hoc-tai-uc"><span>Uc</span><i class="fa-regular fa-plus"></i></a>
+            <a class="btn-solid" href="/capstone-vietnam/truong-doi-tac/cac-truong-dai-hoc-tai-anh"><span>Anh</span><i class="fa-regular fa-plus"></i></a>
+            <a class="btn-solid" href="/thong-tin-du-hoc/du-hoc-ireland"><span>Ireland</span><i class="fa-regular fa-plus"></i></a>
+            <a class="btn-solid" href="/thong-tin-du-hoc/du-hoc-thuy-si"><span>Thuy si</span><i class="fa-regular fa-plus"></i></a>
+        </div>
+    </div>
+    <div class="container">
+        <div class="swiper-relative four-slider mt-8">
+            <div class="swiper" id="truong-th-swiper">
+                <div class="swiper-wrapper">
+                    <!-- TODO: render truong trung hoc tu ViewBag/Model -->
+                </div>
+            </div>
+            <div class="mobile-only"><div class="swiper-pagination"></div></div>
+            <div class="desktop-only">
+                <div class="swiper-button is-abs">
+                    <div class="button-prev"><i class="fa-light fa-chevron-left"></i></div>
+                    <div class="button-next"><i class="fa-light fa-chevron-right"></i></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Cong cu tim truong -->
+<section class="home-our-research section-large bg-neutral-50">
+    <div class="container">
+        <h2 class="site-title text-center" data-aos="flip-left" data-aos-delay="100">CONG CU TIM TRUONG</h2>
+        <div class="mt-8">
+            <div class="school-search-form" data-aos="fade-up" data-aos-delay="100">
+                <input type="text" id="search-ten-truong" placeholder="TEN TRUONG...">
+                <select id="search-quoc-gia">
+                    <option value="" disabled selected>QUOC GIA +</option>
+                    <option>My</option>
+                    <option>Canada</option>
+                    <option>Anh</option>
+                    <option>Uc</option>
+                    <option>Ireland</option>
+                    <option>Thuy si</option>
+                    <option>Singapore</option>
+                </select>
+                <select id="search-bac-hoc">
+                    <option value="" disabled selected>BAC HOC +</option>
+                    <option>Trung hoc</option>
+                    <option>Cao dang</option>
+                    <option>Dai hoc</option>
+                    <option>Sau dai hoc</option>
+                </select>
+                <select id="search-nganh-hoc">
+                    <option value="" disabled selected>NGANH HOC +</option>
+                    <option>Kinh te</option>
+                    <option>Quan tri kinh doanh</option>
+                    <option>Cong nghe thong tin</option>
+                    <option>Khoa hoc may tinh</option>
+                    <option>Nghe thuat</option>
+                    <option>Tam ly hoc</option>
+                </select>
+                <select id="search-hoc-phi">
+                    <option value="" disabled selected>HOC PHI +</option>
+                    <option>Duoi 10.000 USD</option>
+                    <option>10.000 - 20.000 USD</option>
+                    <option>20.000 - 40.000 USD</option>
+                    <option>Tren 40.000 USD</option>
+                </select>
+            </div>
+            <div class="school-search-btn-container">
+                <button class="school-search-btn" onclick="timTruong()">TIM THONG TIN TRUONG</button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Ve Capstone - so lieu -->
+<section class="home-about bg-primary-950 section" data-aos="fade-up" data-aos-delay="100">
+    <div class="container">
+        <div class="row -mt-8 items-center">
+            <div class="col w-full mt-8 lg:w-5/12 xl:w-1/2">
+                <div class="block-about">
+                    <div class="hub-title">
+                        <h1 class="university-name">Reaching New Heights</h1>
+                        <h2>Cong ty TNHH Capstone Viet Nam</h2>
+                    </div>
+                    <div class="button">
+                        <a class="btn-solid btn-white uppercase" href="/gioi-thieu/ve-capstone.html">
+                            <span>VE CAPSTONE VIETNAM</span><i class="fa-light fa-plus"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col w-full mt-8 lg:w-7/12 xl:w-1/2">
+                <div class="about-list">
+                    <div class="about-item">
+                        <div class="icon"><img src="/static/img/icon-1.png" alt=""></div>
+                        <h2 class="number"><span class="count-up" data-count="2009">0</span></h2>
+                        <div class="caption"><p>Thanh lap Capstone</p></div>
+                    </div>
+                    <div class="about-item">
+                        <div class="icon"><img src="/static/img/icon-2.png" alt=""></div>
+                        <h2 class="number"><span class="count-up" data-count="800">0</span><span class="sub-count">+</span></h2>
+                        <div class="caption"><p>Doi tac Quoc te</p></div>
+                    </div>
+                    <div class="about-item">
+                        <div class="icon"><img src="/static/img/icon-3.png" alt=""></div>
+                        <h2 class="number"><span class="count-up" data-count="100000">0</span><span class="sub-count">+</span></h2>
+                        <div class="caption"><p>Luot khach hang tham du</p></div>
+                    </div>
+                    <div class="about-item">
+                        <div class="icon"><img src="/static/img/icon-4.png" alt=""></div>
+                        <h2 class="number"><span class="count-up" data-count="150">0</span><span class="sub-count">+</span></h2>
+                        <div class="caption"><p>Ky trien lam, hoi thao du hoc</p></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Tin tuc hoc bong -->
+<section class="home-news news-list-section section-large">
+    <div class="container">
+        <h2 class="site-title text-center">Tin tuc - Hoc bong</h2>
+        <div class="news-list mt-8" id="tin-tuc-list">
+            <!-- TODO: render tin tuc tu ViewBag/Model -->
+        </div>
+        <div class="button justify-center mt-8">
+            <a class="btn-solid" href="/cam-nang-va-tin-tuc"><span>Xem tat ca</span><i class="fa-regular fa-plus"></i></a>
+        </div>
+    </div>
+</section>
+
+<!-- Cac dich vu -->
+<section class="home-courses section-large bg-neutral-50">
+    <div class="container">
+        <h2 class="site-title text-center">CAC DICH VU CUA CAPSTONE</h2>
+        <div class="home-courses-list mt-8">
+            <div class="home-courses-item">
+                <div class="image img-cover">
+                    <a href="/capstone-vietnam/cac-dich-vu-capstone/tu-van-du-hoc-cac-nuoc">
+                        <img src="/static/img/service/du-hoc-cac-cap.jpg" alt="Du hoc cac cap">
+                    </a>
+                </div>
+                <div class="caption"><h3 class="title"><a href="/capstone-vietnam/cac-dich-vu-capstone/tu-van-du-hoc-cac-nuoc">Du hoc cac cap</a></h3></div>
+            </div>
+            <div class="home-courses-item">
+                <div class="image img-cover">
+                    <a href="/capstone-vietnam/cac-dich-vu-capstone/tu-van-du-hoc-truong-top">
+                        <img src="/static/img/service/du-hoc-truong-top.jpg" alt="Du hoc truong top">
+                    </a>
+                </div>
+                <div class="caption"><h3 class="title"><a href="/capstone-vietnam/cac-dich-vu-capstone/tu-van-du-hoc-truong-top">Du hoc truong top</a></h3></div>
+            </div>
+            <div class="home-courses-item">
+                <div class="image img-cover">
+                    <a href="/capstone-vietnam/cac-dich-vu-capstone/tu-van-nganh-nghe">
+                        <img src="/static/img/service/dinh-huong-nghe-nghiep.jpg" alt="Dinh huong nghe nghiep">
+                    </a>
+                </div>
+                <div class="caption"><h3 class="title"><a href="/capstone-vietnam/cac-dich-vu-capstone/tu-van-nganh-nghe">Dinh huong nghe nghiep</a></h3></div>
+            </div>
+            <div class="home-courses-item">
+                <div class="image img-cover">
+                    <a href="/capstone-vietnam/cac-dich-vu-capstone/tu-van-visa-du-hoc-tham-than">
+                        <img src="/static/img/service/visa-du-hoc.jpg" alt="Visa du hoc, tham than">
+                    </a>
+                </div>
+                <div class="caption"><h3 class="title"><a href="/capstone-vietnam/cac-dich-vu-capstone/tu-van-visa-du-hoc-tham-than">Visa du hoc, tham than</a></h3></div>
+            </div>
+            <div class="home-courses-item">
+                <div class="image img-cover">
+                    <a href="/tu-van-dinh-cu">
+                        <img src="/static/img/service/tu-van-dinh-cu.jpg" alt="Tu van dau tu dinh cu">
+                    </a>
+                </div>
+                <div class="caption"><h3 class="title"><a href="/tu-van-dinh-cu">Tu van dau tu dinh cu</a></h3></div>
+            </div>
+            <div class="home-courses-item">
+                <div class="image img-cover">
+                    <a href="/capstone-vietnam/fairguide">
+                        <img src="/static/img/service/trien-lam-du-hoc.jpg" alt="Trien lam du hoc">
+                    </a>
+                </div>
+                <div class="caption"><h3 class="title"><a href="/capstone-vietnam/fairguide">Trien lam du hoc</a></li></h3></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Doi ngu co van -->
+<section class="home-units section-large">
+    <div class="container">
+        <h2 class="site-title text-center">DOI NGU CO VAN</h2>
+        <div class="swiper-relative four-slider mt-8">
+            <div class="swiper" id="doi-ngu-swiper">
+                <div class="swiper-wrapper">
+                    <!-- TODO: render doi ngu tu ViewBag/Model -->
+                </div>
+            </div>
+            <div class="mobile-only"><div class="swiper-pagination"></div></div>
+            <div class="desktop-only">
+                <div class="swiper-button is-abs">
+                    <div class="button-prev"><i class="fa-light fa-chevron-left"></i></div>
+                    <div class="button-next"><i class="fa-light fa-chevron-right"></i></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Danh sach truong doi tac -->
+<section class="home-our-research section-large bg-neutral-50">
+    <div class="container">
+        <h2 class="site-title text-center">DANH SACH TRUONG DOI TAC</h2>
+        <div class="swiper-relative four-slider mt-8">
+            <div class="swiper" id="truong-doi-tac-swiper">
+                <div class="swiper-wrapper">
+                    <!-- TODO: render truong doi tac tu ViewBag/Model -->
+                </div>
+            </div>
+            <div class="mobile-only"><div class="swiper-pagination"></div></div>
+            <div class="desktop-only">
+                <div class="swiper-button is-abs">
+                    <div class="button-prev"><i class="fa-light fa-chevron-left"></i></div>
+                    <div class="button-next"><i class="fa-light fa-chevron-right"></i></div>
+                </div>
+            </div>
+        </div>
+        <div class="button justify-center mt-8">
+            <a class="btn-solid" href="/capstone-vietnam/truong-doi-tac"><span>Xem tat ca</span><i class="fa-regular fa-plus"></i></a>
+        </div>
+    </div>
+</section>
+
+<!-- Dang ky tu van -->
+<section class="home-about section-large bg-primary-50">
+    <div class="container">
+        <div class="row items-center">
+            <div class="col w-full lg:w-1/2">
+                <h2 class="site-title">Dang ky tu van</h2>
+                <p class="mt-4">Moi su hop tac tot dep deu bat dau tu mot cuoc tro chuyen.
+                Hay lien he voi chung toi, moi mong muon cua ban se duoc lang nghe.</p>
+            </div>
+            <div class="col w-full lg:w-1/2 mt-8 lg:mt-0">
+                <form class="contact-form" id="form-tu-van" method="post" action="/dang-ky-tu-van">
+                    <select name="HinhThucTuVan">
+                        <option value="" disabled selected>Hinh thuc tu van</option>
+                        <option value="online">Online</option>
+                        <option value="offline">Truc tiep</option>
+                    </select>
+                    <input type="text" name="HoTen" placeholder="Ho va ten *" required>
+                    <input type="tel" name="DienThoai" placeholder="So dien thoai *" required>
+                    <input type="email" name="Email" placeholder="Email *" required>
+                    <select name="DichVu">
+                        <option value="" disabled selected>Dich vu quan tam</option>
+                        <option>Tu van du hoc</option>
+                        <option>Tu van dinh cu</option>
+                        <option>Career Coach</option>
+                        <option>Visa du hoc</option>
+                    </select>
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="DongY" required>
+                        Toi dong y voi cac dieu khoan bao mat thong tin cua Capstone
+                    </label>
+                    <button type="submit" class="btn-solid active">
+                        <span>GUI</span><i class="fa-regular fa-arrow-right"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Cam nhan khach hang -->
+<section class="home-story section-large bg-neutral-50 overflow-hidden">
+    <div class="container">
+        <h2 class="site-title text-center">Cam Nhan Cua Khach Hang</h2>
+        <div class="swiper-relative one-slider no-loop mt-8 equal-height">
+            <div class="swiper" id="testimonial-swiper">
+                <div class="swiper-wrapper">
+                    <!-- TODO: render cam nhan tu ViewBag/Model -->
+                </div>
+            </div>
+            <div class="swiper-pagination is-abs"></div>
+        </div>
+    </div>
+</section>

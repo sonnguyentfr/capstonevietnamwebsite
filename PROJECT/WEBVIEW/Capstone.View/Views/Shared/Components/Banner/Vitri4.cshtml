@@ -1,0 +1,28 @@
+﻿@model IEnumerable<NVCMS.WebView.Data.ViewModels.BannerViewModel>
+@if (Model != null && Model.Any())
+{
+    <div class="swiper">
+        <div class="swiper-wrapper">
+            @foreach (var banner in Model)
+            {
+                <div class="swiper-slide">
+                    <div class="image img-cover">
+                        @if (!string.IsNullOrEmpty(banner.Link))
+                        {
+                            <a href="@banner.Link" title="@banner.Title">
+                                <img cdn-src="@banner.IMGLink" cdn-w="@banner.Width" cdn-h="@banner.Height"
+                                     alt="@banner.Title" loading="lazy" />
+                            </a>
+                        }
+                        else
+                        {
+                            <img cdn-src="@banner.IMGLink" cdn-w="@banner.Width" cdn-h="@banner.Height"
+                                 alt="@banner.Title" loading="lazy" />
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="swiper-pagination is-white is-abs"></div>
+    </div>
+}

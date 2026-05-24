@@ -2,6 +2,7 @@
 Imports DotNetNuke
 Imports DotNetNuke.Security.Roles
 Imports DotNetNuke.UI.Utilities
+Imports NVCMS.Modules.Hethong
 Imports NVCMS.Modules.TinTuc
 Imports NVCMS.Modules.Users
 

@@ -2,6 +2,7 @@
 Imports System.Xml
 Imports DotNetNuke.Entities.Modules
 Imports DotNetNuke.Security.Permissions
+Imports NVCMS.Modules.Hethong
 Imports NVCMS.Modules.TinTuc
 Namespace DesktopModules.TinTuc.Control
     Partial Class MenuAdmin

@@ -59,7 +59,7 @@ Namespace NVCMS.Modules.Banner
             '
             If Not IsPostBack Then
                 Try
-                    PortalCurrent = PortalContextHelper.CurrentPortal.PortalId
+                    PortalCurrent = PortalId
                     BindVitri()
                     If IsNumeric(Request.Item("vitri")) Then
                         vitri = Request.Item("vitri")

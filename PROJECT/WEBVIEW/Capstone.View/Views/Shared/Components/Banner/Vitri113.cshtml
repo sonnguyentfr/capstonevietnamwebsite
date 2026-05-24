@@ -1,0 +1,19 @@
+﻿@model IEnumerable<NVCMS.WebView.Data.ViewModels.BannerViewModel>
+@if (Model != null && Model.Any())
+{
+    <div class="col-lg-12 col-md-12 duhocnuocnao mt-8">
+        @foreach (var banner in Model)
+        {
+            <div class="card" data-aos="fade-up">
+                <a href="@banner.Link" title="@banner.Title">
+                    <img cdn-src="@banner.IMGLink" cdn-w="@banner.Width" cdn-h="@banner.Height"
+                         alt="@banner.Title" loading="lazy" />
+                </a>
+                <div class="card__head"><a href="@banner.Link">@banner.Title</a></div>
+            </div>
+        }
+    </div>
+    <div class="col-lg-12 col-md-12 duhocnuocnao">
+        <a href="/tim-truong" class="w-full text-center block"><h3>cac quoc gia khac +</h3></a>
+    </div>
+}

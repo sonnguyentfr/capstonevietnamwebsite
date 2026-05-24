@@ -1,0 +1,269 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
+
+.form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
+  color: var(--bs-secondary-color);
+  text-align: end;
+}
+
+.form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
+  text-align: start;
+}
+
+/* =============================================
+   TRANG GIOI THIEU - LAYOUT 2 COT
+   ============================================= */
+.gt-layout {
+  display: flex;
+  gap: 2rem;
+  align-items: flex-start;
+}
+
+/* Sidebar */
+.gt-sidebar {
+  flex: 0 0 260px;
+  position: sticky;
+  top: 100px;
+  max-height: calc(100vh - 120px);
+  overflow-y: auto;
+}
+
+.gt-sidebar-title {
+  font-size: 1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.75rem 1rem;
+  margin: 0;
+  background-color: var(--bs-primary, #0d6efd);
+  color: #fff;
+  border-radius: 4px 4px 0 0;
+}
+
+.gt-sidebar-menu {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border: 1px solid #e0e0e0;
+  border-top: none;
+  border-radius: 0 0 4px 4px;
+  overflow: hidden;
+}
+
+.gt-sidebar-menu > li > a {
+  display: block;
+  padding: 0.6rem 1rem;
+  color: #333;
+  text-decoration: none;
+  font-size: 0.9rem;
+  border-bottom: 1px solid #f0f0f0;
+  transition: background 0.2s, color 0.2s;
+}
+
+.gt-sidebar-menu > li > a:hover,
+.gt-sidebar-menu > li.active > a {
+  background-color: #f5f5f5;
+  color: var(--bs-primary, #0d6efd);
+  font-weight: 600;
+}
+
+.gt-sidebar-menu > li.active > a {
+  border-left: 3px solid var(--bs-primary, #0d6efd);
+  padding-left: calc(1rem - 3px);
+}
+
+/* Sub-menu trong sidebar */
+.gt-sidebar-children {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  background: #fafafa;
+}
+
+.gt-sidebar-children li a {
+  display: block;
+  padding: 0.45rem 1rem 0.45rem 1.75rem;
+  color: #555;
+  text-decoration: none;
+  font-size: 0.85rem;
+  border-bottom: 1px solid #f0f0f0;
+  transition: background 0.2s, color 0.2s;
+}
+
+.gt-sidebar-children li a:hover,
+.gt-sidebar-children li.active a {
+  color: var(--bs-primary, #0d6efd);
+  background: #f0f4ff;
+}
+
+/* Cot noi dung */
+.gt-content {
+  flex: 1;
+  min-width: 0;
+}
+
+/* =============================================
+   TYPOGRAPHY - NOI DUNG HTML TU DB
+   Ap dung cho ca .page-tomtat va .page-noidung
+   ============================================= */
+.page-tomtat,
+.page-noidung {
+  line-height: 1.8;
+  color: #333;
+  font-size: 1rem;
+  word-break: break-word;
+}
+
+/* Tieu de */
+.page-tomtat h1, .page-noidung h1,
+.page-tomtat h2, .page-noidung h2,
+.page-tomtat h3, .page-noidung h3,
+.page-tomtat h4, .page-noidung h4,
+.page-tomtat h5, .page-noidung h5,
+.page-tomtat h6, .page-noidung h6 {
+  font-weight: 700;
+  line-height: 1.4;
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+  color: #1a1a1a;
+}
+.page-tomtat h1, .page-noidung h1 { font-size: 1.75rem; }
+.page-tomtat h2, .page-noidung h2 { font-size: 1.5rem; }
+.page-tomtat h3, .page-noidung h3 { font-size: 1.25rem; }
+.page-tomtat h4, .page-noidung h4 { font-size: 1.1rem; }
+.page-tomtat h5, .page-noidung h5 { font-size: 1rem; }
+.page-tomtat h6, .page-noidung h6 { font-size: 0.9rem; color: #555; }
+
+/* Doan van */
+.page-tomtat p, .page-noidung p {
+  margin-bottom: 1rem;
+}
+
+/* Danh sach */
+.page-tomtat ul, .page-noidung ul,
+.page-tomtat ol, .page-noidung ol {
+  padding-left: 1.5rem;
+  margin-bottom: 1rem;
+}
+.page-tomtat ul, .page-noidung ul { list-style: disc; }
+.page-tomtat ol, .page-noidung ol { list-style: decimal; }
+.page-tomtat li, .page-noidung li { margin-bottom: 0.35rem; }
+
+/* Lien ket */
+.page-tomtat a, .page-noidung a {
+  color: var(--bs-primary, #0d6efd);
+  text-decoration: underline;
+}
+.page-tomtat a:hover, .page-noidung a:hover {
+  opacity: 0.8;
+}
+
+/* Hinh anh */
+.page-tomtat img, .page-noidung img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 6px;
+  margin: 0.75rem 0;
+  display: block;
+}
+
+/* Blockquote */
+.page-tomtat blockquote, .page-noidung blockquote {
+  border-left: 4px solid var(--bs-primary, #0d6efd);
+  padding: 0.75rem 1.25rem;
+  margin: 1rem 0;
+  background: #f8f9ff;
+  border-radius: 0 4px 4px 0;
+  color: #555;
+  font-style: italic;
+}
+
+/* Bang */
+.page-tomtat table, .page-noidung table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+}
+.page-tomtat th, .page-noidung th {
+  background: var(--bs-primary, #0d6efd);
+  color: #fff;
+  padding: 0.6rem 0.85rem;
+  text-align: left;
+  font-weight: 600;
+}
+.page-tomtat td, .page-noidung td {
+  padding: 0.55rem 0.85rem;
+  border-bottom: 1px solid #e8e8e8;
+  vertical-align: top;
+}
+.page-tomtat tr:nth-child(even) td,
+.page-noidung tr:nth-child(even) td {
+  background: #f9f9f9;
+}
+
+/* Code */
+.page-tomtat pre, .page-noidung pre {
+  background: #f4f4f4;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 1rem;
+  overflow-x: auto;
+  font-size: 0.875rem;
+  margin-bottom: 1rem;
+}
+.page-tomtat code, .page-noidung code {
+  background: #f0f0f0;
+  padding: 0.1em 0.4em;
+  border-radius: 3px;
+  font-size: 0.875em;
+}
+.page-tomtat pre code, .page-noidung pre code {
+  background: none;
+  padding: 0;
+}
+
+/* Duong ngang */
+.page-tomtat hr, .page-noidung hr {
+  border: none;
+  border-top: 1px solid #e0e0e0;
+  margin: 1.5rem 0;
+}
+
+/* Strong / Em */
+.page-tomtat strong, .page-noidung strong { font-weight: 700; }
+.page-tomtat em, .page-noidung em { font-style: italic; }
+
+/* Responsive: doi sang 1 cot khi man hinh nho */
+@media (max-width: 768px) {
+  .gt-layout {
+    flex-direction: column;
+  }
+
+  .gt-sidebar {
+    flex: none;
+    width: 100%;
+    position: static;
+    max-height: none;
+  }
+}

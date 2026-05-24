@@ -6,6 +6,7 @@ Imports System.Net
 Imports System.Web
 Imports System.Web.Script.Serialization
 Imports NVCMS.Modules.TinTuc
+Imports NVCMS.Modules.Hethong
 Namespace doi.upload
 
 
@@ -15,9 +16,10 @@ Namespace doi.upload
         Public PhotoVirtualPath As String
         Dim ctlMediaNews As New NewsByMediaController
         Dim ctlMedia As New MediaItemController
+        Public Shared PortalId As Integer = PortalSettings.Current.PortalId
         Public Sub ProcessRequest(ByVal context As HttpContext) Implements IHttpHandler.ProcessRequest
-            PhotoPhysicPath = Ultis.GetImagePath(False, PortalSettings.Current.PortalId, True)
-            PhotoVirtualPath = Ultis.GetImagePath(True, PortalSettings.Current.PortalId, True)
+            PhotoPhysicPath = Ultis.GetImagePath(False, PortalId, True)
+            PhotoVirtualPath = Ultis.GetImagePath(True, PortalId, True)
             Dim itemid As Integer = 0
             Integer.TryParse(context.Request.QueryString("itemid"), itemid)
             Dim tenfile As String = ""
@@ -40,17 +42,17 @@ Namespace doi.upload
                         tenfile += "<li class='anh-daupload'><div class='anh-khunganh'><a data-fancybox data-caption='' href='" & Ultis.GetBackround(sextension, Ultis.GetMediaPath(PhotoVirtualPath, fileName)) & "'><img src='" & Ultis.GetBackround(sextension, Ultis.GetMediaPath(PhotoVirtualPath, fileName)) & "' /></a><input " & Ultis.Enableanh(sextension) & " type='checkbox' data-img='" & Ultis.GetMediaPath(PhotoVirtualPath, fileName) & "' class='anh-addToAvatar' data-toggle='tooltip' data-placement='top' title='Đặt làm ảnh đại diện'/></div><div class='anh-thongtin'><a class='anh-addToContent btn' data-title='" & Ultis.GetMediaPath(PhotoVirtualPath, fileName) & "' data-img='" & Ultis.GetMediaPath(PhotoVirtualPath, fileName) & "' data-toggle='tooltip' data-placement='top' title='Chèn vào bài viết'><em class='icon ni ni-download'></em></a><a class='anh-addToContent2 btn' data-title='" & Ultis.GetMediaPath(PhotoVirtualPath, fileName) & "' data-img='" & Ultis.GetMediaPath(PhotoVirtualPath, fileName) & "' data-toggle='tooltip' data-placement='top' title='Chèn ảnh gốc vào bài viết'><em class='icon ni ni-camera'></em></a><a class='anh-addToContentLink btn' data-title='" & Ultis.GetMediaPath(PhotoVirtualPath, fileName) & "' data-img='" & Ultis.GetMediaPath(PhotoVirtualPath, fileName) & "' data-toggle='tooltip' data-placement='top' title='Chèn link vào text'><em class='icon ni ni-link'></em></a></div><div style='clear:both'></div></li>"
                         'check xem có phải video ko
                         'If sextension = "mp4" Then
-                        '    duration = CType(Ultis.GetVideoDurationSecond(Ultis.GetImagePath(False, PortalSettings.Current.PortalId, True) & "\" & fileName), Integer)
+                        '    duration = CType(Ultis.GetVideoDurationSecond(Ultis.GetImagePath(False, PortalId, True) & "\" & fileName), Integer)
                         'End If
                         'insert vo db
                         Dim filesize As Integer = postedFile.ContentLength
                         Dim idmedia As Integer = 0
-                        idmedia = ctlMedia._Insert(fileName, fileName, Ultis.GetImagePath(False, PortalSettings.Current.PortalId, True), Ultis.GetMediaPath(PhotoVirtualPath, fileName), filesize, sextension, 0, DateTime.Now, UserController.Instance.GetCurrentUserInfo().UserID, PortalSettings.Current.PortalId)
+                        idmedia = ctlMedia._Insert(fileName, fileName, Ultis.GetImagePath(False, PortalId, True), Ultis.GetMediaPath(PhotoVirtualPath, fileName), filesize, sextension, DateTime.Now, UserController.Instance.GetCurrentUserInfo().UserID, PortalId)
                         'update Duration
                         Dim objMedia As MediaItemInfo = ctlMedia._GetByID(idmedia)
-                        
+
                         'chen vao bang product media
-                        ctlMediaNews._Insert(itemid, idmedia, DateTime.Now, UserController.Instance.GetCurrentUserInfo().UserID, PortalSettings.Current.PortalId)
+                        ctlMediaNews._Insert(itemid, idmedia, DateTime.Now, UserController.Instance.GetCurrentUserInfo().UserID, PortalId)
                     End If
                     'Save the File in Folder.
 

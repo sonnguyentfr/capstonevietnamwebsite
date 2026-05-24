@@ -1,0 +1,48 @@
+﻿<?xml version="1.0"?>
+<doc>
+<assembly>
+<name>
+NVCMS.Modules.TrangGioiThieu
+</name>
+</assembly>
+<members>
+<member name="T:My.Resources.Resources">
+<summary>
+  A strongly-typed resource class, for looking up localized strings, etc.
+</summary>
+</member>
+<member name="P:My.Resources.Resources.ResourceManager">
+<summary>
+  Returns the cached ResourceManager instance used by this class.
+</summary>
+</member>
+<member name="P:My.Resources.Resources.Culture">
+<summary>
+  Overrides the current thread's CurrentUICulture property for all
+  resource lookups using this strongly typed resource class.
+</summary>
+</member>
+<member name="T:NVCMS.Modules.TrangGioiThieu.DataProvider">
+ -----------------------------------------------------------------------------
+ <summary>
+ An abstract class for the data access layer
+ </summary>
+ <remarks>
+ </remarks>
+ <history>
+ </history>
+ -----------------------------------------------------------------------------
+</member>
+<member name="T:NVCMS.Modules.TrangGioiThieu.SqlDataProvider">
+ -----------------------------------------------------------------------------
+ <summary>
+ SQL Server implementation of the abstract DataProvider class
+ </summary>
+ <remarks>
+ </remarks>
+ <history>
+ </history>
+ -----------------------------------------------------------------------------
+</member>
+</members>
+</doc>
