@@ -1,0 +1,107 @@
+﻿@using NVCMS.WebView.Data.ViewModels
+@model IEnumerable<TruongCardViewModel>
+
+@{
+    var title = ViewData["ViewTitle"]?.ToString() ?? "";
+    var hasItems = Model != null && Model.Any();
+}
+
+@if (hasItems)
+{
+    var uniqueId = "ts-" + Guid.NewGuid().ToString("N").Substring(0, 8);
+    <div class="truong-swiper-component" id="wrap-@uniqueId" data-aos="fade-up" data-aos-delay="100">
+        @if (!string.IsNullOrEmpty(title))
+        {
+            <div class="truong-swiper-header">
+                <h3 class="truong-swiper-title">@title</h3>
+            </div>
+        }
+        <div class="truong-swiper-prev swiper-button-prev"></div>
+        <div class="truong-swiper-next swiper-button-next"></div>
+        <div class="swiper @uniqueId truong-swiper-container">
+            <div class="swiper-wrapper">
+                @foreach (var t in Model!)
+                {
+                    <div class="swiper-slide">
+                        <a href="@t.DetailUrl" class="school-card school-card--slide">
+                            <div class="school-card__cover">
+                                @if (!string.IsNullOrEmpty(t.CoverUrl))
+                                {
+                                    <img src="@t.CoverUrl" alt="@t.NameofSchool" loading="lazy" />
+                                }
+                                else
+                                {
+                                    <div class="school-card__cover-placeholder"></div>
+                                }
+                                @if (t.IsPartner)
+                                {
+                                    <span class="school-card__badge">Đối tác</span>
+                                }
+                            </div>
+                            <div class="school-card__body">
+                                @if (!string.IsNullOrEmpty(t.LogoUrl))
+                                {
+                                    <div class="school-card__logo-wrap">
+                                        <img src="@t.LogoUrl" alt="logo @t.NameofSchool" loading="lazy" />
+                                    </div>
+                                }
+                                <h4 class="school-card__name">@t.NameofSchool</h4>
+                                <div class="school-card__meta">
+                                    @if (!string.IsNullOrEmpty(t.CountryName))
+                                    {
+                                        <span class="school-card__meta-item">
+                                            <i class="fa fa-globe"></i> @t.CountryName
+                                        </span>
+                                    }
+                                    @if (!string.IsNullOrEmpty(t.StateName))
+                                    {
+                                        <span class="school-card__meta-item">
+                                            <i class="fa fa-map-marker-alt"></i> @t.StateName
+                                        </span>
+                                    }
+                                    @if (!string.IsNullOrEmpty(t.SchoolTypeLabelVN))
+                                    {
+                                        <span class="school-card__meta-item school-card__type">
+                                            <i class="fa fa-school"></i> @t.SchoolTypeLabelVN
+                                        </span>
+                                    }
+                                    @if (t.TuitionDisplay.HasValue && t.TuitionDisplay > 0)
+                                    {
+                                        <span class="school-card__meta-item school-card__tuition">
+                                            <i class="fa fa-dollar-sign"></i>
+                                            @t.TuitionDisplay.Value.ToString("N0") / năm
+                                        </span>
+                                    }
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                }
+            </div>
+            <div class="swiper-pagination truong-swiper-pagination"></div>
+        </div>
+    </div>
+
+    <script>
+        (function () {
+            document.addEventListener('DOMContentLoaded', function () {
+                new Swiper('.@uniqueId', {
+                    slidesPerView: 1,
+                    spaceBetween: 20,
+                    loop: false,
+                    pagination: { el: '.@uniqueId .truong-swiper-pagination', clickable: true },
+                    navigation: {
+                        nextEl: '#wrap-@uniqueId .truong-swiper-next',
+                        prevEl: '#wrap-@uniqueId .truong-swiper-prev'
+                    },
+                    breakpoints: {
+                        576:  { slidesPerView: 2 },
+                        768:  { slidesPerView: 3 },
+                        1024: { slidesPerView: 4 },
+                        1280: { slidesPerView: 5 }
+                    }
+                });
+            });
+        })();
+    </script>
+}

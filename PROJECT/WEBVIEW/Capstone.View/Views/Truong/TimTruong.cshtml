@@ -1,0 +1,173 @@
+@model NVCMS.WebView.Data.ViewModels.TruongSearchResultViewModel
+@{
+    ViewData["Title"] = "Tìm trường";
+
+    var f = Model.Filter;
+
+    string BaseQs()
+    {
+        var parts = new System.Text.StringBuilder();
+        void Add(string k, string? v) { if (!string.IsNullOrEmpty(v)) { if (parts.Length > 0) parts.Append('&'); parts.Append(k).Append('=').Append(Uri.EscapeDataString(v)); } }
+        Add("ten",       f.Ten);
+        Add("loai",      f.Loai);
+        Add("tuitionmax",f.TuitionMax?.ToString());
+        Add("pagesize",  f.PageSize != 12 ? f.PageSize.ToString() : null);
+        if (f.QuocGiaIds.Count > 0) Add("quocgiaids", string.Join(",", f.QuocGiaIds));
+        if (f.MajorIds.Count   > 0) Add("majorids",   string.Join(",", f.MajorIds));
+        return parts.ToString();
+    }
+    var baseQs = BaseQs();
+
+    ViewData["Pagination_CurrentPage"] = Model.Page;
+    ViewData["Pagination_TotalPages"]  = Model.TotalPages;
+    ViewData["Pagination_BaseUrl"]     = "/tim-truong";
+    ViewData["Pagination_QueryString"] = baseQs;
+
+    // Build toggle URL for multi-select country
+    string ToggleCountryUrl(int countryId)
+    {
+        var ids = new List<int>(f.QuocGiaIds);
+        if (ids.Contains(countryId)) ids.Remove(countryId); else ids.Add(countryId);
+        var p = new System.Text.StringBuilder();
+        void A(string k, string? v) { if (!string.IsNullOrEmpty(v)) { if (p.Length > 0) p.Append('&'); p.Append(k).Append('=').Append(Uri.EscapeDataString(v)); } }
+        A("ten",       f.Ten);
+        A("loai",      f.Loai);
+        A("tuitionmax",f.TuitionMax?.ToString());
+        if (ids.Count         > 0) A("quocgiaids", string.Join(",", ids));
+        if (f.MajorIds.Count  > 0) A("majorids",   string.Join(",", f.MajorIds));
+        A("page", "1");
+        return "/tim-truong" + (p.Length > 0 ? "?" + p : "");
+    }
+
+    // Build toggle URL for multi-select major
+    string ToggleMajorUrl(int majorId)
+    {
+        var ids = new List<int>(f.MajorIds);
+        if (ids.Contains(majorId)) ids.Remove(majorId); else ids.Add(majorId);
+        var p = new System.Text.StringBuilder();
+        void A(string k, string? v) { if (!string.IsNullOrEmpty(v)) { if (p.Length > 0) p.Append('&'); p.Append(k).Append('=').Append(Uri.EscapeDataString(v)); } }
+        A("ten",           f.Ten);
+        A("loai",          f.Loai);
+        A("tuitionmax",    f.TuitionMax?.ToString());
+        if (f.QuocGiaIds.Count > 0) A("quocgiaids", string.Join(",", f.QuocGiaIds));
+        if (ids.Count          > 0) A("majorids",   string.Join(",", ids));
+        A("page", "1");
+        return "/tim-truong" + (p.Length > 0 ? "?" + p : "");
+    }
+
+    string FilterUrl(string? ten = null, string? loai = "~~", int? tuitionMax = -1, int? pageSize = null)
+    {
+        var p = new System.Text.StringBuilder();
+        void A(string k, string? v) { if (!string.IsNullOrEmpty(v)) { if (p.Length > 0) p.Append('&'); p.Append(k).Append('=').Append(Uri.EscapeDataString(v)); } }
+        A("ten",       ten       ?? f.Ten);
+        A("loai",      loai == "~~" ? f.Loai : loai);
+        A("tuitionmax",(tuitionMax == -1 ? f.TuitionMax : (tuitionMax <= 0 ? null : tuitionMax))?.ToString());
+        A("pagesize",  ((pageSize ?? f.PageSize) != 12 ? (pageSize ?? f.PageSize).ToString() : null));
+        if (f.QuocGiaIds.Count > 0) A("quocgiaids", string.Join(",", f.QuocGiaIds));
+        if (f.MajorIds.Count   > 0) A("majorids",   string.Join(",", f.MajorIds));
+        A("page", "1");
+        return "/tim-truong" + (p.Length > 0 ? "?" + p : "");
+    }
+
+    bool hasFilters = f.QuocGiaIds.Any() || !string.IsNullOrEmpty(f.Loai) || f.MajorIds.Any() || f.TuitionMax.HasValue;
+}
+
+<!-- HERO -->
+<section class="page-hero bg-primary-950 py-14">
+    <div class="container">
+        <div class="text-center mb-8" data-aos="fade-up">
+            <h1 class="text-white site-title">Công cụ tìm trường</h1>
+            <p class="text-white/70 mt-3">Lọc hàng nghìn trường theo quốc gia, bậc học, ngành học và học phí</p>
+        </div>
+        <!-- Search bar nhanh -->
+        <form method="get" action="/tim-truong" class="hero-search-bar" data-aos="fade-up" data-aos-delay="100">
+            @if (!string.IsNullOrEmpty(f.Loai))     { <input type="hidden" name="loai"       value="@f.Loai"> }
+            @if (f.TuitionMax.HasValue)              { <input type="hidden" name="tuitionmax" value="@f.TuitionMax"> }
+            @foreach (var id in f.QuocGiaIds)        { <input type="hidden" name="quocgiaids" value="@id"> }
+            @foreach (var id in f.MajorIds)          { <input type="hidden" name="majorids"   value="@id"> }
+            <div class="hero-search-bar__inner">
+                <i class="fa-solid fa-magnifying-glass hero-search-bar__icon"></i>
+                <input type="text" name="ten" value="@f.Ten" placeholder="Tìm tên trường..." class="hero-search-bar__input" autocomplete="off">
+                <button type="submit" class="hero-search-bar__btn">Tìm kiếm</button>
+            </div>
+        </form>
+    </div>
+</section>
+
+<!-- MAIN -->
+<section class="section-large bg-neutral-50">
+    <div class="container">
+        <div class="truong-search-layout">
+
+            <!-- ======= SIDEBAR FILTER ======= -->
+            @await Component.InvokeAsync("TruongFilterSidebar", new NVCMS.WebView.Data.ViewModels.TruongFilterSidebarViewModel
+            {
+                Filter      = Model.Filter,
+                QuocGiaList = Model.QuocGiaList,
+                MajorList   = Model.MajorList,
+                BaseUrl     = "/tim-truong",
+                ShowCountry = true,
+                ShowLoai    = true,
+                ShowTuition = true,
+                ShowMajor   = true,
+            })
+
+            <!-- ======= KẾT QUẢ ======= -->
+            <div class="truong-search-results">
+
+                <!-- Toolbar -->
+                <div class="truong-results-toolbar">
+                    <p class="truong-results-count">
+                        Tìm thấy <strong>@Model.Total</strong> trường
+                        @if (!string.IsNullOrEmpty(f.Ten))      { <span class="filter-tag">Tên: "@f.Ten"</span> }
+                        @if (f.QuocGiaIds.Any())
+                        {
+                            foreach (var qid in f.QuocGiaIds)
+                            {
+                                var qName = Model.QuocGiaList.FirstOrDefault(q => q.Id == qid)?.Ten ?? qid.ToString();
+                                <span class="filter-tag">@qName</span>
+                            }
+                        }
+                        @if (!string.IsNullOrEmpty(f.Loai)) { var ll = f.Loai switch { "4Y"=>"Đại học","2Y"=>"Cao đẳng","GR"=>"Sau ĐH","BF"=>"Trung học","ESL"=>"ESL",_=>f.Loai }; <span class="filter-tag">@ll</span> }
+                        @if (f.TuitionMax.HasValue) { <span class="filter-tag">≤ @f.TuitionMax.Value.ToString("N0") USD</span> }
+                    </p>
+                    <div class="truong-results-pagesize">
+                        <span class="text-neutral-400 text-sm">Hiển thị:</span>
+                        @foreach (var ps in new[] { 12, 24, 48 })
+                        {
+                            <a href="@FilterUrl(pageSize: ps)" class="btn-solid btn-xs @(f.PageSize == ps ? "active" : "")">@ps</a>
+                        }
+                    </div>
+                </div>
+
+                <!-- Phân trang đầu trang -->
+                @if (Model.TotalPages > 1)
+                {
+                    <div class="mb-4"><partial name="_Pagination" /></div>
+                }
+
+                <!-- Grid -->
+                <div class="school-grid school-grid--search" data-aos="fade-up">
+                    @if (!Model.Items.Any())
+                    {
+                        <div class="col-span-full text-center py-16">
+                            <i class="fa-solid fa-school-flag text-5xl text-neutral-300 mb-4 block"></i>
+                            <p class="text-neutral-500 text-lg mb-4">Không tìm thấy trường phù hợp.</p>
+                            <a href="/tim-truong" class="btn-solid">Xóa bộ lọc</a>
+                        </div>
+                    }
+                    @foreach (var t in Model.Items)
+                    {
+                        <partial name="_TruongCard" model="t" />
+                    }
+                </div>
+
+                <!-- Phân trang cuối trang -->
+                @if (Model.TotalPages > 1)
+                {
+                    <div class="mt-8"><partial name="_Pagination" /></div>
+                }
+            </div>
+        </div>
+    </div>
+</section>

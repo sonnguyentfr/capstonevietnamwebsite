@@ -1,0 +1,179 @@
+@model NVCMS.WebView.Data.ViewModels.TruongFilterSidebarViewModel
+@{
+    var f       = Model.Filter;
+    var baseUrl = Model.BaseUrl;
+
+    // ── Helpers build URL ────────────────────────────────────────────────────
+    // Trả về query string với tất cả params hiện tại, override tham số muốn đổi
+    string BuildUrl(
+        string? loai         = "~~",
+        int?    tuitionMax   = int.MinValue,
+        int?    majorId      = int.MinValue,
+        int?    pageSize     = null,
+        List<int>? quocGiaIds = null)
+    {
+        var p = new System.Text.StringBuilder();
+        void A(string k, string? v) {
+            if (!string.IsNullOrEmpty(v)) {
+                if (p.Length > 0) p.Append('&');
+                p.Append(k).Append('=').Append(Uri.EscapeDataString(v));
+            }
+        }
+
+        // Ten
+        A("ten", f.Ten);
+
+        // QuocGia — nếu truyền list mới thì dùng, không thì giữ nguyên
+        var qIds = quocGiaIds ?? f.QuocGiaIds;
+        if (qIds.Count > 0) A("quocgiaids", string.Join(",", qIds));
+
+        // Loai
+        var newLoai = loai == "~~" ? f.Loai : loai;
+        A("loai", newLoai);
+
+        // TuitionMax
+        var newTuition = tuitionMax == int.MinValue ? f.TuitionMax : (tuitionMax <= 0 ? (int?)null : tuitionMax);
+        A("tuitionmax", newTuition?.ToString());
+
+        // MajorId (multi)
+        var mIds = majorId == int.MinValue
+            ? f.MajorIds
+            : (majorId <= 0 ? new List<int>() : ToggleMajorIds(majorId.Value));
+        if (mIds.Count > 0) A("majorids", string.Join(",", mIds));
+
+        // PageSize
+        var ps = pageSize ?? f.PageSize;
+        A("pagesize", ps != 12 ? ps.ToString() : null);
+
+        A("page", "1");
+        return baseUrl + (p.Length > 0 ? "?" + p : "");
+    }
+
+    List<int> ToggleCountryIds(int id)
+    {
+        var ids = new List<int>(f.QuocGiaIds);
+        if (ids.Contains(id)) ids.Remove(id); else ids.Add(id);
+        return ids;
+    }
+
+    List<int> ToggleMajorIds(int id)
+    {
+        var ids = new List<int>(f.MajorIds);
+        if (ids.Contains(id)) ids.Remove(id); else ids.Add(id);
+        return ids;
+    }
+
+    bool hasActiveFilter = f.QuocGiaIds.Any()
+        || !string.IsNullOrEmpty(f.Loai)
+        || f.TuitionMax.HasValue
+        || f.MajorIds.Any();
+
+    // Reset URL: giữ lại ten, bỏ hết filter
+    string resetUrl = baseUrl + (!string.IsNullOrEmpty(f.Ten) ? "?ten=" + Uri.EscapeDataString(f.Ten!) : "");
+}
+
+<aside class="truong-filter-sidebar" data-aos="fade-right">
+
+    <!-- ── HEADER ─────────────────────────────────────── -->
+    <div class="filter-sidebar__header">
+        <i class="fa-solid fa-sliders"></i>
+        <span>Bộ lọc</span>
+        @if (hasActiveFilter)
+        {
+            <a href="@resetUrl" class="filter-sidebar__reset">
+                <i class="fa-solid fa-rotate-left"></i> Xóa lọc
+            </a>
+        }
+    </div>
+
+    <!-- ── QUỐC GIA (ẩn nếu route đã fix quốc gia) ───── -->
+    @if (Model.ShowCountry && Model.FixedCountryId == null && Model.QuocGiaList.Any())
+    {
+        <div class="filter-group">
+            <h4 class="filter-group__title"><i class="fa-solid fa-earth-asia"></i> Quốc gia</h4>
+            <div class="filter-group__options filter-group__options--scroll">
+                @foreach (var q in Model.QuocGiaList)
+                {
+                    var isActive = f.QuocGiaIds.Contains(q.Id);
+                    <a href="@BuildUrl(quocGiaIds: ToggleCountryIds(q.Id))"
+                       class="filter-chip @(isActive ? "active" : "")">
+                        @if (isActive) { <i class="fa-solid fa-check"></i> }
+                        <span>@q.Ten</span>
+                        <span class="filter-chip__count">@q.TruongCount</span>
+                    </a>
+                }
+            </div>
+        </div>
+    }
+
+    <!-- ── BẬC HỌC ────────────────────────────────────── -->
+    @if (Model.ShowLoai)
+    {
+        var loaiOpts = new (string Val, string Label, string Icon)[] {
+            ("",    "Tất cả bậc học", "fa-layer-group"),
+            ("4Y",  "Đại học 4 năm",  "fa-university"),
+            ("2Y",  "Cao đẳng",       "fa-school"),
+            ("GR",  "Sau đại học",    "fa-user-graduate"),
+            ("BF",  "Trung học",      "fa-chalkboard"),
+            ("ESL", "Anh ngữ ESL",    "fa-language"),
+        };
+        <div class="filter-group">
+            <h4 class="filter-group__title"><i class="fa-solid fa-graduation-cap"></i> Bậc học</h4>
+            <div class="filter-group__options">
+                @foreach (var opt in loaiOpts)
+                {
+                    var isActive = string.IsNullOrEmpty(opt.Val)
+                        ? string.IsNullOrEmpty(f.Loai)
+                        : f.Loai == opt.Val;
+                    <a href="@BuildUrl(loai: opt.Val)" class="filter-chip @(isActive ? "active" : "")">
+                        <i class="fa-solid @opt.Icon"></i>
+                        <span>@opt.Label</span>
+                    </a>
+                }
+            </div>
+        </div>
+    }
+
+    <!-- ── HỌC PHÍ ────────────────────────────────────── -->
+    @if (Model.ShowTuition)
+    {
+        var tuitionOpts = new (int? Val, string Label)[] {
+            (null,  "Tất cả mức học phí"),
+            (10000, "Dưới 10.000 USD"),
+            (20000, "Dưới 20.000 USD"),
+            (30000, "Dưới 30.000 USD"),
+            (50000, "Dưới 50.000 USD"),
+        };
+        <div class="filter-group">
+            <h4 class="filter-group__title"><i class="fa-solid fa-dollar-sign"></i> Học phí (USD/năm)</h4>
+            <div class="filter-group__options">
+                @foreach (var opt in tuitionOpts)
+                {
+                    <a href="@BuildUrl(tuitionMax: opt.Val ?? 0)"
+                       class="filter-chip @(f.TuitionMax == opt.Val ? "active" : "")">
+                        <span>@opt.Label</span>
+                    </a>
+                }
+            </div>
+        </div>
+    }
+
+    <!-- ── NGÀNH HỌC (multi-select) ──────────────────── -->
+    @if (Model.ShowMajor && Model.MajorList.Any())
+    {
+        <div class="filter-group">
+            <h4 class="filter-group__title"><i class="fa-solid fa-book-open"></i> Ngành học</h4>
+            <div class="filter-group__options filter-group__options--scroll">
+                @foreach (var m in Model.MajorList)
+                {
+                    var isActive = f.MajorIds.Contains(m.Id);
+                    <a href="@BuildUrl(majorId: m.Id)" class="filter-chip @(isActive ? "active" : "")">
+                        @if (isActive) { <i class="fa-solid fa-check"></i> }
+                        <span>@(m.TitleVN ?? m.Title)</span>
+                    </a>
+                }
+            </div>
+        </div>
+    }
+
+</aside>

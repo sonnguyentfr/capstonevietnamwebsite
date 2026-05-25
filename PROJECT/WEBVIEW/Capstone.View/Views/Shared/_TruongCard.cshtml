@@ -1,0 +1,56 @@
+@model NVCMS.WebView.Data.ViewModels.TruongCardViewModel
+
+<div class="school-card">
+    <a href="@Model.DetailUrl" class="school-card__cover img-cover">
+        <img src="@(Model.CoverUrl ?? "/static/img/no-image.jpg")" alt="@Model.NameofSchool" loading="lazy">
+        @if (Model.IsPartner)
+        {
+            <span class="school-card__badge">Đối tác</span>
+        }
+    </a>
+    <div class="school-card__body">
+        @if (!string.IsNullOrEmpty(Model.LogoUrl))
+        {
+            <div class="school-card__logo">
+                <img src="@Model.LogoUrl" alt="Logo @Model.NameofSchool" loading="lazy">
+            </div>
+        }
+        <h3 class="school-card__name">
+            <a href="@Model.DetailUrl">@Model.NameofSchool</a>
+        </h3>
+        <div class="school-card__meta">
+            @if (!string.IsNullOrEmpty(Model.CountryName))
+            {
+                <span><i class="fa-solid fa-location-dot"></i> @Model.CountryName</span>
+            }
+            @if (!string.IsNullOrEmpty(Model.StateName))
+            {
+                <span><i class="fa-solid fa-map-pin"></i> @Model.StateName</span>
+            }
+            @if (!string.IsNullOrEmpty(Model.Loai))
+            {
+                var loaiText = Model.Loai switch
+                {
+                    "4Y" => "Đại học",
+                    "2Y" => "Cao đẳng",
+                    "GR" => "Sau đại học",
+                    "BF" => "Trung học",
+                    "ESL" => "Anh ngữ ESL",
+                    _ => Model.Loai
+                };
+                <span><i class="fa-solid fa-graduation-cap"></i> @loaiText</span>
+            }
+            @if (Model.TuitionDisplay.HasValue && Model.TuitionDisplay > 0)
+            {
+                <span class="school-card__tuition"><i class="fa-solid fa-dollar-sign"></i> @Model.TuitionDisplay.Value.ToString("N0") / năm</span>
+            }
+        </div>
+        @if (!string.IsNullOrEmpty(Model.Tomtat))
+        {
+            <p class="school-card__desc">@Model.Tomtat</p>
+        }
+        <a class="btn-solid btn-sm mt-4" href="@Model.DetailUrl">
+            <span>Xem chi tiết</span><i class="fa-solid fa-arrow-right"></i>
+        </a>
+    </div>
+</div>

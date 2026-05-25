@@ -1,0 +1,77 @@
+@*
+    Pagination partial – dùng chung cho tất cả trang danh sách
+    ViewData cần set trước khi gọi partial:
+      Pagination_CurrentPage  (int)
+      Pagination_TotalPages   (int)
+      Pagination_BaseUrl      (string) – VD: "/truong-doi-tac/my"
+      Pagination_QueryString  (string) – các params đã encode, KHÔNG có Page=, KHÔNG có "?"
+                                         VD: "Loai=4Y&TuitionMax=20000"
+*@
+@{
+    var currentPage = (int)(ViewData["Pagination_CurrentPage"] ?? 1);
+    var totalPages  = (int)(ViewData["Pagination_TotalPages"]  ?? 1);
+    var baseUrl     = ViewData["Pagination_BaseUrl"]     as string ?? "";
+    var queryString = ViewData["Pagination_QueryString"] as string ?? "";
+
+    string PageUrl(int p)
+    {
+        var qs = string.IsNullOrEmpty(queryString) ? $"Page={p}" : $"{queryString}&Page={p}";
+        return $"{baseUrl}?{qs}";
+    }
+
+    int winStart = Math.Max(1, currentPage - 2);
+    int winEnd   = Math.Min(totalPages, currentPage + 2);
+}
+
+@if (totalPages > 1)
+{
+    <nav class="site-pagination" aria-label="Phân trang">
+        @if (currentPage > 1)
+        {
+            <a class="site-pagination__btn" href="@PageUrl(currentPage - 1)" aria-label="Trang trước">
+                <i class="fa-solid fa-chevron-left"></i>
+            </a>
+        }
+        else
+        {
+            <span class="site-pagination__btn disabled"><i class="fa-solid fa-chevron-left"></i></span>
+        }
+
+        @if (winStart > 1)
+        {
+            <a class="site-pagination__page" href="@PageUrl(1)">1</a>
+            @if (winStart > 2) { <span class="site-pagination__ellipsis">…</span> }
+        }
+
+        @for (int p = winStart; p <= winEnd; p++)
+        {
+            if (p == currentPage)
+            {
+                <span class="site-pagination__page active" aria-current="page">@p</span>
+            }
+            else
+            {
+                <a class="site-pagination__page" href="@PageUrl(p)">@p</a>
+            }
+        }
+
+        @if (winEnd < totalPages)
+        {
+            @if (winEnd < totalPages - 1) { <span class="site-pagination__ellipsis">…</span> }
+            <a class="site-pagination__page" href="@PageUrl(totalPages)">@totalPages</a>
+        }
+
+        @if (currentPage < totalPages)
+        {
+            <a class="site-pagination__btn" href="@PageUrl(currentPage + 1)" aria-label="Trang sau">
+                <i class="fa-solid fa-chevron-right"></i>
+            </a>
+        }
+        else
+        {
+            <span class="site-pagination__btn disabled"><i class="fa-solid fa-chevron-right"></i></span>
+        }
+
+        <span class="site-pagination__info">Trang @currentPage / @totalPages</span>
+    </nav>
+}

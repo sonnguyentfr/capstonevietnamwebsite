@@ -1,0 +1,216 @@
+﻿@using NVCMS.WebView.Data.ViewModels
+@model EventsCatViewModel
+
+@{
+    ViewData["Title"] = Model.CatName;
+    var isUpcoming = Model.EndDate.HasValue && Model.EndDate.Value >= DateTime.Now;
+}
+
+@* ===== HERO ===== *@
+<section class="event-detail-hero">
+    @{
+        var heroImg = !string.IsNullOrEmpty(Model.AvatarUrl)
+            ? $"{Model.AvatarUrl}?width=1920&height=600&mode=crop&anchor=middlecenter"
+            : "/data/no-photo.png?width=1920&height=600&mode=crop&anchor=middlecenter";
+    }
+    <div class="event-detail-hero-bg" style="background-image:url('@heroImg')">
+        <div class="event-detail-hero-overlay"></div>
+        <div class="container event-detail-hero-content">
+            <div class="breadcrumb" data-aos="fade-up">
+                <a href="/">Trang chủ</a>
+                <i class="fa-solid fa-chevron-right"></i>
+                <a href="/su-kien">Sự kiện</a>
+                <i class="fa-solid fa-chevron-right"></i>
+                <span>@Model.CatName</span>
+            </div>
+            <span class="event-status-badge @(isUpcoming ? "badge-upcoming" : "badge-past")" data-aos="fade-up" data-aos-delay="50">
+                @(isUpcoming ? "Sắp diễn ra" : "Đã diễn ra")
+            </span>
+            <h1 class="event-detail-title" data-aos="fade-up" data-aos-delay="100">@Model.CatName</h1>
+            @if (Model.FromDate.HasValue || Model.EndDate.HasValue)
+            {
+                <div class="event-detail-meta" data-aos="fade-up" data-aos-delay="150">
+                    <span><i class="fa-solid fa-clock"></i>
+                        @if (Model.FromDate.HasValue) { @Model.FromDate.Value.ToString("HH:mm, dd/MM/yyyy") }
+                        @if (Model.FromDate.HasValue && Model.EndDate.HasValue) { <text> — </text> }
+                        @if (Model.EndDate.HasValue) { @Model.EndDate.Value.ToString("HH:mm, dd/MM/yyyy") }
+                    </span>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
+@* ===== BODY ===== *@
+<section class="event-detail-body section-large">
+    <div class="container">
+        <div class="event-detail-layout">
+
+            @* ===== NOI DUNG CHINH ===== *@
+            <div class="event-detail-main">
+
+                @if (!string.IsNullOrEmpty(Model.Desception))
+                {
+                    <div class="event-desc-box" data-aos="fade-up">
+                        <h2 class="section-sub-title">Giới thiệu</h2>
+                        <div class="rich-text">@Html.Raw(Model.Desception)</div>
+                    </div>
+                }
+
+                @if (!string.IsNullOrEmpty(Model.Contentx))
+                {
+                    <div class="event-content-box mt-8" data-aos="fade-up">
+                        <div class="rich-text">@Html.Raw(Model.Contentx)</div>
+                    </div>
+                }
+
+                @* ===== CHUONG TRINH / DIA DIEM ===== *@
+                @if (Model.Events != null && Model.Events.Any())
+                {
+                    <div class="event-locations mt-10" data-aos="fade-up">
+                        <h2 class="section-sub-title">
+                            <i class="fa-solid fa-location-dot"></i> Địa điểm tổ chức
+                        </h2>
+                        <div class="event-locations-grid mt-6">
+                            @foreach (var ev in Model.Events)
+                            {
+                                <div class="event-location-card">
+                                    @if (!string.IsNullOrEmpty(ev.AvatarUrl))
+                                    {
+                                        <div class="elc-thumb">
+                                            <img src="@(ev.AvatarUrl)?width=480&height=280&mode=crop&anchor=middlecenter"
+                                                 alt="@ev.Diadiem" loading="lazy" />
+                                        </div>
+                                    }
+                                    <div class="elc-body">
+                                        @if (!string.IsNullOrEmpty(ev.Diadiem))
+                                        {
+                                            <div class="elc-row">
+                                                <i class="fa-solid fa-location-dot"></i>
+                                                <span>@ev.Diadiem</span>
+                                            </div>
+                                        }
+                                        @if (ev.Fromdatetime.HasValue || ev.Enddatetime.HasValue)
+                                        {
+                                            <div class="elc-row">
+                                                <i class="fa-solid fa-clock"></i>
+                                                <span>
+                                                    @if (ev.Fromdatetime.HasValue) { @ev.Fromdatetime.Value.ToString("HH:mm dd/MM/yyyy") }
+                                                    @if (ev.Fromdatetime.HasValue && ev.Enddatetime.HasValue) { <text> — </text> }
+                                                    @if (ev.Enddatetime.HasValue) { @ev.Enddatetime.Value.ToString("HH:mm dd/MM/yyyy") }
+                                                </span>
+                                            </div>
+                                        }
+                                        @if (!string.IsNullOrEmpty(ev.Thanhphan))
+                                        {
+                                            <div class="elc-row">
+                                                <i class="fa-solid fa-users"></i>
+                                                <span>@ev.Thanhphan</span>
+                                            </div>
+                                        }
+                                        @if (!string.IsNullOrEmpty(ev.Descreption))
+                                        {
+                                            <div class="elc-desc mt-3 rich-text">@Html.Raw(ev.Descreption)</div>
+                                        }
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+
+                @* ===== FAIR INFO ===== *@
+                @{
+                    var hasFairInfo = !string.IsNullOrEmpty(Model.FairSchool)
+                                   || !string.IsNullOrEmpty(Model.FairDiengia)
+                                   || !string.IsNullOrEmpty(Model.FairOrg)
+                                   || !string.IsNullOrEmpty(Model.FairDonviTaiTro);
+                }
+                @if (hasFairInfo)
+                {
+                    <div class="event-fair-info mt-10" data-aos="fade-up">
+                        <h2 class="section-sub-title">Thông tin thêm</h2>
+                        <dl class="fair-dl mt-4">
+                            @if (!string.IsNullOrEmpty(Model.FairSchool))
+                            {
+                                <dt><i class="fa-solid fa-school"></i> Trường tham gia</dt>
+                                <dd>@Model.FairSchool</dd>
+                            }
+                            @if (!string.IsNullOrEmpty(Model.FairDiengia))
+                            {
+                                <dt><i class="fa-solid fa-microphone"></i> Diễn giả</dt>
+                                <dd>@Model.FairDiengia</dd>
+                            }
+                            @if (!string.IsNullOrEmpty(Model.FairOrg))
+                            {
+                                <dt><i class="fa-solid fa-building"></i> Đơn vị tổ chức</dt>
+                                <dd>@Model.FairOrg</dd>
+                            }
+                            @if (!string.IsNullOrEmpty(Model.FairDonviTaiTro))
+                            {
+                                <dt><i class="fa-solid fa-hand-holding-heart"></i> Đơn vị tài trợ</dt>
+                                <dd>@Model.FairDonviTaiTro</dd>
+                            }
+                        </dl>
+                    </div>
+                }
+            </div>
+
+            @* ===== SIDEBAR ===== *@
+            <aside class="event-detail-sidebar">
+
+                @* Dang ky *@
+                @if (isUpcoming && !string.IsNullOrEmpty(Model.Link_pr))
+                {
+                    <div class="sidebar-box sidebar-register" data-aos="fade-left">
+                        <h3 class="sidebar-box-title"><i class="fa-solid fa-calendar-check"></i> Đăng ký tham dự</h3>
+                        <p class="mt-2">Đừng bỏ lỡ cơ hội gặp gỡ chuyên gia tư vấn và đại diện các trường quốc tế.</p>
+                        <a class="btn-solid w-full mt-4" href="@Model.Link_pr" target="_blank">
+                            <span>Đăng ký ngay</span><i class="fa-solid fa-arrow-right"></i>
+                        </a>
+                    </div>
+                }
+
+                @* Thoi gian *@
+                @if (Model.FromDate.HasValue || Model.EndDate.HasValue)
+                {
+                    <div class="sidebar-box" data-aos="fade-left" data-aos-delay="100">
+                        <h3 class="sidebar-box-title"><i class="fa-solid fa-calendar-days"></i> Thời gian</h3>
+                        <ul class="sidebar-meta-list mt-3">
+                            @if (Model.FromDate.HasValue)
+                            {
+                                <li>
+                                    <span class="meta-label">Bắt đầu</span>
+                                    <span class="meta-value">@Model.FromDate.Value.ToString("HH:mm, dd/MM/yyyy")</span>
+                                </li>
+                            }
+                            @if (Model.EndDate.HasValue)
+                            {
+                                <li>
+                                    <span class="meta-label">Kết thúc</span>
+                                    <span class="meta-value">@Model.EndDate.Value.ToString("HH:mm, dd/MM/yyyy")</span>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                }
+
+                @* Lien he *@
+                @if (!string.IsNullOrEmpty(Model.Email))
+                {
+                    <div class="sidebar-box" data-aos="fade-left" data-aos-delay="150">
+                        <h3 class="sidebar-box-title"><i class="fa-solid fa-envelope"></i> Liên hệ</h3>
+                        <a href="mailto:@Model.Email" class="sidebar-email mt-3">@Model.Email</a>
+                    </div>
+                }
+
+                @* Quay lai *@
+                <div class="sidebar-box sidebar-back" data-aos="fade-left" data-aos-delay="200">
+                    <a class="btn-outline w-full" href="/su-kien">
+                        <i class="fa-solid fa-arrow-left"></i><span>Tất cả sự kiện</span>
+                    </a>
+                </div>
+            </aside>
+        </div>
+    </div>
+</section>

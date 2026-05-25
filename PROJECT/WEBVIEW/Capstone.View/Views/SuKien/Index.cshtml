@@ -1,0 +1,188 @@
+﻿@using NVCMS.WebView.Data.ViewModels
+@model EventsPageViewModel
+
+@{
+    ViewData["Title"] = "Sự kiện - Triển lãm";
+}
+
+@* ===== HERO BANNER ===== *@
+<section class="page-hero bg-primary-950">
+    <div class="container">
+        <h1 class="page-hero-title" data-aos="fade-up">Hội thảo &amp; Sự kiện</h1>
+        <p class="page-hero-desc" data-aos="fade-up" data-aos-delay="100">
+            Cập nhật các hội thảo du học, định cư sắp diễn ra cùng Capstone Vietnam
+        </p>
+    </div>
+</section>
+
+@* ===== SU KIEN SAP DIEN RA ===== *@
+<section class="events-upcoming section-large">
+    <div class="container">
+        <div class="section-header" data-aos="fade-up">
+            <span class="section-label">Sắp diễn ra</span>
+            <h2 class="site-title">Triển lãm - Hội thảo - Sự kiện</h2>
+            <div class="bar"></div>
+        </div>
+
+        @if (Model.Upcoming != null && Model.Upcoming.Any())
+        {
+            <div class="events-grid mt-10">
+                @foreach (var cat in Model.Upcoming)
+                {
+                    <article class="event-card" data-aos="fade-up" data-aos-delay="100">
+                        <a class="event-card-thumb" href="/su-kien/@cat.Slug-@cat.Id">
+                            @{
+                                var imgSrc = !string.IsNullOrEmpty(cat.AvatarUrl)
+                                    ? $"{cat.AvatarUrl}?width=720&height=400&mode=crop&anchor=middlecenter"
+                                    : "/data/no-photo.png?width=720&height=400&mode=crop&anchor=middlecenter";
+                            }
+                            <img src="@imgSrc" alt="@cat.CatName" loading="lazy" />
+                            <div class="event-card-badge badge-upcoming">
+                                <i class="fa-solid fa-calendar-check"></i> Sắp diễn ra
+                            </div>
+                        </a>
+                        <div class="event-card-body">
+                            @if (cat.FromDate.HasValue)
+                            {
+                                <div class="event-date-strip">
+                                    <div class="date-block">
+                                        <span class="date-day">@cat.FromDate.Value.ToString("dd")/@cat.FromDate.Value.ToString("MM")/@cat.FromDate.Value.ToString("yyyy")</span>
+                                    </div>
+                                    @if (cat.EndDate.HasValue)
+                                    {
+                                        <span class="date-arrow"><i class="fa-solid fa-arrow-right"></i></span>
+                                        <div class="date-block">
+                                            <span class="date-day">@cat.EndDate.Value.ToString("dd")/@cat.EndDate.Value.ToString("MM")/@cat.EndDate.Value.ToString("yyyy")</span>
+                                        </div>
+                                    }
+                                </div>
+                            }
+                            <h3 class="event-card-title">
+                                <a href="/su-kien/@cat.Slug-@cat.Id">@cat.CatName</a>
+                            </h3>
+                            @if (cat.Events != null && cat.Events.Any())
+                            {
+                                <ul class="event-venues mt-3">
+                                    @foreach (var ev in cat.Events.Where(e => !string.IsNullOrEmpty(e.Diadiem)))
+                                    {
+                                        <li><i class="fa-solid fa-location-dot"></i> @ev.Diadiem</li>
+                                    }
+                                </ul>
+                            }
+                            <div class="event-card-footer mt-4">
+                                <a class="btn-solid" href="/su-kien/@cat.Slug-@cat.Id">
+                                    <span>Xem chi tiết</span><i class="fa-solid fa-arrow-right"></i>
+                                </a>
+                                @if (!string.IsNullOrEmpty(cat.Link_pr))
+                                {
+                                    <a class="btn-outline" href="@cat.Link_pr" target="_blank">
+                                        <span>Đăng ký</span><i class="fa-solid fa-external-link"></i>
+                                    </a>
+                                }
+                            </div>
+                        </div>
+                    </article>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="events-empty" data-aos="fade-up">
+                <i class="fa-solid fa-calendar-xmark"></i>
+                <p>Hiện chưa có sự kiện sắp diễn ra. Vui lòng quay lại sau.</p>
+            </div>
+        }
+    </div>
+</section>
+
+@* ===== SU KIEN DA DIEN RA (infinite scroll) ===== *@
+<section class="events-past section-large bg-neutral-50">
+    <div class="container">
+        <div class="section-header" data-aos="fade-up">
+            <span class="section-label">Đã diễn ra</span>
+            <h2 class="site-title">Sự kiện trước đây</h2>
+            <div class="bar"></div>
+        </div>
+        <div class="events-grid events-grid-past mt-10" id="past-grid"></div>
+        <div id="past-sentinel" class="past-sentinel"></div>
+        <div id="past-loading" class="past-status" style="display:none">
+            <span class="spinner"></span> Đang tải...
+        </div>
+        <div id="past-end" class="past-status" style="display:none">
+            <i class="fa-solid fa-flag-checkered"></i> Không còn sự kiện nào
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+<script>
+(function () {
+    const grid      = document.getElementById('past-grid');
+    const sentinel  = document.getElementById('past-sentinel');
+    const loading   = document.getElementById('past-loading');
+    const endMsg    = document.getElementById('past-end');
+    const PAGE_SIZE = 24;
+    let page        = 1;
+    let fetching    = false;
+    let done        = false;
+
+    function buildCard(c) {
+        const href    = `/su-kien/${c.slug}-${c.id}`;
+        const img     = c.avatarUrl
+            ? `${c.avatarUrl}?width=720&height=400&mode=crop&anchor=middlecenter`
+            : `/data/no-photo.png?width=720&height=400&mode=crop&anchor=middlecenter`;
+        const dates   = c.fromDate
+            ? `<div class="event-date-strip is-past"><i class="fa-solid fa-calendar"></i> ${c.fromDate}${c.endDate ? ' — ' + c.endDate : ''}</div>`
+            : '';
+        const rawDesc = c.desc ? c.desc.replace(/<[^>]*>/g, '') : '';
+        const desc    = rawDesc
+            ? `<p class="event-card-desc event-card-desc--clamp mt-2">${rawDesc}</p>`
+            : '';
+        return `
+        <article class="event-card event-card-past">
+            <a class="event-card-thumb" href="${href}">
+                <img src="${img}" alt="${c.catName}" loading="lazy" />
+                <div class="event-card-badge badge-past">
+                    <i class="fa-solid fa-calendar-minus"></i> Đã diễn ra
+                </div>
+            </a>
+            <div class="event-card-body">
+                ${dates}
+                <h3 class="event-card-title"><a href="${href}">${c.catName}</a></h3>
+                ${desc}
+                <div class="event-card-footer mt-4">
+                    <a class="btn-outline" href="${href}"><span>Xem lại</span></a>
+                </div>
+            </div>
+        </article>`;
+    }
+
+    async function loadNext() {
+        if (fetching || done) return;
+        fetching = true;
+        loading.style.display = 'flex';
+        try {
+            const res  = await fetch(`/su-kien/past-paged?page=${page}&pageSize=${PAGE_SIZE}`);
+            const data = await res.json();
+            data.items.forEach(c => grid.insertAdjacentHTML('beforeend', buildCard(c)));
+            page++;
+            if (grid.children.length >= data.total) {
+                done = true;
+                sentinel.remove();
+                endMsg.style.display = 'flex';
+            }
+        } finally {
+            fetching = false;
+            loading.style.display = 'none';
+        }
+    }
+
+    const observer = new IntersectionObserver(entries => {
+        if (entries[0].isIntersecting) loadNext();
+    }, { rootMargin: '200px' });
+
+    observer.observe(sentinel);
+    loadNext(); // load trang dau ngay khi vao trang
+})();
+</script>
+}

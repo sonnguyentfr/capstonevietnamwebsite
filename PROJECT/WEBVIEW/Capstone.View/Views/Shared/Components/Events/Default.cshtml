@@ -1,0 +1,114 @@
+﻿@using NVCMS.WebView.Data.ViewModels
+@model IEnumerable<EventsCatViewModel>
+@if (Model != null && Model.Any())
+{
+    
+    <div class="swiper-relative one-slider mt-8 equal-height" data-aos="fade-up" data-aos-delay="100">
+        <div class="swiper" id="events-home-swiper">
+            <div class="swiper-wrapper">
+                @foreach (var cat in Model)
+                {
+
+                    <div class="swiper-slide">
+                        <div class="story-item">
+                            <div class="image img-cover" data-aos="fade-right" data-aos-delay="300">
+                                @if (!string.IsNullOrEmpty(cat.AvatarUrl))
+                                {
+                                    <img src="@(cat.AvatarUrl)?width=1024&height=530&mode=crop&anchor=middlecenter"
+                                         alt="@cat.CatName"
+                                         loading="lazy" />
+                                }
+                                else
+                                {
+                                    <img src="/data/no-photo.png?width=1024&height=530&mode=crop&anchor=middlecenter"
+                                         alt="@cat.CatName"
+                                         loading="lazy" />
+                                }
+                            </div>
+                            <div class="caption" data-aos="fade-left" data-aos-delay="300">
+                                <h3 class="name">
+                                    @if (!string.IsNullOrEmpty(cat.Link_pr))
+                                    {
+                                        <a target="_blank" href="@cat.Link_pr">@cat.CatName</a>
+                                    }
+                                    else
+                                    {
+                                        <span>@cat.CatName</span>
+                                    }
+                                </h3>
+                                @if (cat.FromDate.HasValue || cat.EndDate.HasValue)
+                                {
+                                    <h4 class="sub-name mt-1">
+                                        <i class="fa-solid fa-clock"></i>
+                                        @if (cat.FromDate.HasValue)
+                                        {
+                                            @cat.FromDate.Value.ToString("HH:mm dd/MM/yyyy")
+                                        }
+                                        @if (cat.FromDate.HasValue && cat.EndDate.HasValue)
+                                        {
+                                            <text> - </text>
+                                        }
+                                        @if (cat.EndDate.HasValue)
+                                        {
+                                            @cat.EndDate.Value.ToString("HH:mm dd/MM/yyyy")
+                                        }
+                                    </h4>
+                                }
+                                <div class="line-dot mt-6" data-aos="fade-in" data-aos-delay="400">
+                                    <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+                                </div>
+                                @if (cat.Events != null && cat.Events.Any())
+                                {
+                                    <div class="brief mt-6" data-aos="fade-up" data-aos-delay="450">
+                                        <ul>
+                                            @foreach (var ev in cat.Events)
+                                            {
+                                                @if (!string.IsNullOrEmpty(ev.Diadiem))
+                                                {
+                                                    <li class="ttm-event-meta-item ttm-event-date ttm-event-vanue">
+                                                        Địa điểm: <i class="fa-solid fa-location-dot"></i>@ev.Diadiem
+                                                    </li>
+                                                }
+                                            }
+                                        </ul>
+                                    </div>
+                                }
+                                <div class="button mt-6" data-aos="fade-up" data-aos-delay="500">
+                                    @if (!string.IsNullOrEmpty(cat.Link_pr))
+                                    {
+                                        <a class="btn-solid" href="@cat.Link_pr" target="_blank">
+                                            <span>Xem thêm</span><i class="fa-solid fa-plus"></i>
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <a class="btn-solid" href="/su-kien/@cat.Slug-@cat.Id">
+                                            <span>Xem thêm</span><i class="fa-solid fa-plus"></i>
+                                        </a>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="swiper-pagination is-abs"></div>
+        </div>
+    </div>
+    <script>
+    (function () {
+        var el = document.getElementById('events-home-swiper');
+        if (!el || typeof Swiper === 'undefined') return;
+        var sw = el.swiper;
+        if (sw) {
+            sw.params.autoplay.delay = 3000;
+            sw.autoplay.start();
+        } else {
+            document.addEventListener('DOMContentLoaded', function () {
+                var s = el.swiper;
+                if (s) { s.params.autoplay.delay = 3000; s.autoplay.start(); }
+            });
+        }
+    })();
+    </script>
+}

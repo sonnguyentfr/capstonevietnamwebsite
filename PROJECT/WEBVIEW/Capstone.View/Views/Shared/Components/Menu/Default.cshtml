@@ -1,4 +1,4 @@
-@model List<NVCMS.WebView.Data.Models.MenuItemModel>
+﻿@model List<NVCMS.WebView.Data.Models.MenuItemModel>
 @{
     var currentPath = Context.Request.Path.Value?.TrimEnd('/') ?? string.Empty;
 
@@ -23,7 +23,7 @@
         {
             <li class="has-mega-menu @(parentActive ? "active" : "")">
                 <a href="@item.Url">@item.Title</a>
-                <span class="menu-toggle fa-light fa-chevron-down"></span>
+                <span class="menu-toggle fa-solid fa-chevron-down"></span>
                 <div class="mega-menu">
                     <div class="container">
                         <ul class="mega-list">

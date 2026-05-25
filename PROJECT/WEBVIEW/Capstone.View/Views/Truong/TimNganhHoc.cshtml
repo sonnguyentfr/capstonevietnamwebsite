@@ -1,0 +1,59 @@
+@model NVCMS.WebView.Data.ViewModels.MajorSearchViewModel
+@{
+    ViewData["Title"] = "Tìm ngành học";
+}
+
+<section class="page-hero bg-primary-950 py-16">
+    <div class="container text-center">
+        <h1 class="text-white site-title">Tìm ngành học</h1>
+        <p class="text-white/70 mt-4">Khám phá các ngành học phù hợp tại các trường đối tác Capstone</p>
+    </div>
+</section>
+
+<section class="section-large bg-neutral-50">
+    <div class="container">
+        <form method="get" action="/tim-nganh-hoc" class="school-search-form">
+            <input type="text" name="filter" value="@Model.Filter" placeholder="Tên ngành học...">
+            <select name="quocGia">
+                <option value="">-- Quốc gia --</option>
+                @foreach (var q in Model.QuocGiaList)
+                {
+                    <option value="@q.Id" selected="@(Model.QuocGiaId == q.Id ? "selected" : null)">@q.Ten</option>
+                }
+            </select>
+            <select name="loai">
+                <option value="">-- Bậc học --</option>
+                <option value="4Y" selected="@(Model.Loai=="4Y" ? "selected" : null)">Đại học 4 năm</option>
+                <option value="2Y" selected="@(Model.Loai=="2Y" ? "selected" : null)">Cao đẳng 2 năm</option>
+                <option value="GR" selected="@(Model.Loai=="GR" ? "selected" : null)">Sau đại học</option>
+                <option value="BF" selected="@(Model.Loai=="BF" ? "selected" : null)">Trung học</option>
+            </select>
+            <button type="submit" class="school-search-btn">
+                <i class="fa-solid fa-magnifying-glass"></i> Lọc ngành
+            </button>
+        </form>
+    </div>
+</section>
+
+<section class="section-large">
+    <div class="container">
+        <p class="text-neutral-600 mb-6">@Model.Majors.Count() ngành học</p>
+        <div class="major-grid">
+            @foreach (var m in Model.Majors)
+            {
+                <a class="major-card" href="/tim-truong?MajorId=@m.Id&Loai=@Model.Loai&QuocGia=@Model.QuocGiaId">
+                    <div class="major-card__icon"><i class="fa-solid fa-book-open"></i></div>
+                    <h3 class="major-card__name">@(m.TitleVN ?? m.Title)</h3>
+                    @if (!string.IsNullOrEmpty(m.Title) && m.Title != m.TitleVN)
+                    {
+                        <p class="major-card__en">@m.Title</p>
+                    }
+                </a>
+            }
+            @if (!Model.Majors.Any())
+            {
+                <p class="col-span-full text-center text-neutral-500 py-12">Không tìm thấy ngành học phù hợp.</p>
+            }
+        </div>
+    </div>
+</section>

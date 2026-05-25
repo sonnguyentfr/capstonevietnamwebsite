@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = "Trang chu";
+    ViewData["Title"] = "Trang chủ";
 }
 
 <!-- Banner slider - vitri = 1 -->
@@ -10,12 +10,12 @@
 <!-- Quick nav -->
 <section class="home-nav bg-primary-950 aos-init aos-animate">
     <ul class="nav-list">
-        <li><a class="btn-solid" href="/tu-van-dinh-cu"><i class="fa-light fa-chalkboard-user"></i><span>Tu van dinh cu</span></a></li>
-        <li><a class="btn-solid" href="/capstone-vietnam/cac-dich-vu-capstone/tu-van-du-hoc-cac-nuoc"><i class="fa-light fa-file-certificate"></i><span>Tu van du hoc cac nuoc</span></a></li>
-        <li><a class="btn-solid" href="/capstone-vietnam/cac-dich-vu-capstone/tu-van-du-hoc-truong-top"><i class="fa-light fa-star"></i><span>Du hoc truong TOP</span></a></li>
-        <li><a class="btn-solid" href="/capstone-vietnam/cac-dich-vu-capstone/tu-van-nganh-nghe"><i class="fa-light fa-graduation-cap"></i><span>Tu van nganh nghe - Career Coach</span></a></li>
-        <li><a class="btn-solid" href="/capstone-vietnam/cac-dich-vu-capstone/dich-vu-chuyen-tien-du-hoc"><i class="fa-light fa-globe"></i><span>Dich vu chuyen tien du hoc</span></a></li>
-        <li><a class="btn-solid" href="/capstone-vietnam/cac-dich-vu-capstone/dich-vu-tim-nha"><i class="fa-light fa-building-columns"></i><span>Dich vu tim nha</span></a></li>
+        <li data-aos="fade-up" data-aos-delay="50"><a class="btn-solid" href="/tu-van-dinh-cu"><i class="fa-solid fa-chalkboard-user"></i><span>Tư vấn định cư</span></a></li>
+        <li data-aos="fade-up" data-aos-delay="100"><a class="btn-solid" href="/capstone-vietnam/cac-dich-vu-capstone/tu-van-du-hoc-cac-nuoc"><i class="fa-solid fa-file-certificate"></i><span>Tư vấn du học các nước</span></a></li>
+        <li data-aos="fade-up" data-aos-delay="150"><a class="btn-solid" href="/capstone-vietnam/cac-dich-vu-capstone/tu-van-du-hoc-truong-top"><i class="fa-solid fa-star"></i><span>Du học trường TOP</span></a></li>
+        <li data-aos="fade-up" data-aos-delay="200"><a class="btn-solid" href="/capstone-vietnam/cac-dich-vu-capstone/tu-van-nganh-nghe"><i class="fa-solid fa-graduation-cap"></i><span>Tư vấn ngành nghề - Career Coach</span></a></li>
+        <li data-aos="fade-up" data-aos-delay="250"><a class="btn-solid" href="/capstone-vietnam/cac-dich-vu-capstone/dich-vu-chuyen-tien-du-hoc"><i class="fa-solid fa-globe"></i><span>Dịch vụ chuyển tiền du học</span></a></li>
+        <li data-aos="fade-up" data-aos-delay="300"><a class="btn-solid" href="/capstone-vietnam/cac-dich-vu-capstone/dich-vu-tim-nha"><i class="fa-solid fa-building-columns"></i><span>Dịch vụ tìm nhà</span></a></li>
     </ul>
 </section>
 
@@ -30,174 +30,229 @@
 <!-- Hoi thao su kien -->
 <section class="home-story section-large bg-neutral-50 overflow-hidden">
     <div class="container">
-        <h2 class="site-title text-center">Hội thảo - Sự kiện</h2>
-        <!-- TODO: render danh sach su kien tu ViewBag/Model -->
-        <div class="row mt-8" id="su-kien-list">
-        </div>
-        <div class="button justify-center mt-8">
-            <a class="btn-solid" href="/su-kien"><span>Xem them</span><i class="fa-regular fa-plus"></i></a>
+        <h2 class="site-title text-center" data-aos="fade-right" data-aos-delay="300">Hội thảo - Sự kiện</h2>
+        @await Component.InvokeAsync("Events")
+        <div class="button justify-center mt-8" data-aos="fade-up" data-aos-delay="200">
+            <a class="btn-solid" href="/su-kien"><span>Xem thêm</span><i class="fa-solid fa-plus"></i></a>
         </div>
     </div>
 </section>
-
 <!-- Truong dai hoc cao dang -->
-<section class="home-connectivity section-large">
+<section class="home-connectivity section-large" style="border-top-width: 1px; border-bottom-width: 1px; border-color: rgb(152 152 152 / var(--tw-border-opacity));">
     <div class="container" data-aos="zoom-in" data-aos-delay="150">
-        <h2 class="site-title text-center uppercase">Cac truong dai hoc &amp; cao dang</h2>
-        <div class="site-desc mt-8 mx-auto text-center">
-            <p>Capstone chi hop tac voi cac truong duoc kiem dinh cap khu vuc (Kiem dinh vang) tai My,
-            va cac truong duoc kiem dinh chinh thong tai cac quoc gia khac</p>
+        <h2 class="site-title text-center uppercase">Các trường đại học & cao đẳng</h2>
+        <div class="site-desc mt-8 mx-auto text-center" data-aos="fade-up" data-aos-delay="200">
+            <p>
+                Capstone chỉ hợp tác với các trường được kiểm định cấp khu vực (Kiểm định vàng) tại Mỹ,
+                và các trường được kiểm định chính thống tại các quốc gia khác
+            </p>
         </div>
-        <div class="button justify-center mt-8">
-            <a class="btn-solid active" href="/capstone-vietnam/truong-doi-tac"><span>Truong noi bat</span><i class="fa-regular fa-plus"></i></a>
-            <a class="btn-solid" href="/capstone-vietnam/truong-doi-tac/truong-tai-my"><span>My</span><i class="fa-regular fa-plus"></i></a>
-            <a class="btn-solid" href="/capstone-vietnam/truong-doi-tac/truong-dai-hoc-tai-canada"><span>Canada</span><i class="fa-regular fa-plus"></i></a>
-            <a class="btn-solid" href="/capstone-vietnam/truong-doi-tac/truong-dai-hoc-tai-uc"><span>Uc</span><i class="fa-regular fa-plus"></i></a>
-            <a class="btn-solid" href="/capstone-vietnam/truong-doi-tac/cac-truong-dai-hoc-tai-anh"><span>Anh</span><i class="fa-regular fa-plus"></i></a>
-            <a class="btn-solid" href="/thong-tin-du-hoc/du-hoc-ireland"><span>Ireland</span><i class="fa-regular fa-plus"></i></a>
-            <a class="btn-solid" href="/thong-tin-du-hoc/du-hoc-thuy-si"><span>Thuy si</span><i class="fa-regular fa-plus"></i></a>
+        <div class="button justify-center mt-8" data-aos="fade-up" data-aos-delay="250">
+            <a class="btn-solid active" href="/truong-doi-tac" target="_blank"><span>Trường nổi bật</span><i class="fa-regular fa-plus"></i></a>
+            <a class="btn-solid" href="/truong-doi-tac/my" target="_blank"><span>Mỹ</span><i class="fa-regular fa-plus"></i></a>
+            <a class="btn-solid" href="/truong-doi-tac/canada" target="_blank"><span>Canada</span><i class="fa-regular fa-plus"></i></a>
+            <a class="btn-solid" href="/truong-doi-tac/uc" target="_blank"><span>Úc</span><i class="fa-regular fa-plus"></i></a>
+            <a class="btn-solid" href="/truong-doi-tac/anh" target="_blank"><span>Anh</span><i class="fa-regular fa-plus"></i></a>
         </div>
     </div>
-    <div class="container">
-        <div class="swiper-relative four-slider mt-8">
-            <div class="swiper" id="truong-dh-swiper">
-                <div class="swiper-wrapper">
-                    <!-- TODO: render truong doi tac tu ViewBag/Model -->
-                </div>
-            </div>
-            <div class="mobile-only"><div class="swiper-pagination"></div></div>
-            <div class="desktop-only">
-                <div class="swiper-button is-abs">
-                    <div class="button-prev"><i class="fa-light fa-chevron-left"></i></div>
-                    <div class="button-next"><i class="fa-light fa-chevron-right"></i></div>
-                </div>
-            </div>
+    <div class="container mt-8" data-aos="fade-up" data-aos-delay="100">
+        @await Component.InvokeAsync("TruongSwiper", new { loaiList = new[] { "4Y", "2Y" }, pageSize = 30 })
+    </div>
+</section>
+<!-- Danh sach truong Trung hoc doi tac -->
+<section class="home-connectivity section-large bg-neutral-50">
+    <div class="container" data-aos="zoom-in" data-aos-delay="150">
+        <h2 class="site-title text-center uppercase">Danh sách trường Trung học đối tác</h2>
+        <div class="site-desc mt-8 mx-auto text-center" data-aos="fade-up" data-aos-delay="200">
+            <p>
+                Capstone hợp tác với các trường trung học uy tín tại Mỹ, Canada, Úc, Anh và nhiều quốc gia khác,
+                mang đến nền tảng vững chắc cho hành trình du học của bạn.
+            </p>
+        </div>
+        <div class="button justify-center mt-8" data-aos="fade-up" data-aos-delay="250">
+            <a class="btn-solid active" href="/truong-doi-tac?loai=BF"><span>Tất cả</span><i class="fa-solid fa-plus"></i></a>
+            <a class="btn-solid" href="/truong-doi-tac/my?loai=BF"><span>Mỹ</span><i class="fa-solid fa-plus"></i></a>
+            <a class="btn-solid" href="/truong-doi-tac/canada?loai=BF"><span>Canada</span><i class="fa-solid fa-plus"></i></a>
+            <a class="btn-solid" href="/truong-doi-tac/uc?loai=BF"><span>Úc</span><i class="fa-solid fa-plus"></i></a>
+            <a class="btn-solid" href="/truong-doi-tac/anh?loai=BF"><span>Anh</span><i class="fa-solid fa-plus"></i></a>
+        </div>
+    </div>
+    <div class="container mt-8" data-aos="fade-up" data-aos-delay="100">
+        @await Component.InvokeAsync("TruongSwiper", new { loaiList = new[] { "BF" }, pageSize = 30 })
+        <div class="button justify-center mt-8" data-aos="fade-up" data-aos-delay="150">
+            <a class="btn-solid" href="/truong-doi-tac?loai=BF"><span>Xem tất cả trường trung học đối tác</span><i class="fa-solid fa-plus"></i></a>
         </div>
     </div>
 </section>
-
-<!-- Truong trung hoc -->
-<section class="home-connectivity section-large">
-    <div class="container" data-aos="zoom-in" data-aos-delay="150">
-        <h2 class="site-title text-center uppercase">Cac truong trung hoc</h2>
-        <div class="site-desc mt-8 mx-auto text-center">
-            <p>Capstone chi hop tac voi cac truong duoc kiem dinh cap khu vuc (Kiem dinh vang) tai My,
-            va cac truong duoc kiem dinh chinh thong tai cac quoc gia khac</p>
-        </div>
-        <div class="button justify-center mt-8">
-            <a class="btn-solid active" href="/capstone-vietnam/truong-doi-tac"><span>Truong noi bat</span><i class="fa-regular fa-plus"></i></a>
-            <a class="btn-solid" href="/capstone-vietnam/truong-doi-tac/truong-tai-my"><span>My</span><i class="fa-regular fa-plus"></i></a>
-            <a class="btn-solid" href="/capstone-vietnam/truong-doi-tac/truong-dai-hoc-tai-canada"><span>Canada</span><i class="fa-regular fa-plus"></i></a>
-            <a class="btn-solid" href="/capstone-vietnam/truong-doi-tac/truong-dai-hoc-tai-uc"><span>Uc</span><i class="fa-regular fa-plus"></i></a>
-            <a class="btn-solid" href="/capstone-vietnam/truong-doi-tac/cac-truong-dai-hoc-tai-anh"><span>Anh</span><i class="fa-regular fa-plus"></i></a>
-            <a class="btn-solid" href="/thong-tin-du-hoc/du-hoc-ireland"><span>Ireland</span><i class="fa-regular fa-plus"></i></a>
-            <a class="btn-solid" href="/thong-tin-du-hoc/du-hoc-thuy-si"><span>Thuy si</span><i class="fa-regular fa-plus"></i></a>
-        </div>
-    </div>
-    <div class="container">
-        <div class="swiper-relative four-slider mt-8">
-            <div class="swiper" id="truong-th-swiper">
-                <div class="swiper-wrapper">
-                    <!-- TODO: render truong trung hoc tu ViewBag/Model -->
-                </div>
-            </div>
-            <div class="mobile-only"><div class="swiper-pagination"></div></div>
-            <div class="desktop-only">
-                <div class="swiper-button is-abs">
-                    <div class="button-prev"><i class="fa-light fa-chevron-left"></i></div>
-                    <div class="button-next"><i class="fa-light fa-chevron-right"></i></div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
 <!-- Cong cu tim truong -->
-<section class="home-our-research section-large bg-neutral-50">
-    <div class="container">
-        <h2 class="site-title text-center" data-aos="flip-left" data-aos-delay="100">CONG CU TIM TRUONG</h2>
-        <div class="mt-8">
-            <div class="school-search-form" data-aos="fade-up" data-aos-delay="100">
-                <input type="text" id="search-ten-truong" placeholder="TEN TRUONG...">
-                <select id="search-quoc-gia">
-                    <option value="" disabled selected>QUOC GIA +</option>
-                    <option>My</option>
-                    <option>Canada</option>
-                    <option>Anh</option>
-                    <option>Uc</option>
-                    <option>Ireland</option>
-                    <option>Thuy si</option>
-                    <option>Singapore</option>
-                </select>
-                <select id="search-bac-hoc">
-                    <option value="" disabled selected>BAC HOC +</option>
-                    <option>Trung hoc</option>
-                    <option>Cao dang</option>
-                    <option>Dai hoc</option>
-                    <option>Sau dai hoc</option>
-                </select>
-                <select id="search-nganh-hoc">
-                    <option value="" disabled selected>NGANH HOC +</option>
-                    <option>Kinh te</option>
-                    <option>Quan tri kinh doanh</option>
-                    <option>Cong nghe thong tin</option>
-                    <option>Khoa hoc may tinh</option>
-                    <option>Nghe thuat</option>
-                    <option>Tam ly hoc</option>
-                </select>
-                <select id="search-hoc-phi">
-                    <option value="" disabled selected>HOC PHI +</option>
-                    <option>Duoi 10.000 USD</option>
-                    <option>10.000 - 20.000 USD</option>
-                    <option>20.000 - 40.000 USD</option>
-                    <option>Tren 40.000 USD</option>
-                </select>
+<section class="school-finder-section section-large">
+    <div class="school-finder-bg">
+        <div class="school-finder-overlay"></div>
+        <div class="container school-finder-inner">
+            <div class="school-finder-header" data-aos="fade-up" data-aos-delay="100">
+                <span class="school-finder-label"><i class="fa-solid fa-magnifying-glass"></i> Công cụ tìm trường</span>
+                <h2 class="school-finder-title">Tìm Trường Phù Hợp Với Bạn</h2>
+                <p class="school-finder-desc">Chọn quốc gia, bậc học, ngành học và mức học phí để tìm trường lý tưởng</p>
             </div>
-            <div class="school-search-btn-container">
-                <button class="school-search-btn" onclick="timTruong()">TIM THONG TIN TRUONG</button>
+
+            <!-- Keyword search -->
+            <div class="school-finder-search" data-aos="fade-up" data-aos-delay="150">
+                <div class="school-finder-input-wrap">
+                    <i class="fa-solid fa-school school-finder-input-icon"></i>
+                    <input type="text" id="sf-ten" placeholder="Nhập tên trường bạn muốn tìm...">
+                </div>
+            </div>
+
+            <!-- Filter rows -->
+            <div class="school-finder-filters" data-aos="fade-up" data-aos-delay="200">
+
+                <!-- Quoc gia -->
+                <div class="sf-filter-group">
+                    <div class="sf-filter-label"><i class="fa-solid fa-earth-asia"></i> Quốc gia</div>
+                    <div class="sf-chips" id="sf-quocgia-chips">
+                        <button type="button" class="sf-chip active" data-value=""><i class="fa-solid fa-globe"></i> Tất cả</button>
+                        <button type="button" class="sf-chip" data-value="38">
+                            <img src="/static/img/flags/us.svg" alt="" class="sf-chip-flag" onerror="this.style.display='none'">🇺🇸 Mỹ
+                        </button>
+                        <button type="button" class="sf-chip" data-value="3">
+                            <img src="/static/img/flags/ca.svg" alt="" class="sf-chip-flag" onerror="this.style.display='none'">🇨🇦 Canada
+                        </button>
+                        <button type="button" class="sf-chip" data-value="1">
+                            <img src="/static/img/flags/au.svg" alt="" class="sf-chip-flag" onerror="this.style.display='none'">🇦🇺 Úc
+                        </button>
+                        <button type="button" class="sf-chip" data-value="28">
+                            <img src="/static/img/flags/gb.svg" alt="" class="sf-chip-flag" onerror="this.style.display='none'">🇬🇧 Anh
+                        </button>
+                        <button type="button" class="sf-chip" data-value="401">🇮🇪 Ireland</button>
+                        <button type="button" class="sf-chip" data-value="23">🇨🇭 Thụy Sĩ</button>
+                        <button type="button" class="sf-chip" data-value="99">🇳🇿 New Zealand</button>
+                    </div>
+                </div>
+
+                <!-- Bac hoc -->
+                <div class="sf-filter-group">
+                    <div class="sf-filter-label"><i class="fa-solid fa-graduation-cap"></i> Bậc học</div>
+                    <div class="sf-chips" id="sf-loai-chips">
+                        <button type="button" class="sf-chip active" data-value=""><i class="fa-solid fa-list"></i> Tất cả</button>
+                        <button type="button" class="sf-chip" data-value="BF"><i class="fa-solid fa-school"></i> Trung học</button>
+                        <button type="button" class="sf-chip" data-value="2Y"><i class="fa-solid fa-building-columns"></i> Cao đẳng</button>
+                        <button type="button" class="sf-chip" data-value="4Y"><i class="fa-solid fa-university"></i> Đại học</button>
+                        <button type="button" class="sf-chip" data-value="GR"><i class="fa-solid fa-user-graduate"></i> Sau đại học</button>
+                        <button type="button" class="sf-chip" data-value="ESL"><i class="fa-solid fa-language"></i> Anh ngữ ESL</button>
+                    </div>
+                </div>
+
+                <!-- Hoc phi -->
+                <div class="sf-filter-group">
+                    <div class="sf-filter-label"><i class="fa-solid fa-dollar-sign"></i> Học phí (USD/năm)</div>
+                    <div class="sf-chips" id="sf-tuition-chips">
+                        <button type="button" class="sf-chip active" data-value=""><i class="fa-solid fa-list"></i> Tất cả</button>
+                        <button type="button" class="sf-chip" data-value="10000">Dưới 10.000</button>
+                        <button type="button" class="sf-chip" data-value="20000">10.000 – 20.000</button>
+                        <button type="button" class="sf-chip" data-value="35000">20.000 – 35.000</button>
+                        <button type="button" class="sf-chip" data-value="50000">Trên 35.000</button>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Hidden selects for form submit -->
+            <input type="hidden" id="sf-quocgia-val" name="QuocGia">
+            <input type="hidden" id="sf-loai-val" name="Loai">
+            <input type="hidden" id="sf-tuition-val" name="TuitionMax">
+
+            <!-- CTA -->
+            <div class="school-finder-cta" data-aos="fade-up" data-aos-delay="250">
+                <button type="button" class="sf-search-btn" id="sf-submit-btn">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <span>TÌM TRƯỜNG NGAY</span>
+                </button>
+                <a class="sf-link-btn" href="/tim-truong">
+                    <i class="fa-solid fa-sliders"></i>
+                    <span>Tìm kiếm nâng cao</span>
+                </a>
+                <a class="sf-link-btn" href="/tim-nganh-hoc">
+                    <i class="fa-solid fa-book-open"></i>
+                    <span>Tìm ngành học</span>
+                </a>
             </div>
         </div>
     </div>
 </section>
+<script>
+    (function() {
+        // Single-select chip groups
+        document.querySelectorAll('.sf-chips').forEach(function(group) {
+            group.querySelectorAll('.sf-chip').forEach(function(chip) {
+                chip.addEventListener('click', function() {
+                    group.querySelectorAll('.sf-chip').forEach(function(c) { c.classList.remove('active'); });
+                    chip.classList.add('active');
+                    var groupId = group.id;
+                    var val = chip.dataset.value;
+                    if (groupId === 'sf-quocgia-chips') document.getElementById('sf-quocgia-val').value = val;
+                    if (groupId === 'sf-loai-chips') document.getElementById('sf-loai-val').value = val;
+                    if (groupId === 'sf-tuition-chips') document.getElementById('sf-tuition-val').value = val;
+                });
+            });
+        });
+
+        document.getElementById('sf-submit-btn').addEventListener('click', function() {
+            var params = new URLSearchParams();
+            var ten = document.getElementById('sf-ten').value.trim();
+            var qg = document.getElementById('sf-quocgia-val').value;
+            var loai = document.getElementById('sf-loai-val').value;
+            var tuition = document.getElementById('sf-tuition-val').value;
+            if (ten) params.set('ten', ten);
+            if (qg) params.set('quocgiaids', qg);
+            if (loai) params.set('loai', loai);
+            if (tuition) params.set('tuitionmax', tuition);
+            window.location.href = '/tim-truong' + (params.toString() ? '?' + params.toString() : '');
+        });
+
+        document.getElementById('sf-ten').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') document.getElementById('sf-submit-btn').click();
+        });
+    })();
+</script>
 
 <!-- Ve Capstone - so lieu -->
 <section class="home-about bg-primary-950 section" data-aos="fade-up" data-aos-delay="100">
     <div class="container">
         <div class="row -mt-8 items-center">
-            <div class="col w-full mt-8 lg:w-5/12 xl:w-1/2">
+            <div class="col w-full mt-8 lg:w-5/12 xl:w-1/2" data-aos="fade-right" data-aos-delay="100">
                 <div class="block-about">
                     <div class="hub-title">
                         <h1 class="university-name">Reaching New Heights</h1>
-                        <h2>Cong ty TNHH Capstone Viet Nam</h2>
+                        <h2>Công ty TNHH Capstone Việt Nam</h2>
                     </div>
                     <div class="button">
                         <a class="btn-solid btn-white uppercase" href="/gioi-thieu/ve-capstone.html">
-                            <span>VE CAPSTONE VIETNAM</span><i class="fa-light fa-plus"></i>
+                            <span>VỀ CAPSTONE VIETNAM</span><i class="fa-solid fa-plus"></i>
                         </a>
                     </div>
                 </div>
             </div>
             <div class="col w-full mt-8 lg:w-7/12 xl:w-1/2">
                 <div class="about-list">
-                    <div class="about-item">
+                    <div class="about-item" data-aos="zoom-in" data-aos-delay="100">
                         <div class="icon"><img src="/static/img/icon-1.png" alt=""></div>
                         <h2 class="number"><span class="count-up" data-count="2009">0</span></h2>
-                        <div class="caption"><p>Thanh lap Capstone</p></div>
+                        <div class="caption"><p>Thành lập Capstone</p></div>
                     </div>
-                    <div class="about-item">
+                    <div class="about-item" data-aos="zoom-in" data-aos-delay="200">
                         <div class="icon"><img src="/static/img/icon-2.png" alt=""></div>
                         <h2 class="number"><span class="count-up" data-count="800">0</span><span class="sub-count">+</span></h2>
-                        <div class="caption"><p>Doi tac Quoc te</p></div>
+                        <div class="caption"><p>Đối tác Quốc tế</p></div>
                     </div>
-                    <div class="about-item">
+                    <div class="about-item" data-aos="zoom-in" data-aos-delay="300">
                         <div class="icon"><img src="/static/img/icon-3.png" alt=""></div>
                         <h2 class="number"><span class="count-up" data-count="100000">0</span><span class="sub-count">+</span></h2>
-                        <div class="caption"><p>Luot khach hang tham du</p></div>
+                        <div class="caption"><p>Lượt khách hàng tham dự</p></div>
                     </div>
-                    <div class="about-item">
+                    <div class="about-item" data-aos="zoom-in" data-aos-delay="400">
                         <div class="icon"><img src="/static/img/icon-4.png" alt=""></div>
                         <h2 class="number"><span class="count-up" data-count="150">0</span><span class="sub-count">+</span></h2>
-                        <div class="caption"><p>Ky trien lam, hoi thao du hoc</p></div>
+                        <div class="caption"><p>Kỳ triển lãm, hội thảo du học</p></div>
                     </div>
                 </div>
             </div>
@@ -208,12 +263,12 @@
 <!-- Tin tuc hoc bong -->
 <section class="home-news news-list-section section-large">
     <div class="container">
-        <h2 class="site-title text-center">Tin tuc - Hoc bong</h2>
+        <h2 class="site-title text-center" data-aos="fade-up" data-aos-delay="100">Tin tức - Học bổng</h2>
         <div class="news-list mt-8" id="tin-tuc-list">
             <!-- TODO: render tin tuc tu ViewBag/Model -->
         </div>
         <div class="button justify-center mt-8">
-            <a class="btn-solid" href="/cam-nang-va-tin-tuc"><span>Xem tat ca</span><i class="fa-regular fa-plus"></i></a>
+            <a class="btn-solid" href="/cam-nang-va-tin-tuc"><span>Xem tất cả</span><i class="fa-solid fa-plus"></i></a>
         </div>
     </div>
 </section>
@@ -221,55 +276,55 @@
 <!-- Cac dich vu -->
 <section class="home-courses section-large bg-neutral-50">
     <div class="container">
-        <h2 class="site-title text-center">CAC DICH VU CUA CAPSTONE</h2>
+        <h2 class="site-title text-center" data-aos="fade-up" data-aos-delay="100">CÁC DỊCH VỤ CỦA CAPSTONE</h2>
         <div class="home-courses-list mt-8">
-            <div class="home-courses-item">
+            <div class="home-courses-item" data-aos="fade-up" data-aos-delay="50">
                 <div class="image img-cover">
                     <a href="/capstone-vietnam/cac-dich-vu-capstone/tu-van-du-hoc-cac-nuoc">
-                        <img src="/static/img/service/du-hoc-cac-cap.jpg" alt="Du hoc cac cap">
+                        <img src="/static/img/service/du-hoc-cac-cap.jpg" alt="Du học các cấp">
                     </a>
                 </div>
-                <div class="caption"><h3 class="title"><a href="/capstone-vietnam/cac-dich-vu-capstone/tu-van-du-hoc-cac-nuoc">Du hoc cac cap</a></h3></div>
+                <div class="caption"><h3 class="title"><a href="/capstone-vietnam/cac-dich-vu-capstone/tu-van-du-hoc-cac-nuoc">Du học các cấp</a></h3></div>
             </div>
-            <div class="home-courses-item">
+            <div class="home-courses-item" data-aos="fade-up" data-aos-delay="100">
                 <div class="image img-cover">
                     <a href="/capstone-vietnam/cac-dich-vu-capstone/tu-van-du-hoc-truong-top">
-                        <img src="/static/img/service/du-hoc-truong-top.jpg" alt="Du hoc truong top">
+                        <img src="/static/img/service/du-hoc-truong-top.jpg" alt="Du học trường TOP">
                     </a>
                 </div>
-                <div class="caption"><h3 class="title"><a href="/capstone-vietnam/cac-dich-vu-capstone/tu-van-du-hoc-truong-top">Du hoc truong top</a></h3></div>
+                <div class="caption"><h3 class="title"><a href="/capstone-vietnam/cac-dich-vu-capstone/tu-van-du-hoc-truong-top">Du học trường TOP</a></h3></div>
             </div>
-            <div class="home-courses-item">
+            <div class="home-courses-item" data-aos="fade-up" data-aos-delay="150">
                 <div class="image img-cover">
                     <a href="/capstone-vietnam/cac-dich-vu-capstone/tu-van-nganh-nghe">
-                        <img src="/static/img/service/dinh-huong-nghe-nghiep.jpg" alt="Dinh huong nghe nghiep">
+                        <img src="/static/img/service/dinh-huong-nghe-nghiep.jpg" alt="Định hướng nghề nghiệp">
                     </a>
                 </div>
-                <div class="caption"><h3 class="title"><a href="/capstone-vietnam/cac-dich-vu-capstone/tu-van-nganh-nghe">Dinh huong nghe nghiep</a></h3></div>
+                <div class="caption"><h3 class="title"><a href="/capstone-vietnam/cac-dich-vu-capstone/tu-van-nganh-nghe">Định hướng nghề nghiệp</a></h3></div>
             </div>
-            <div class="home-courses-item">
+            <div class="home-courses-item" data-aos="fade-up" data-aos-delay="200">
                 <div class="image img-cover">
                     <a href="/capstone-vietnam/cac-dich-vu-capstone/tu-van-visa-du-hoc-tham-than">
-                        <img src="/static/img/service/visa-du-hoc.jpg" alt="Visa du hoc, tham than">
+                        <img src="/static/img/service/visa-du-hoc.jpg" alt="Visa du học, thăm thân">
                     </a>
                 </div>
-                <div class="caption"><h3 class="title"><a href="/capstone-vietnam/cac-dich-vu-capstone/tu-van-visa-du-hoc-tham-than">Visa du hoc, tham than</a></h3></div>
+                <div class="caption"><h3 class="title"><a href="/capstone-vietnam/cac-dich-vu-capstone/tu-van-visa-du-hoc-tham-than">Visa du học, thăm thân</a></h3></div>
             </div>
-            <div class="home-courses-item">
+            <div class="home-courses-item" data-aos="fade-up" data-aos-delay="250">
                 <div class="image img-cover">
                     <a href="/tu-van-dinh-cu">
-                        <img src="/static/img/service/tu-van-dinh-cu.jpg" alt="Tu van dau tu dinh cu">
+                        <img src="/static/img/service/tu-van-dinh-cu.jpg" alt="Tư vấn đầu tư định cư">
                     </a>
                 </div>
-                <div class="caption"><h3 class="title"><a href="/tu-van-dinh-cu">Tu van dau tu dinh cu</a></h3></div>
+                <div class="caption"><h3 class="title"><a href="/tu-van-dinh-cu">Tư vấn đầu tư định cư</a></h3></div>
             </div>
-            <div class="home-courses-item">
+            <div class="home-courses-item" data-aos="fade-up" data-aos-delay="300">
                 <div class="image img-cover">
                     <a href="/capstone-vietnam/fairguide">
-                        <img src="/static/img/service/trien-lam-du-hoc.jpg" alt="Trien lam du hoc">
+                        <img src="/static/img/service/trien-lam-du-hoc.jpg" alt="Triển lãm du học">
                     </a>
                 </div>
-                <div class="caption"><h3 class="title"><a href="/capstone-vietnam/fairguide">Trien lam du hoc</a></li></h3></div>
+                <div class="caption"><h3 class="title"><a href="/capstone-vietnam/fairguide">Triển lãm du học</a></h3></div>
             </div>
         </div>
     </div>
@@ -278,8 +333,8 @@
 <!-- Doi ngu co van -->
 <section class="home-units section-large">
     <div class="container">
-        <h2 class="site-title text-center">DOI NGU CO VAN</h2>
-        <div class="swiper-relative four-slider mt-8">
+        <h2 class="site-title text-center" data-aos="fade-up" data-aos-delay="100">ĐỘI NGŨ CỐ VẤN</h2>
+        <div class="swiper-relative four-slider mt-8" data-aos="fade-up" data-aos-delay="200">
             <div class="swiper" id="doi-ngu-swiper">
                 <div class="swiper-wrapper">
                     <!-- TODO: render doi ngu tu ViewBag/Model -->
@@ -288,34 +343,10 @@
             <div class="mobile-only"><div class="swiper-pagination"></div></div>
             <div class="desktop-only">
                 <div class="swiper-button is-abs">
-                    <div class="button-prev"><i class="fa-light fa-chevron-left"></i></div>
-                    <div class="button-next"><i class="fa-light fa-chevron-right"></i></div>
+                    <div class="button-prev"><i class="fa-solid fa-chevron-left"></i></div>
+                    <div class="button-next"><i class="fa-solid fa-chevron-right"></i></div>
                 </div>
             </div>
-        </div>
-    </div>
-</section>
-
-<!-- Danh sach truong doi tac -->
-<section class="home-our-research section-large bg-neutral-50">
-    <div class="container">
-        <h2 class="site-title text-center">DANH SACH TRUONG DOI TAC</h2>
-        <div class="swiper-relative four-slider mt-8">
-            <div class="swiper" id="truong-doi-tac-swiper">
-                <div class="swiper-wrapper">
-                    <!-- TODO: render truong doi tac tu ViewBag/Model -->
-                </div>
-            </div>
-            <div class="mobile-only"><div class="swiper-pagination"></div></div>
-            <div class="desktop-only">
-                <div class="swiper-button is-abs">
-                    <div class="button-prev"><i class="fa-light fa-chevron-left"></i></div>
-                    <div class="button-next"><i class="fa-light fa-chevron-right"></i></div>
-                </div>
-            </div>
-        </div>
-        <div class="button justify-center mt-8">
-            <a class="btn-solid" href="/capstone-vietnam/truong-doi-tac"><span>Xem tat ca</span><i class="fa-regular fa-plus"></i></a>
         </div>
     </div>
 </section>
@@ -324,34 +355,36 @@
 <section class="home-about section-large bg-primary-50">
     <div class="container">
         <div class="row items-center">
-            <div class="col w-full lg:w-1/2">
-                <h2 class="site-title">Dang ky tu van</h2>
-                <p class="mt-4">Moi su hop tac tot dep deu bat dau tu mot cuoc tro chuyen.
-                Hay lien he voi chung toi, moi mong muon cua ban se duoc lang nghe.</p>
+            <div class="col w-full lg:w-1/2" data-aos="fade-right" data-aos-delay="100">
+                <h2 class="site-title">Đăng ký tư vấn</h2>
+                <p class="mt-4">
+                    Mọi sự hợp tác tốt đẹp đều bắt đầu từ một cuộc trò chuyện.
+                    Hãy liên hệ với chúng tôi, mọi mong muốn của bạn sẽ được lắng nghe.
+                </p>
             </div>
-            <div class="col w-full lg:w-1/2 mt-8 lg:mt-0">
+            <div class="col w-full lg:w-1/2 mt-8 lg:mt-0" data-aos="fade-left" data-aos-delay="200">
                 <form class="contact-form" id="form-tu-van" method="post" action="/dang-ky-tu-van">
                     <select name="HinhThucTuVan">
-                        <option value="" disabled selected>Hinh thuc tu van</option>
+                        <option value="" disabled selected>Hình thức tư vấn</option>
                         <option value="online">Online</option>
-                        <option value="offline">Truc tiep</option>
+                        <option value="offline">Trực tiếp</option>
                     </select>
-                    <input type="text" name="HoTen" placeholder="Ho va ten *" required>
-                    <input type="tel" name="DienThoai" placeholder="So dien thoai *" required>
+                    <input type="text" name="HoTen" placeholder="Họ và tên *" required>
+                    <input type="tel" name="DienThoai" placeholder="Số điện thoại *" required>
                     <input type="email" name="Email" placeholder="Email *" required>
                     <select name="DichVu">
-                        <option value="" disabled selected>Dich vu quan tam</option>
-                        <option>Tu van du hoc</option>
-                        <option>Tu van dinh cu</option>
+                        <option value="" disabled selected>Dịch vụ quan tâm</option>
+                        <option>Tư vấn du học</option>
+                        <option>Tư vấn định cư</option>
                         <option>Career Coach</option>
-                        <option>Visa du hoc</option>
+                        <option>Visa du học</option>
                     </select>
                     <label class="checkbox-label">
                         <input type="checkbox" name="DongY" required>
-                        Toi dong y voi cac dieu khoan bao mat thong tin cua Capstone
+                        Tôi đồng ý với các điều khoản bảo mật thông tin của Capstone
                     </label>
                     <button type="submit" class="btn-solid active">
-                        <span>GUI</span><i class="fa-regular fa-arrow-right"></i>
+                        <span>GỬI</span><i class="fa-solid fa-arrow-right"></i>
                     </button>
                 </form>
             </div>
@@ -362,8 +395,8 @@
 <!-- Cam nhan khach hang -->
 <section class="home-story section-large bg-neutral-50 overflow-hidden">
     <div class="container">
-        <h2 class="site-title text-center">Cam Nhan Cua Khach Hang</h2>
-        <div class="swiper-relative one-slider no-loop mt-8 equal-height">
+        <h2 class="site-title text-center" data-aos="fade-up" data-aos-delay="100">Cảm Nhận Của Khách Hàng</h2>
+        <div class="swiper-relative one-slider no-loop mt-8 equal-height" data-aos="fade-up" data-aos-delay="200">
             <div class="swiper" id="testimonial-swiper">
                 <div class="swiper-wrapper">
                     <!-- TODO: render cam nhan tu ViewBag/Model -->

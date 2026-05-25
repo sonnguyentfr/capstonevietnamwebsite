@@ -545,12 +545,6 @@ img {
     }
 }
 
-@media (min-width: 1440px) {
-    .container {
-        max-width: 1440px;
-    }
-}
-
 @media (min-width: 400px) {
     .container {
         max-width: 100%;
@@ -565,7 +559,16 @@ img {
 
 @media (min-width: 1200px) {
     .container {
-        max-width: calc(1534 / 1920 * 100rem);
+        max-width: 1278px;
+    }
+}
+
+/* Fluid container: 1900px → 1534px | 2560px → 2045px  (ratio ≈80%)
+   Formula: y = 63.4px + 77.42vw  — passes through both data points exactly.
+   Transition point ≈1570px where fluid value meets the 1278px fixed floor. */
+@media (min-width: 1570px) {
+    .container {
+        max-width: calc(63.4px + 77.42vw);
     }
 }
 
@@ -9739,3 +9742,20 @@ footer {
         width: 89vh;
     }
 }
+
+.brief ul {
+    padding-left: 20px;
+}
+
+    .brief ul li {
+        list-style-type: decimal;
+        padding-bottom: 20px;
+    }
+
+        .brief ul li i.fa {
+            padding-right: 5px;
+        }
+
+        .brief ul li:last-child {
+            padding-bottom: 0 !important;
+        }

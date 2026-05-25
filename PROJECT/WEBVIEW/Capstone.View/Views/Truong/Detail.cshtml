@@ -1,0 +1,422 @@
+@model NVCMS.WebView.Data.ViewModels.TruongDetailViewModel
+@{
+    ViewData["Title"] = Model.NameofSchool;
+    bool is4Y = Model.Loai is "4Y" or "2Y" or "GR";
+    bool isBF = Model.Loai is "BF" or "HS";
+    bool isESL = Model.Loai is "ESL";
+}
+
+<!-- Cover -->
+<section class="truong-hero" style="@(!string.IsNullOrEmpty(Model.CoverUrl) ? $"background-image:url('{Model.CoverUrl}')" : "background:#1e3a5f")">
+    <div class="truong-hero__overlay"></div>
+    <div class="container truong-hero__content">
+        @if (!string.IsNullOrEmpty(Model.LogoUrl))
+        {
+            <div class="truong-hero__logo">
+                <img src="@Model.LogoUrl" alt="Logo @Model.NameofSchool">
+            </div>
+        }
+        <div class="truong-hero__info">
+            <div class="truong-hero__badges">
+                @if (Model.IsPartner)
+                {
+                    <span class="badge badge--partner"><i class="fa-solid fa-handshake"></i> Đối tác Capstone</span>
+                }
+                @if (!string.IsNullOrEmpty(Model.CountryName))
+                {
+                    <span class="badge"><i class="fa-solid fa-location-dot"></i> @Model.CountryName</span>
+                }
+                @if (!string.IsNullOrEmpty(Model.Loai))
+                {
+                    var loaiLabel = Model.Loai switch
+                    {
+                        "4Y" => "Đại học", "2Y" => "Cao đẳng", "GR" => "Sau đại học",
+                        "BF" => "Trung học", "HS" => "Trung học", "ESL" => "Anh ngữ ESL",
+                        _ => Model.Loai
+                    };
+                    <span class="badge"><i class="fa-solid fa-graduation-cap"></i> @loaiLabel</span>
+                }
+            </div>
+            <h1 class="truong-hero__name">@Model.NameofSchool</h1>
+            @if (!string.IsNullOrEmpty(Model.ThanhPholongannhat))
+            {
+                <p class="truong-hero__city"><i class="fa-solid fa-map-pin"></i> @Model.ThanhPholongannhat</p>
+            }
+        </div>
+    </div>
+</section>
+
+<!-- Quick info bar -->
+<section class="truong-meta-bar bg-primary-950">
+    <div class="container truong-meta-bar__inner">
+        @if (!string.IsNullOrEmpty(Model.Namthanhlap))
+        {
+            <div class="truong-meta-item">
+                <i class="fa-solid fa-calendar"></i>
+                <span>Thành lập @Model.Namthanhlap</span>
+            </div>
+        }
+        @if (!string.IsNullOrEmpty(Model.Website))
+        {
+            <div class="truong-meta-item">
+                <i class="fa-solid fa-globe"></i>
+                <a href="@Model.Website" target="_blank" rel="noopener">Website</a>
+            </div>
+        }
+        @if (!string.IsNullOrEmpty(Model.Phone))
+        {
+            <div class="truong-meta-item">
+                <i class="fa-solid fa-phone"></i>
+                <a href="tel:@Model.Phone">@Model.Phone</a>
+            </div>
+        }
+        @if (!string.IsNullOrEmpty(Model.Email))
+        {
+            <div class="truong-meta-item">
+                <i class="fa-solid fa-envelope"></i>
+                <a href="mailto:@Model.Email">@Model.Email</a>
+            </div>
+        }
+    </div>
+</section>
+
+<div class="container section-large">
+    <div class="truong-layout">
+        <!-- Main content -->
+        <div class="truong-layout__main">
+
+            <!-- Giới thiệu -->
+            @if (!string.IsNullOrEmpty(Model.Descreption))
+            {
+                <div class="truong-section">
+                    <h2 class="truong-section__title">Giới thiệu về trường</h2>
+                    <div class="rich-text">@Html.Raw(Model.Descreption)</div>
+                </div>
+            }
+
+            <!-- Video -->
+            @if (!string.IsNullOrEmpty(Model.VideoLink))
+            {
+                <div class="truong-section">
+                    <h2 class="truong-section__title">Video giới thiệu</h2>
+                    <div class="video-embed">
+                        <iframe src="@Model.VideoLink" frameborder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowfullscreen loading="lazy" title="@Model.NameofSchool"></iframe>
+                    </div>
+                </div>
+            }
+
+            <!-- Ngành học -->
+            @if (Model.Majors.Any())
+            {
+                <div class="truong-section">
+                    <h2 class="truong-section__title">Ngành học</h2>
+                    <div class="major-tags">
+                        @foreach (var m in Model.Majors)
+                        {
+                            <a class="major-tag" href="/tim-truong?MajorId=@m.Id">@(m.TitleVN ?? m.Title)</a>
+                        }
+                    </div>
+                </div>
+            }
+
+            <!-- ==================== ĐẠI HỌC / CAO ĐẲNG layout ==================== -->
+            @if (is4Y && Model.Admis4Year is not null)
+            {
+                var a = Model.Admis4Year;
+                <div class="truong-section">
+                    <h2 class="truong-section__title">Thông tin tuyển sinh</h2>
+                    <div class="info-grid">
+                        @if (a.FallUnder.HasValue || a.SpringUnder.HasValue || a.RollingUnder == true)
+                        {
+                            <div class="info-item">
+                                <span class="info-label"><i class="fa-solid fa-calendar-days"></i> Hạn nộp hồ sơ</span>
+                                <span class="info-value">
+                                    @if (a.RollingUnder == true) { <text>Tuyển sinh liên tục</text> }
+                                    else {
+                                        @if (a.FallUnder.HasValue) { <text>Fall: @a.FallUnder.Value.ToString("dd/MM/yyyy")  </text> }
+                                        @if (a.SpringUnder.HasValue) { <text>Spring: @a.SpringUnder.Value.ToString("dd/MM/yyyy")</text> }
+                                    }
+                                </span>
+                            </div>
+                        }
+                        @if (!string.IsNullOrEmpty(a.ToefliBTUnder))
+                        {
+                            <div class="info-item">
+                                <span class="info-label"><i class="fa-solid fa-file-pen"></i> TOEFL iBT</span>
+                                <span class="info-value">@a.ToefliBTUnder</span>
+                            </div>
+                        }
+                        @if (!string.IsNullOrEmpty(a.IELTSUnder))
+                        {
+                            <div class="info-item">
+                                <span class="info-label"><i class="fa-solid fa-file-pen"></i> IELTS</span>
+                                <span class="info-value">@a.IELTSUnder</span>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <div class="truong-section">
+                    <h2 class="truong-section__title">Học phí & Chi phí</h2>
+                    <div class="cost-table">
+                        <table>
+                            <thead><tr><th>Bậc học</th><th>Học phí/năm (USD)</th></tr></thead>
+                            <tbody>
+                                @if (a.TuitionUnder.HasValue) { <tr><td>Đại học</td><td>@a.TuitionUnder.Value.ToString("N0")</td></tr> }
+                                @if (a.TuitionGrad.HasValue) { <tr><td>Sau đại học</td><td>@a.TuitionGrad.Value.ToString("N0")</td></tr> }
+                                @if (a.TuitionAss.HasValue) { <tr><td>Cao đẳng</td><td>@a.TuitionAss.Value.ToString("N0")</td></tr> }
+                                @if (a.TuitionESL.HasValue) { <tr><td>ESL</td><td>@a.TuitionESL.Value.ToString("N0")</td></tr> }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                @if (a.ScholarshipUnder == true || a.ScholarshipGrad == true || a.ScholarshipAss == true)
+                {
+                    <div class="truong-section">
+                        <h2 class="truong-section__title"><i class="fa-solid fa-award"></i> Học bổng</h2>
+                        <div class="info-grid">
+                            @if (a.ScholarshipUnder == true && !string.IsNullOrEmpty(a.ScholarshipUnderRangeVN))
+                            {
+                                <div class="info-item">
+                                    <span class="info-label">Đại học</span>
+                                    <span class="info-value">@a.ScholarshipUnderRangeVN</span>
+                                </div>
+                            }
+                            @if (a.ScholarshipGrad == true && !string.IsNullOrEmpty(a.ScholarshipGradRangeVN))
+                            {
+                                <div class="info-item">
+                                    <span class="info-label">Sau đại học</span>
+                                    <span class="info-value">@a.ScholarshipGradRangeVN</span>
+                                </div>
+                            }
+                            @if (a.ScholarshipAss == true && !string.IsNullOrEmpty(a.ScholarshipAssRangeVN))
+                            {
+                                <div class="info-item">
+                                    <span class="info-label">Cao đẳng</span>
+                                    <span class="info-value">@a.ScholarshipAssRangeVN</span>
+                                </div>
+                            }
+                        </div>
+                        @if (!string.IsNullOrEmpty(a.ScholarshipNoteVN))
+                        {
+                            <p class="mt-4 text-neutral-600">@a.ScholarshipNoteVN</p>
+                        }
+                    </div>
+                }
+
+                <div class="truong-section">
+                    <h2 class="truong-section__title">Thống kê sinh viên</h2>
+                    <div class="stats-row">
+                        @if (a.NOSTotalUnder.HasValue)
+                        {
+                            <div class="stat-item"><span class="stat-num">@a.NOSTotalUnder.Value.ToString("N0")</span><span class="stat-label">Tổng sinh viên</span></div>
+                        }
+                        @if (a.NOSInternationalUnder.HasValue)
+                        {
+                            <div class="stat-item"><span class="stat-num">@a.NOSInternationalUnder.Value.ToString("N0")</span><span class="stat-label">Sinh viên quốc tế</span></div>
+                        }
+                        @if (a.NOSVNUnder.HasValue)
+                        {
+                            <div class="stat-item"><span class="stat-num">@a.NOSVNUnder.Value.ToString("N0")</span><span class="stat-label">Sinh viên Việt Nam</span></div>
+                        }
+                        @if (!string.IsNullOrEmpty(a.GraduationRate))
+                        {
+                            <div class="stat-item"><span class="stat-num">@a.GraduationRate</span><span class="stat-label">Tỷ lệ tốt nghiệp</span></div>
+                        }
+                        @if (!string.IsNullOrEmpty(a.EmploymentRateAfterGraduation))
+                        {
+                            <div class="stat-item"><span class="stat-num">@a.EmploymentRateAfterGraduation</span><span class="stat-label">Tỷ lệ có việc làm</span></div>
+                        }
+                    </div>
+                </div>
+            }
+
+            <!-- ==================== TRUNG HỌC layout ==================== -->
+            @if (isBF && Model.AdmisBF is not null)
+            {
+                var b = Model.AdmisBF;
+                <div class="truong-section">
+                    <h2 class="truong-section__title">Thông tin tuyển sinh</h2>
+                    <div class="info-grid">
+                        @if (b.GradesFrom.HasValue && b.GradesTo.HasValue)
+                        {
+                            <div class="info-item">
+                                <span class="info-label"><i class="fa-solid fa-school"></i> Khối lớp</span>
+                                <span class="info-value">Lớp @b.GradesFrom đến lớp @b.GradesTo</span>
+                            </div>
+                        }
+                        @if (b.AdmFall.HasValue || b.AdmRoll == true)
+                        {
+                            <div class="info-item">
+                                <span class="info-label"><i class="fa-solid fa-calendar-days"></i> Hạn nộp hồ sơ</span>
+                                <span class="info-value">
+                                    @(b.AdmRoll == true ? "Tuyển sinh liên tục" : b.AdmFall?.ToString("dd/MM/yyyy"))
+                                </span>
+                            </div>
+                        }
+                        @if (b.APCourse == true) { <div class="info-item"><span class="info-label">AP Courses</span><span class="info-value badge badge--yes">Có</span></div> }
+                        @if (b.IBCourse == true)  { <div class="info-item"><span class="info-label">IB Programme</span><span class="info-value badge badge--yes">Có</span></div> }
+                        @if (b.ESL == true)        { <div class="info-item"><span class="info-label">ESL Support</span><span class="info-value badge badge--yes">Có</span></div> }
+                    </div>
+                    @if (b.TESTToefl == true || b.TESTIELTS == true)
+                    {
+                        <h3 class="mt-6 font-semibold">Yêu cầu tiếng Anh</h3>
+                        <div class="info-grid mt-2">
+                            @if (b.TESTToefl == true) { <div class="info-item"><span class="info-label">TOEFL min.</span><span class="info-value">@b.TESTToeflMin</span></div> }
+                            @if (b.TESTIELTS == true)  { <div class="info-item"><span class="info-label">IELTS min.</span><span class="info-value">@b.TESTIELTSMin</span></div> }
+                        </div>
+                    }
+                </div>
+
+                <div class="truong-section">
+                    <h2 class="truong-section__title">Học phí & Chi phí</h2>
+                    <div class="cost-table">
+                        <table>
+                            <thead><tr><th>Khoản</th><th>USD/năm</th></tr></thead>
+                            <tbody>
+                                @if (b.Tuition.HasValue)  { <tr><td>Học phí</td><td>@b.Tuition.Value.ToString("N0")</td></tr> }
+                                @if (b.COSRoom.HasValue)   { <tr><td>Ký túc xá / Ăn</td><td>@b.COSRoom.Value.ToString("N0")</td></tr> }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                @if (b.ScholarshipInternation == true)
+                {
+                    <div class="truong-section">
+                        <h2 class="truong-section__title"><i class="fa-solid fa-award"></i> Học bổng quốc tế</h2>
+                        <p>@(b.ScholarshipInternationRangVN ?? "Có học bổng dành cho học sinh quốc tế")</p>
+                    </div>
+                }
+
+                @if (b.SummerProgram == true)
+                {
+                    <div class="truong-section">
+                        <h2 class="truong-section__title"><i class="fa-solid fa-sun"></i> Chương trình hè</h2>
+                        <div class="info-grid">
+                            @if (!string.IsNullOrEmpty(b.SummerProgramAges))   { <div class="info-item"><span class="info-label">Độ tuổi</span><span class="info-value">@b.SummerProgramAges</span></div> }
+                            @if (!string.IsNullOrEmpty(b.SummerProgramCOST))   { <div class="info-item"><span class="info-label">Chi phí</span><span class="info-value">@b.SummerProgramCOST</span></div> }
+                        </div>
+                    </div>
+                }
+
+                <div class="truong-section">
+                    <h2 class="truong-section__title">Ký túc xá</h2>
+                    <div class="info-grid">
+                        @if (b.HousingBF == true)   { <div class="info-item"><span class="info-label">Ký túc xá trường</span><span class="info-value badge badge--yes">Có</span></div> }
+                        @if (b.HousingHome == true) { <div class="info-item"><span class="info-label">Homestay</span><span class="info-value badge badge--yes">Có</span></div> }
+                    </div>
+                </div>
+            }
+
+            <!-- ==================== ESL layout ==================== -->
+            @if (isESL && Model.AdmisESL is not null)
+            {
+                var e = Model.AdmisESL;
+                <div class="truong-section">
+                    <h2 class="truong-section__title">Chương trình Anh ngữ (ESL)</h2>
+                    @if (!string.IsNullOrEmpty(e.TypeOfCourse))
+                    {
+                        <p class="mb-4">@e.TypeOfCourse</p>
+                    }
+                    <div class="info-grid">
+                        @if (!string.IsNullOrEmpty(e.LCName))   { <div class="info-item"><span class="info-label">Tên khóa học</span><span class="info-value">@e.LCName</span></div> }
+                        @if (!string.IsNullOrEmpty(e.LCCost))   { <div class="info-item"><span class="info-label">Chi phí</span><span class="info-value">@e.LCCost</span></div> }
+                        @if (e.RateOfStudent.HasValue)           { <div class="info-item"><span class="info-label">Tỷ lệ SV/giáo viên</span><span class="info-value">@e.RateOfStudent:1</span></div> }
+                        @if (e.WorkOpp == true)                  { <div class="info-item"><span class="info-label">Cơ hội làm thêm</span><span class="info-value badge badge--yes">Có</span></div> }
+                        @if (!string.IsNullOrEmpty(e.Conditional)) { <div class="info-item"><span class="info-label">Điều kiện nhập học</span><span class="info-value">@e.Conditional</span></div> }
+                    </div>
+                </div>
+
+                <div class="truong-section">
+                    <h2 class="truong-section__title">Học phí & Chi phí</h2>
+                    <div class="cost-table">
+                        <table>
+                            <thead><tr><th>Khoản</th><th>USD</th></tr></thead>
+                            <tbody>
+                                @if (e.Tuition.HasValue)  { <tr><td>Học phí</td><td>@e.Tuition.Value.ToString("N0")</td></tr> }
+                                @if (e.COSRoom.HasValue)  { <tr><td>Ký túc xá</td><td>@e.COSRoom.Value.ToString("N0")</td></tr> }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                @if (e.Scholarship == true)
+                {
+                    <div class="truong-section">
+                        <h2 class="truong-section__title"><i class="fa-solid fa-award"></i> Học bổng</h2>
+                        <p>@(e.ScholarshipRange ?? "Có học bổng dành cho học viên")</p>
+                    </div>
+                }
+
+                <div class="truong-section">
+                    <h2 class="truong-section__title">Chỗ ở</h2>
+                    <div class="info-grid">
+                        @if (e.HousingOncampus == true)  { <div class="info-item"><span class="info-label">Ký túc xá</span><span class="info-value badge badge--yes">Có</span></div> }
+                        @if (e.HousingHomeStay == true)  { <div class="info-item"><span class="info-label">Homestay</span><span class="info-value badge badge--yes">Có</span></div> }
+                        @if (e.HousingApartment == true) { <div class="info-item"><span class="info-label">Căn hộ</span><span class="info-value badge badge--yes">Có</span></div> }
+                    </div>
+                </div>
+
+                <div class="truong-section">
+                    <h2 class="truong-section__title">Thống kê</h2>
+                    <div class="stats-row">
+                        @if (e.NOSTotal.HasValue)       { <div class="stat-item"><span class="stat-num">@e.NOSTotal</span><span class="stat-label">Tổng học viên</span></div> }
+                        @if (e.NOSInternation.HasValue) { <div class="stat-item"><span class="stat-num">@e.NOSInternation</span><span class="stat-label">Quốc tế</span></div> }
+                    </div>
+                </div>
+            }
+
+        </div><!-- end main -->
+
+        <!-- Sidebar -->
+        <aside class="truong-layout__sidebar">
+            <div class="sidebar-card">
+                <h3 class="sidebar-card__title">Thông tin liên hệ</h3>
+                @if (!string.IsNullOrEmpty(Model.Address))
+                {
+                    <p><i class="fa-solid fa-location-dot"></i> @Model.Address</p>
+                }
+                @if (!string.IsNullOrEmpty(Model.Phone))
+                {
+                    <p><i class="fa-solid fa-phone"></i> <a href="tel:@Model.Phone">@Model.Phone</a></p>
+                }
+                @if (!string.IsNullOrEmpty(Model.Email))
+                {
+                    <p><i class="fa-solid fa-envelope"></i> <a href="mailto:@Model.Email">@Model.Email</a></p>
+                }
+                @if (!string.IsNullOrEmpty(Model.Website))
+                {
+                    <p><i class="fa-solid fa-globe"></i> <a href="@Model.Website" target="_blank" rel="noopener">@Model.Website</a></p>
+                }
+            </div>
+
+            @if (!string.IsNullOrEmpty(Model.Kiemdinh))
+            {
+                <div class="sidebar-card">
+                    <h3 class="sidebar-card__title">Kiểm định</h3>
+                    <p>@Model.Kiemdinh</p>
+                </div>
+            }
+
+            @if (!string.IsNullOrEmpty(Model.TypeofRankingVN ?? Model.TypeofRanking))
+            {
+                <div class="sidebar-card">
+                    <h3 class="sidebar-card__title">Xếp hạng</h3>
+                    <p>@(Model.TypeofRankingVN ?? Model.TypeofRanking)</p>
+                </div>
+            }
+
+            <div class="sidebar-card">
+                <h3 class="sidebar-card__title">Tư vấn ngay</h3>
+                <p class="mb-4">Liên hệ Capstone để được tư vấn miễn phí về trường này</p>
+                <a class="btn-solid active w-full" href="/dang-ky-tu-van">
+                    <i class="fa-solid fa-paper-plane"></i> Đăng ký tư vấn
+                </a>
+            </div>
+        </aside>
+    </div>
+</div>
