@@ -106,9 +106,19 @@ public class CdnSrcTagHelper : TagHelper
     [HtmlAttributeName(CdnHAttr)]
     public int CdnH { get; set; }
 
+    private const string NoPhotoUrl = "/static/img/no-photo.svg";
+
     public override void Process(TagHelperContext context, TagHelperOutput output)
     {
-        if (string.IsNullOrEmpty(CdnSrc)) return;
+        // If no cdn-src provided, show placeholder immediately
+        if (string.IsNullOrEmpty(CdnSrc))
+        {
+            output.Attributes.SetAttribute("src", NoPhotoUrl);
+            output.Attributes.RemoveAll(CdnSrcAttr);
+            output.Attributes.RemoveAll(CdnWAttr);
+            output.Attributes.RemoveAll(CdnHAttr);
+            return;
+        }
 
         // 1. Strip /DATA/ /data/ /Portals/ roi prepend base URL
         //    /DATA/IMAGES/abc.jpg  ->  https://server.com/IMAGES/abc.jpg
@@ -146,6 +156,10 @@ public class CdnSrcTagHelper : TagHelper
         }
 
         output.Attributes.SetAttribute("src", resolved);
+
+        // 3. onerror fallback -> no-photo if CDN image is broken / 404
+        if (!output.Attributes.ContainsName("onerror"))
+            output.Attributes.SetAttribute("onerror", $"this.onerror=null;this.src='{NoPhotoUrl}'");
 
         output.Attributes.RemoveAll(CdnSrcAttr);
         output.Attributes.RemoveAll(CdnWAttr);

@@ -10,12 +10,9 @@
 <section class="truong-hero" style="@(!string.IsNullOrEmpty(Model.CoverUrl) ? $"background-image:url('{Model.CoverUrl}')" : "background:#1e3a5f")">
     <div class="truong-hero__overlay"></div>
     <div class="container truong-hero__content">
-        @if (!string.IsNullOrEmpty(Model.LogoUrl))
-        {
-            <div class="truong-hero__logo">
-                <img src="@Model.LogoUrl" alt="Logo @Model.NameofSchool">
-            </div>
-        }
+        <div class="truong-hero__logo">
+            <img cdn-src="@Model.LogoUrl" alt="Logo @Model.NameofSchool" />
+        </div>
         <div class="truong-hero__info">
             <div class="truong-hero__badges">
                 @if (Model.IsPartner)

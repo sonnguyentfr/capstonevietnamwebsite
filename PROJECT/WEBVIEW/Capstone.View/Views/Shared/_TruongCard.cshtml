@@ -2,19 +2,16 @@
 
 <div class="school-card">
     <a href="@Model.DetailUrl" class="school-card__cover img-cover">
-        <img src="@(Model.CoverUrl ?? "/static/img/no-image.jpg")" alt="@Model.NameofSchool" loading="lazy">
+        <img cdn-src="@Model.CoverUrl" alt="@Model.NameofSchool" loading="lazy" />
         @if (Model.IsPartner)
         {
             <span class="school-card__badge">Đối tác</span>
         }
     </a>
     <div class="school-card__body">
-        @if (!string.IsNullOrEmpty(Model.LogoUrl))
-        {
-            <div class="school-card__logo">
-                <img src="@Model.LogoUrl" alt="Logo @Model.NameofSchool" loading="lazy">
-            </div>
-        }
+        <div class="school-card__logo">
+            <img cdn-src="@Model.LogoUrl" alt="Logo @Model.NameofSchool" loading="lazy" />
+        </div>
         <h3 class="school-card__name">
             <a href="@Model.DetailUrl">@Model.NameofSchool</a>
         </h3>

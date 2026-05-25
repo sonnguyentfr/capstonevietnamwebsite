@@ -25,26 +25,16 @@
                     <div class="swiper-slide">
                         <a href="@t.DetailUrl" class="school-card school-card--slide">
                             <div class="school-card__cover">
-                                @if (!string.IsNullOrEmpty(t.CoverUrl))
-                                {
-                                    <img src="@t.CoverUrl" alt="@t.NameofSchool" loading="lazy" />
-                                }
-                                else
-                                {
-                                    <div class="school-card__cover-placeholder"></div>
-                                }
+                                <img cdn-src="@t.CoverUrl" alt="@t.NameofSchool" loading="lazy" />
                                 @if (t.IsPartner)
                                 {
                                     <span class="school-card__badge">Đối tác</span>
                                 }
                             </div>
                             <div class="school-card__body">
-                                @if (!string.IsNullOrEmpty(t.LogoUrl))
-                                {
-                                    <div class="school-card__logo-wrap">
-                                        <img src="@t.LogoUrl" alt="logo @t.NameofSchool" loading="lazy" />
-                                    </div>
-                                }
+                                <div class="school-card__logo-wrap">
+                                    <img cdn-src="@t.LogoUrl" alt="logo @t.NameofSchool" loading="lazy" />
+                                </div>
                                 <h4 class="school-card__name">@t.NameofSchool</h4>
                                 <div class="school-card__meta">
                                     @if (!string.IsNullOrEmpty(t.CountryName))
