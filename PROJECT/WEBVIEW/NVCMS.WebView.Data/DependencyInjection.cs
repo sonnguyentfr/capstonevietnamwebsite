@@ -4,7 +4,9 @@ using NVCMS.WebView.Data.Contracts.Repository;
 using NVCMS.WebView.Data.Contracts.Service;
 using NVCMS.WebView.Data.Repository;
 using NVCMS.WebView.Data.Service;
+using NVCMS.WebView.Data.SiteSettings;
 using NVCMS.WebView.Data.ViewModels;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace NVCMS.WebView.Data;
 
@@ -46,6 +48,11 @@ public static class DependencyInjection
         services.AddScoped<ITruongService>(sp =>
             new TruongService(sp.GetRequiredService<ITruongRepository>(), rewriter));
         services.AddSingleton<IMenuService>(_ => new MenuService(webRootPath));
+
+        // SiteSettings — Singleton, backed by WebView_GetSiteSettings SP, cached per portalId
+        services.AddMemoryCache();
+        services.AddSingleton<ISiteSettingsHelper>(sp =>
+            new SiteSettingsHelper(connectionString, sp.GetRequiredService<IMemoryCache>()));
 
         return services;
     }

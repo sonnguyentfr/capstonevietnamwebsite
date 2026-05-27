@@ -1,4 +1,13 @@
-﻿<!DOCTYPE html>
+﻿@{
+    // Load site settings once per request — result is cached by portalId
+    var _portalId = SiteOptions.Value.PortalId;
+    var _headerFooterData = await SiteHelper.GetHeaderFooterDataAsync(_portalId);
+    var _siteName = !string.IsNullOrEmpty(_headerFooterData.SiteName) ? _headerFooterData.SiteName : "Capstone Vietnam";
+    var _metaDesc = ViewData["MetaDescription"] as string ?? "Capstone có ý nghĩa là thành tựu cao nhất hay nói cách khác là những gì tốt nhất mà một cá nhân hoặc một tổ chức có thể đạt được";
+    var _metaImg   = ViewData["MetaImage"]   as string ?? "/static/img/og-default.jpg";
+    var _canonical = ViewData["CanonicalUrl"] as string;
+}
+<!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
@@ -21,20 +30,15 @@
     <link rel="stylesheet" href="/static/fonts/lora/stylesheet.css">
     <link rel="stylesheet" href="/static/fonts/boxicons.min.css">
     <link rel="stylesheet" href="/static/fonts/themify-icons.css">
-    <title>@ViewData["Title"] - Capstone Vietnam</title>
-    @{
-        var _metaDesc = ViewData["MetaDescription"] as string ?? "Capstone Vietnam – Đơn vị tiên phong tổ chức hội thảo, sự kiện và đào tạo chuyên nghiệp.";
-        var _metaImg  = ViewData["MetaImage"]  as string ?? "/static/img/og-default.jpg";
-        var _canonical= ViewData["CanonicalUrl"] as string;
-    }
+    <title>@ViewData["Title"] - @_siteName</title>
     <meta name="description" content="@_metaDesc">
     @if (_canonical != null) {
         <link rel="canonical" href="@_canonical">
     }
     @* Open Graph *@
     <meta property="og:type"        content="website">
-    <meta property="og:site_name"   content="Capstone Vietnam">
-    <meta property="og:title"       content="@ViewData["Title"] - Capstone Vietnam">
+    <meta property="og:site_name"   content="@_siteName">
+    <meta property="og:title"       content="@ViewData["Title"] - @_siteName">
     <meta property="og:description" content="@_metaDesc">
     <meta property="og:image"       content="@_metaImg">
     @if (_canonical != null) {
@@ -42,9 +46,14 @@
     }
     @* Twitter Card *@
     <meta name="twitter:card"        content="summary_large_image">
-    <meta name="twitter:title"       content="@ViewData["Title"] - Capstone Vietnam">
+    <meta name="twitter:title"       content="@ViewData["Title"] - @_siteName">
     <meta name="twitter:description" content="@_metaDesc">
     <meta name="twitter:image"       content="@_metaImg">
+    @* Inject custom <head> code from admin (Google Tag Manager, analytics, etc.) *@
+    @if (!string.IsNullOrEmpty(_headerFooterData.HeaderCode))
+    {
+        @Html.Raw(_headerFooterData.HeaderCode)
+    }
     @await RenderSectionAsync("Styles", required: false)
 </head>
 <body>
@@ -62,6 +71,11 @@
     <script src="/static/js/aos.js"></script>
     <script src="/static/js/main.min.js"></script>
     <script src="/static/js/site.js"></script>
+    @* Inject custom footer scripts from admin *@
+    @if (!string.IsNullOrEmpty(_headerFooterData.FooterCode))
+    {
+        @Html.Raw(_headerFooterData.FooterCode)
+    }
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

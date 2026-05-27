@@ -27,8 +27,12 @@
                 {
                     var loaiLabel = Model.Loai switch
                     {
-                        "4Y" => "Đại học", "2Y" => "Cao đẳng", "GR" => "Sau đại học",
-                        "BF" => "Trung học", "HS" => "Trung học", "ESL" => "Anh ngữ ESL",
+                        "4Y" => "Đại học",
+                        "2Y" => "Cao đẳng",
+                        "GR" => "Sau đại học",
+                        "BF" => "Trung học",
+                        "HS" => "Trung học",
+                        "ESL" => "Anh ngữ ESL",
                         _ => Model.Loai
                     };
                     <span class="badge"><i class="fa-solid fa-graduation-cap"></i> @loaiLabel</span>
@@ -60,20 +64,11 @@
                 <a href="@Model.Website" target="_blank" rel="noopener">Website</a>
             </div>
         }
-        @if (!string.IsNullOrEmpty(Model.Phone))
+        @if (!string.IsNullOrEmpty(Model.Address))
         {
-            <div class="truong-meta-item">
-                <i class="fa-solid fa-phone"></i>
-                <a href="tel:@Model.Phone">@Model.Phone</a>
-            </div>
+            <div class="truong-meta-item"><i class="fa-solid fa-location-dot"></i> @Model.Address</div>
         }
-        @if (!string.IsNullOrEmpty(Model.Email))
-        {
-            <div class="truong-meta-item">
-                <i class="fa-solid fa-envelope"></i>
-                <a href="mailto:@Model.Email">@Model.Email</a>
-            </div>
-        }
+        
     </div>
 </section>
 
@@ -83,14 +78,21 @@
         <div class="truong-layout__main">
 
             <!-- Giới thiệu -->
-            @if (!string.IsNullOrEmpty(Model.Descreption))
+            @if (!string.IsNullOrEmpty(Model.Info))
             {
                 <div class="truong-section">
                     <h2 class="truong-section__title">Giới thiệu về trường</h2>
+                    <div class="rich-text">@Html.Raw(Model.Info)</div>
+                </div>
+            }
+            <!-- Giới thiệu -->
+            @if (!string.IsNullOrEmpty(Model.Descreption))
+            {
+                <div class="truong-section">
+                    <h2 class="truong-section__title">Điểm mạnh</h2>
                     <div class="rich-text">@Html.Raw(Model.Descreption)</div>
                 </div>
             }
-
             <!-- Video -->
             @if (!string.IsNullOrEmpty(Model.VideoLink))
             {
@@ -99,7 +101,7 @@
                     <div class="video-embed">
                         <iframe src="@Model.VideoLink" frameborder="0"
                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                allowfullscreen loading="lazy" title="@Model.NameofSchool"></iframe>
+                                allowfullscreen loading="lazy" title="@Model.NameofSchool" width="90%" height="400px"></iframe>
                     </div>
                 </div>
             }
@@ -130,10 +132,20 @@
                             <div class="info-item">
                                 <span class="info-label"><i class="fa-solid fa-calendar-days"></i> Hạn nộp hồ sơ</span>
                                 <span class="info-value">
-                                    @if (a.RollingUnder == true) { <text>Tuyển sinh liên tục</text> }
-                                    else {
-                                        @if (a.FallUnder.HasValue) { <text>Fall: @a.FallUnder.Value.ToString("dd/MM/yyyy")  </text> }
-                                        @if (a.SpringUnder.HasValue) { <text>Spring: @a.SpringUnder.Value.ToString("dd/MM/yyyy")</text> }
+                                    @if (a.RollingUnder == true)
+                                    {
+                                        <text>Tuyển sinh liên tục</text>
+                                    }
+                                    else
+                                    {
+                                        @if (a.FallUnder.HasValue)
+                                        {
+                                            <text>Fall: @a.FallUnder.Value.ToString("dd/MM/yyyy")  </text>
+                                        }
+                                        @if (a.SpringUnder.HasValue)
+                                        {
+                                            <text>Spring: @a.SpringUnder.Value.ToString("dd/MM/yyyy")</text>
+                                        }
                                     }
                                 </span>
                             </div>
@@ -161,10 +173,22 @@
                         <table>
                             <thead><tr><th>Bậc học</th><th>Học phí/năm (USD)</th></tr></thead>
                             <tbody>
-                                @if (a.TuitionUnder.HasValue) { <tr><td>Đại học</td><td>@a.TuitionUnder.Value.ToString("N0")</td></tr> }
-                                @if (a.TuitionGrad.HasValue) { <tr><td>Sau đại học</td><td>@a.TuitionGrad.Value.ToString("N0")</td></tr> }
-                                @if (a.TuitionAss.HasValue) { <tr><td>Cao đẳng</td><td>@a.TuitionAss.Value.ToString("N0")</td></tr> }
-                                @if (a.TuitionESL.HasValue) { <tr><td>ESL</td><td>@a.TuitionESL.Value.ToString("N0")</td></tr> }
+                                @if (a.TuitionUnder.HasValue)
+                                {
+                                    <tr><td>Đại học</td><td>@a.TuitionUnder.Value.ToString("N0")</td></tr>
+                                }
+                                @if (a.TuitionGrad.HasValue)
+                                {
+                                    <tr><td>Sau đại học</td><td>@a.TuitionGrad.Value.ToString("N0")</td></tr>
+                                }
+                                @if (a.TuitionAss.HasValue)
+                                {
+                                    <tr><td>Cao đẳng</td><td>@a.TuitionAss.Value.ToString("N0")</td></tr>
+                                }
+                                @if (a.TuitionESL.HasValue)
+                                {
+                                    <tr><td>ESL</td><td>@a.TuitionESL.Value.ToString("N0")</td></tr>
+                                }
                             </tbody>
                         </table>
                     </div>
@@ -254,16 +278,31 @@
                                 </span>
                             </div>
                         }
-                        @if (b.APCourse == true) { <div class="info-item"><span class="info-label">AP Courses</span><span class="info-value badge badge--yes">Có</span></div> }
-                        @if (b.IBCourse == true)  { <div class="info-item"><span class="info-label">IB Programme</span><span class="info-value badge badge--yes">Có</span></div> }
-                        @if (b.ESL == true)        { <div class="info-item"><span class="info-label">ESL Support</span><span class="info-value badge badge--yes">Có</span></div> }
+                        @if (b.APCourse == true)
+                        {
+                            <div class="info-item"><span class="info-label">AP Courses</span><span class="info-value badge badge--yes">Có</span></div>
+                        }
+                        @if (b.IBCourse == true)
+                        {
+                            <div class="info-item"><span class="info-label">IB Programme</span><span class="info-value badge badge--yes">Có</span></div>
+                        }
+                        @if (b.ESL == true)
+                        {
+                            <div class="info-item"><span class="info-label">ESL Support</span><span class="info-value badge badge--yes">Có</span></div>
+                        }
                     </div>
                     @if (b.TESTToefl == true || b.TESTIELTS == true)
                     {
                         <h3 class="mt-6 font-semibold">Yêu cầu tiếng Anh</h3>
                         <div class="info-grid mt-2">
-                            @if (b.TESTToefl == true) { <div class="info-item"><span class="info-label">TOEFL min.</span><span class="info-value">@b.TESTToeflMin</span></div> }
-                            @if (b.TESTIELTS == true)  { <div class="info-item"><span class="info-label">IELTS min.</span><span class="info-value">@b.TESTIELTSMin</span></div> }
+                            @if (b.TESTToefl == true)
+                            {
+                                <div class="info-item"><span class="info-label">TOEFL min.</span><span class="info-value">@b.TESTToeflMin</span></div>
+                            }
+                            @if (b.TESTIELTS == true)
+                            {
+                                <div class="info-item"><span class="info-label">IELTS min.</span><span class="info-value">@b.TESTIELTSMin</span></div>
+                            }
                         </div>
                     }
                 </div>
@@ -274,8 +313,14 @@
                         <table>
                             <thead><tr><th>Khoản</th><th>USD/năm</th></tr></thead>
                             <tbody>
-                                @if (b.Tuition.HasValue)  { <tr><td>Học phí</td><td>@b.Tuition.Value.ToString("N0")</td></tr> }
-                                @if (b.COSRoom.HasValue)   { <tr><td>Ký túc xá / Ăn</td><td>@b.COSRoom.Value.ToString("N0")</td></tr> }
+                                @if (b.Tuition.HasValue)
+                                {
+                                    <tr><td>Học phí</td><td>@b.Tuition.Value.ToString("N0")</td></tr>
+                                }
+                                @if (b.COSRoom.HasValue)
+                                {
+                                    <tr><td>Ký túc xá / Ăn</td><td>@b.COSRoom.Value.ToString("N0")</td></tr>
+                                }
                             </tbody>
                         </table>
                     </div>
@@ -294,8 +339,14 @@
                     <div class="truong-section">
                         <h2 class="truong-section__title"><i class="fa-solid fa-sun"></i> Chương trình hè</h2>
                         <div class="info-grid">
-                            @if (!string.IsNullOrEmpty(b.SummerProgramAges))   { <div class="info-item"><span class="info-label">Độ tuổi</span><span class="info-value">@b.SummerProgramAges</span></div> }
-                            @if (!string.IsNullOrEmpty(b.SummerProgramCOST))   { <div class="info-item"><span class="info-label">Chi phí</span><span class="info-value">@b.SummerProgramCOST</span></div> }
+                            @if (!string.IsNullOrEmpty(b.SummerProgramAges))
+                            {
+                                <div class="info-item"><span class="info-label">Độ tuổi</span><span class="info-value">@b.SummerProgramAges</span></div>
+                            }
+                            @if (!string.IsNullOrEmpty(b.SummerProgramCOST))
+                            {
+                                <div class="info-item"><span class="info-label">Chi phí</span><span class="info-value">@b.SummerProgramCOST</span></div>
+                            }
                         </div>
                     </div>
                 }
@@ -303,8 +354,14 @@
                 <div class="truong-section">
                     <h2 class="truong-section__title">Ký túc xá</h2>
                     <div class="info-grid">
-                        @if (b.HousingBF == true)   { <div class="info-item"><span class="info-label">Ký túc xá trường</span><span class="info-value badge badge--yes">Có</span></div> }
-                        @if (b.HousingHome == true) { <div class="info-item"><span class="info-label">Homestay</span><span class="info-value badge badge--yes">Có</span></div> }
+                        @if (b.HousingBF == true)
+                        {
+                            <div class="info-item"><span class="info-label">Ký túc xá trường</span><span class="info-value badge badge--yes">Có</span></div>
+                        }
+                        @if (b.HousingHome == true)
+                        {
+                            <div class="info-item"><span class="info-label">Homestay</span><span class="info-value badge badge--yes">Có</span></div>
+                        }
                     </div>
                 </div>
             }
@@ -320,11 +377,26 @@
                         <p class="mb-4">@e.TypeOfCourse</p>
                     }
                     <div class="info-grid">
-                        @if (!string.IsNullOrEmpty(e.LCName))   { <div class="info-item"><span class="info-label">Tên khóa học</span><span class="info-value">@e.LCName</span></div> }
-                        @if (!string.IsNullOrEmpty(e.LCCost))   { <div class="info-item"><span class="info-label">Chi phí</span><span class="info-value">@e.LCCost</span></div> }
-                        @if (e.RateOfStudent.HasValue)           { <div class="info-item"><span class="info-label">Tỷ lệ SV/giáo viên</span><span class="info-value">@e.RateOfStudent:1</span></div> }
-                        @if (e.WorkOpp == true)                  { <div class="info-item"><span class="info-label">Cơ hội làm thêm</span><span class="info-value badge badge--yes">Có</span></div> }
-                        @if (!string.IsNullOrEmpty(e.Conditional)) { <div class="info-item"><span class="info-label">Điều kiện nhập học</span><span class="info-value">@e.Conditional</span></div> }
+                        @if (!string.IsNullOrEmpty(e.LCName))
+                        {
+                            <div class="info-item"><span class="info-label">Tên khóa học</span><span class="info-value">@e.LCName</span></div>
+                        }
+                        @if (!string.IsNullOrEmpty(e.LCCost))
+                        {
+                            <div class="info-item"><span class="info-label">Chi phí</span><span class="info-value">@e.LCCost</span></div>
+                        }
+                        @if (e.RateOfStudent.HasValue)
+                        {
+                            <div class="info-item"><span class="info-label">Tỷ lệ SV/giáo viên</span><span class="info-value">@e.RateOfStudent:1</span></div>
+                        }
+                        @if (e.WorkOpp == true)
+                        {
+                            <div class="info-item"><span class="info-label">Cơ hội làm thêm</span><span class="info-value badge badge--yes">Có</span></div>
+                        }
+                        @if (!string.IsNullOrEmpty(e.Conditional))
+                        {
+                            <div class="info-item"><span class="info-label">Điều kiện nhập học</span><span class="info-value">@e.Conditional</span></div>
+                        }
                     </div>
                 </div>
 
@@ -334,8 +406,14 @@
                         <table>
                             <thead><tr><th>Khoản</th><th>USD</th></tr></thead>
                             <tbody>
-                                @if (e.Tuition.HasValue)  { <tr><td>Học phí</td><td>@e.Tuition.Value.ToString("N0")</td></tr> }
-                                @if (e.COSRoom.HasValue)  { <tr><td>Ký túc xá</td><td>@e.COSRoom.Value.ToString("N0")</td></tr> }
+                                @if (e.Tuition.HasValue)
+                                {
+                                    <tr><td>Học phí</td><td>@e.Tuition.Value.ToString("N0")</td></tr>
+                                }
+                                @if (e.COSRoom.HasValue)
+                                {
+                                    <tr><td>Ký túc xá</td><td>@e.COSRoom.Value.ToString("N0")</td></tr>
+                                }
                             </tbody>
                         </table>
                     </div>
@@ -352,45 +430,95 @@
                 <div class="truong-section">
                     <h2 class="truong-section__title">Chỗ ở</h2>
                     <div class="info-grid">
-                        @if (e.HousingOncampus == true)  { <div class="info-item"><span class="info-label">Ký túc xá</span><span class="info-value badge badge--yes">Có</span></div> }
-                        @if (e.HousingHomeStay == true)  { <div class="info-item"><span class="info-label">Homestay</span><span class="info-value badge badge--yes">Có</span></div> }
-                        @if (e.HousingApartment == true) { <div class="info-item"><span class="info-label">Căn hộ</span><span class="info-value badge badge--yes">Có</span></div> }
+                        @if (e.HousingOncampus == true)
+                        {
+                            <div class="info-item"><span class="info-label">Ký túc xá</span><span class="info-value badge badge--yes">Có</span></div>
+                        }
+                        @if (e.HousingHomeStay == true)
+                        {
+                            <div class="info-item"><span class="info-label">Homestay</span><span class="info-value badge badge--yes">Có</span></div>
+                        }
+                        @if (e.HousingApartment == true)
+                        {
+                            <div class="info-item"><span class="info-label">Căn hộ</span><span class="info-value badge badge--yes">Có</span></div>
+                        }
                     </div>
                 </div>
 
                 <div class="truong-section">
                     <h2 class="truong-section__title">Thống kê</h2>
                     <div class="stats-row">
-                        @if (e.NOSTotal.HasValue)       { <div class="stat-item"><span class="stat-num">@e.NOSTotal</span><span class="stat-label">Tổng học viên</span></div> }
-                        @if (e.NOSInternation.HasValue) { <div class="stat-item"><span class="stat-num">@e.NOSInternation</span><span class="stat-label">Quốc tế</span></div> }
+                        @if (e.NOSTotal.HasValue)
+                        {
+                            <div class="stat-item"><span class="stat-num">@e.NOSTotal</span><span class="stat-label">Tổng học viên</span></div>
+                        }
+                        @if (e.NOSInternation.HasValue)
+                        {
+                            <div class="stat-item"><span class="stat-num">@e.NOSInternation</span><span class="stat-label">Quốc tế</span></div>
+                        }
                     </div>
                 </div>
             }
 
         </div><!-- end main -->
-
         <!-- Sidebar -->
         <aside class="truong-layout__sidebar">
             <div class="sidebar-card">
                 <h3 class="sidebar-card__title">Thông tin liên hệ</h3>
                 @if (!string.IsNullOrEmpty(Model.Address))
                 {
-                    <p><i class="fa-solid fa-location-dot"></i> @Model.Address</p>
+                    <p><i class="fa-solid fa-location-dot"></i>Thành phố lớn gần nhất: @Model.ThanhPholongannhat</p>
                 }
                 @if (!string.IsNullOrEmpty(Model.Phone))
                 {
-                    <p><i class="fa-solid fa-phone"></i> <a href="tel:@Model.Phone">@Model.Phone</a></p>
+                    <p><i class="fa-solid fa-graduation-cap"></i> Loại trường: @Model.Loaitruongtext</p>
                 }
-                @if (!string.IsNullOrEmpty(Model.Email))
+                @if (!string.IsNullOrEmpty(Model.Facebook))
                 {
-                    <p><i class="fa-solid fa-envelope"></i> <a href="mailto:@Model.Email">@Model.Email</a></p>
+                    <p><i class="fa-brands fa-facebook"></i> <a href="@Model.Facebook" target="_blank">@Model.Facebook</a></p>
                 }
-                @if (!string.IsNullOrEmpty(Model.Website))
+                @if (!string.IsNullOrEmpty(Model.Twitter))
                 {
-                    <p><i class="fa-solid fa-globe"></i> <a href="@Model.Website" target="_blank" rel="noopener">@Model.Website</a></p>
+                    <p><i class="fa-brands fa-twitter"></i> <a href="@Model.Twitter" target="_blank" rel="noopener">@Model.Twitter</a></p>
+                }
+                @if (!string.IsNullOrEmpty(Model.Youtube))
+                {
+                    <p><i class="fa-brands fa-youtube"></i> <a href="@Model.Youtube" target="_blank" rel="noopener">@Model.Youtube</a></p>
+                }
+                @if (!string.IsNullOrEmpty(Model.Instagram))
+                {
+                    <p><i class="fa-brands fa-instagram"></i> <a href="@Model.Instagram" target="_blank" rel="noopener">@Model.Instagram</a></p>
                 }
             </div>
-
+            @if (Model.Admis4Year is not null)
+            {
+                var a = Model.Admis4Year;
+                <div class="sidebar-card">
+                    <h3 class="sidebar-card__title">Top 5 ngành học</h3>
+                    <ol>
+                        @if (!string.IsNullOrEmpty(a.MostMajor1))
+                        {
+                            <li>@a.MostMajor1</li>
+                        }
+                        @if (!string.IsNullOrEmpty(a.MostMajor2))
+                        {
+                            <li>@a.MostMajor2</li>
+                        }
+                        @if (!string.IsNullOrEmpty(a.MostMajor3))
+                        {
+                            <li>@a.MostMajor3</li>
+                        }
+                        @if (!string.IsNullOrEmpty(a.MostMajor4))
+                        {
+                            <li>@a.MostMajor4</li>
+                        }
+                        @if (!string.IsNullOrEmpty(a.MostMajor5))
+                        {
+                            <li>@a.MostMajor5</li>
+                        }
+                    </ol>
+                </div>
+            }
             @if (!string.IsNullOrEmpty(Model.Kiemdinh))
             {
                 <div class="sidebar-card">
@@ -417,3 +545,19 @@
         </aside>
     </div>
 </div>
+
+@section Scripts {
+    @Html.Raw(SeoSchemaHelper.CollegeOrUniversity(
+        name: Model.NameofSchool ?? string.Empty,
+        description: Model.Tomtat,
+        url: Model.Website,
+        logoUrl: Model.LogoUrl,
+        imageUrl: Model.CoverUrl,
+        address: Model.Address,
+        country: Model.CountryName,
+        telephone: Model.Phone,
+        email: Model.Email,
+        foundingYear: Model.Namthanhlap,
+        sameAs: new[] { Model.Website }.Where(s => !string.IsNullOrWhiteSpace(s))!
+    ))
+}

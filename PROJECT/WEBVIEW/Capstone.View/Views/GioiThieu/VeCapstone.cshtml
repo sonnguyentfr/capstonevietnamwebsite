@@ -3,3 +3,18 @@
 }
 
 @await Component.InvokeAsync("GioiThieu", new { id = 360 })
+
+@section Scripts {
+    @{
+        var _vcSettings = await SiteHelper.GetSettingsAsync(SiteOptions.Value.PortalId);
+        var _vcUrl = $"{Context.Request.Scheme}://{Context.Request.Host}/gioi-thieu/ve-capstone";
+    }
+    @Html.Raw(SeoSchemaHelper.WebPage(
+        name:          "Về Capstone Vietnam",
+        description:   _vcSettings.General.SiteSummary,
+        url:           _vcUrl,
+        publisherName: _vcSettings.General.SiteName,
+        publisherUrl:  _vcSettings.General.SiteWeb,
+        isAboutPage:   true
+    ))
+}

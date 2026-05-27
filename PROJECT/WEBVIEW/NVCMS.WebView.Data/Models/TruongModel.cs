@@ -7,6 +7,8 @@ public class TruongModel
     public string? NameofSchool { get; set; }
     public string? Tomtat { get; set; }
     public string? TomTatEN { get; set; }
+    public string? Info { get; set; }
+    public string? InfoEN { get; set; }
     public string? DescreptionWebsite { get; set; }
     public string? DescreptionWebsiteEN { get; set; }
     public string? Address { get; set; }

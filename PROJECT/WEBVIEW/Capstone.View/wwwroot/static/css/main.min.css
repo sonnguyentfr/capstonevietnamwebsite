@@ -401,7 +401,9 @@ img {
         font-size: clamp(12px,calc(16/1920*100rem),calc(16/1920*100rem));
     }
 }
-
+ol li {
+    list-style:decimal;
+}
 *, ::before, ::after {
     --tw-border-spacing-x: 0;
     --tw-border-spacing-y: 0;

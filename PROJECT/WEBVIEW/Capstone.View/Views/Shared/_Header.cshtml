@@ -1,20 +1,34 @@
-﻿<header>
+﻿@{
+    var _data = await SiteHelper.GetHeaderFooterDataAsync(SiteOptions.Value.PortalId);
+    var _serverFilesBaseUrl = SiteOptions.Value.ServerFilesBaseUrl;
+    var _headerLogo = !string.IsNullOrEmpty(_data.HeaderLogo.Replace("/DATA", _serverFilesBaseUrl)) ? _data.HeaderLogo.Replace("/DATA", _serverFilesBaseUrl) : "/static/img/logo.png";
+    var _siteName = !string.IsNullOrEmpty(_data.SiteName) ? _data.SiteName : "Capstone Vietnam";
+}
+<header>
     <div class="header-top">
         <div class="container flex items-center justify-between">
             <div class="logo">
-                <a href="/"><img src="/static/img/logo.png" alt="Capstone Vietnam"></a>
+                <a href="/"><img src="@_headerLogo" alt="@_siteName"></a>
             </div>
             <div class="header-right">
                 <div class="button-contact">
                     <ul class="contact-list">
-                        <li>
-                            VP Ha Noi <a href="tel:0936701696">0936 701 696</a>
-                            <span class="small"><i class="flaticon-pin"></i> 2 Le Quy Don, P. Bach Dang, Q. Hai Ba Trung</span>
-                        </li>
-                        <li>
-                            VP Ho Chi Minh <a href="tel:0918215445">0918 215 445</a>
-                            <span class="small"><i class="flaticon-pin"></i> 22 Tran Quy Khoach, P. Tan Dinh, Q.1</span>
-                        </li>
+                        @foreach (var branch in _data.Branches.Skip(1))
+                        {
+                            <li>
+                                <span>
+                                    @branch.Name
+                                @if (!string.IsNullOrEmpty(branch.Phone))
+                                {
+                                    <a href="tel:@branch.Phone.Replace(" ", "")">@branch.Phone</a>
+                                    }
+                                </span>
+                                @if (!string.IsNullOrEmpty(branch.Address))
+                                {
+                                    <span class="small"><i class="fa fa-map-marker" aria-hidden="true"></i> @branch.Address</span>
+                                }
+                            </li>
+                        }
                     </ul>
                 </div>
                 <div class="button-language">

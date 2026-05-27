@@ -68,6 +68,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NVCMS.WebView.Data", "PROJE
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Capstone.View", "PROJECT\WEBVIEW\Capstone.View\Capstone.View.csproj", "{B74E12C3-83FB-17D5-FC6B-060C2B9B5045}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AI", "AI", "{B8D31861-E8A8-4E40-B136-65AF9F098DF3}"
+	ProjectSection(SolutionItems) = preProject
+		CLAUDE.md = CLAUDE.md
+		website-context.json = website-context.json
+		website-settings.md = website-settings.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -317,6 +324,7 @@ Global
 		{19EDBA47-7ACC-7457-0DDB-1C50445E7661} = {EB1B1211-640D-0C76-A929-990D115248FD}
 		{4A570B67-CAA3-4152-9B51-9DCFEBCCCD62} = {19EDBA47-7ACC-7457-0DDB-1C50445E7661}
 		{B74E12C3-83FB-17D5-FC6B-060C2B9B5045} = {19EDBA47-7ACC-7457-0DDB-1C50445E7661}
+		{B8D31861-E8A8-4E40-B136-65AF9F098DF3} = {19EDBA47-7ACC-7457-0DDB-1C50445E7661}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {949CE203-E9BD-48CB-A63B-FD3291CE903F}

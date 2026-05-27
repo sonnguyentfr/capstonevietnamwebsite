@@ -214,3 +214,20 @@
         </div>
     </div>
 </section>
+
+@section Scripts {
+    @{
+        var _evtUrl = ViewData["CanonicalUrl"] as string;
+        var _siteSettings = await SiteHelper.GetSettingsAsync(SiteOptions.Value.PortalId);
+    }
+    @Html.Raw(SeoSchemaHelper.Event(
+        name:          Model.CatName ?? string.Empty,
+        startDate:     Model.FromDate,
+        endDate:       Model.EndDate,
+        description:   Model.Desception,
+        url:           _evtUrl,
+        imageUrl:      Model.AvatarUrl,
+        organizerName: _siteSettings.General.SiteName,
+        organizerUrl:  _siteSettings.General.SiteWeb
+    ))
+}

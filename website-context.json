@@ -1,0 +1,76 @@
+{
+  "settingsSource": {
+    "provider": "PortalController.GetPortalSetting",
+    "portalSupport": true,
+    "cache": true
+  },
+
+  "website": {
+    "general": {
+      "siteName": "",
+      "siteWeb": "",
+      "siteAddress": "",
+      "siteEmail": "",
+      "sitePhone": "",
+      "siteSummary": "",
+      "siteTag": ""
+    },
+
+    "social": {
+      "facebook": "",
+      "youtube": "",
+      "linkedin": "",
+      "instagram": "",
+      "zalo": "",
+      "twitter": "",
+      "whatsapp": "",
+      "skype": ""
+    },
+
+    "chat": {
+      "zaloId": "",
+      "facebookChatId": "",
+      "liveChatId": ""
+    },
+
+    "mail": {
+      "enableMail": false,
+      "mailList": ""
+    },
+
+    "google": {
+      "captchaKey": "",
+      "captchaSecret": ""
+    },
+
+    "cdn": {
+      "cdn": "",
+      "fileServer": ""
+    },
+
+    "logo": {
+      "headerLogo": "",
+      "footerLogo": ""
+    },
+
+    "code": {
+      "headerCode": "",
+      "footerCode": ""
+    },
+
+    "branches": [
+      {
+        "name": "",
+        "address": "",
+        "email": "",
+        "phone": ""
+      },
+      {
+        "name": "",
+        "address": "",
+        "email": "",
+        "phone": ""
+      }
+    ]
+  }
+}

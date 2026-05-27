@@ -11,6 +11,30 @@ Imports NVCMS.Modules.HeThong
 Public Class PageSettings
     Inherits Entities.Modules.PortalModuleBase
     Dim iPortalId = PortalId
+    Public Property PhotoAbPath() As String
+        Get
+            If Not ViewState.Item("PhotoAbPath") Is Nothing Then
+                Return CType(ViewState.Item("PhotoAbPath"), String)
+            Else
+                Return ""
+            End If
+        End Get
+        Set(ByVal value As String)
+            ViewState.Add("PhotoAbPath", value)
+        End Set
+    End Property
+    Public Property PhotoVirPath() As String
+        Get
+            If Not ViewState.Item("PhotoVirPath") Is Nothing Then
+                Return CType(ViewState.Item("PhotoVirPath"), String)
+            Else
+                Return nvcmsBL.GetImagePath(True, PortalId, True)
+            End If
+        End Get
+        Set(ByVal value As String)
+            ViewState.Add("PhotoVirPath", value)
+        End Set
+    End Property
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         Try
             If Not Page.IsPostBack Then
@@ -105,6 +129,12 @@ Public Class PageSettings
                     Me.dvPreviewlogo.Visible = True
                     Me.dvPreviewlogo.InnerHtml = "<img src=""" & PortalController.GetPortalSetting(nvcmsBL.settingPagesiteLogo, iPortalId, Null.NullString) & """  height='100px' />"
                 End If
+                '------------Logo Footer
+                hpflinkimagefooter.Value = PortalController.GetPortalSetting(nvcmsBL.settingPagesiteLogofooter, iPortalId, Null.NullString)
+                If Not PortalController.GetPortalSetting(nvcmsBL.settingPagesiteLogofooter, iPortalId, Null.NullString) Is Nothing Then
+                    Me.dvPreviewlogofooter.Visible = True
+                    Me.dvPreviewlogofooter.InnerHtml = "<img src=""" & PortalController.GetPortalSetting(nvcmsBL.settingPagesiteLogofooter, iPortalId, Null.NullString) & """  height='100px' />"
+                End If
                 'Email Server
                 emailsmtp.Value = PortalController.GetPortalSetting(nvcmsBL.settingPageMailSMTP, iPortalId, Null.NullString)
                 emailtenhienthi.Value = PortalController.GetPortalSetting(nvcmsBL.settingPageMailTenHienThi, iPortalId, Null.NullString)
@@ -121,6 +151,7 @@ Public Class PageSettings
                 Else
                     ViewState("UrlReferrer") = ""
                 End If
+                PhotoAbPath = nvcmsBL.GetImagePath(False, PortalId, True)
             End If
             'End If
         Catch ex As Exception
@@ -186,13 +217,25 @@ Public Class PageSettings
             Dim strFileNamePath As String = ""
             If Me.filelogo.PostedFile.FileName <> "" Then
                 strFileName = System.IO.Path.GetFileName(Me.filelogo.PostedFile.FileName)
-                Me.filelogo.PostedFile.SaveAs(PortalSettings.HomeDirectoryMapPath & "/" & strFileName)
-                strFileNamePath = String.Concat(PortalSettings.HomeDirectory, Me.filelogo.PostedFile.FileName)
+                Me.filelogo.PostedFile.SaveAs(PhotoAbPath & "/" & strFileName)
+                strFileNamePath = GetMediaPath(PhotoVirPath, Me.filelogo.PostedFile.FileName)
             Else
                 strFileNamePath = hpflinkimage.Value
             End If
             PortalController.UpdatePortalSetting(iPortalId, nvcmsBL.settingPagesiteLogo, strFileNamePath, True)
+            'Logo footer
+            Dim strFileNamefooter As String = ""
+            Dim strFileNamePathfooter As String = ""
+            If Me.filelogofooter.PostedFile.FileName <> "" Then
+                strFileNamefooter = System.IO.Path.GetFileName(Me.filelogofooter.PostedFile.FileName)
+                Me.filelogofooter.PostedFile.SaveAs(PhotoAbPath & "/" & strFileNamefooter)
+                strFileNamePathfooter = GetMediaPath(PhotoVirPath, Me.filelogofooter.PostedFile.FileName)
+            Else
+                strFileNamePathfooter = hpflinkimage.Value
+            End If
+            PortalController.UpdatePortalSetting(iPortalId, nvcmsBL.settingPagesiteLogofooter, strFileNamePathfooter, True)
             '----------------------
+
             ClientAPI.RegisterStartUpScript(Me.Page, "UpdateSuccess", "<script>UpdateSuccess('Cập nhật thành công!');</script>")
         Catch ex As Exception
             ProcessModuleLoadException(Me, ex)
@@ -282,6 +325,19 @@ Public Class PageSettings
             sitemaillist.Value = ""
         End If
     End Sub
-
+    Private Function GetUploadPath(ByVal spath As String) As String
+        Try
+            Return spath.Substring(0, spath.LastIndexOf("/", System.StringComparison.Ordinal))
+        Catch ex As Exception
+            Return ""
+        End Try
+    End Function
+    Private Function GetMediaPath(ByVal foldername As String, ByVal radupload As String) As String
+        If radupload.Length > 0 Then
+            Return foldername & "/" & radupload
+        Else
+            Return ""
+        End If
+    End Function
 
 End Class

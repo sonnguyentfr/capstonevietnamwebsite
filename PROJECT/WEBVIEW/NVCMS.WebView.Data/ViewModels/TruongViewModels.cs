@@ -73,6 +73,8 @@ public class TruongDetailViewModel
     public string? NameofSchool { get; set; }
     public string? Tomtat { get; set; }
     public string? TomTatEN { get; set; }
+    public string? Info { get; set; }
+    public string? InfoEN { get; set; }
     public string? Descreption { get; set; }
     public string? DescreptionEN { get; set; }
     public string? DescreptionWebsite { get; set; }
@@ -95,6 +97,12 @@ public class TruongDetailViewModel
     public bool IsPartner { get; set; }
     public string? LogoUrl { get; set; }
     public string? CoverUrl { get; set; }
+    public string? Facebook { get; set; }
+    public string? Twitter { get; set; }
+    public string? Linkedin { get; set; }
+    public string? GPlus { get; set; }
+    public string? Youtube { get; set; }
+    public string? Instagram { get; set; }
     public string? CountryName { get; set; }
     public IEnumerable<MajorViewModel> Majors { get; set; } = [];
     public TruongAdmis4YearViewModel? Admis4Year { get; set; }
@@ -159,7 +167,11 @@ public class TruongAdmis4YearViewModel
     public string? IELTSUnder { get; set; }
     public string? GraduationRate { get; set; }
     public string? EmploymentRateAfterGraduation { get; set; }
-    public string? MostMajor { get; set; }
+    public string? MostMajor1 { get; set; }
+    public string? MostMajor2 { get; set; }
+    public string? MostMajor3 { get; set; }
+    public string? MostMajor4 { get; set; }
+    public string? MostMajor5 { get; set; }
     public bool? OnCampus { get; set; }
     public int? NOSTotalUnder { get; set; }
     public int? NOSInternationalUnder { get; set; }

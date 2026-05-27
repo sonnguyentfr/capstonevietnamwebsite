@@ -3,3 +3,18 @@
 }
 
 @await Component.InvokeAsync("GioiThieu", new { id = 359 })
+
+@section Scripts {
+    @{
+        var _gtSettings = await SiteHelper.GetSettingsAsync(SiteOptions.Value.PortalId);
+        var _gtUrl = $"{Context.Request.Scheme}://{Context.Request.Host}/gioi-thieu";
+    }
+    @Html.Raw(SeoSchemaHelper.WebPage(
+        name:          "Giới thiệu - " + _gtSettings.General.SiteName,
+        description:   _gtSettings.General.SiteSummary,
+        url:           _gtUrl,
+        publisherName: _gtSettings.General.SiteName,
+        publisherUrl:  _gtSettings.General.SiteWeb,
+        isAboutPage:   true
+    ))
+}

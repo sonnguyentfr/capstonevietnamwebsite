@@ -65,7 +65,7 @@
                             <div class="form-group">
                                 <div class="form-control-wrap">
                                     <input type="text" class="form-control" id="siteemail" runat="server" placeholder="info@mail.com">
-                                    <mark><small> settingPagesiteemail</small></mark>
+                                    <mark><small>settingPagesiteemail</small></mark>
                                 </div>
                             </div>
                         </div>
@@ -90,7 +90,7 @@
                         <div class="col-lg-4">
                             <div class="form-group">
                                 <label class="form-label">Tên chi nhánh 1:</label>
-                                <span class="form-note">Ví dụ: Cơ sở Hàm Nghi</span>
+                                <span class="form-note">Ví dụ: Văn phòng Hà nội</span>
                             </div>
                         </div>
                         <div class="col-lg-8">
@@ -111,7 +111,7 @@
                         <div class="col-lg-8">
                             <div class="form-group">
                                 <div class="form-control-wrap">
-                                    <input type="text" class="form-control" id="sitediachi1" runat="server" placeholder="39 Hàm Nghi, Quận 1, TP.Hồ Chí Minh">
+                                    <input type="text" class="form-control" id="sitediachi1" runat="server" placeholder="2 Lê Quý Đôn, P. Hai Bà Trưng">
                                 </div>
                             </div>
                         </div>
@@ -126,7 +126,7 @@
                         <div class="col-lg-8">
                             <div class="form-group">
                                 <div class="form-control-wrap">
-                                    <input type="text" class="form-control" id="siteemail1" runat="server" placeholder="info@buh.edu.vn">
+                                    <input type="text" class="form-control" id="siteemail1" runat="server" placeholder="info@capstonevietnam.com">
                                 </div>
                             </div>
                         </div>
@@ -141,7 +141,7 @@
                         <div class="col-lg-8">
                             <div class="form-group">
                                 <div class="form-control-wrap">
-                                    <input type="text" class="form-control" id="sitedienthoai1" runat="server" placeholder="(028) 38 291901">
+                                    <input type="text" class="form-control" id="sitedienthoai1" runat="server" placeholder="0989336860">
                                 </div>
                             </div>
                         </div>
@@ -151,13 +151,13 @@
                         <div class="col-lg-4">
                             <div class="form-group">
                                 <label class="form-label">Tên chi nhánh 2:</label>
-                                <span class="form-note">Ví dụ: Cơ sở Hoàng Diệu</span>
+                                <span class="form-note">Ví dụ: Văn Phòng Hồ Chí Minh</span>
                             </div>
                         </div>
                         <div class="col-lg-8">
                             <div class="form-group">
                                 <div class="form-control-wrap">
-                                    <input type="text" class="form-control" id="tenchinhnhanh2" runat="server" placeholder="Cơ sở Hoàng Diệu">
+                                    <input type="text" class="form-control" id="tenchinhnhanh2" runat="server" placeholder="Văn Phòng Hồ Chí Minh">
                                 </div>
                             </div>
                         </div>
@@ -172,7 +172,7 @@
                         <div class="col-lg-8">
                             <div class="form-group">
                                 <div class="form-control-wrap">
-                                    <input type="text" class="form-control" id="sitediachi2" runat="server" placeholder=" 56 Hoàng Diệu II, Q.Thủ Đức, TP.Hồ Chí Minh">
+                                    <input type="text" class="form-control" id="sitediachi2" runat="server" placeholder=" 22 Trần Quý Khoách, P. Tân Định">
                                 </div>
                             </div>
                         </div>
@@ -187,7 +187,7 @@
                         <div class="col-lg-8">
                             <div class="form-group">
                                 <div class="form-control-wrap">
-                                    <input type="text" class="form-control" id="siteemail2" runat="server" placeholder="info@buh.edu.vn">
+                                    <input type="text" class="form-control" id="siteemail2" runat="server" placeholder="info@capstonevietnam.com">
                                 </div>
                             </div>
                         </div>
@@ -202,7 +202,7 @@
                         <div class="col-lg-8">
                             <div class="form-group">
                                 <div class="form-control-wrap">
-                                    <input type="text" class="form-control" id="sitedienthoai2" runat="server" placeholder="(028) 38 291901">
+                                    <input type="text" class="form-control" id="sitedienthoai2" runat="server" placeholder="918215445">
                                 </div>
                             </div>
                         </div>
@@ -233,7 +233,7 @@
                         <div class="col-lg-8">
                             <div class="form-group">
                                 <div class="form-control-wrap">
-                                    <input type="text" class="form-control" id="sitetag" runat="server" placeholder="đại học ngân hàng,khoa ngân hàng,ngân hàng,thành phố hồ chí minh">
+                                    <input type="text" class="form-control" id="sitetag" runat="server" placeholder="capstone vietnam, du học, du học mỹ, học bổng">
                                 </div>
                             </div>
                         </div>
@@ -339,7 +339,7 @@
                             <div class="form-group">
                                 <div class="form-control-wrap">
                                     <input type="text" class="form-control" id="sitewhatsapp" runat="server" placeholder="">
-                                    <mark><small> settingPagesitewhatsapp</small></mark>
+                                    <mark><small>settingPagesitewhatsapp</small></mark>
                                 </div>
                             </div>
                         </div>
@@ -355,7 +355,7 @@
                             <div class="form-group">
                                 <div class="form-control-wrap">
                                     <input type="text" class="form-control" id="siteSkype" runat="server" placeholder="">
-                                    <mark><small> settingPagesiteSkype</small></mark>
+                                    <mark><small>settingPagesiteSkype</small></mark>
                                 </div>
                             </div>
                         </div>
@@ -371,8 +371,8 @@
                         <div class="col-lg-10">
                             <div class="form-group">
                                 <div class="form-control-wrap">
-                                    <asp:TextBox ID="siteHeaderCode" CssClass="form-control" runat="server" TextMode="MultiLine"  height="250px" placeholder=""></asp:TextBox>
-                                    <mark><small> settingPagesiteHeaderCode</small></mark>
+                                    <asp:TextBox ID="siteHeaderCode" CssClass="form-control" runat="server" TextMode="MultiLine" Height="250px" placeholder=""></asp:TextBox>
+                                    <mark><small>settingPagesiteHeaderCode</small></mark>
                                 </div>
                             </div>
                         </div>
@@ -387,8 +387,8 @@
                         <div class="col-lg-10">
                             <div class="form-group">
                                 <div class="form-control-wrap">
-                                    <asp:TextBox ID="siteFooterCode" CssClass="form-control" runat="server" TextMode="MultiLine" height="250px" placeholder=""></asp:TextBox>
-                                    <mark><small> settingPagesiteFooterCode</small></mark>
+                                    <asp:TextBox ID="siteFooterCode" CssClass="form-control" runat="server" TextMode="MultiLine" Height="250px" placeholder=""></asp:TextBox>
+                                    <mark><small>settingPagesiteFooterCode</small></mark>
                                 </div>
                             </div>
                         </div>
@@ -515,7 +515,7 @@
                     <div class="row g-3 align-center">
                         <div class="col-lg-5">
                             <div class="form-group">
-                                <label class="form-label" for="site-name">Logo</label>
+                                <label class="form-label" for="site-name">Logo header</label>
                             </div>
                         </div>
                         <div class="col-lg-7">
@@ -531,7 +531,26 @@
                         </div>
                     </div>
                 </div>
-
+                <div class="gy-3">
+                    <div class="row g-3 align-center">
+                        <div class="col-lg-5">
+                            <div class="form-group">
+                                <label class="form-label" for="site-name">Logo Footer</label>
+                            </div>
+                        </div>
+                        <div class="col-lg-7">
+                            <div class="form-group">
+                                <div class="form-control-wrap">
+                                    <input id="filelogofooter" runat="server" type="file" />
+                                </div>
+                                <div class="form-control-wrap">
+                                    <div id="dvPreviewlogofooter" runat="server"></div>
+                                    <asp:HiddenField ID="hpflinkimagefooter" runat="server" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
         </div>
@@ -566,7 +585,7 @@
                             <div class="form-group">
                                 <div class="form-control-wrap">
                                     <input type="text" class="form-control" id="sitemaillist" runat="server" placeholder="mail@mail.com,mail2@mail.com">
-                                    <mark><small> settingPagesiteNhanMailList</small></mark>
+                                    <mark><small>settingPagesiteNhanMailList</small></mark>
                                 </div>
                             </div>
                         </div>
@@ -585,7 +604,7 @@
                                 <div class="form-group">
                                     <div class="form-control-wrap">
                                         <input type="text" class="form-control" id="sitecdn" runat="server">
-                                        <mark><small> settingPageSiteCDN</small></mark>
+                                        <mark><small>settingPageSiteCDN</small></mark>
                                     </div>
                                 </div>
                             </div>
@@ -602,7 +621,7 @@
                                 <div class="form-group">
                                     <div class="form-control-wrap">
                                         <input type="text" class="form-control" id="sitefileserver" runat="server">
-                                        <mark><small> settingPageSiteFilesServer</small></mark>
+                                        <mark><small>settingPageSiteFilesServer</small></mark>
                                     </div>
                                 </div>
                             </div>
@@ -622,7 +641,7 @@
                             <div class="form-group">
                                 <div class="form-control-wrap">
                                     <input type="text" class="form-control" id="txtgoooglekey" runat="server">
-                                    <mark><small> settingPageGooogleCapcha</small></mark>
+                                    <mark><small>settingPageGooogleCapcha</small></mark>
                                 </div>
                             </div>
                         </div>
@@ -638,7 +657,7 @@
                             <div class="form-group">
                                 <div class="form-control-wrap">
                                     <input type="text" class="form-control" id="txtgoooglekeysecret" runat="server">
-                                    <mark><small> settingPageGooogleCapchaSecret</small></mark>
+                                    <mark><small>settingPageGooogleCapchaSecret</small></mark>
                                 </div>
                             </div>
                         </div>
@@ -664,7 +683,7 @@
                             <div class="form-group">
                                 <div class="form-control-wrap">
                                     <input type="text" class="form-control" id="emailsmtp" runat="server">
-                                    <mark><small> settingPageMailSMTP</small></mark>
+                                    <mark><small>settingPageMailSMTP</small></mark>
                                 </div>
                             </div>
                         </div>
@@ -681,7 +700,7 @@
                             <div class="form-group">
                                 <div class="form-control-wrap">
                                     <input type="text" class="form-control" id="emailtenhienthi" runat="server">
-                                    <mark><small> settingPageMailTenHienThi</small></mark>
+                                    <mark><small>settingPageMailTenHienThi</small></mark>
                                 </div>
                             </div>
                         </div>
@@ -698,7 +717,7 @@
                             <div class="form-group">
                                 <div class="form-control-wrap">
                                     <input type="text" class="form-control" id="emailEmail" runat="server">
-                                    <mark><small> settingPageMailEmail</small></mark>
+                                    <mark><small>settingPageMailEmail</small></mark>
                                 </div>
                             </div>
                         </div>
@@ -715,7 +734,7 @@
                             <div class="form-group">
                                 <div class="form-control-wrap">
                                     <input type="text" class="form-control" id="emailmatkhau" runat="server">
-                                    <mark><small> settingPageMailMatkhau</small></mark>
+                                    <mark><small>settingPageMailMatkhau</small></mark>
                                 </div>
                             </div>
                         </div>
@@ -754,6 +773,34 @@
                     } else {
                         alert(file.name + " is not a valid image file.");
                         dvPreviewlogo.innerHTML = "";
+                        return false;
+                    }
+                }
+            } else {
+                alert("This browser does not support HTML5 FileReader.");
+            }
+        }
+
+        fileUploadfooter = document.getElementById('<%=filelogofooter.ClientID%>');
+        fileUploadfooter.onchange = function () {
+            if (typeof (FileReader) != "undefined") {
+                var dvPreviewlogofooter = document.getElementById('<%=dvPreviewlogofooter.ClientID%>');
+                dvPreviewlogofooter.innerHTML = "";
+                var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.jpg|.jpeg|.gif|.png|.bmp)$/;
+                for (var i = 0; i < fileUploadfooter.files.length; i++) {
+                    var filefooter = fileUploadfooter.files[i];
+                    if (regex.test(filefooter.name.toLowerCase())) {
+                        var reader = new FileReader();
+                        reader.onload = function (e) {
+                            var img = document.createElement("IMG");
+                            img.height = "100";
+                            img.src = e.target.result;
+                            dvPreviewlogofooter.appendChild(img);
+                        }
+                        reader.readAsDataURL(filefooter);
+                    } else {
+                        alert(filefooter.name + " is not a valid image file.");
+                        dvPreviewlogofooter.innerHTML = "";
                         return false;
                     }
                 }

@@ -1,4 +1,10 @@
-﻿<section class="home-hub-life">
+﻿@{
+    var _data = await SiteHelper.GetHeaderFooterDataAsync(SiteOptions.Value.PortalId);
+    var _serverFilesBaseUrl = SiteOptions.Value.ServerFilesBaseUrl;
+    var _footerLogo = !string.IsNullOrEmpty(_data.FooterLogo.Replace("/DATA", _serverFilesBaseUrl)) ? _data.FooterLogo.Replace("/DATA", _serverFilesBaseUrl) : "/static/img/logo-footer.png";
+    var _siteName = !string.IsNullOrEmpty(_data.SiteName) ? _data.SiteName : "Capstone Vietnam";
+}
+<section class="home-hub-life">
     <div class="video-container">
         <iframe src="https://www.youtube.com/embed/MzCwaMUjlfQ?autoplay=1&amp;mute=1&amp;controls=0&amp;loop=1&amp;playlist=MzCwaMUjlfQ&amp;modestbranding=1&amp;showinfo=0&amp;rel=0" frameborder="0" allow="autoplay; fullscreen" allowfullscreen=""></iframe>
     </div>
@@ -8,7 +14,7 @@
         <div class="footer-top">
             <div class="logo">
                 <a href="index.htm">
-                    <img src="/static/img/logo-footer.png" alt="">
+                    <img src="@_footerLogo" alt="@_siteName">
                 </a>
             </div>
             <div class="right">
@@ -23,34 +29,31 @@
             </div>
         </div>
         <div class="footer-mid">
-            <div class="footer-block">
-                <h4 class="footer-title"><i class="fa-regular fa-location-dot"></i>&nbsp;&nbsp;Văn Phòng Hà Nội</h4>
-                <ul class="footer-info">
-                    <li>
-
-                        <div class="content">
-                            <p><strong>Văn Phòng Hà Nội</strong></p>
-                            <p><i class="bx bx-home"></i>&nbsp;&nbsp;2 Lê Quý Đôn, P. Bạch Đằng, Q.Hai Bà Trưng</p>
-                            <p><i class="bx bx-phone"></i>&nbsp;&nbsp;Hotline: 0936 701 696</p>
-                            <p><i class="bx bx-mail-send"></i>&nbsp;&nbsp;Email: info@capstonevietnam.com</p>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-            <div class="footer-block">
-                <h4 class="footer-title"><i class="fa-regular fa-location-dot"></i>&nbsp;&nbsp;Văn Phòng Hồ Chí Minh</h4>
-                <ul class="footer-info">
-                    <li>
-                        <div class="content">
-                            <p><strong>Văn Phòng Hồ Chí Minh</strong></p>
-                            <p><i class="bx bx-home"></i>&nbsp;&nbsp;22 Trần Quý Khoách, P. Tân Định, Q.1</p>
-                            <p><i class="bx bx-phone"></i>&nbsp;&nbsp;Hotline: 0918 215 445</p>
-                            <p><i class="bx bx-mail-send"></i>&nbsp;&nbsp;Email: info@capstonevietnam.com</p>
-                        </div>
-                    </li>
-
-                </ul>
-            </div>
+            @foreach (var branch in _data.Branches.Skip(1))
+            {
+                <div class="footer-block">
+                    <h4 class="footer-title"><i class="fa-regular fa-location-dot"></i>&nbsp;&nbsp;@branch.Name</h4>
+                    <ul class="footer-info">
+                        <li>
+                            <div class="content">
+                                <p><strong>@branch.Name</strong></p>
+                                @if (!string.IsNullOrEmpty(branch.Address))
+                                {
+                                    <p><i class="bx bx-home"></i>&nbsp;&nbsp;@branch.Address</p>
+                                }
+                                @if (!string.IsNullOrEmpty(branch.Phone))
+                                {
+                                    <p><i class="bx bx-phone"></i>&nbsp;&nbsp;Hotline: <a href="tel:@branch.Phone.Replace(" ", "")">@branch.Phone</a></p>
+                                }
+                                @if (!string.IsNullOrEmpty(branch.Email))
+                                {
+                                    <p><i class="bx bx-mail-send"></i>&nbsp;&nbsp;Email: <a href="mailto:@branch.Email">@branch.Email</a></p>
+                                }
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            }
 
             <div class="footer-block">
                 <h4 class="footer-title">Thông tin chung</h4>
@@ -71,11 +74,26 @@
         <div class="footer-bot">
             <div class="social-list">
                 <ul>
-                    <li><a href="https://www.facebook.com/" target="_blank" rel="noopener"><i class="fa-brands fa-facebook-f"></i></a></li>
-                    <li><a href="https://www.youtube.com/" target="_blank" rel="noopener"><i class="fa-brands fa-youtube"></i></a></li>
-                    <li><a href="#"><i class="fa-brands fa-tiktok"></i></a></li>
-                    <li><a href="#"><i class="fa-brands fa-x-twitter"></i></a></li>
-                    <li><a href="#"><i class="fa-brands fa-linkedin-in"></i></a></li>
+                    @if (!string.IsNullOrEmpty(_data.Social.Facebook))
+                    {
+                        <li><a href="@_data.Social.Facebook" target="_blank" rel="noopener"><i class="fa-brands fa-facebook-f"></i></a></li>
+                    }
+                    @if (!string.IsNullOrEmpty(_data.Social.Youtube))
+                    {
+                        <li><a href="@_data.Social.Youtube" target="_blank" rel="noopener"><i class="fa-brands fa-youtube"></i></a></li>
+                    }
+                    @if (!string.IsNullOrEmpty(_data.Social.Twitter))
+                    {
+                        <li><a href="@_data.Social.Twitter" target="_blank" rel="noopener"><i class="fa-brands fa-x-twitter"></i></a></li>
+                    }
+                    @if (!string.IsNullOrEmpty(_data.Social.LinkedIn))
+                    {
+                        <li><a href="@_data.Social.LinkedIn" target="_blank" rel="noopener"><i class="fa-brands fa-linkedin-in"></i></a></li>
+                    }
+                    @if (!string.IsNullOrEmpty(_data.Social.Instagram))
+                    {
+                        <li><a href="@_data.Social.Instagram" target="_blank" rel="noopener"><i class="fa-brands fa-instagram"></i></a></li>
+                    }
                 </ul>
             </div>
             <div class="copyright">
@@ -88,17 +106,21 @@
 <div class="cta-fixed">
     <ul>
         <li class="back-to-top active"><a href="javascript:;" title="Back to top"><i class="fa-light fa-arrow-up-to-line"></i><span>TOP</span></a></li>
-        <li><a href="tel: 0912860809"><i class="fa-light fa-phone"></i><span>Gọi điện</span></a></li>
-        <li><a href="mailto: info@capstonevietnam.com"><i class="fa-light fa-envelope"></i><span>Email</span></a></li>
-        <li>
-            <a href="#">
-                <img src="/static/img/zalo.png" alt=""><span>Zalo</span>
-            </a>
-        </li>
-        <li>
-            <a href="#">
-                <img src="/static/img/mess.png" alt=""><span>Message</span>
-            </a>
-        </li>
+        @if (!string.IsNullOrEmpty(_data.SitePhone))
+        {
+            <li><a href="tel:@_data.SitePhone.Replace(" ", "")"><i class="fa-light fa-phone"></i><span>Gọi điện</span></a></li>
+        }
+        @if (!string.IsNullOrEmpty(_data.SiteEmail))
+        {
+            <li><a href="mailto:@_data.SiteEmail"><i class="fa-light fa-envelope"></i><span>Email</span></a></li>
+        }
+        @if (!string.IsNullOrEmpty(_data.Social.Zalo))
+        {
+            <li><a href="@_data.Social.Zalo" target="_blank" rel="noopener"><img src="/static/img/zalo.png" alt=""><span>Zalo</span></a></li>
+        }
+        @if (!string.IsNullOrEmpty(_data.Social.Facebook))
+        {
+            <li><a href="@_data.Social.Facebook" target="_blank" rel="noopener"><img src="/static/img/mess.png" alt=""><span>Message</span></a></li>
+        }
     </ul>
 </div>

@@ -170,13 +170,15 @@ public class TruongService : ITruongService
             var aESL = await _repo.GetAdmisESLAsync(id);
             if (aESL is not null) vmESL = MapESL(aESL);
         }
-
+        var social = (t.Social ?? "").Split(',', StringSplitOptions.TrimEntries);
         return new TruongDetailViewModel
         {
             Card = MapCard(t),
             NameofSchool = t.NameofSchool,
             Tomtat = t.Tomtat,
             TomTatEN = t.TomTatEN,
+            Info = t.Info,
+            InfoEN = t.InfoEN,
             Descreption = _rewriter.ResolveHtml(t.Descreption),
             DescreptionEN = _rewriter.ResolveHtml(t.DescreptionEN),
             DescreptionWebsite = t.DescreptionWebsite,
@@ -203,7 +205,13 @@ public class TruongService : ITruongService
             Majors = majors.Select(m => new MajorViewModel { Id = m.Id, Title = m.Title, TitleVN = m.TitleVN }),
             Admis4Year = vm4y,
             AdmisBF = vmBF,
-            AdmisESL = vmESL
+            AdmisESL = vmESL,
+            Facebook = social.ElementAtOrDefault(0),
+            Twitter = social.ElementAtOrDefault(1),
+            Linkedin = social.ElementAtOrDefault(2),
+            GPlus = social.ElementAtOrDefault(3),
+            Youtube = social.ElementAtOrDefault(4),
+            Instagram = social.ElementAtOrDefault(5)
         };
     }
 
@@ -220,7 +228,7 @@ public class TruongService : ITruongService
         if (!string.IsNullOrWhiteSpace(filter))
             list = list.Where(m =>
                 (m.TitleVN ?? string.Empty).Contains(filter, StringComparison.OrdinalIgnoreCase) ||
-                (m.Title   ?? string.Empty).Contains(filter, StringComparison.OrdinalIgnoreCase));
+                (m.Title ?? string.Empty).Contains(filter, StringComparison.OrdinalIgnoreCase));
 
         return new MajorSearchViewModel
         {
@@ -288,10 +296,10 @@ public class TruongService : ITruongService
         return loaiCode switch
         {
             "4Y" or "GR" => Valid(t.ECUnder) ?? Valid(t.ECgrad),
-            "2Y"         => Valid(t.ECass)   ?? Valid(t.ECUnder),
+            "2Y" => Valid(t.ECass) ?? Valid(t.ECUnder),
             "BF" or "HS" => Valid(t.ECHighschool),
-            "ESL"        => Valid(t.ECESL),
-            _            => Valid(t.ECUnder) ?? Valid(t.ECHighschool) ?? Valid(t.ECass)
+            "ESL" => Valid(t.ECESL),
+            _ => Valid(t.ECUnder) ?? Valid(t.ECHighschool) ?? Valid(t.ECass)
         };
     }
 
@@ -303,17 +311,17 @@ public class TruongService : ITruongService
     {
         return rawLoai switch
         {
-            "1"  => "ESL",  // ESL
+            "1" => "ESL",  // ESL
             "11" => "ESL",  // Language & Culture Institute
-            "2"  => "4Y",   // University
+            "2" => "4Y",   // University
             "10" => "4Y",   // Liberal Art College
-            "3"  => "2Y",   // College / Community College
-            "6"  => "2Y",   // College
-            "4"  => "BF",   // Secondary School
-            "5"  => "BF",   // Primary - Secondary Education
-            "9"  => "GR",   // Graduate
-            "7"  => "ESL",  // Summer & Winter program
-            "8"  => "ESL",  // Summer Program
+            "3" => "2Y",   // College / Community College
+            "6" => "2Y",   // College
+            "4" => "BF",   // Secondary School
+            "5" => "BF",   // Primary - Secondary Education
+            "9" => "GR",   // Graduate
+            "7" => "ESL",  // Summer & Winter program
+            "8" => "ESL",  // Summer Program
             // Nếu đã là code string thì giữ nguyên (backward compat)
             "4Y" or "2Y" or "GR" or "BF" or "HS" or "ESL" => rawLoai,
             _ => rawLoai ?? string.Empty
@@ -328,7 +336,7 @@ public class TruongService : ITruongService
         "BF" => "Trung học",
         "HS" => "Trung học",
         "ESL" => "Anh ngữ ESL",
-        _    => "Trường đối tác"
+        _ => "Trường đối tác"
     };
 
     /// <summary>
@@ -338,44 +346,60 @@ public class TruongService : ITruongService
     /// </summary>
     private static List<string> LoaiCodeToRawIds(string? code) => code switch
     {
-        "4Y"  => ["2", "10"],
-        "2Y"  => ["3", "6"],
-        "BF"  or "HS" => ["4", "5"],
-        "GR"  => ["9"],
+        "4Y" => ["2", "10"],
+        "2Y" => ["3", "6"],
+        "BF" or "HS" => ["4", "5"],
+        "GR" => ["9"],
         "ESL" => ["1", "7", "8", "11"],
-        _     => string.IsNullOrWhiteSpace(code) ? [] : [code]
+        _ => string.IsNullOrWhiteSpace(code) ? [] : [code]
     };
 
-    private static TruongAdmis4YearViewModel Map4Year(TruongAdmis4YearModel a) => new()
+    private static TruongAdmis4YearViewModel Map4Year(TruongAdmis4YearModel a)
     {
-        TuitionUnder = a.COSTuitionfeeUnder,
-        TuitionGrad = a.COSTuitionfeeGrad,
-        TuitionAss = a.COSTuitionfeeAss,
-        TuitionESL = a.COSTuitionfeeESL,
-        ScholarshipUnder = a.ScholarshipUnder,
-        ScholarshipUnderRangeVN = a.ScholarshipUnderRangeVN,
-        ScholarshipGrad = a.ScholarshipGrad,
-        ScholarshipGradRangeVN = a.ScholarshipGradRangeVN,
-        ScholarshipAss = a.ScholarshipAss,
-        ScholarshipAssRangeVN = a.ScholarshipAssRangeVN,
-        ScholarshipESL = a.ScholarshipESL,
-        ScholarshipESLRangeVN = a.ScholarshipESLRangeVN,
-        ScholarshipNoteVN = a.ScholarshipNoteVN,
-        FallUnder = a.FallUnder,
-        SpringUnder = a.SpringUnder,
-        FallGrad = a.FallGrad,
-        RollingUnder = a.RollingUnder,
-        RollingGrad = a.RollingGrad,
-        ToefliBTUnder = a.ToefliBTUnder,
-        IELTSUnder = a.IELTSUnder,
-        GraduationRate = a.GraduationRate,
-        EmploymentRateAfterGraduation = a.EmploymentRateAfterGraduation,
-        MostMajor = a.MostMajor,
-        OnCampus = a.OnCampus,
-        NOSTotalUnder = a.NOSTotalUnder,
-        NOSInternationalUnder = a.NOSInternationalUnder,
-        NOSVNUnder = a.NOSVNUnder
-    };
+        var majors = (a.MostMajor ?? "")
+            .Split(',', StringSplitOptions.TrimEntries);
+
+        return new TruongAdmis4YearViewModel
+        {
+            TuitionUnder = a.COSTuitionfeeUnder,
+            TuitionGrad = a.COSTuitionfeeGrad,
+            TuitionAss = a.COSTuitionfeeAss,
+            TuitionESL = a.COSTuitionfeeESL,
+
+            ScholarshipUnder = a.ScholarshipUnder,
+            ScholarshipUnderRangeVN = a.ScholarshipUnderRangeVN,
+            ScholarshipGrad = a.ScholarshipGrad,
+            ScholarshipGradRangeVN = a.ScholarshipGradRangeVN,
+            ScholarshipAss = a.ScholarshipAss,
+            ScholarshipAssRangeVN = a.ScholarshipAssRangeVN,
+            ScholarshipESL = a.ScholarshipESL,
+            ScholarshipESLRangeVN = a.ScholarshipESLRangeVN,
+            ScholarshipNoteVN = a.ScholarshipNoteVN,
+
+            FallUnder = a.FallUnder,
+            SpringUnder = a.SpringUnder,
+            FallGrad = a.FallGrad,
+            RollingUnder = a.RollingUnder,
+            RollingGrad = a.RollingGrad,
+
+            ToefliBTUnder = a.ToefliBTUnder,
+            IELTSUnder = a.IELTSUnder,
+
+            GraduationRate = a.GraduationRate,
+            EmploymentRateAfterGraduation = a.EmploymentRateAfterGraduation,
+
+            MostMajor1 = majors.ElementAtOrDefault(0),
+            MostMajor2 = majors.ElementAtOrDefault(1),
+            MostMajor3 = majors.ElementAtOrDefault(2),
+            MostMajor4 = majors.ElementAtOrDefault(3),
+            MostMajor5 = majors.ElementAtOrDefault(4),
+
+            OnCampus = a.OnCampus,
+            NOSTotalUnder = a.NOSTotalUnder,
+            NOSInternationalUnder = a.NOSInternationalUnder,
+            NOSVNUnder = a.NOSVNUnder
+        };
+    }
 
     private static TruongAdmisBFViewModel MapBF(TruongAdmisBFModel a) => new()
     {

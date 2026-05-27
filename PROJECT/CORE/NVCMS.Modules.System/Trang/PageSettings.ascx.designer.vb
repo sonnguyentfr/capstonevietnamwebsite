@@ -12,7 +12,7 @@ Option Explicit On
 
 
 Partial Public Class PageSettings
-    
+
     '''<summary>
     '''sitename control.
     '''</summary>
@@ -21,7 +21,7 @@ Partial Public Class PageSettings
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents sitename As Global.System.Web.UI.HtmlControls.HtmlInputText
-    
+
     '''<summary>
     '''siteweb control.
     '''</summary>
@@ -30,7 +30,7 @@ Partial Public Class PageSettings
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents siteweb As Global.System.Web.UI.HtmlControls.HtmlInputText
-    
+
     '''<summary>
     '''sitediachi control.
     '''</summary>
@@ -39,7 +39,7 @@ Partial Public Class PageSettings
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents sitediachi As Global.System.Web.UI.HtmlControls.HtmlInputText
-    
+
     '''<summary>
     '''siteemail control.
     '''</summary>
@@ -48,7 +48,7 @@ Partial Public Class PageSettings
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents siteemail As Global.System.Web.UI.HtmlControls.HtmlInputText
-    
+
     '''<summary>
     '''sitedienthoai control.
     '''</summary>
@@ -57,7 +57,7 @@ Partial Public Class PageSettings
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents sitedienthoai As Global.System.Web.UI.HtmlControls.HtmlInputText
-    
+
     '''<summary>
     '''tenchinhnhanh1 control.
     '''</summary>
@@ -66,7 +66,7 @@ Partial Public Class PageSettings
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents tenchinhnhanh1 As Global.System.Web.UI.HtmlControls.HtmlInputText
-    
+
     '''<summary>
     '''sitediachi1 control.
     '''</summary>
@@ -75,7 +75,7 @@ Partial Public Class PageSettings
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents sitediachi1 As Global.System.Web.UI.HtmlControls.HtmlInputText
-    
+
     '''<summary>
     '''siteemail1 control.
     '''</summary>
@@ -84,7 +84,7 @@ Partial Public Class PageSettings
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents siteemail1 As Global.System.Web.UI.HtmlControls.HtmlInputText
-    
+
     '''<summary>
     '''sitedienthoai1 control.
     '''</summary>
@@ -93,7 +93,7 @@ Partial Public Class PageSettings
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents sitedienthoai1 As Global.System.Web.UI.HtmlControls.HtmlInputText
-    
+
     '''<summary>
     '''tenchinhnhanh2 control.
     '''</summary>
@@ -102,7 +102,7 @@ Partial Public Class PageSettings
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents tenchinhnhanh2 As Global.System.Web.UI.HtmlControls.HtmlInputText
-    
+
     '''<summary>
     '''sitediachi2 control.
     '''</summary>
@@ -111,7 +111,7 @@ Partial Public Class PageSettings
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents sitediachi2 As Global.System.Web.UI.HtmlControls.HtmlInputText
-    
+
     '''<summary>
     '''siteemail2 control.
     '''</summary>
@@ -120,7 +120,7 @@ Partial Public Class PageSettings
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents siteemail2 As Global.System.Web.UI.HtmlControls.HtmlInputText
-    
+
     '''<summary>
     '''sitedienthoai2 control.
     '''</summary>
@@ -129,7 +129,7 @@ Partial Public Class PageSettings
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents sitedienthoai2 As Global.System.Web.UI.HtmlControls.HtmlInputText
-    
+
     '''<summary>
     '''sitetomtat control.
     '''</summary>
@@ -138,7 +138,7 @@ Partial Public Class PageSettings
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents sitetomtat As Global.System.Web.UI.WebControls.TextBox
-    
+
     '''<summary>
     '''sitetag control.
     '''</summary>
@@ -147,7 +147,7 @@ Partial Public Class PageSettings
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents sitetag As Global.System.Web.UI.HtmlControls.HtmlInputText
-    
+
     '''<summary>
     '''sitefacebookpage control.
     '''</summary>
@@ -156,7 +156,7 @@ Partial Public Class PageSettings
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents sitefacebookpage As Global.System.Web.UI.HtmlControls.HtmlInputText
-    
+
     '''<summary>
     '''siteyoutube control.
     '''</summary>
@@ -165,7 +165,7 @@ Partial Public Class PageSettings
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents siteyoutube As Global.System.Web.UI.HtmlControls.HtmlInputText
-    
+
     '''<summary>
     '''siteInstagram control.
     '''</summary>
@@ -174,7 +174,7 @@ Partial Public Class PageSettings
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents siteInstagram As Global.System.Web.UI.HtmlControls.HtmlInputText
-    
+
     '''<summary>
     '''siteZalo control.
     '''</summary>
@@ -183,7 +183,7 @@ Partial Public Class PageSettings
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents siteZalo As Global.System.Web.UI.HtmlControls.HtmlInputText
-    
+
     '''<summary>
     '''siteTwitter control.
     '''</summary>
@@ -192,7 +192,7 @@ Partial Public Class PageSettings
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents siteTwitter As Global.System.Web.UI.HtmlControls.HtmlInputText
-    
+
     '''<summary>
     '''siteLinkedin control.
     '''</summary>
@@ -201,7 +201,7 @@ Partial Public Class PageSettings
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents siteLinkedin As Global.System.Web.UI.HtmlControls.HtmlInputText
-    
+
     '''<summary>
     '''sitewhatsapp control.
     '''</summary>
@@ -210,7 +210,7 @@ Partial Public Class PageSettings
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents sitewhatsapp As Global.System.Web.UI.HtmlControls.HtmlInputText
-    
+
     '''<summary>
     '''siteSkype control.
     '''</summary>
@@ -219,7 +219,7 @@ Partial Public Class PageSettings
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents siteSkype As Global.System.Web.UI.HtmlControls.HtmlInputText
-    
+
     '''<summary>
     '''siteHeaderCode control.
     '''</summary>
@@ -228,7 +228,7 @@ Partial Public Class PageSettings
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents siteHeaderCode As Global.System.Web.UI.WebControls.TextBox
-    
+
     '''<summary>
     '''siteFooterCode control.
     '''</summary>
@@ -237,7 +237,7 @@ Partial Public Class PageSettings
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents siteFooterCode As Global.System.Web.UI.WebControls.TextBox
-    
+
     '''<summary>
     '''ddlPortalId control.
     '''</summary>
@@ -246,7 +246,7 @@ Partial Public Class PageSettings
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents ddlPortalId As Global.System.Web.UI.WebControls.DropDownList
-    
+
     '''<summary>
     '''ddlPortalIdEn control.
     '''</summary>
@@ -255,7 +255,7 @@ Partial Public Class PageSettings
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents ddlPortalIdEn As Global.System.Web.UI.WebControls.DropDownList
-    
+
     '''<summary>
     '''ddlPageTinTuc control.
     '''</summary>
@@ -264,7 +264,7 @@ Partial Public Class PageSettings
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents ddlPageTinTuc As Global.System.Web.UI.WebControls.DropDownList
-    
+
     '''<summary>
     '''ddlPageTinAnh control.
     '''</summary>
@@ -273,7 +273,7 @@ Partial Public Class PageSettings
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents ddlPageTinAnh As Global.System.Web.UI.WebControls.DropDownList
-    
+
     '''<summary>
     '''ddlPageVideo control.
     '''</summary>
@@ -282,7 +282,7 @@ Partial Public Class PageSettings
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents ddlPageVideo As Global.System.Web.UI.WebControls.DropDownList
-    
+
     '''<summary>
     '''ddlPageEvents control.
     '''</summary>
@@ -291,7 +291,7 @@ Partial Public Class PageSettings
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents ddlPageEvents As Global.System.Web.UI.WebControls.DropDownList
-    
+
     '''<summary>
     '''ddlfolder control.
     '''</summary>
@@ -300,7 +300,7 @@ Partial Public Class PageSettings
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents ddlfolder As Global.System.Web.UI.WebControls.DropDownList
-    
+
     '''<summary>
     '''filelogo control.
     '''</summary>
@@ -309,7 +309,7 @@ Partial Public Class PageSettings
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents filelogo As Global.System.Web.UI.HtmlControls.HtmlInputFile
-    
+
     '''<summary>
     '''dvPreviewlogo control.
     '''</summary>
@@ -318,7 +318,7 @@ Partial Public Class PageSettings
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents dvPreviewlogo As Global.System.Web.UI.HtmlControls.HtmlGenericControl
-    
+
     '''<summary>
     '''hpflinkimage control.
     '''</summary>
@@ -327,7 +327,34 @@ Partial Public Class PageSettings
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents hpflinkimage As Global.System.Web.UI.WebControls.HiddenField
-    
+
+    '''<summary>
+    '''filelogofooter control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents filelogofooter As Global.System.Web.UI.HtmlControls.HtmlInputFile
+
+    '''<summary>
+    '''dvPreviewlogofooter control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents dvPreviewlogofooter As Global.System.Web.UI.HtmlControls.HtmlGenericControl
+
+    '''<summary>
+    '''hpflinkimagefooter control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents hpflinkimagefooter As Global.System.Web.UI.WebControls.HiddenField
+
     '''<summary>
     '''chkNhanEmail control.
     '''</summary>
@@ -336,7 +363,7 @@ Partial Public Class PageSettings
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents chkNhanEmail As Global.System.Web.UI.WebControls.CheckBox
-    
+
     '''<summary>
     '''EmailLienhe control.
     '''</summary>
@@ -345,7 +372,7 @@ Partial Public Class PageSettings
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents EmailLienhe As Global.System.Web.UI.HtmlControls.HtmlGenericControl
-    
+
     '''<summary>
     '''sitemaillist control.
     '''</summary>
@@ -354,7 +381,7 @@ Partial Public Class PageSettings
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents sitemaillist As Global.System.Web.UI.HtmlControls.HtmlInputText
-    
+
     '''<summary>
     '''sitecdn control.
     '''</summary>
@@ -363,7 +390,7 @@ Partial Public Class PageSettings
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents sitecdn As Global.System.Web.UI.HtmlControls.HtmlInputText
-    
+
     '''<summary>
     '''sitefileserver control.
     '''</summary>
@@ -372,7 +399,7 @@ Partial Public Class PageSettings
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents sitefileserver As Global.System.Web.UI.HtmlControls.HtmlInputText
-    
+
     '''<summary>
     '''txtgoooglekey control.
     '''</summary>
@@ -381,7 +408,7 @@ Partial Public Class PageSettings
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents txtgoooglekey As Global.System.Web.UI.HtmlControls.HtmlInputText
-    
+
     '''<summary>
     '''txtgoooglekeysecret control.
     '''</summary>
@@ -390,7 +417,7 @@ Partial Public Class PageSettings
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents txtgoooglekeysecret As Global.System.Web.UI.HtmlControls.HtmlInputText
-    
+
     '''<summary>
     '''emailsmtp control.
     '''</summary>
@@ -399,7 +426,7 @@ Partial Public Class PageSettings
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents emailsmtp As Global.System.Web.UI.HtmlControls.HtmlInputText
-    
+
     '''<summary>
     '''emailtenhienthi control.
     '''</summary>
@@ -408,7 +435,7 @@ Partial Public Class PageSettings
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents emailtenhienthi As Global.System.Web.UI.HtmlControls.HtmlInputText
-    
+
     '''<summary>
     '''emailEmail control.
     '''</summary>
@@ -417,7 +444,7 @@ Partial Public Class PageSettings
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents emailEmail As Global.System.Web.UI.HtmlControls.HtmlInputText
-    
+
     '''<summary>
     '''emailmatkhau control.
     '''</summary>
@@ -426,7 +453,7 @@ Partial Public Class PageSettings
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents emailmatkhau As Global.System.Web.UI.HtmlControls.HtmlInputText
-    
+
     '''<summary>
     '''lbtUpdate2 control.
     '''</summary>
@@ -435,7 +462,7 @@ Partial Public Class PageSettings
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents lbtUpdate2 As Global.System.Web.UI.WebControls.LinkButton
-    
+
     '''<summary>
     '''lbtCancelTop2 control.
     '''</summary>

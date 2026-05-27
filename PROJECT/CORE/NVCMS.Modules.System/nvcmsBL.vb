@@ -130,6 +130,7 @@ Public Class nvcmsBL
 
 
     Public Shared settingPagesiteLogo = "settingPagesiteLogo"
+    Public Shared settingPagesiteLogofooter = "settingPagesiteLogofooter"
     Public Shared settingPageTinTuc = "settingPageTinTuc"
     Public Shared settingPageTinAnh = "settingPageTinAnh"
     Public Shared settingPageVideo = "settingPageVideo"
