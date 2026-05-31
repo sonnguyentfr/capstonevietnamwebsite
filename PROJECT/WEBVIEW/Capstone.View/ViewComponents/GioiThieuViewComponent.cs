@@ -29,7 +29,7 @@ public class GioiThieuViewComponent : ViewComponent
         if (data is not null)
         {
             var allMenu      = _menuService.GetMenu();
-            var capstoneGroup = allMenu.FirstOrDefault(m => m.Url == "/capstone-vietnam");
+            var capstoneGroup = allMenu.FirstOrDefault(m => m.Url == "/gioi-thieu");
             data.SidebarMenu = capstoneGroup?.Children ?? [];
         }
         return View(data);

@@ -16,6 +16,52 @@ public class NewsRepository : INewsRepository
 
     private SqlConnection CreateConn() => new(_connectionString);
 
+    public async Task<PaginatedList<NewsModel>> GetAllPagedAsync(int portalId, int page, int pageSize)
+    {
+        await using var conn = CreateConn();
+        var param = new { PortalId = portalId, PageIndex = page, PageSize = pageSize };
+        using var multi = await conn.QueryMultipleAsync(
+            "WebView_NVCMS_News_SelectAll",
+            param,
+            commandType: CommandType.StoredProcedure);
+        var total = await multi.ReadFirstOrDefaultAsync<int>();
+        var items = await multi.ReadAsync<NewsModel>();
+        return new PaginatedList<NewsModel>(items, total, page, pageSize);
+    }
+
+    public async Task<IEnumerable<(int CategoryId, int Count)>> GetCategoryCountsAsync(int portalId)
+    {
+        await using var conn = CreateConn();
+        var rows = await conn.QueryAsync(
+            "WebView_NVCMS_NewsCategory_SelectWithCount",
+            new { PortalId = portalId },
+            commandType: CommandType.StoredProcedure);
+        return rows.Select(r => ((int)r.CategoryID, (int)r.NewsCount));
+    }
+
+    public async Task<PaginatedList<NewsModel>> GetByCategoryIdsAsync(
+        IEnumerable<int> categoryIds, int portalId, int page, int pageSize)
+    {
+        var idList = string.Join(",", categoryIds);
+        var offset = (page - 1) * pageSize;
+        var sql = $"""
+            SELECT COUNT(*) FROM NV_News
+            WHERE PortalId = @PortalId AND IsActive = 1
+              AND CategoryId IN ({idList});
+
+            SELECT * FROM NV_News
+            WHERE PortalId = @PortalId AND IsActive = 1
+              AND CategoryId IN ({idList})
+            ORDER BY PublishedDate DESC
+            OFFSET @Offset ROWS FETCH NEXT @PageSize ROWS ONLY;
+            """;
+        await using var conn = CreateConn();
+        using var multi = await conn.QueryMultipleAsync(sql, new { PortalId = portalId, Offset = offset, PageSize = pageSize });
+        var total = await multi.ReadFirstOrDefaultAsync<int>();
+        var items = await multi.ReadAsync<NewsModel>();
+        return new PaginatedList<NewsModel>(items, total, page, pageSize);
+    }
+
     public async Task<PaginatedList<NewsModel>> GetByCategoryAsync(
         int categoryId, int portalId, int page, int pageSize)
     {
@@ -28,7 +74,7 @@ public class NewsRepository : INewsRepository
             PageSize = pageSize
         };
         using var multi = await conn.QueryMultipleAsync(
-            "NVCMS_News_SelectByCategory",
+            "WebView_NVCMS_News_SelectByCategory",
             param,
             commandType: CommandType.StoredProcedure);
         var total = await multi.ReadFirstOrDefaultAsync<int>();
@@ -40,7 +86,7 @@ public class NewsRepository : INewsRepository
     {
         await using var conn = CreateConn();
         return await conn.QueryFirstOrDefaultAsync<NewsModel>(
-            "NVCMS_News_SelectByID",
+            "WebView_NVCMS_News_SelectByID",
             new { NewId = newId, PortalId = portalId },
             commandType: CommandType.StoredProcedure);
     }
@@ -50,7 +96,7 @@ public class NewsRepository : INewsRepository
     {
         await using var conn = CreateConn();
         return await conn.QueryAsync<NewsModel>(
-            "NVCMS_News_SelectRelated",
+            "WebView_NVCMS_News_SelectRelated",
             new { CategoryId = categoryId, ExcludeId = excludeId, PortalId = portalId, Top = top },
             commandType: CommandType.StoredProcedure);
     }
@@ -59,7 +105,7 @@ public class NewsRepository : INewsRepository
     {
         await using var conn = CreateConn();
         return await conn.QueryAsync<NewsCategoryModel>(
-            "NVCMS_NewsCategory_SelectAll",
+            "WebView_NVCMS_NewsCategory_SelectAll",
             new { PortalId = portalId },
             commandType: CommandType.StoredProcedure);
     }
@@ -68,7 +114,7 @@ public class NewsRepository : INewsRepository
     {
         await using var conn = CreateConn();
         return await conn.QueryFirstOrDefaultAsync<NewsCategoryModel>(
-            "NVCMS_NewsCategory_SelectByID",
+            "WebView_NVCMS_NewsCategory_SelectByID",
             new { CategoryId = categoryId },
             commandType: CommandType.StoredProcedure);
     }
@@ -77,8 +123,17 @@ public class NewsRepository : INewsRepository
     {
         await using var conn = CreateConn();
         await conn.ExecuteAsync(
-            "NVCMS_News_UpdateView",
+            "WebView_NVCMS_News_UpdateView",
             new { NewId = newId },
+            commandType: CommandType.StoredProcedure);
+    }
+
+    public async Task<IEnumerable<NewsModel>> GetFeaturedAsync(int portalId, int top)
+    {
+        await using var conn = CreateConn();
+        return await conn.QueryAsync<NewsModel>(
+            "WebView_NVCMS_NewsSettings_Select",
+            new { PortalId = portalId, Top = top },
             commandType: CommandType.StoredProcedure);
     }
 }

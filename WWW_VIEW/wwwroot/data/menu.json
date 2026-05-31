@@ -1,25 +1,25 @@
-[
+﻿[
   {
     "title": "Capstone Vietnam",
-    "url": "/capstone-vietnam",
+    "url": "/gioi-thieu",
     "children": [
       { "title": "Giới thiệu", "url": "/gioi-thieu/ve-capstone", "children": [] },
-      { "title": "Đội ngũ", "url": "/capstone-vietnam/doi-ngu", "children": [] },
+      { "title": "Đội ngũ", "url": "/gioi-thieu/doi-ngu-198", "children": [] },
       {
         "title": "Các dịch vụ Capstone",
-        "url": "/capstone-vietnam/cac-dich-vu-capstone",
+        "url": "/gioi-thieu/cac-dich-vu-capstone",
         "children": [
           { "title": "Tư vấn Định cư", "url": "/tu-van-dinh-cu", "children": [] },
-          { "title": "Tư vấn du học các nước", "url": "/capstone-vietnam/cac-dich-vu-capstone/tu-van-du-hoc-cac-nuoc", "children": [] },
-          { "title": "Tư vấn du học trường TOP - Elite Scholars", "url": "/capstone-vietnam/cac-dich-vu-capstone/tu-van-du-hoc-truong-top", "children": [] },
-          { "title": "Tư vấn du học Cao học - Bespoke", "url": "/capstone-vietnam/cac-dich-vu-capstone/tu-van-du-hoc-cao-hoc", "children": [] },
-          { "title": "Tư vấn ngành nghề - Career Coach", "url": "/capstone-vietnam/cac-dich-vu-capstone/tu-van-nganh-nghe", "children": [] },
-          { "title": "Tư vấn Visa du học/thăm thân", "url": "/capstone-vietnam/cac-dich-vu-capstone/tu-van-visa-du-hoc-tham-than", "children": [] },
-          { "title": "Dịch vụ chuyển tiền du học", "url": "/capstone-vietnam/cac-dich-vu-capstone/dich-vu-chuyen-tien-du-hoc", "children": [] },
-          { "title": "Dịch vụ tìm nhà", "url": "/capstone-vietnam/cac-dich-vu-capstone/dich-vu-tim-nha", "children": [] }
+          { "title": "Tư vấn du học các nước", "url": "/gioi-thieu/cac-dich-vu-capstone/tu-van-du-hoc-cac-nuoc", "children": [] },
+          { "title": "Tư vấn du học trường TOP - Elite Scholars", "url": "/gioi-thieu/cac-dich-vu-capstone/tu-van-du-hoc-truong-top", "children": [] },
+          { "title": "Tư vấn du học Cao học - Bespoke", "url": "/gioi-thieu/cac-dich-vu-capstone/tu-van-du-hoc-cao-hoc", "children": [] },
+          { "title": "Tư vấn ngành nghề - Career Coach", "url": "/gioi-thieu/cac-dich-vu-capstone/tu-van-nganh-nghe", "children": [] },
+          { "title": "Tư vấn Visa du học/thăm thân", "url": "/gioi-thieu/cac-dich-vu-capstone/tu-van-visa-du-hoc-tham-than", "children": [] },
+          { "title": "Dịch vụ chuyển tiền du học", "url": "/gioi-thieu/cac-dich-vu-capstone/dich-vu-chuyen-tien-du-hoc", "children": [] },
+          { "title": "Dịch vụ tìm nhà", "url": "/gioi-thieu/cac-dich-vu-capstone/dich-vu-tim-nha", "children": [] }
         ]
       },
-      { "title": "Quy trình Tư vấn", "url": "/capstone-vietnam/quy-trinh-tu-van", "children": [] },
+      { "title": "Quy trình Tư vấn", "url": "/gioi-thieu/quy-trinh-tu-van", "children": [] },
       {
         "title": "Trường đối tác",
         "url": "/truong-doi-tac",
@@ -46,10 +46,10 @@
           ]}
         ]
       },
-      { "title": "Chia sẻ từ du học sinh", "url": "/capstone-vietnam/chia-se-tu-du-hoc-sinh", "children": [] },
-      { "title": "Thư viện Ảnh - Videos", "url": "/capstone-vietnam/thu-vien-anh-video", "children": [] },
-      { "title": "Fair Guide", "url": "/capstone-vietnam/fairguide", "children": [] },
-      { "title": "Tuyển dụng", "url": "/gioi-thieu/tuyen-dung", "children": [] },
+      { "title": "Chia sẻ từ du học sinh", "url": "/gioi-thieu/chia-se-tu-du-hoc-sinh-227", "children": [] },
+      { "title": "Thư viện Ảnh - Videos", "url": "/gioi-thieu/thu-vien-anh-video", "children": [] },
+      { "title": "Fair Guide", "url": "/gioi-thieu/fairguide", "children": [] },
+      { "title": "Tuyển dụng", "url": "/gioi-thieu/tuyen-dung-200", "children": [] },
       { "title": "Liên hệ", "url": "/lien-he", "children": [] }
     ]
   },
@@ -62,8 +62,8 @@
         "url": "/tu-van-du-hoc/du-hoc-my",
         "children": [
           { "title": "Hệ thống giáo dục", "url": "/thong-tin-du-hoc/du-hoc-my/he-thong-giao-duc", "children": [] },
-          { "title": "Visa", "url": "/thong-tin-du-hoc/du-hoc-my/Visa", "children": [] },
-          { "title": "Tin tức", "url": "/thong-tin-du-hoc/du-hoc-my/tin-tuc", "children": [] },
+          { "title": "Visa", "url": "/thong-tin-du-hoc/du-hoc-my/visa", "children": [] },
+          { "title": "Tin tức", "url": "/thong-tin-du-hoc/du-hoc-my/tin-tuc-244", "children": [] },
           { "title": "Danh sách trường", "url": "/thong-tin-du-hoc/du-hoc-my/danh-sach-truong", "children": [] }
         ]
       },
@@ -73,7 +73,7 @@
         "children": [
           { "title": "Hệ thống giáo dục", "url": "/thong-tin-du-hoc/du-hoc-anh/he-thong-giao-duc", "children": [] },
           { "title": "Visa", "url": "/thong-tin-du-hoc/du-hoc-anh/visa", "children": [] },
-          { "title": "Tin tức", "url": "/thong-tin-du-hoc/du-hoc-anh/tin-tuc", "children": [] },
+          { "title": "Tin tức", "url": "/thong-tin-du-hoc/du-hoc-anh/tin-tuc-227", "children": [] },
           { "title": "Danh sách trường", "url": "/thong-tin-du-hoc/du-hoc-anh/danh-sach-truong", "children": [] }
         ]
       },
@@ -83,7 +83,7 @@
         "children": [
           { "title": "Hệ thống giáo dục", "url": "/thong-tin-du-hoc/du-hoc-canada/he-thong-giao-duc", "children": [] },
           { "title": "Visa", "url": "/thong-tin-du-hoc/du-hoc-canada/visa", "children": [] },
-          { "title": "Tin tức", "url": "/thong-tin-du-hoc/du-hoc-canada/tin-tuc", "children": [] },
+          { "title": "Tin tức", "url": "/thong-tin-du-hoc/du-hoc-canada/tin-tuc-227", "children": [] },
           { "title": "Danh sách trường", "url": "/thong-tin-du-hoc/du-hoc-canada/danh-sach-truong", "children": [] }
         ]
       },
@@ -93,7 +93,7 @@
         "children": [
           { "title": "Hệ thống giáo dục", "url": "/thong-tin-du-hoc/du-hoc-uc/he-thong-giao-duc", "children": [] },
           { "title": "Visa", "url": "/thong-tin-du-hoc/du-hoc-uc/visa", "children": [] },
-          { "title": "Tin tức", "url": "/thong-tin-du-hoc/du-hoc-uc/tin-tuc", "children": [] },
+          { "title": "Tin tức", "url": "/thong-tin-du-hoc/du-hoc-uc/tin-tuc-227", "children": [] },
           { "title": "Danh sách trường", "url": "/thong-tin-du-hoc/du-hoc-uc/danh-sach-truong", "children": [] }
         ]
       },
@@ -103,7 +103,7 @@
         "children": [
           { "title": "Hệ thống giáo dục", "url": "/thong-tin-du-hoc/du-hoc-ireland/he-thong-giao-duc", "children": [] },
           { "title": "Visa", "url": "/thong-tin-du-hoc/du-hoc-ireland/visa", "children": [] },
-          { "title": "Tin tức", "url": "/thong-tin-du-hoc/du-hoc-ireland/tin-tuc", "children": [] },
+          { "title": "Tin tức", "url": "/thong-tin-du-hoc/du-hoc-ireland/tin-tuc-227", "children": [] },
           { "title": "Danh sách trường", "url": "/thong-tin-du-hoc/du-hoc-ireland/danh-sach-truong", "children": [] }
         ]
       },
@@ -113,7 +113,7 @@
         "children": [
           { "title": "Hệ thống giáo dục", "url": "/thong-tin-du-hoc/du-hoc-thuy-si/he-thong-giao-duc", "children": [] },
           { "title": "Visa", "url": "/thong-tin-du-hoc/du-hoc-thuy-si/visa", "children": [] },
-          { "title": "Tin tức", "url": "/thong-tin-du-hoc/du-hoc-thuy-si/tin-tuc", "children": [] },
+          { "title": "Tin tức", "url": "/thong-tin-du-hoc/du-hoc-thuy-si/tin-tuc-227", "children": [] },
           { "title": "Danh sách trường", "url": "/thong-tin-du-hoc/du-hoc-thuy-si/danh-sach-truong", "children": [] }
         ]
       }
@@ -121,16 +121,16 @@
   },
   {
     "title": "Thông tin Định cư",
-    "url": "/capstone-vietnam/cac-dich-vu-capstone/tu-van-dinh-cu",
+    "url": "/tu-van-dinh-cu",
     "children": [
-      { "title": "Định cư Mỹ EB-5", "url": "/capstone-vietnam/cac-dich-vu-capstone/tu-van-dinh-cu/dinh-cu-my-eb5", "children": [] },
-      { "title": "Tin tức định cư EB-5", "url": "/capstone-vietnam/cac-dich-vu-capstone/tu-van-dinh-cu/tin-tuc-dinh-cu-eb5", "children": [] },
-      { "title": "Định cư Mỹ EB-3", "url": "/capstone-vietnam/cac-dich-vu-capstone/tu-van-dinh-cu/dinh-cu-my-eb3", "children": [] },
-      { "title": "Tin tức định cư EB-3", "url": "/capstone-vietnam/cac-dich-vu-capstone/tu-van-dinh-cu/tin-tuc-dinh-cu-eb3", "children": [] },
-      { "title": "Định cư Canada", "url": "/capstone-vietnam/cac-dich-vu-capstone/tu-van-dinh-cu/dinh-cu-canada", "children": [] },
-      { "title": "Tin tức định cư Canada", "url": "/capstone-vietnam/cac-dich-vu-capstone/tu-van-dinh-cu/tin-tuc-dinh-cu-canada", "children": [] },
-      { "title": "Định cư Úc", "url": "/capstone-vietnam/cac-dich-vu-capstone/tu-van-dinh-cu/dinh-cu-uc", "children": [] },
-      { "title": "Tin tức định cư Úc", "url": "/capstone-vietnam/cac-dich-vu-capstone/tu-van-dinh-cu/tin-tuc-dinh-cu-uc", "children": [] }
+      { "title": "Định cư Mỹ EB-5", "url": "/gioi-thieu/cac-dich-vu-capstone/tu-van-dinh-cu/dinh-cu-my-eb5", "children": [] },
+      { "title": "Tin tức định cư EB-5", "url": "/tu-van-dinh-cu/tin-tuc-dinh-cu-eb5-202", "children": [] },
+      { "title": "Định cư Mỹ EB-3", "url": "/gioi-thieu/cac-dich-vu-capstone/tu-van-dinh-cu/dinh-cu-my-eb3", "children": [] },
+      { "title": "Tin tức định cư EB-3", "url": "/tu-van-dinh-cu/tin-tuc-dinh-cu-eb3-227", "children": [] },
+      { "title": "Định cư Canada", "url": "/gioi-thieu/cac-dich-vu-capstone/tu-van-dinh-cu/dinh-cu-canada", "children": [] },
+      { "title": "Tin tức định cư Canada", "url": "/tu-van-dinh-cu/tin-tuc-dinh-cu-canada-227", "children": [] },
+      { "title": "Định cư Úc", "url": "/gioi-thieu/cac-dich-vu-capstone/tu-van-dinh-cu/dinh-cu-uc", "children": [] },
+      { "title": "Tin tức định cư Úc", "url": "/tu-van-dinh-cu/tin-tuc-dinh-cu-uc-227", "children": [] }
     ]
   },
   {
@@ -147,17 +147,17 @@
     "title": "Cẩm nang & Tin tức",
     "url": "/cam-nang-va-tin-tuc",
     "children": [
-      { "title": "Tin tức chung", "url": "/cam-nang-va-tin-du-hoc/tin-tuc", "children": [] },
-      { "title": "Bản tin về các trường", "url": "/cam-nang-va-su-kien-du-hoc/ban-tin-truong", "children": [] },
-      { "title": "Cẩm nang du học", "url": "/cam-nang-va-tin-du-hoc/cam-nang-du-hoc", "children": [] },
-      { "title": "Chia sẻ từ du học sinh", "url": "/tin-tuc/chia-se-tu-du-hoc-sinh", "children": [] }
+      { "title": "Tin tức chung", "url": "/cam-nang-va-tin-tuc/tin-tuc-228", "children": [] },
+      { "title": "Bản tin về các trường", "url": "/cam-nang-va-tin-tuc/ban-tin-truong-229", "children": [] },
+      { "title": "Cẩm nang du học", "url": "/cam-nang-va-tin-tuc/cam-nang-du-hoc-225", "children": [] },
+      { "title": "Chia sẻ từ du học sinh", "url": "/cam-nang-va-tin-tuc/chia-se-tu-du-hoc-sinh-227", "children": [] }
     ]
   },
   {
     "title": "Sự kiện",
     "url": "/su-kien",
     "children": [
-      { "title": "Sự kiện & Hội thảo Du học", "url": "/cam-nang-va-su-kien-du-hoc/su-kien-hoi-thao-du-hoc", "children": [] }
+      { "title": "Sự kiện & Hội thảo Du học", "url": "/su-kien", "children": [] }
     ]
   }
 ]

@@ -7,5 +7,6 @@ public class CategoryViewModel
     public string   CategoryName { get; set; } = string.Empty;
     public string   Slug         { get; set; } = string.Empty;
     public string?  Description  { get; set; }
+    public int      NewsCount    { get; set; }
     public List<CategoryViewModel> Children { get; set; } = [];
 }

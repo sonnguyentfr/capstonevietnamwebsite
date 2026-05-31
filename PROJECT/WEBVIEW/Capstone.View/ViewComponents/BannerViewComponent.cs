@@ -21,7 +21,7 @@ public class BannerViewComponent : ViewComponent
 
     public async Task<IViewComponentResult> InvokeAsync(int vitriid)
     {
-        var banners = await _bannerService.GetByVitriAsync(vitriid, _portalId);
+        var banners = await _bannerService.GetAllShowAsync(_portalId, vitriid);
         return View($"Vitri{vitriid}", banners);
     }
 }

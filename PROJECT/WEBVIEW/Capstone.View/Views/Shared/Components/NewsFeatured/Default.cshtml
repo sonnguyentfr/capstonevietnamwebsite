@@ -1,0 +1,40 @@
+@using NVCMS.WebView.Data.ViewModels
+@model IEnumerable<NewsItemViewModel>
+
+@{
+    var items = Model?.ToList() ?? [];
+    var aosEffects = new[] { "fade-up", "fade-down", "fade-left", "fade-right", "zoom-in", "zoom-in-up", "flip-left", "flip-up" };
+    var rng = new Random();
+}
+
+@if (items.Any())
+{
+    @foreach (var item in items)
+    {
+        var aos = aosEffects[rng.Next(aosEffects.Length)];
+        <div class="news-item" data-aos="@aos">
+            <div class="image img-cover">
+                <a href="/tin-tuc/@(item.Slug)-@item.NewId">
+                    @if (!string.IsNullOrEmpty(item.ImagePath))
+                    {
+                        <img src="@item.ImagePath" alt="@item.Title" loading="lazy" />
+                    }
+                    else
+                    {
+                        <img src="/static/images/no-photo.png" alt="@item.Title" loading="lazy" />
+                    }
+                </a>
+            </div>
+            <div class="caption">
+                @if (!string.IsNullOrEmpty(item.CategoryName))
+                {
+                    <span class="news-cat">@item.CategoryName</span>
+                }
+                <p class="news-date">@item.PublishedDate.ToString("dd-MM-yyyy")</p>
+                <h3 class="news-title">
+                    <a href="/tin-tuc/@(item.Slug)-@item.NewId">@item.Title</a>
+                </h3>
+            </div>
+        </div>
+    }
+}

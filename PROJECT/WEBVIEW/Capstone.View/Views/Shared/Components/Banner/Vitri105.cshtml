@@ -1,0 +1,27 @@
+﻿@model IEnumerable<NVCMS.WebView.Data.ViewModels.BannerViewModel>
+@{
+    var items  = Model?.Take(6).ToList() ?? [];
+    var delays = new[] { 50, 100, 150, 200, 250, 300 };
+}
+
+@foreach (var (banner, i) in items.Select((b, i) => (b, i)))
+{
+    <div class="home-courses-item" data-aos="fade-up" data-aos-delay="@delays[i % delays.Length]">
+        <div class="image img-cover">
+            <a href="@banner.Link" title="@banner.Title">
+                @if (!string.IsNullOrEmpty(banner.IMGLink))
+                {
+                    <img cdn-src="@banner.IMGLink" cdn-w="@banner.Width" cdn-h="@banner.Height"
+                         alt="@banner.Title" loading="lazy" />
+                }
+                else
+                {
+                    <img src="/static/images/no-photo.png" alt="@banner.Title" loading="lazy" />
+                }
+            </a>
+        </div>
+        <div class="caption">
+            <h3 class="title"><a href="@banner.Link">@banner.Title</a></h3>
+        </div>
+    </div>
+}

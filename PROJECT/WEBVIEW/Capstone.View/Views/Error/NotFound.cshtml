@@ -1,0 +1,24 @@
+@{
+    ViewData["Title"] = "Trang không tìm thấy";
+    Layout = "_Layout";
+}
+
+<section class="section-large">
+    <div class="container">
+        <div class="error-page text-center" style="padding: 80px 0 120px;">
+            <div style="font-size: 120px; font-weight: 800; line-height: 1; color: var(--primary, #1a5fb4); opacity: .15; user-select: none;">
+                404
+            </div>
+            <div style="margin-top: -40px; position: relative; z-index: 1;">
+                <h1 style="font-size: 2rem; font-weight: 700; margin-bottom: 16px;">Trang không tìm thấy</h1>
+                <p style="color: #666; font-size: 1.05rem; max-width: 480px; margin: 0 auto 32px;">
+                    Trang bạn đang tìm kiếm có thể đã bị xóa, đổi tên hoặc tạm thời không khả dụng.
+                </p>
+                <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
+                    <a href="/" class="btn-solid active"><span>Về trang chủ</span></a>
+                    <a href="javascript:history.back()" class="btn-solid"><span>Quay lại</span></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

@@ -653,7 +653,9 @@ ol li {
 .-mt-8 {
     margin-top: calc(calc(32/1920*100rem) * -1);
 }
-
+.mb-4 {
+    margin-bottom: calc(16/1920*100rem);
+}
 .mb-5 {
     margin-bottom: calc(20/1920*100rem);
 }
@@ -8147,12 +8149,13 @@ header .children-menu > li > a:hover {
 
 @media (min-width: 1200px) {
     .news-list-section .news-list {
-        grid-template-columns: repeat(4, minmax(0, 1fr));
+        grid-template-columns: repeat(12, minmax(0, 1fr));
     }
 }
 
 .news-list-section .news-item {
     --tw-bg-opacity: 1;
+    grid-column: span 3;
     background-color: rgb(246 246 246 / var(--tw-bg-opacity));
 }
 
@@ -8162,16 +8165,24 @@ header .children-menu > li > a:hover {
 }
 
 @media (min-width: 1200px) {
-    .news-list-section .news-item:nth-child(1), .news-list-section .news-item:nth-child(2) {
-        grid-column: span 2 / span 2;
+    .news-list-section .news-item:nth-child(1),
+    .news-list-section .news-item:nth-child(2),
+    .news-list-section .news-item:nth-child(3) {
+        grid-column: span 4;
         border-radius: 0px;
     }
 
-        .news-list-section .news-item:nth-child(1) .image, .news-list-section .news-item:nth-child(2) .image, .news-list-section .news-item:nth-child(2) .image {
+        .news-list-section .news-item:nth-child(1) .image,
+        .news-list-section .news-item:nth-child(2) .image,
+        .news-list-section .news-item:nth-child(2) .image,
+        .news-list-section .news-item:nth-child(3) .image {
             aspect-ratio: 640/420;
         }
 
-        .news-list-section .news-item:nth-child(1) .caption, .news-list-section .news-item:nth-child(2) .caption, .news-list-section .news-item:nth-child(3) .caption {
+        .news-list-section .news-item:nth-child(1) .caption,
+        .news-list-section .news-item:nth-child(2) .caption,
+        .news-list-section .news-item:nth-child(3) .caption,
+        .news-list-section .news-item:nth-child(4) .caption {
             position: absolute;
             bottom: 0 /* 0px */;
             left: 0 /* 0px */;
@@ -8188,16 +8199,25 @@ header .children-menu > li > a:hover {
             pointer-events: none
         }
 
-            .news-list-section .news-item:nth-child(1) .caption > *, .news-list-section .news-item:nth-child(2) .caption > *,, .news-list-section .news-item:nth-child(3) .caption > * {
+            .news-list-section .news-item:nth-child(1) .caption > *,
+            .news-list-section .news-item:nth-child(2) .caption > *,
+            .news-list-section .news-item:nth-child(3) .caption > *,
+            .news-list-section .news-item:nth-child(4) .caption > * {
                 pointer-events: auto;
             }
 
-        .news-list-section .news-item:nth-child(1) .news-date, .news-list-section .news-item:nth-child(2) .news-date,, .news-list-section .news-item:nth-child(3) .news-date {
+        .news-list-section .news-item:nth-child(1) .news-date,
+        .news-list-section .news-item:nth-child(2) .news-date,
+        .news-list-section .news-item:nth-child(3) .news-date,
+        .news-list-section .news-item:nth-child(4) .news-date {
             --tw-text-opacity: 1;
             color: rgb(220 220 220 / var(--tw-text-opacity));
         }
 
-        .news-list-section .news-item:nth-child(1) .news-title, .news-list-section .news-item:nth-child(2) .news-title, .news-list-section .news-item:nth-child(3) .news-title {
+        .news-list-section .news-item:nth-child(1) .news-title,
+        .news-list-section .news-item:nth-child(2) .news-title,
+        .news-list-section .news-item:nth-child(3) .news-title,
+        .news-list-section .news-item:nth-child(4) .news-title {
             --tw-text-opacity: 1;
             color: rgb(255 255 255 / var(--tw-text-opacity));
             font-size: 18px;
@@ -8205,7 +8225,10 @@ header .children-menu > li > a:hover {
         }
 
     @media (min-width: 1200px) {
-        .news-list-section .news-item:nth-child(1) .news-title, .news-list-section .news-item:nth-child(2) .news-title, .news-list-section .news-item:nth-child(3) .news-title {
+        .news-list-section .news-item:nth-child(1) .news-title,
+        .news-list-section .news-item:nth-child(2) .news-title,
+        .news-list-section .news-item:nth-child(3) .news-title,
+        .news-list-section .news-item:nth-child(4) .news-title {
             font-size: clamp(12px,calc(20/1920*100rem),calc(20/1920*100rem));
         }
     }

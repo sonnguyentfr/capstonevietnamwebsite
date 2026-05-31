@@ -1,0 +1,149 @@
+@using NVCMS.WebView.Data.ViewModels
+@using NVCMS.WebView.Data.Common
+@model PaginatedList<NewsItemViewModel>
+
+@{
+    var category = ViewData["Category"] as CategoryViewModel;
+    var catName = category?.CategoryName ?? ViewData["Title"]?.ToString() ?? "Tin tức";
+    var catSlug = category?.Slug ?? string.Empty;
+    var catId = category?.CategoryID ?? 0;
+    ViewData["Title"] = catName;
+
+    // base URL for pagination – use current path so both /tin-tuc/danh-muc/... and static routes work
+    var baseUrl = Context.Request.Path.Value ?? $"/tin-tuc/danh-muc/{catSlug}-{catId}";
+    var rest = Model.Items.Skip(0).ToList();
+}
+
+<section class="page-hero page-hero--news">
+    <div class="container">
+        <nav class="breadcrumb" aria-label="breadcrumb">
+            <a href="/">Trang chủ</a>
+            <i class="fa-solid fa-chevron-right"></i>
+            <span>@catName</span>
+        </nav>
+        <h1 class="page-hero__title" data-aos="fade-up">@catName</h1>
+    </div>
+</section>
+
+<section class="news-list-section section-large">
+    <div class="container">
+        @if (!Model.Items.Any())
+        {
+            <div class="no-data-section">
+                <i class="fa-regular fa-newspaper"></i>
+                <p>Chưa có bài viết nào trong danh mục này 111.</p>
+            </div>
+        }
+        else
+        {
+            @if (rest.Any())
+            {
+                @* <div class="news-grid news-grid--4col">
+                    @foreach (var item in rest)
+                    {
+                        <article class="news-card" data-aos="fade-up">
+                            <a href="/tin-tuc/@(item.Slug)-@item.NewId" class="news-card__img-wrap">
+                                @if (!string.IsNullOrEmpty(item.ImagePath))
+                                {
+                                    <img src="@item.ImagePath" alt="@item.Title" loading="lazy" />
+                                }
+                                else
+                                {
+                                    <img src="/static/images/no-photo.png" alt="@item.Title" loading="lazy" />
+                                }
+                            </a>
+                            <div class="news-card__body">
+                                <div class="news-card__meta">
+                                    <span class="news-card__cat">@item.CategoryName</span>
+                                    <time class="news-card__date" datetime="@item.PublishedDate.ToString("yyyy-MM-dd")">
+                                        @item.PublishedDate.ToString("dd/MM/yyyy")
+                                    </time>
+                                </div>
+                                <h2 class="news-card__title">
+                                    <a href="/tin-tuc/@(item.Slug)-@item.NewId">@item.Title</a>
+                                </h2>
+                                @if (!string.IsNullOrEmpty(item.Summary))
+                                {
+                                    <p class="news-card__summary">@Html.Raw(item.Summary)</p>
+                                }
+                                @if (!string.IsNullOrEmpty(item.Tacgia))
+                                {
+                                    <span class="news-card__author"><i class="fa-solid fa-pen-nib"></i> @item.Tacgia</span>
+                                }
+                            </div>
+                        </article>
+                    }
+                </div> *@
+                <div class="news-list mt-8">
+                    @foreach (var item in rest)
+                    {
+                        <div class="news-item">
+                            <div class="image img-cover">
+                                <a href="/tin-tuc/@(item.Slug)-@item.NewId">
+                                    @if (!string.IsNullOrEmpty(item.ImagePath))
+                                    {
+                                        <img src="@item.ImagePath" alt="@item.Title" loading="lazy" />
+                                    }
+                                    else
+                                    {
+                                        <img src="/static/images/no-photo.png" alt="@item.Title" loading="lazy" />
+                                    }
+                                </a>
+                            </div>
+                            <div class="caption">
+                                <p class="news-date">@item.PublishedDate.ToString("dd/MM/yyyy")</p>
+                                <h3 class="news-title"><a href="/tin-tuc/@(item.Slug)-@item.NewId">@item.Title</a></h3>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+
+            @* ── Phân trang ─────────────────────────────────────────────── *@
+            @if (Model.TotalPages > 1)
+            {
+                <nav class="pagination" aria-label="Phân trang">
+                    @if (Model.HasPrev)
+                    {
+                        <a href="@baseUrl?page=@(Model.Page - 1)" class="pagination__btn" aria-label="Trang trước">
+                            <i class="fa-solid fa-chevron-left"></i>
+                        </a>
+                    }
+
+                    @for (int p = 1; p <= Model.TotalPages; p++)
+                    {
+                        if (p == Model.Page)
+                        {
+                            <span class="pagination__btn pagination__btn--active">@p</span>
+                        }
+                        else if (p == 1 || p == Model.TotalPages || Math.Abs(p - Model.Page) <= 2)
+                        {
+                            <a href="@baseUrl?page=@p" class="pagination__btn">@p</a>
+                        }
+                        else if (Math.Abs(p - Model.Page) == 3)
+                        {
+                            <span class="pagination__ellipsis">…</span>
+                        }
+                    }
+
+                    @if (Model.HasNext)
+                    {
+                        <a href="@baseUrl?page=@(Model.Page + 1)" class="pagination__btn" aria-label="Trang sau">
+                            <i class="fa-solid fa-chevron-right"></i>
+                        </a>
+                    }
+                </nav>
+            }
+        }
+    </div>
+</section>
+
+@section Scripts {
+    @Html.Raw(SeoSchemaHelper.WebPage(
+        name: catName,
+        description: category?.Description ?? catName,
+        url: ViewData["CanonicalUrl"]?.ToString() ?? string.Empty,
+        publisherName: (await SiteHelper.GetSettingsAsync(SiteOptions.Value.PortalId))?.General.SiteName ?? string.Empty
+    ))
+}
+

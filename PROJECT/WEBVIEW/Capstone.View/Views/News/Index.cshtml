@@ -1,0 +1,58 @@
+﻿@using NVCMS.WebView.Data.ViewModels
+@model IEnumerable<CategoryViewModel>
+
+@{
+    ViewData["Title"] = "Cam nang & Tin tuc";
+}
+
+<section class="page-hero page-hero--news">
+    <div class="container">
+        <nav class="breadcrumb" aria-label="breadcrumb">
+            <a href="/">Trang chu</a>
+            <i class="fa-solid fa-chevron-right"></i>
+            <span>Cam nang &amp; Tin tuc</span>
+        </nav>
+        <h1 class="page-hero__title" data-aos="fade-up">Cam nang &amp; Tin tuc</h1>
+    </div>
+</section>
+
+<section class="news-categories-section">
+    <div class="container">
+        @if (!Model.Any())
+        {
+            <div class="no-data-section">
+                <i class="fa-regular fa-newspaper"></i>
+                <p>Chua co danh muc tin tuc nao 111.</p>
+            </div>
+        }
+        else
+        {
+            <div class="news-cat-grid">
+                @foreach (var cat in Model)
+                {
+                    @* Map CategoryID → URL chuẩn {slug}-{categoryId} *@
+                    var catUrl = cat.CategoryID switch
+                    {
+                        200 => "/gioi-thieu/tuyen-dung-200",
+                        227 => "/cam-nang-va-tin-tuc/chia-se-tu-du-hoc-sinh-227",
+                        244 => "/thong-tin-du-hoc/du-hoc-my/tin-tuc-244",
+                        202 => "/tu-van-dinh-cu/tin-tuc-dinh-cu-eb5-202",
+                        225 => "/cam-nang-va-tin-tuc/cam-nang-du-hoc-225",
+                        228 => "/cam-nang-va-tin-tuc/tin-tuc-228",
+                        229 => "/cam-nang-va-tin-tuc/ban-tin-truong-229",
+                        _   => $"/tin-tuc/danh-muc/{cat.Slug}-{cat.CategoryID}"
+                    };
+                    <a href="@catUrl" class="news-cat-card" data-aos="fade-up">
+                        <span class="news-cat-card__name">@cat.CategoryName</span>
+                        @if (!string.IsNullOrEmpty(cat.Description))
+                        {
+                            <span class="news-cat-card__desc">@cat.Description</span>
+                        }
+                    </a>
+                }
+            </div>
+        }
+    </div>
+</section>
+
+@await Component.InvokeAsync("NewsFeatured", new { count = 12 })

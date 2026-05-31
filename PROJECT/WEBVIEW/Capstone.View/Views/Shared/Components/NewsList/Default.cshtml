@@ -1,0 +1,53 @@
+@using NVCMS.WebView.Data.ViewModels
+@model IEnumerable<NewsItemViewModel>
+
+@{
+    var catName = ViewData["CategoryName"]?.ToString() ?? string.Empty;
+    var catSlug = ViewData["CategorySlug"]?.ToString() ?? string.Empty;
+    var catId   = ViewData["CategoryId"] is int id ? id : 0;
+    var items   = Model?.ToList() ?? [];
+}
+
+@if (items.Any())
+{
+    <div class="news-list-component">
+        @if (!string.IsNullOrEmpty(catName))
+        {
+            <div class="news-list-component__header">
+                <h3 class="news-list-component__title">@catName</h3>
+                @if (catId > 0)
+                {
+                    <a href="/tin-tuc/@catSlug-@catId" class="news-list-component__more">
+                        Xem tất cả <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+                }
+            </div>
+        }
+
+        <div class="news-list-component__grid">
+            @foreach (var item in items)
+            {
+                <article class="news-card news-card--sm">
+                    <a href="/tin-tuc/@(item.Slug)-@item.NewId" class="news-card__img-wrap">
+                        @if (!string.IsNullOrEmpty(item.ImagePath))
+                        {
+                            <img src="@item.ImagePath" alt="@item.Title" loading="lazy" />
+                        }
+                        else
+                        {
+                            <img src="/static/images/no-photo.png" alt="@item.Title" loading="lazy" />
+                        }
+                    </a>
+                    <div class="news-card__body">
+                        <time class="news-card__date" datetime="@item.PublishedDate.ToString("yyyy-MM-dd")">
+                            @item.PublishedDate.ToString("dd/MM/yyyy")
+                        </time>
+                        <h4 class="news-card__title">
+                            <a href="/tin-tuc/@(item.Slug)-@item.NewId">@item.Title</a>
+                        </h4>
+                    </div>
+                </article>
+            }
+        </div>
+    </div>
+}

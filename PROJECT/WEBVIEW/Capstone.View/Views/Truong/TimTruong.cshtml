@@ -9,6 +9,7 @@
         var parts = new System.Text.StringBuilder();
         void Add(string k, string? v) { if (!string.IsNullOrEmpty(v)) { if (parts.Length > 0) parts.Append('&'); parts.Append(k).Append('=').Append(Uri.EscapeDataString(v)); } }
         Add("ten",       f.Ten);
+        Add("letter",    f.Letter);
         Add("loai",      f.Loai);
         Add("tuitionmax",f.TuitionMax?.ToString());
         Add("pagesize",  f.PageSize != 12 ? f.PageSize.ToString() : null);
@@ -55,11 +56,12 @@
         return "/tim-truong" + (p.Length > 0 ? "?" + p : "");
     }
 
-    string FilterUrl(string? ten = null, string? loai = "~~", int? tuitionMax = -1, int? pageSize = null)
+    string FilterUrl(string? ten = null, string? letter = "~~", string? loai = "~~", int? tuitionMax = -1, int? pageSize = null)
     {
         var p = new System.Text.StringBuilder();
         void A(string k, string? v) { if (!string.IsNullOrEmpty(v)) { if (p.Length > 0) p.Append('&'); p.Append(k).Append('=').Append(Uri.EscapeDataString(v)); } }
         A("ten",       ten       ?? f.Ten);
+        A("letter",    letter == "~~" ? f.Letter : (letter == "" ? null : letter));
         A("loai",      loai == "~~" ? f.Loai : loai);
         A("tuitionmax",(tuitionMax == -1 ? f.TuitionMax : (tuitionMax <= 0 ? null : tuitionMax))?.ToString());
         A("pagesize",  ((pageSize ?? f.PageSize) != 12 ? (pageSize ?? f.PageSize).ToString() : null));
@@ -133,19 +135,30 @@
                     </p>
                     <div class="truong-results-pagesize">
                         <span class="text-neutral-400 text-sm">Hiển thị:</span>
-                        @foreach (var ps in new[] { 12, 24, 48 })
+                        @foreach (var ps in new[] { 20, 40, 60 })
                         {
                             <a href="@FilterUrl(pageSize: ps)" class="btn-solid btn-xs @(f.PageSize == ps ? "active" : "")">@ps</a>
                         }
                     </div>
                 </div>
 
-                <!-- Phân trang đầu trang -->
-                @if (Model.TotalPages > 1)
-                {
-                    <div class="mb-4"><partial name="_Pagination" /></div>
+                <!-- Alphabet bar -->
+                @{
+                    var letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToCharArray();
+                    var activeLetter = f.Letter?.ToUpper();
                 }
-
+                <div class="alpha-bar mb-4">
+                    <a href="@FilterUrl(letter: "")" class="alpha-bar__item @(string.IsNullOrEmpty(activeLetter) ? "active" : "")">
+                        Tất cả
+                    </a>
+                    @foreach (var ch in letters)
+                    {
+                        var l = ch.ToString();
+                        <a href="@FilterUrl(letter: l)" class="alpha-bar__item @(activeLetter == l ? "active" : "")">
+                            @l
+                        </a>
+                    }
+                </div>
                 <!-- Grid -->
                 <div class="school-grid school-grid--search" data-aos="fade-up">
                     @if (!Model.Items.Any())

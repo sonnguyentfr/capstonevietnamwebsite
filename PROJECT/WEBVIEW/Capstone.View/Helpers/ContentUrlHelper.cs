@@ -64,6 +64,50 @@ public class ContentUrlHelper
         }
         return url;
     }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // YouTube embed converter
+    // ─────────────────────────────────────────────────────────────────────────
+
+    private static readonly System.Text.RegularExpressions.Regex _ytWatch =
+        new(@"(?:https?://)?(?:www\.)?youtube\.com/watch\?(?:[^#&]*&)*v=([a-zA-Z0-9_-]{11})",
+            System.Text.RegularExpressions.RegexOptions.IgnoreCase |
+            System.Text.RegularExpressions.RegexOptions.Compiled);
+
+    private static readonly System.Text.RegularExpressions.Regex _ytShort =
+        new(@"(?:https?://)?youtu\.be/([a-zA-Z0-9_-]{11})",
+            System.Text.RegularExpressions.RegexOptions.IgnoreCase |
+            System.Text.RegularExpressions.RegexOptions.Compiled);
+
+    private static readonly System.Text.RegularExpressions.Regex _ytEmbed =
+        new(@"(?:https?://)?(?:www\.)?youtube\.com/embed/([a-zA-Z0-9_-]{11})",
+            System.Text.RegularExpressions.RegexOptions.IgnoreCase |
+            System.Text.RegularExpressions.RegexOptions.Compiled);
+
+    /// <summary>
+    /// Convert bất kỳ dạng link YouTube nào sang embed URL chuẩn.
+    /// Hỗ trợ:
+    ///   https://www.youtube.com/watch?v=VIDEOID
+    ///   https://www.youtube.com/watch?v=VIDEOID&amp;t=30s
+    ///   https://youtu.be/VIDEOID
+    ///   https://www.youtube.com/embed/VIDEOID  (giữ nguyên)
+    /// Trả về null nếu không phải link YouTube hợp lệ.
+    /// </summary>
+    public static string? ToYouTubeEmbedUrl(string? url)
+    {
+        if (string.IsNullOrWhiteSpace(url)) return null;
+
+        var m = _ytWatch.Match(url);
+        if (m.Success) return $"https://www.youtube.com/embed/{m.Groups[1].Value}";
+
+        m = _ytShort.Match(url);
+        if (m.Success) return $"https://www.youtube.com/embed/{m.Groups[1].Value}";
+
+        m = _ytEmbed.Match(url);
+        if (m.Success) return $"https://www.youtube.com/embed/{m.Groups[1].Value}";
+
+        return null;
+    }
 }
 
 // ─────────────────────────────────────────────────────────────────────────────

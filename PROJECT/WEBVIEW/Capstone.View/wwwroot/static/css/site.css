@@ -1,5 +1,5 @@
 html {
-    font-size: 14px;
+    font-size: 15px;
 }
 
 @media (min-width: 768px) {
@@ -1309,12 +1309,45 @@ body {
     /* ================================================================
    TRUONG SEARCH LAYOUT  (dùng chung Index + QuocGia)
    ================================================================ */
-    .truong-search-layout {
-        display: grid;
-        grid-template-columns: 272px 1fr;
-        gap: 2rem;
-        align-items: start;
-    }
+      .truong-search-layout {
+         display: grid;
+         grid-template-columns: 272px 1fr;
+         gap: 2rem;
+         align-items: start;
+     }
+
+     /* ----------------------------------------------------------------
+    ALPHABET BAR
+    ---------------------------------------------------------------- */
+     .alpha-bar {
+         display: flex;
+         flex-wrap: wrap;
+         gap: 4px;
+     }
+
+     .alpha-bar__item {
+         display: inline-flex;
+         align-items: center;
+         justify-content: center;
+         min-width: 32px;
+         height: 32px;
+         padding: 0 6px;
+         border-radius: 6px;
+         border: 1px solid #e2e8f0;
+         background: #fff;
+         color: #374151;
+         font-size: .8rem;
+         font-weight: 600;
+         text-decoration: none;
+         transition: background .15s, color .15s, border-color .15s;
+     }
+
+     .alpha-bar__item:hover,
+     .alpha-bar__item.active {
+         background: var(--primary, #1a5fb4);
+         color: #fff;
+         border-color: var(--primary, #1a5fb4);
+     }
 
     @media (max-width: 960px) {
         .truong-search-layout {
@@ -1659,3 +1692,177 @@ body {
         border-radius: 6px !important;
         min-height: unset !important;
     }
+
+/* =============================================
+   TRUONG DETAIL – LEVELS BADGES
+   ============================================= */
+.truong-hero__levels {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem;
+    margin-top: .75rem;
+}
+
+.badge--level {
+    background: rgba(255,255,255,.18);
+    border: 1px solid rgba(255,255,255,.4);
+    color: #fff;
+    font-size: .8rem;
+    font-weight: 600;
+    padding: .3rem .85rem;
+    border-radius: 20px;
+    backdrop-filter: blur(4px);
+    display: inline-flex;
+    align-items: center;
+    gap: .35rem;
+}
+
+.badge--level-sm {
+    display: inline-block;
+    background: #e8f0fe;
+    color: #1e3a5f;
+    font-size: .78rem;
+    font-weight: 700;
+    padding: .15rem .6rem;
+    border-radius: 12px;
+}
+
+/* =============================================
+   TRUONG DETAIL – SCHOLARSHIP GRID
+   ============================================= */
+.scholarship-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.scholarship-card {
+    background: #f0f7ff;
+    border: 1.5px solid #c7dff7;
+    border-radius: 10px;
+    padding: 1rem 1.2rem;
+}
+
+.scholarship-card__level {
+    font-size: .82rem;
+    font-weight: 700;
+    color: #1e3a5f;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    margin-bottom: .4rem;
+    display: flex;
+    align-items: center;
+    gap: .4rem;
+}
+
+.scholarship-card__value {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #0d6efd;
+}
+
+.scholarship-note {
+    margin-top: .75rem;
+    font-size: .93rem;
+    color: #555;
+    display: flex;
+    gap: .5rem;
+    align-items: flex-start;
+}
+
+.scholarship-note i { margin-top: .15rem; color: #0d6efd; flex-shrink: 0; }
+
+.financial-aid-box {
+    background: #fff8e1;
+    border-left: 4px solid #f59e0b;
+    border-radius: 0 8px 8px 0;
+    padding: .85rem 1.2rem;
+    margin-top: 1rem;
+}
+
+.financial-aid-box h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #92400e;
+    margin-bottom: .35rem;
+    display: flex;
+    align-items: center;
+    gap: .4rem;
+}
+
+.financial-aid-box p { font-size: .93rem; color: #555; margin: 0; }
+
+/* =============================================
+   TRUONG DETAIL – SUBSECTION TITLE
+   ============================================= */
+.truong-subsection__title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #374151;
+    margin: 1.25rem 0 .6rem;
+    padding-bottom: .3rem;
+    border-bottom: 1px dashed #e5e7eb;
+}
+
+/* =============================================
+   TRUONG DETAIL – NO DATA NOTICE
+   ============================================= */
+.no-data-notice {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    background: #f9fafb;
+    border: 1.5px dashed #d1d5db;
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    color: #6b7280;
+    font-size: .95rem;
+}
+
+.no-data-notice i { color: #9ca3af; flex-shrink: 0; }
+.no-data-notice a { color: #0d6efd; text-decoration: underline; }
+
+.no-data-section {
+    text-align: center;
+    padding: 3rem 1.5rem;
+    background: #f9fafb;
+    border-radius: 12px;
+    border: 1.5px dashed #d1d5db;
+    color: #6b7280;
+}
+
+.no-data-section i { color: #9ca3af; margin-bottom: 1rem; display: block; }
+.no-data-section h3 { font-size: 1.1rem; font-weight: 700; color: #374151; margin-bottom: .5rem; }
+.no-data-section p { margin-bottom: 1.25rem; font-size: .95rem; }
+
+/* =============================================
+   SIDEBAR – LEVELS LIST
+   ============================================= */
+.sidebar-levels {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+}
+
+.sidebar-levels li {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    font-size: .95rem;
+    color: #374151;
+    font-weight: 500;
+}
+
+.sidebar-levels li i { color: #0d6efd; width: 18px; text-align: center; }
+
+.sidebar-card--cta {
+    background: linear-gradient(135deg, #1e3a5f, #0b4d8a);
+    color: #fff;
+}
+
+.sidebar-card--cta .sidebar-card__title { color: #fff; }
+.sidebar-card--cta p { color: rgba(255,255,255,.85); }

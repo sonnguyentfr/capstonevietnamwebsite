@@ -34,6 +34,13 @@ public class TruongRepository : ITruongRepository
     {
         await using var conn = CreateConn();
 
+        // Khi có Letter (lọc chữ cái đầu tên trường) thì dùng inline SQL
+        // vì SP dùng LIKE '%'+@Ten+'%' — không thể lọc prefix đúng.
+        if (!string.IsNullOrWhiteSpace(f.Letter) && string.IsNullOrWhiteSpace(f.Ten))
+        {
+            return await SearchByLetterAsync(conn, f);
+        }
+
         var p = new DynamicParameters();
         p.Add("Ten",        string.IsNullOrWhiteSpace(f.Ten) ? (object?)null : f.Ten);
         p.Add("QuocGia",    f.QuocGia);
@@ -46,6 +53,27 @@ public class TruongRepository : ITruongRepository
 
         using var multi = await conn.QueryMultipleAsync(
             "WebView_Truong_Search", p, commandType: CommandType.StoredProcedure);
+
+        var total = await multi.ReadSingleAsync<int>();
+        var items = await multi.ReadAsync<TruongModel>();
+        return (items, total);
+    }
+
+    private static async Task<(IEnumerable<TruongModel> Items, int Total)> SearchByLetterAsync(
+        SqlConnection conn, TruongSearchFilterViewModel f)
+    {
+        var p = new DynamicParameters();
+        p.Add("Letter",     f.Letter!.Trim().ToUpper()[0].ToString());
+        p.Add("QuocGia",    f.QuocGia);
+        p.Add("Loai",       string.IsNullOrWhiteSpace(f.Loai) ? (object?)null : f.Loai);
+        p.Add("IsPartner",  f.IsPartner);
+        p.Add("MajorId",    f.MajorId);
+        p.Add("TuitionMax", f.TuitionMax);
+        p.Add("Page",       f.Page);
+        p.Add("PageSize",   f.PageSize);
+
+        using var multi = await conn.QueryMultipleAsync(
+            "WebView_Truong_SearchByLetter", p, commandType: CommandType.StoredProcedure);
 
         var total = await multi.ReadSingleAsync<int>();
         var items = await multi.ReadAsync<TruongModel>();

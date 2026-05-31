@@ -35,9 +35,9 @@ public class BannerService : IBannerService
         return items.Select(Map);
     }
 
-    public async Task<IEnumerable<BannerViewModel>> GetAllShowAsync(int portalId)
+    public async Task<IEnumerable<BannerViewModel>> GetAllShowAsync(int portalId, int vitri)
     {
-        var items = await _repo.GetAllShowAsync(portalId);
+        var items = await _repo.GetAllShowAsync(portalId, vitri);
         return items.Select(Map);
     }
 

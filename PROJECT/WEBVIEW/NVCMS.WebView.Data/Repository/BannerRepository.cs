@@ -24,12 +24,12 @@ public class BannerRepository : IBannerRepository
             commandType: CommandType.StoredProcedure);
     }
 
-    public async Task<IEnumerable<BannerModel>> GetAllShowAsync(int portalId)
+    public async Task<IEnumerable<BannerModel>> GetAllShowAsync(int portalId, int vitri)
     {
         await using var conn = CreateConn();
         return await conn.QueryAsync<BannerModel>(
             "NVCMS_Banner_SelectAllShow",
-            new { PortalId = portalId },
+            new { PortalId = portalId, Vitri = vitri },
             commandType: CommandType.StoredProcedure);
     }
 

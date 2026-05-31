@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Options;
 using Capstone.View.Options;
 using NVCMS.WebView.Data.Contracts.Service;
+using NVCMS.WebView.Data.Common;
 using NVCMS.WebView.Data.ViewModels;
 
 namespace Capstone.View.Controllers;
@@ -80,7 +81,7 @@ public class TruongController : Controller
         NormalizeFilter(filter, majorids, quocgiaids);
         filter.QuocGia   = countryId;
         filter.IsPartner = true;
-        if (filter.PageSize <= 0) filter.PageSize = 12;
+        if (filter.PageSize <= 0) filter.PageSize = 20;
 
         var vm       = await _truongService.SearchAsync(filter);
         var countries = await _truongService.GetCountriesAsync();
@@ -99,7 +100,13 @@ public class TruongController : Controller
     {
         var vm = await _truongService.GetDetailAsync(id);
         if (vm is null) return NotFound();
+
+        var canonical = SlugHelper.ToSlug(vm.NameofSchool ?? string.Empty);
+        if (!string.Equals(slug, canonical, StringComparison.OrdinalIgnoreCase))
+            return RedirectToRoutePermanent("truong-detail", new { slug = canonical, id });
+
         ViewData["Title"] = vm.NameofSchool;
+        ViewData["CanonicalUrl"] = $"{Request.Scheme}://{Request.Host}/truong-doi-tac/{canonical}-{id}";
         return View(vm);
     }
 

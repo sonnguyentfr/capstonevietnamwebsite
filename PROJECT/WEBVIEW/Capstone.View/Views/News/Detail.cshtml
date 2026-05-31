@@ -1,0 +1,120 @@
+@using NVCMS.WebView.Data.ViewModels
+@model NewsDetailViewModel
+
+@{
+    ViewData["Title"] = Model.MetaTitle ?? Model.Title;
+}
+
+<article class="news-detail">
+    <div class="container news-detail__container">
+
+        @* Breadcrumb *@
+        <nav class="breadcrumb" aria-label="breadcrumb">
+            <a href="/">Trang chủ</a>
+            <i class="fa-solid fa-chevron-right"></i>
+            <a href="/tin-tuc/@(Model.CategorySlug)-@Model.CategoryId">@Model.CategoryName</a>
+            <i class="fa-solid fa-chevron-right"></i>
+            <span>@Model.Title</span>
+        </nav>
+
+        <div class="news-detail__layout">
+            @* Main content *@
+            <div class="news-detail__main">
+                <header class="news-detail__header">
+                    <span class="news-detail__cat">@Model.CategoryName</span>
+                    <h1 class="news-detail__title">@Model.Title</h1>
+                    <div class="news-detail__meta">
+                        @if (!string.IsNullOrEmpty(Model.Tacgia))
+                        {
+                            <span><i class="fa-solid fa-pen-nib"></i> @Model.Tacgia</span>
+                        }
+                        <time datetime="@Model.PublishedDate.ToString("yyyy-MM-ddTHH:mm:ss")">
+                            <i class="fa-regular fa-clock"></i>
+                            @Model.PublishedDate.ToString("HH:mm, dd/MM/yyyy")
+                        </time>
+                        <span><i class="fa-regular fa-eye"></i> @Model.ViewCount lượt xem</span>
+                    </div>
+                </header>
+
+                @if (!string.IsNullOrEmpty(Model.ImagePath))
+                {
+                    <figure class="news-detail__cover">
+                        <img src="@Model.ImagePath" alt="@Model.Title" loading="eager" />
+                    </figure>
+                }
+
+                @if (!string.IsNullOrEmpty(Model.Summary))
+                {
+                    <div class="news-detail__summary">
+                        @Html.Raw(Model.Summary)
+                    </div>
+                }
+
+                <div class="news-detail__content page-noidung">
+                    @Html.Raw(Model.Content)
+                </div>
+
+                @if (!string.IsNullOrEmpty(Model.SourceText))
+                {
+                    <p class="news-detail__source">
+                        <em>Nguồn: @Model.SourceText</em>
+                    </p>
+                }
+
+                @* Tin liên quan *@
+                @if (Model.RelatedNews.Any())
+                {
+                    <aside class="news-related">
+                        <h3 class="news-related__title">Tin liên quan</h3>
+                        <div class="news-related__grid">
+                            @foreach (var r in Model.RelatedNews)
+                            {
+                                <a href="/tin-tuc/@(r.Slug)-@r.NewId" class="news-related__item">
+                                    @if (!string.IsNullOrEmpty(r.ImagePath))
+                                    {
+                                        <img src="@r.ImagePath" alt="@r.Title" loading="lazy" />
+                                    }
+                                    <div class="news-related__info">
+                                        <span class="news-related__date">@r.PublishedDate.ToString("dd/MM/yyyy")</span>
+                                        <p class="news-related__name">@r.Title</p>
+                                    </div>
+                                </a>
+                            }
+                        </div>
+                    </aside>
+                }
+            </div>
+
+            @* Sidebar *@
+            <aside class="news-detail__sidebar">
+                <div class="sidebar-card">
+                    <h4 class="sidebar-card__title">Danh mục</h4>
+                    <a href="/tin-tuc/@(Model.CategorySlug)-@Model.CategoryId" class="sidebar-cat-link sidebar-cat-link--active">
+                        <i class="fa-solid fa-folder-open"></i> @Model.CategoryName
+                    </a>
+                </div>
+            </aside>
+        </div>
+
+    </div>
+</article>
+
+@section Scripts {
+    <script type="application/ld+json">
+    {
+        "@@context": "https://schema.org",
+        "@@type": "NewsArticle",
+        "headline": "@Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.MetaTitle ?? Model.Title).Trim('"'))",
+        "description": "@Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.MetaDescription ?? string.Empty).Trim('"'))",
+        "image": "@(Model.MetaImage ?? Model.ImagePath ?? string.Empty)",
+        "datePublished": "@Model.PublishedDate.ToString("yyyy-MM-ddTHH:mm:ssZ")",
+        "author": { "@@type": "Person", "name": "@(Model.Tacgia ?? "Capstone Vietnam")" },
+        "publisher": {
+            "@@type": "Organization",
+            "name": "Capstone Vietnam",
+            "logo": { "@@type": "ImageObject", "url": "" }
+        },
+        "mainEntityOfPage": { "@@type": "WebPage", "@@id": "@ViewData["CanonicalUrl"]" }
+    }
+    </script>
+}

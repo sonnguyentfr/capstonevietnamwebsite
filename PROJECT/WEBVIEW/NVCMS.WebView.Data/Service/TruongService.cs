@@ -89,6 +89,7 @@ public class TruongService : ITruongService
             var repoFilter = new TruongSearchFilterViewModel
             {
                 Ten = filter.Ten,
+                Letter = filter.Letter,
                 QuocGia = filter.QuocGiaIds.Count == 1 ? filter.QuocGiaIds[0] : filter.QuocGia,
                 Loai = rawIds.Count == 1 ? rawIds[0] : (rawIds.Count == 0 ? null : filter.Loai),
                 MajorId = filter.MajorIds.Count == 1 ? filter.MajorIds[0] : filter.MajorId,

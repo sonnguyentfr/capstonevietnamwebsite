@@ -7,6 +7,18 @@ public interface INewsService
 {
     Task<PaginatedList<NewsItemViewModel>> GetByCategorySlugAsync(
         string categorySlug, int portalId, int page, int pageSize);
+
+    Task<PaginatedList<NewsItemViewModel>> GetByCategoryIdAsync(
+        int categoryId, int portalId, int page, int pageSize);
+
+    Task<PaginatedList<NewsItemViewModel>> GetAllPagedAsync(
+        int portalId, int page, int pageSize);
+
+    Task<IEnumerable<CategoryViewModel>> GetCategoriesWithCountAsync(int portalId);
+
+    Task<IEnumerable<NewsItemViewModel>> GetFeaturedAsync(int portalId, int top);
+
     Task<NewsDetailViewModel?> GetDetailAsync(int newId, int portalId);
     Task<IEnumerable<CategoryViewModel>> GetMenuCategoriesAsync(int portalId);
+    Task<CategoryViewModel?> GetCategoryByIdAsync(int categoryId);
 }

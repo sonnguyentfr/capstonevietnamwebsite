@@ -27,6 +27,7 @@ public class TruongCardViewModel
 public class TruongSearchFilterViewModel
 {
     public string? Ten { get; set; }
+    public string? Letter { get; set; }         // lọc theo chữ cái đầu tên trường
     public int? QuocGia { get; set; }           // single-select (backward compat / URL param)
     public List<int> QuocGiaIds { get; set; } = []; // multi-select checkboxes
     public string? Loai { get; set; }
@@ -149,6 +150,11 @@ public class TruongAdmis4YearViewModel
     public int? TuitionGrad { get; set; }
     public int? TuitionAss { get; set; }
     public int? TuitionESL { get; set; }
+    // Chi phí bổ sung
+    public int? LivingCost { get; set; }
+    public int? InsuranceCost { get; set; }
+    public int? OtherCost { get; set; }
+    // Học bổng
     public bool? ScholarshipUnder { get; set; }
     public string? ScholarshipUnderRangeVN { get; set; }
     public bool? ScholarshipGrad { get; set; }
@@ -158,6 +164,8 @@ public class TruongAdmis4YearViewModel
     public bool? ScholarshipESL { get; set; }
     public string? ScholarshipESLRangeVN { get; set; }
     public string? ScholarshipNoteVN { get; set; }
+    public string? FinancialAidNote { get; set; }
+    // Tuyển sinh
     public DateTime? FallUnder { get; set; }
     public DateTime? SpringUnder { get; set; }
     public DateTime? FallGrad { get; set; }
@@ -165,6 +173,10 @@ public class TruongAdmis4YearViewModel
     public bool? RollingGrad { get; set; }
     public string? ToefliBTUnder { get; set; }
     public string? IELTSUnder { get; set; }
+    public string? DuolingoUnder { get; set; }
+    public string? OtherTestUnder { get; set; }
+    public string? ApplicationFeeUnder { get; set; }
+    // Thống kê
     public string? GraduationRate { get; set; }
     public string? EmploymentRateAfterGraduation { get; set; }
     public string? MostMajor1 { get; set; }

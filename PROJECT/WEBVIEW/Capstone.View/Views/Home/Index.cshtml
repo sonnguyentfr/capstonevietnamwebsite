@@ -216,43 +216,61 @@
 </script>
 
 <!-- Ve Capstone - so lieu -->
-<section class="home-about bg-primary-950 section" data-aos="fade-up" data-aos-delay="100">
+<section class="home-about bg-primary-950 section aos-init aos-animate" data-aos="fade-up" data-aos-delay="100">
     <div class="container">
         <div class="row -mt-8 items-center">
-            <div class="col w-full mt-8 lg:w-5/12 xl:w-1/2" data-aos="fade-right" data-aos-delay="100">
+            <div class="col mt-8 lg:w-5/12 xl:w-1/2">
                 <div class="block-about">
                     <div class="hub-title">
-                        <h1 class="university-name">Reaching New Heights</h1>
+                        <h1 class="university-name"><span class="highlight">R</span>eaching <span class="highlight">N</span>ew <span class="highlight">H</span>eights</h1>
                         <h2>Công ty TNHH Capstone Việt Nam</h2>
                     </div>
-                    <div class="button">
-                        <a class="btn-solid btn-white uppercase" href="/gioi-thieu/ve-capstone.html">
-                            <span>VỀ CAPSTONE VIETNAM</span><i class="fa-solid fa-plus"></i>
-                        </a>
-                    </div>
+                    <div class="button"><a class="btn-solid btn-white uppercase" href="#"><span>VỀ CAPSTONE VIETNAN</span><i class="fa-light fa-plus"></i></a></div>
                 </div>
             </div>
-            <div class="col w-full mt-8 lg:w-7/12 xl:w-1/2">
+            <div class="col mt-8 lg:w-7/12 xl:w-1/2">
                 <div class="about-list">
-                    <div class="about-item" data-aos="zoom-in" data-aos-delay="100">
-                        <div class="icon"><img src="/static/img/icon-1.png" alt=""></div>
-                        <h2 class="number"><span class="count-up" data-count="2009">0</span></h2>
-                        <div class="caption"><p>Thành lập Capstone</p></div>
+                    <div class="about-item">
+                        <div class="icon">
+                            <img src="/static/img/icon-1.png" alt="">
+                        </div>
+                        <h2 class="number"><span class="count-up" data-count="2009" id="countUp-0">2.009</span><span class="sub-count"></span></h2>
+                        <div class="caption">
+                            <p>Thành lập Capstone</p>
+                        </div>
                     </div>
-                    <div class="about-item" data-aos="zoom-in" data-aos-delay="200">
-                        <div class="icon"><img src="/static/img/icon-2.png" alt=""></div>
-                        <h2 class="number"><span class="count-up" data-count="800">0</span><span class="sub-count">+</span></h2>
-                        <div class="caption"><p>Đối tác Quốc tế</p></div>
+                    <div class="about-item">
+                        <div class="icon">
+                            <img src="/static/img/icon-2.png" alt="">
+                        </div>
+                        <h2 class="number"><span class="count-up" data-count="800" id="countUp-1">800</span><span class="sub-count">+</span></h2>
+                        <div class="caption">
+                            <p>
+                                Đối tác
+                                Quốc tế
+                            </p>
+                        </div>
                     </div>
-                    <div class="about-item" data-aos="zoom-in" data-aos-delay="300">
-                        <div class="icon"><img src="/static/img/icon-3.png" alt=""></div>
-                        <h2 class="number"><span class="count-up" data-count="100000">0</span><span class="sub-count">+</span></h2>
-                        <div class="caption"><p>Lượt khách hàng tham dự</p></div>
+                    <div class="about-item">
+                        <div class="icon">
+                            <img src="/static/img/icon-3.png" alt="">
+                        </div>
+                        <h2 class="number"><span class="count-up" data-count="100000" id="countUp-2">100.000</span><span class="sub-count">+</span></h2>
+                        <div class="caption">
+                            <p>Lượt khách hàng tham dự</p>
+                        </div>
                     </div>
-                    <div class="about-item" data-aos="zoom-in" data-aos-delay="400">
-                        <div class="icon"><img src="/static/img/icon-4.png" alt=""></div>
-                        <h2 class="number"><span class="count-up" data-count="150">0</span><span class="sub-count">+</span></h2>
-                        <div class="caption"><p>Kỳ triển lãm, hội thảo du học</p></div>
+                    <div class="about-item">
+                        <div class="icon">
+                            <img src="/static/img/icon-4.png" alt="">
+                        </div>
+                        <h2 class="number"><span class="count-up" data-count="150" id="countUp-3">150</span><span class="sub-count">+</span></h2>
+                        <div class="caption">
+                            <p>
+                                Kỳ triển lãm,
+                                hội thảo du học
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -265,10 +283,10 @@
     <div class="container">
         <h2 class="site-title text-center" data-aos="fade-up" data-aos-delay="100">Tin tức - Học bổng</h2>
         <div class="news-list mt-8" id="tin-tuc-list">
-            <!-- TODO: render tin tuc tu ViewBag/Model -->
+            @await Component.InvokeAsync("NewsFeatured", new { count = 7, bigCount = 3 })
         </div>
         <div class="button justify-center mt-8">
-            <a class="btn-solid" href="/cam-nang-va-tin-tuc"><span>Xem tất cả</span><i class="fa-solid fa-plus"></i></a>
+            <a class="btn-solid" href="/cam-nang-va-tin-tuc-67"><span>Xem tất cả</span><i class="fa-solid fa-plus"></i></a>
         </div>
     </div>
 </section>
@@ -278,54 +296,7 @@
     <div class="container">
         <h2 class="site-title text-center" data-aos="fade-up" data-aos-delay="100">CÁC DỊCH VỤ CỦA CAPSTONE</h2>
         <div class="home-courses-list mt-8">
-            <div class="home-courses-item" data-aos="fade-up" data-aos-delay="50">
-                <div class="image img-cover">
-                    <a href="/capstone-vietnam/cac-dich-vu-capstone/tu-van-du-hoc-cac-nuoc">
-                        <img src="/static/img/service/du-hoc-cac-cap.jpg" alt="Du học các cấp">
-                    </a>
-                </div>
-                <div class="caption"><h3 class="title"><a href="/capstone-vietnam/cac-dich-vu-capstone/tu-van-du-hoc-cac-nuoc">Du học các cấp</a></h3></div>
-            </div>
-            <div class="home-courses-item" data-aos="fade-up" data-aos-delay="100">
-                <div class="image img-cover">
-                    <a href="/capstone-vietnam/cac-dich-vu-capstone/tu-van-du-hoc-truong-top">
-                        <img src="/static/img/service/du-hoc-truong-top.jpg" alt="Du học trường TOP">
-                    </a>
-                </div>
-                <div class="caption"><h3 class="title"><a href="/capstone-vietnam/cac-dich-vu-capstone/tu-van-du-hoc-truong-top">Du học trường TOP</a></h3></div>
-            </div>
-            <div class="home-courses-item" data-aos="fade-up" data-aos-delay="150">
-                <div class="image img-cover">
-                    <a href="/capstone-vietnam/cac-dich-vu-capstone/tu-van-nganh-nghe">
-                        <img src="/static/img/service/dinh-huong-nghe-nghiep.jpg" alt="Định hướng nghề nghiệp">
-                    </a>
-                </div>
-                <div class="caption"><h3 class="title"><a href="/capstone-vietnam/cac-dich-vu-capstone/tu-van-nganh-nghe">Định hướng nghề nghiệp</a></h3></div>
-            </div>
-            <div class="home-courses-item" data-aos="fade-up" data-aos-delay="200">
-                <div class="image img-cover">
-                    <a href="/capstone-vietnam/cac-dich-vu-capstone/tu-van-visa-du-hoc-tham-than">
-                        <img src="/static/img/service/visa-du-hoc.jpg" alt="Visa du học, thăm thân">
-                    </a>
-                </div>
-                <div class="caption"><h3 class="title"><a href="/capstone-vietnam/cac-dich-vu-capstone/tu-van-visa-du-hoc-tham-than">Visa du học, thăm thân</a></h3></div>
-            </div>
-            <div class="home-courses-item" data-aos="fade-up" data-aos-delay="250">
-                <div class="image img-cover">
-                    <a href="/tu-van-dinh-cu">
-                        <img src="/static/img/service/tu-van-dinh-cu.jpg" alt="Tư vấn đầu tư định cư">
-                    </a>
-                </div>
-                <div class="caption"><h3 class="title"><a href="/tu-van-dinh-cu">Tư vấn đầu tư định cư</a></h3></div>
-            </div>
-            <div class="home-courses-item" data-aos="fade-up" data-aos-delay="300">
-                <div class="image img-cover">
-                    <a href="/capstone-vietnam/fairguide">
-                        <img src="/static/img/service/trien-lam-du-hoc.jpg" alt="Triển lãm du học">
-                    </a>
-                </div>
-                <div class="caption"><h3 class="title"><a href="/capstone-vietnam/fairguide">Triển lãm du học</a></h3></div>
-            </div>
+            @await Component.InvokeAsync("Banner", new { vitriid = 105 })
         </div>
     </div>
 </section>
@@ -333,65 +304,78 @@
 <!-- Doi ngu co van -->
 <section class="home-units section-large">
     <div class="container">
-        <h2 class="site-title text-center" data-aos="fade-up" data-aos-delay="100">ĐỘI NGŨ CỐ VẤN</h2>
-        <div class="swiper-relative four-slider mt-8" data-aos="fade-up" data-aos-delay="200">
-            <div class="swiper" id="doi-ngu-swiper">
-                <div class="swiper-wrapper">
-                    <!-- TODO: render doi ngu tu ViewBag/Model -->
-                </div>
-            </div>
-            <div class="mobile-only"><div class="swiper-pagination"></div></div>
-            <div class="desktop-only">
-                <div class="swiper-button is-abs">
-                    <div class="button-prev"><i class="fa-solid fa-chevron-left"></i></div>
-                    <div class="button-next"><i class="fa-solid fa-chevron-right"></i></div>
-                </div>
-            </div>
+        <h2 class="site-title text-center" data-aos="fade-up">ĐỘI NGŨ CỐ VẤN</h2>
+        <div class="home-courses-list mt-8">
+            @await Component.InvokeAsync("DoiNguCoVan", new { categoryId = 198, count = 15 })
         </div>
     </div>
 </section>
 
 <!-- Dang ky tu van -->
-<section class="home-about section-large bg-primary-50">
+<section class="contact-form section-b-large">
     <div class="container">
-        <div class="row items-center">
-            <div class="col w-full lg:w-1/2" data-aos="fade-right" data-aos-delay="100">
-                <h2 class="site-title">Đăng ký tư vấn</h2>
-                <p class="mt-4">
-                    Mọi sự hợp tác tốt đẹp đều bắt đầu từ một cuộc trò chuyện.
-                    Hãy liên hệ với chúng tôi, mọi mong muốn của bạn sẽ được lắng nghe.
-                </p>
+        <div class="row">
+            <div class="col lg:w-1/2">
+                <div class="block-wrap">
+                    <h2 class="site-title mb-6 text-center lg:text-left">Đăng ký tư vấn</h2>
+                    <div class="txt mb-7 text-center lg:text-left">
+                        <p>Mọi sự hợp tác tốt đẹp đều bắt đầu từ một cuộc trò chuyện.</p>
+                        <p>Hãy liên hệ với chúng tôi, mọi mong muốn của bạn&nbsp;<span>sẽ được lắng nghe.</span></p>
+                    </div>
+                    <div class="wrap-form">
+                        <div class="grid grid-cols-2 gap-6">
+
+                            <div class="form-group col-span-2">
+                                <select type="text" placeholder="Hình thức tư vấn">
+                                    <option value="">Hình thức tư vấn</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-span-2">
+                                <input type="tel" placeholder="Họ và tên">
+                            </div>
+                            <div class="form-group lg:col-span-1 col-span-2">
+                                <input type="email" placeholder="Email">
+                            </div>
+                            <div class="form-group lg:col-span-1 col-span-2">
+                                <input type="text" placeholder="Số điện thoại ">
+                            </div>
+                            <div class="form-group col-span-2">
+                                <textarea type="text" placeholder="Nội dung"></textarea>
+                            </div>
+                            <div class="form-group col-span-2" style="font-style: italic">
+                                <p>Capstone cam kết không chia sẻ thông tin của bạn cho bất kỳ bên thứ ba nào.</p>
+                                <p>
+                                    <label>
+                                        <input type="checkbox">
+                                        Tôi đồng ý với các điều khoản và điều kiện bảo mật thông tin của Capstone
+                                    </label>
+                                </p>
+                                <p>
+                                    <label>
+                                        <input type="checkbox" checked="">
+                                        Tôi muốn nhận thông tin du học và các ưu đãi cập nhật từ Capstone, vui lòng liên hệ với tôi qua điện thoại, email hoặc SMS.
+                                    </label>
+                                </p>
+                            </div>
+                            <div class="frm-btnwrap">
+                                <div class="frm-btn">
+                                    <button><span>GỬI</span><em class="fa-regular fa-arrow-right"></em></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="col w-full lg:w-1/2 mt-8 lg:mt-0" data-aos="fade-left" data-aos-delay="200">
-                <form class="contact-form" id="form-tu-van" method="post" action="/dang-ky-tu-van">
-                    <select name="HinhThucTuVan">
-                        <option value="" disabled selected>Hình thức tư vấn</option>
-                        <option value="online">Online</option>
-                        <option value="offline">Trực tiếp</option>
-                    </select>
-                    <input type="text" name="HoTen" placeholder="Họ và tên *" required>
-                    <input type="tel" name="DienThoai" placeholder="Số điện thoại *" required>
-                    <input type="email" name="Email" placeholder="Email *" required>
-                    <select name="DichVu">
-                        <option value="" disabled selected>Dịch vụ quan tâm</option>
-                        <option>Tư vấn du học</option>
-                        <option>Tư vấn định cư</option>
-                        <option>Career Coach</option>
-                        <option>Visa du học</option>
-                    </select>
-                    <label class="checkbox-label">
-                        <input type="checkbox" name="DongY" required>
-                        Tôi đồng ý với các điều khoản bảo mật thông tin của Capstone
-                    </label>
-                    <button type="submit" class="btn-solid active">
-                        <span>GỬI</span><i class="fa-solid fa-arrow-right"></i>
-                    </button>
-                </form>
+            <div class="col lg:w-1/2">
+                <div class="img img-cover img-zoom-in">
+                    <a>
+                        <img src="/static/img/48.jpg" alt="alt">
+                    </a>
+                </div>
             </div>
         </div>
     </div>
 </section>
-
 <!-- Cam nhan khach hang -->
 <section class="home-story section-large bg-neutral-50 overflow-hidden">
     <div class="container">

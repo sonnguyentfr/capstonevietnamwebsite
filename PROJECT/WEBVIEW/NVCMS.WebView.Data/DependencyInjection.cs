@@ -29,6 +29,7 @@ public static class DependencyInjection
         services.AddScoped<INewsRepository>(_ => new NewsRepository(connectionString));
         services.AddScoped<IBannerRepository>(_ => new BannerRepository(connectionString));
         services.AddScoped<IGioiThieuRepository>(_ => new GioiThieuRepository(connectionString));
+        services.AddScoped<IShortyUrlRepository>(_ => new ShortyUrlRepository(connectionString));
 
         // Repository - CRMConnection
         services.AddScoped<IEventsRepository>(_ => new EventsRepository(crmConnectionString));
