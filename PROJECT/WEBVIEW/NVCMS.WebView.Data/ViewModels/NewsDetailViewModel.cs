@@ -18,6 +18,8 @@ public class NewsDetailViewModel
     public string   CategoryName     { get; set; } = string.Empty;
     public string   CategorySlug     { get; set; } = string.Empty;
     public string   Slug             { get; set; } = string.Empty;
+    public string?  Tags             { get; set; }
 
-    public List<NewsItemViewModel> RelatedNews { get; set; } = [];
+    public List<NewsItemViewModel>    RelatedNews    { get; set; } = [];
+    public List<TruongCardViewModel>  RelatedSchools { get; set; } = [];
 }

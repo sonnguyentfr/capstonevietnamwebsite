@@ -109,6 +109,7 @@ public class TruongDetailViewModel
     public TruongAdmis4YearViewModel? Admis4Year { get; set; }
     public TruongAdmisBFViewModel? AdmisBF { get; set; }
     public TruongAdmisESLViewModel? AdmisESL { get; set; }
+    public List<NewsItemViewModel> RelatedNews { get; set; } = [];
 }
 
 /// <summary>

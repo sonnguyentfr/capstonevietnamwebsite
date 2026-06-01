@@ -15,4 +15,8 @@ public interface INewsRepository
     Task<NewsCategoryModel?> GetCategoryByIdAsync(int categoryId);
     Task IncrementViewCountAsync(int newId);
     Task<IEnumerable<NewsModel>> GetFeaturedAsync(int portalId, int top);
+
+    // NewsBySchool
+    Task<IEnumerable<TruongModel>> GetSchoolsByNewsAsync(int newId);
+    Task<IEnumerable<NewsModel>>   GetNewsBySchoolAsync(int schoolId);
 }

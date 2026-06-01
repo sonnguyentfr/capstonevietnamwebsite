@@ -9,6 +9,7 @@ namespace NVCMS.WebView.Data.Service;
 public class TruongService : ITruongService
 {
     private readonly ITruongRepository _repo;
+    private readonly INewsRepository   _newsRepo;
     private readonly ContentUrlRewriter _rewriter;
 
     // Country Id mapping — matches Cap_Location.LocationId in CapstoneVietnam_old
@@ -24,9 +25,10 @@ public class TruongService : ITruongService
         {401,"Ireland"},
     };
 
-    public TruongService(ITruongRepository repo, ContentUrlRewriter rewriter)
+    public TruongService(ITruongRepository repo, INewsRepository newsRepo, ContentUrlRewriter rewriter)
     {
-        _repo = repo;
+        _repo     = repo;
+        _newsRepo = newsRepo;
         _rewriter = rewriter;
     }
 
@@ -110,8 +112,10 @@ public class TruongService : ITruongService
             Page = filter.Page,
             PageSize = filter.PageSize,
             Filter = filter,
-            MajorList = majors.Select(m => new MajorViewModel { Id = m.Id, Title = m.Title, TitleVN = m.TitleVN }),
+            MajorList   = majors.Select(m => new MajorViewModel { Id = m.Id, Title = m.Title, TitleVN = m.TitleVN })
+                                .OrderBy(m => m.TitleVN ?? m.Title, StringComparer.CurrentCulture),
             QuocGiaList = countries.Select(c => new QuocGiaViewModel { Id = c.Id, Ten = c.Ten, TruongCount = c.Count })
+                                   .OrderBy(c => c.Ten, StringComparer.CurrentCulture)
         };
     }
 
@@ -140,6 +144,7 @@ public class TruongService : ITruongService
         if (t is null) return null;
 
         var majors = await _repo.GetMajorsByTruongAsync(id);
+        var relatedNews = await _newsRepo.GetNewsBySchoolAsync(id);
 
         var loaiCode = NormalizeLoai(t.Loai);
         TruongAdmis4YearViewModel? vm4y = null;
@@ -212,7 +217,8 @@ public class TruongService : ITruongService
             Linkedin = social.ElementAtOrDefault(2),
             GPlus = social.ElementAtOrDefault(3),
             Youtube = social.ElementAtOrDefault(4),
-            Instagram = social.ElementAtOrDefault(5)
+            Instagram = social.ElementAtOrDefault(5),
+            RelatedNews = relatedNews.Select(MapNewsItem).ToList()
         };
     }
 
@@ -268,6 +274,21 @@ public class TruongService : ITruongService
             .DistinctBy(t => t.Id)
             .Take(pageSize);
     }
+
+    private NewsItemViewModel MapNewsItem(NewsModel n) => new()
+    {
+        NewId         = n.NewId,
+        CategoryId    = n.CategoryId,
+        Title         = n.Title,
+        ImagePath     = _rewriter.ResolveUrl(n.ImagePath),
+        Summary       = n.Summary,
+        Tacgia        = n.Tacgia,
+        Tags          = n.Tags,
+        PublishedDate = n.PublishedDate,
+        Slug          = SlugHelper.ToSlug(n.Title),
+        CategorySlug  = string.Empty,
+        CategoryName  = string.Empty
+    };
 
     private TruongCardViewModel MapCard(TruongModel t)
     {

@@ -41,6 +41,7 @@ public class NewsService : INewsService
 
         var category = await _repo.GetCategoryByIdAsync(news.CategoryId);
         var related  = await _repo.GetRelatedAsync(news.CategoryId, newId, portalId);
+        var schools  = await _repo.GetSchoolsByNewsAsync(newId);
 
         return new NewsDetailViewModel
         {
@@ -60,7 +61,9 @@ public class NewsService : INewsService
             CategoryName    = category?.CategoryName ?? string.Empty,
             CategorySlug    = SlugHelper.ToSlug(category?.CategoryName ?? string.Empty),
             Slug            = SlugHelper.ToSlug(news.Title),
-            RelatedNews     = related.Select(r => MapToItem(r, category)).ToList()
+            Tags            = news.Tags,
+            RelatedNews     = related.Select(r => MapToItem(r, category)).ToList(),
+            RelatedSchools  = schools.Select(MapToSchoolCard).ToList()
         };
     }
 
@@ -173,6 +176,21 @@ public class NewsService : INewsService
         };
     }
 
+    public async Task<IEnumerable<NewsItemViewModel>> GetNewsBySchoolAsync(int schoolId)
+    {
+        var items = await _repo.GetNewsBySchoolAsync(schoolId);
+        var catIds = items.Select(n => n.CategoryId).Distinct();
+        var catTasks = catIds.Select(id => _repo.GetCategoryByIdAsync(id));
+        var cats = (await Task.WhenAll(catTasks))
+                    .Where(c => c is not null)
+                    .ToDictionary(c => c!.CategoryID, c => c!);
+        return items.Select(n =>
+        {
+            cats.TryGetValue(n.CategoryId, out var cat);
+            return MapToItem(n, cat);
+        });
+    }
+
     private NewsItemViewModel MapToItem(NewsModel n, NewsCategoryModel? cat) => new()
     {
         NewId         = n.NewId,
@@ -186,6 +204,25 @@ public class NewsService : INewsService
         Slug          = SlugHelper.ToSlug(n.Title),
         CategorySlug  = SlugHelper.ToSlug(cat?.CategoryName ?? string.Empty),
         CategoryName  = cat?.CategoryName ?? string.Empty
+    };
+
+    private static readonly Dictionary<int, string> CountryNames = new()
+    {
+        {1,  "Úc"}, {3, "Canada"}, {23, "Thụy Sĩ"}, {28, "Anh"},
+        {38, "Mỹ"}, {99, "New Zealand"}, {401, "Ireland"}
+    };
+
+    private TruongCardViewModel MapToSchoolCard(TruongModel t) => new()
+    {
+        Id           = t.Id,
+        NameofSchool = t.NameofSchool,
+        Tomtat       = t.Tomtat,
+        LogoUrl      = _rewriter.ResolveUrl(t.Logo),
+        CoverUrl     = _rewriter.ResolveUrl(t.Conver),
+        IsPartner    = t.isPartner ?? false,
+        CountryId    = t.Country,
+        CountryName  = CountryNames.TryGetValue(t.Country ?? 0, out var cn) ? cn : null,
+        Slug         = SlugHelper.ToSlug(t.NameofSchool ?? string.Empty)
     };
 
     private static List<CategoryViewModel> BuildTree(

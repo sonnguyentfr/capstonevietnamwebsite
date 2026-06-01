@@ -47,7 +47,10 @@ public static class DependencyInjection
         services.AddScoped<IEventsService>(sp =>
             new EventsService(sp.GetRequiredService<IEventsRepository>(), rewriter));
         services.AddScoped<ITruongService>(sp =>
-            new TruongService(sp.GetRequiredService<ITruongRepository>(), rewriter));
+            new TruongService(
+                sp.GetRequiredService<ITruongRepository>(),
+                sp.GetRequiredService<INewsRepository>(),
+                rewriter));
         services.AddSingleton<IMenuService>(_ => new MenuService(webRootPath));
 
         // SiteSettings — Singleton, backed by WebView_GetSiteSettings SP, cached per portalId

@@ -136,4 +136,22 @@ public class NewsRepository : INewsRepository
             new { PortalId = portalId, Top = top },
             commandType: CommandType.StoredProcedure);
     }
+
+    public async Task<IEnumerable<TruongModel>> GetSchoolsByNewsAsync(int newId)
+    {
+        await using var conn = CreateConn();
+        return await conn.QueryAsync<TruongModel>(
+            "WebView_NewsBySchool_GetSchoolsByNews",
+            new { NewId = newId },
+            commandType: CommandType.StoredProcedure);
+    }
+
+    public async Task<IEnumerable<NewsModel>> GetNewsBySchoolAsync(int schoolId)
+    {
+        await using var conn = CreateConn();
+        return await conn.QueryAsync<NewsModel>(
+            "WebView_NewsBySchool_GetNewsBySchool",
+            new { SchoolId = schoolId },
+            commandType: CommandType.StoredProcedure);
+    }
 }

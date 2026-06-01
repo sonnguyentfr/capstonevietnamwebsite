@@ -671,6 +671,30 @@
                     <i class="fa-solid fa-paper-plane"></i> Đăng ký tư vấn
                 </a>
             </div>
+
+            @if (Model.RelatedNews.Any())
+            {
+                <div class="sidebar-card">
+                    <h3 class="sidebar-card__title"><i class="fa-solid fa-newspaper"></i> Tin tức liên quan</h3>
+                    <div class="truong-related-news">
+                        @foreach (var n in Model.RelatedNews)
+                        {
+                            <a href="/tin-tuc/@(n.Slug)-@n.NewId" class="truong-related-news__item">
+                                @if (!string.IsNullOrEmpty(n.ImagePath))
+                                {
+                                    <div class="truong-related-news__img">
+                                        <img src="@n.ImagePath" alt="@n.Title" loading="lazy" />
+                                    </div>
+                                }
+                                <div class="truong-related-news__info">
+                                    <time>@n.PublishedDate.ToString("dd/MM/yyyy")</time>
+                                    <p>@n.Title</p>
+                                </div>
+                            </a>
+                        }
+                    </div>
+                </div>
+            }
         </aside>
     </div>
 </div>
