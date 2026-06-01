@@ -4,24 +4,116 @@
 
 @{
     var category = ViewData["Category"] as CategoryViewModel;
-    var catName = category?.CategoryName ?? ViewData["Title"]?.ToString() ?? "Tin tức";
-    var catSlug = category?.Slug ?? string.Empty;
-    var catId = category?.CategoryID ?? 0;
+    var catName  = category?.CategoryName ?? ViewData["Title"]?.ToString() ?? "Tin tức";
+    var catSlug  = category?.Slug ?? string.Empty;
+    var catId    = category?.CategoryID ?? 0;
+    var parentId = category?.ParentId ?? 0;
     ViewData["Title"] = catName;
 
-    // base URL for pagination – use current path so both /tin-tuc/danh-muc/... and static routes work
     var baseUrl = Context.Request.Path.Value ?? $"/tin-tuc/danh-muc/{catSlug}-{catId}";
-    var rest = Model.Items.Skip(0).ToList();
+    var rest    = Model.Items.Skip(0).ToList();
+
+    // ── Cấu hình hero theo category ──────────────────────────────────────
+    // gradient | icon | badge-label | bg-image (unsplash placeholder)
+    static (string gradient, string icon, string badge, string bgImage) HeroConfig(int id, int parentId) => id switch
+    {
+        // Cẩm nang & Sự kiện du học (67) + con
+        67  => ("135deg,#1e3a5f 0%,#2563eb 100%", "fa-solid fa-newspaper",        "Cẩm nang & Tin tức",       "/static/images/hero/hero-news.jpg"),
+        111 => ("135deg,#1e3a5f 0%,#2563eb 100%", "fa-solid fa-rss",              "Tin tức",                  "/static/images/hero/hero-news.jpg"),
+        112 => ("135deg,#7c3aed 0%,#a855f7 100%", "fa-solid fa-calendar-star",    "Sự kiện",                  "/static/images/hero/hero-event.jpg"),
+        146 => ("135deg,#0f766e 0%,#14b8a6 100%", "fa-solid fa-user-graduate",    "Chia sẻ du học sinh",      "/static/images/hero/hero-student.jpg"),
+        171 => ("135deg,#b45309 0%,#f59e0b 100%", "fa-solid fa-circle-question",  "Hỏi bác Mark",             "/static/images/hero/hero-qa.jpg"),
+        174 => ("135deg,#065f46 0%,#10b981 100%", "fa-solid fa-book-open",        "Cẩm nang du học",          "/static/images/hero/hero-guide.jpg"),
+        175 => ("135deg,#1e3a5f 0%,#0284c7 100%", "fa-solid fa-school",           "Bảng tin trường",          "/static/images/hero/hero-school-news.jpg"),
+        // Du học (75) + con
+        75  => ("135deg,#1d4ed8 0%,#60a5fa 100%", "fa-solid fa-globe",            "Du học",                   "/static/images/hero/hero-study-abroad.jpg"),
+        79  => ("135deg,#b91c1c 0%,#ef4444 100%", "fa-solid fa-flag-usa",         "Du học Mỹ",                "/static/images/hero/hero-usa.jpg"),
+        83  => ("135deg,#92400e 0%,#f59e0b 100%", "fa-solid fa-award",            "Học bổng",                 "/static/images/hero/hero-scholarship.jpg"),
+        84  => ("135deg,#1d4ed8 0%,#60a5fa 100%", "fa-solid fa-circle-info",      "Thông tin hữu ích",        "/static/images/hero/hero-info.jpg"),
+        91  => ("135deg,#b45309 0%,#f59e0b 100%", "fa-solid fa-leaf",             "Du học Canada",            "/static/images/hero/hero-canada.jpg"),
+        92  => ("135deg,#b45309 0%,#dc8a00 100%", "fa-solid fa-map",              "Tổng quan Canada",         "/static/images/hero/hero-canada.jpg"),
+        97  => ("135deg,#0369a1 0%,#38bdf8 100%", "fa-solid fa-sun",              "Du học Úc",                "/static/images/hero/hero-australia.jpg"),
+        101 => ("135deg,#0369a1 0%,#38bdf8 100%", "fa-solid fa-circle-info",      "Thông tin hữu ích",        "/static/images/hero/hero-australia.jpg"),
+        103 => ("135deg,#374151 0%,#6b7280 100%", "fa-solid fa-earth-europe",     "Du học các nước khác",     "/static/images/hero/hero-world.jpg"),
+        // Sự kiện - Ưu đãi (77) + con
+        77  => ("135deg,#7c3aed 0%,#a855f7 100%", "fa-solid fa-calendar-days",    "Sự kiện & Ưu đãi",        "/static/images/hero/hero-event.jpg"),
+        68  => ("135deg,#7c3aed 0%,#a855f7 100%", "fa-solid fa-users",            "Hội thảo thông tin",       "/static/images/hero/hero-event.jpg"),
+        69  => ("135deg,#7c3aed 0%,#c084fc 100%", "fa-solid fa-ticket",           "Triển lãm du học",         "/static/images/hero/hero-fair.jpg"),
+        // Gương mặt thành công (147) + con
+        147 => ("135deg,#0f766e 0%,#14b8a6 100%", "fa-solid fa-star",             "Gương mặt thành công",     "/static/images/hero/hero-success.jpg"),
+        110 => ("135deg,#0f766e 0%,#14b8a6 100%", "fa-solid fa-quote-left",       "Testimonial",              "/static/images/hero/hero-success.jpg"),
+        172 => ("135deg,#0f766e 0%,#059669 100%", "fa-solid fa-hand-holding-heart","Gương mặt TNV",           "/static/images/hero/hero-success.jpg"),
+        // Học bổng (159) + con
+        159 => ("135deg,#92400e 0%,#f59e0b 100%", "fa-solid fa-graduation-cap",   "Học bổng du học",          "/static/images/hero/hero-scholarship.jpg"),
+        160 => ("135deg,#b91c1c 0%,#fbbf24 100%", "fa-solid fa-medal",            "Học bổng Du học Mỹ",       "/static/images/hero/hero-scholarship-usa.jpg"),
+        // Tư vấn Du học (176) + con
+        176 => ("135deg,#1e3a5f 0%,#3b82f6 100%", "fa-solid fa-compass",          "Tư vấn Du học",            "/static/images/hero/hero-consult.jpg"),
+        177 => ("135deg,#b91c1c 0%,#ef4444 100%", "fa-solid fa-flag-usa",         "Tư vấn Du học Mỹ",         "/static/images/hero/hero-usa.jpg"),
+        183 => ("135deg,#0369a1 0%,#38bdf8 100%", "fa-solid fa-sun",              "Tư vấn Du học Úc",         "/static/images/hero/hero-australia.jpg"),
+        184 => ("135deg,#1d4ed8 0%,#818cf8 100%", "fa-solid fa-earth-europe",     "Tư vấn Du học Châu Âu",    "/static/images/hero/hero-europe.jpg"),
+        185 => ("135deg,#dc2626 0%,#f97316 100%", "fa-solid fa-earth-asia",       "Tư vấn Du học Châu Á",     "/static/images/hero/hero-asia.jpg"),
+        186 => ("135deg,#92400e 0%,#f59e0b 100%", "fa-solid fa-award",            "Học bổng Du học",          "/static/images/hero/hero-scholarship.jpg"),
+        187 => ("135deg,#7c3aed 0%,#fbbf24 100%", "fa-solid fa-star-half-stroke", "Elite Scholar",            "/static/images/hero/hero-elite.jpg"),
+        // Hướng nghiệp (188) + con
+        188 => ("135deg,#1e3a5f 0%,#0284c7 100%", "fa-solid fa-briefcase",        "Hướng nghiệp",             "/static/images/hero/hero-career.jpg"),
+        189 => ("135deg,#1e3a5f 0%,#0284c7 100%", "fa-solid fa-person-chalkboard","Career Coach",             "/static/images/hero/hero-career.jpg"),
+        190 => ("135deg,#0f766e 0%,#14b8a6 100%", "fa-solid fa-stethoscope",      "Du học ngành Bác Sĩ",      "/static/images/hero/hero-medicine.jpg"),
+        191 => ("135deg,#374151 0%,#4b5563 100%", "fa-solid fa-chart-line",       "Du học ngành Thương Mại",  "/static/images/hero/hero-business.jpg"),
+        192 => ("135deg,#1d4ed8 0%,#60a5fa 100%", "fa-solid fa-laptop-code",      "Du học ngành CNTT",        "/static/images/hero/hero-tech.jpg"),
+        // Định cư & Đầu tư (194) + con
+        194 => ("135deg,#374151 0%,#1e3a5f 100%", "fa-solid fa-house-flag",       "Định cư & Đầu tư",         "/static/images/hero/hero-immigration.jpg"),
+        195 => ("135deg,#374151 0%,#1e3a5f 100%", "fa-solid fa-passport",         "Tư vấn Định Cư",           "/static/images/hero/hero-immigration.jpg"),
+        196 => ("135deg,#065f46 0%,#10b981 100%", "fa-solid fa-money-bill-trend-up","Tư vấn Đầu Tư",          "/static/images/hero/hero-invest.jpg"),
+        // Capstone Vietnam (197) + con
+        197 => ("135deg,#1e3a5f 0%,#2563eb 100%", "fa-solid fa-building",         "Capstone Vietnam",         "/static/images/hero/hero-capstone.jpg"),
+        198 => ("135deg,#1e3a5f 0%,#2563eb 100%", "fa-solid fa-people-group",     "Đội ngũ",                  "/static/images/hero/hero-team.jpg"),
+        199 => ("135deg,#374151 0%,#6b7280 100%", "fa-solid fa-photo-film",       "Thư viện Ảnh - Videos",    "/static/images/hero/hero-media.jpg"),
+        200 => ("135deg,#1e3a5f 0%,#2563eb 100%", "fa-solid fa-user-tie",         "Tuyển dụng",               "/static/images/hero/hero-jobs.jpg"),
+        _   => ("135deg,#1e3a5f 0%,#2563eb 100%", "fa-solid fa-newspaper",        "Tin tức",                  "")
+    };
+
+    var (heroGradient, heroIcon, heroBadge, heroBgImage) = HeroConfig(catId, parentId);
+
+    // Tìm parent name cho breadcrumb
+    var allCats = ViewData["Categories"] as IEnumerable<CategoryViewModel>;
+    var parentCat = allCats?.FirstOrDefault(c => c.CategoryID == parentId);
+    var parentName = parentCat?.CategoryName;
+    var parentSlug = parentCat?.Slug ?? string.Empty;
 }
 
-<section class="page-hero page-hero--news">
-    <div class="container">
-        <nav class="breadcrumb" aria-label="breadcrumb">
+<section class="cat-hero" style="--hero-gradient: linear-gradient(@heroGradient);@(!string.IsNullOrEmpty(heroBgImage) ? $" --hero-bg: url('{heroBgImage}');" : "")">
+    <div class="cat-hero__overlay"></div>
+    <div class="container cat-hero__inner">
+
+        <nav class="breadcrumb cat-hero__breadcrumb" aria-label="breadcrumb">
             <a href="/">Trang chủ</a>
             <i class="fa-solid fa-chevron-right"></i>
+            @if (!string.IsNullOrEmpty(parentName))
+            {
+                <a href="/tin-tuc/danh-muc/@parentSlug-@parentId">@parentName</a>
+                <i class="fa-solid fa-chevron-right"></i>
+            }
+            else
+            {
+                <a href="/cam-nang-va-tin-tuc">Cẩm nang & Tin tức</a>
+                <i class="fa-solid fa-chevron-right"></i>
+            }
             <span>@catName</span>
         </nav>
-        <h1 class="page-hero__title" data-aos="fade-up">@catName</h1>
+
+        <div class="cat-hero__body" data-aos="fade-up">
+            <span class="cat-hero__badge">
+                <i class="@heroIcon"></i> @heroBadge
+            </span>
+            <h1 class="cat-hero__title">@catName</h1>
+            @if (Model.TotalCount > 0)
+            {
+                <p class="cat-hero__count">
+                    <i class="fa-solid fa-layer-group"></i> @Model.TotalCount bài viết
+                </p>
+            }
+        </div>
+
     </div>
 </section>
 
@@ -31,7 +123,7 @@
         {
             <div class="no-data-section">
                 <i class="fa-regular fa-newspaper"></i>
-                <p>Chưa có bài viết nào trong danh mục này 111.</p>
+                <p>Chưa có bài viết nào trong danh mục này.</p>
             </div>
         }
         else

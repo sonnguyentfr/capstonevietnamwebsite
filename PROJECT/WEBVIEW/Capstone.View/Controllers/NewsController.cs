@@ -44,7 +44,7 @@ public class NewsController : Controller
             return RedirectToRoutePermanent("news-category", new { slug = canonical, categoryId, page });
 
         var paged      = await _news.GetByCategoryIdAsync(categoryId, _portalId, page, pageSize);
-        var categories = await _news.GetMenuCategoriesAsync(_portalId);
+        var categories = await _news.GetCategoriesWithCountAsync(_portalId);
 
         ViewData["Title"]           = category.CategoryName;
         ViewData["MetaDescription"] = category.Description ?? category.CategoryName;
@@ -63,13 +63,15 @@ public class NewsController : Controller
         var category = await _news.GetCategoryByIdAsync(categoryId);
         if (category is null) return NotFound();
 
-        var paged = await _news.GetByCategoryIdAsync(categoryId, _portalId, page, pageSize);
+        var paged      = await _news.GetByCategoryIdAsync(categoryId, _portalId, page, pageSize);
+        var categories = await _news.GetCategoriesWithCountAsync(_portalId);
 
         var canonicalPath = Request.Path.Value ?? string.Empty;
         ViewData["Title"]           = category.CategoryName;
         ViewData["MetaDescription"] = category.Description ?? category.CategoryName;
         ViewData["CanonicalUrl"]    = $"{Request.Scheme}://{Request.Host}{canonicalPath}";
         ViewData["Category"]        = category;
+        ViewData["Categories"]      = categories;
 
         return View("Category", paged);
     }
