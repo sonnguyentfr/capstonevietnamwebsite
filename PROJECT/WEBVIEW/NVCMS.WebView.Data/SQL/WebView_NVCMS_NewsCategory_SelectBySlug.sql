@@ -1,0 +1,1 @@
+﻿CREATE OR ALTER PROCEDURE [dbo].[WebView_NVCMS_NewsCategory_SelectBySlug] @Slug NVARCHAR(500), @PortalId INT AS BEGIN SET NOCOUNT ON; SELECT TOP 1 CategoryID, ParentId, CategoryName, [Description], IsActive, OrderNumber, PortalId, TabID, TabIdDetail, slug FROM NV_NewsCategories WHERE PortalId = @PortalId AND IsActive = 1 AND slug = @Slug; END

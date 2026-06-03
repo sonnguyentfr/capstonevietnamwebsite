@@ -84,17 +84,33 @@ app.MapControllerRoute(name: "chuyen-tien-du-hoc", pattern: "gioi-thieu/cac-dich
 app.MapControllerRoute(name: "tim-nha", pattern: "gioi-thieu/cac-dich-vu-capstone/dich-vu-tim-nha", defaults: new { controller = "DichVu", action = "TimNha" });
 
 // Tin tức – index, all, category, detail
-app.MapControllerRoute(name: "news-all",      pattern: "tin-tuc",                                  defaults: new { controller = "News", action = "All" });
-app.MapControllerRoute(name: "news-category", pattern: "tin-tuc/danh-muc/{slug}-{categoryId:int}", defaults: new { controller = "News", action = "Category" });
-app.MapControllerRoute(name: "news-detail",   pattern: "tin-tuc/{slug}-{id:int}",                  defaults: new { controller = "News", action = "Detail" });
+app.MapControllerRoute(name: "news-all",      pattern: "tin-tuc",              defaults: new { controller = "News", action = "All" });
+app.MapControllerRoute(name: "news-detail",   pattern: "tin-tuc/{slug}-{id:int}", defaults: new { controller = "News", action = "Detail" });
 
-// Trang danh sách tin tức theo chuyên mục – route generic dùng chung
-// 2-segment: /{section}/{slug}-{categoryId}             VD: /gioi-thieu/doi-ngu-227
-app.MapControllerRoute(name: "news-category-page-2", pattern: "{section}/{slug}-{categoryId:int}",       defaults: new { controller = "News", action = "CategoryPage" });
-// 3-segment: /{s1}/{s2}/{slug}-{categoryId}             VD: /thong-tin-du-hoc/du-hoc-my/tin-tuc-244
-app.MapControllerRoute(name: "news-category-page-3", pattern: "{s1}/{s2}/{slug}-{categoryId:int}",       defaults: new { controller = "News", action = "CategoryPage" });
-// 4-segment: /{s1}/{s2}/{s3}/{slug}-{categoryId}        VD: /gioi-thieu/cac-dich-vu-capstone/tu-van-dinh-cu/tin-tuc-dinh-cu-eb5-202
-app.MapControllerRoute(name: "news-category-page-4", pattern: "{s1}/{s2}/{s3}/{slug}-{categoryId:int}",  defaults: new { controller = "News", action = "CategoryPage" });
+// ── Routes danh mục tin tức theo section ──────────────────────────────────────
+// /cam-nang-va-tin-tuc/{slug}        VD: /cam-nang-va-tin-tuc/tin-tuc-chung
+app.MapControllerRoute(name: "news-camnangtintuc", pattern: "cam-nang-va-tin-tuc/{slug}", defaults: new { controller = "News", action = "CategoryBySlug" });
+// /guong-mat-thanh-cong/{slug}
+app.MapControllerRoute(name: "news-guongmat", pattern: "guong-mat-thanh-cong/{slug}", defaults: new { controller = "News", action = "CategoryBySlug" });
+// /tu-van-dinh-cu/{slug}             VD: /tu-van-dinh-cu/tin-tuc-dinh-cu
+app.MapControllerRoute(name: "news-dinhcu", pattern: "tu-van-dinh-cu/{slug}", defaults: new { controller = "News", action = "CategoryBySlug" });
+// /tu-van-du-hoc/{slug}              VD: /tu-van-du-hoc/du-hoc-my
+app.MapControllerRoute(name: "news-tuvanduhoc", pattern: "tu-van-du-hoc/{slug}", defaults: new { controller = "News", action = "CategoryBySlug" });
+// /hoc-bong-du-hoc/{slug}
+app.MapControllerRoute(name: "news-hocbong", pattern: "hoc-bong-du-hoc/{slug}", defaults: new { controller = "News", action = "CategoryBySlug" });
+// /huong-nghiep/{slug}
+app.MapControllerRoute(name: "news-huongnghiep", pattern: "huong-nghiep/{slug}", defaults: new { controller = "News", action = "CategoryBySlug" });
+// /chia-se-tu-du-hoc-sinh            (slug cố định, không có segment cha)
+app.MapControllerRoute(name: "news-chiase", pattern: "chia-se-tu-du-hoc-sinh", defaults: new { controller = "News", action = "CategoryBySlug", slug = "chia-se-tu-du-hoc-sinh" });
+// /thong-tin-du-hoc/{country}/{slug}  VD: /thong-tin-du-hoc/du-hoc-my/tin-tuc-du-hoc-my
+app.MapControllerRoute(name: "news-thongtinduhoc", pattern: "thong-tin-du-hoc/{s1}/{slug}", defaults: new { controller = "News", action = "CategoryBySlug" });
+// /gioi-thieu/{slug}                 VD: /gioi-thieu/doi-ngu
+app.MapControllerRoute(name: "news-gioithieu", pattern: "gioi-thieu/{slug}", defaults: new { controller = "News", action = "CategoryBySlug" });
+
+// Backward compat: /tin-tuc/danh-muc/{slug} → redirect vẫn hoạt động
+app.MapControllerRoute(name: "news-category-slug", pattern: "tin-tuc/danh-muc/{slug}", defaults: new { controller = "News", action = "CategoryBySlug" });
+// Legacy {slug}-{id} → 301 redirect
+app.MapControllerRoute(name: "news-category", pattern: "tin-tuc/danh-muc/{slug}-{categoryId:int}", defaults: new { controller = "News", action = "Category" });
 
 app.MapControllerRoute(name: "default", pattern: "{controller=Home}/{action=Index}/{id?}");
 

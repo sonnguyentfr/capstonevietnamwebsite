@@ -13,6 +13,7 @@ public interface INewsRepository
     Task<IEnumerable<NewsCategoryModel>> GetAllCategoriesAsync(int portalId);
     Task<IEnumerable<(int CategoryId, int Count)>> GetCategoryCountsAsync(int portalId);
     Task<NewsCategoryModel?> GetCategoryByIdAsync(int categoryId);
+    Task<NewsCategoryModel?> GetCategoryBySlugAsync(string slug, int portalId);
     Task IncrementViewCountAsync(int newId);
     Task<IEnumerable<NewsModel>> GetFeaturedAsync(int portalId, int top);
 

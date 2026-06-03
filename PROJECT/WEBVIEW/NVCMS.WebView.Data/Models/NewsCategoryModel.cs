@@ -12,4 +12,5 @@ public class NewsCategoryModel
     public int      PortalId     { get; set; }
     public int      TabID        { get; set; }
     public int      TabIdDetail  { get; set; }
+    public string?  Slug         { get; set; }
 }

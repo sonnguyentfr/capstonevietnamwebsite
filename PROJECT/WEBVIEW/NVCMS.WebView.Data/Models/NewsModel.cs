@@ -24,4 +24,5 @@ public class NewsModel
     public int      UserId           { get; set; }
     public DateTime PublishedDate    { get; set; }
     public DateTime CreateDate       { get; set; }
+    public string?  MetaUrl          { get; set; }
 }

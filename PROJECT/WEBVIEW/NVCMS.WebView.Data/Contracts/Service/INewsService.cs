@@ -21,6 +21,7 @@ public interface INewsService
     Task<NewsDetailViewModel?> GetDetailAsync(int newId, int portalId);
     Task<IEnumerable<CategoryViewModel>> GetMenuCategoriesAsync(int portalId);
     Task<CategoryViewModel?> GetCategoryByIdAsync(int categoryId);
+    Task<CategoryViewModel?> GetCategoryBySlugAsync(string slug, int portalId);
 
     // NewsBySchool
     Task<IEnumerable<NewsItemViewModel>> GetNewsBySchoolAsync(int schoolId);

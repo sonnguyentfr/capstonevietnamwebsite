@@ -119,6 +119,15 @@ public class NewsRepository : INewsRepository
             commandType: CommandType.StoredProcedure);
     }
 
+    public async Task<NewsCategoryModel?> GetCategoryBySlugAsync(string slug, int portalId)
+    {
+        await using var conn = CreateConn();
+        return await conn.QueryFirstOrDefaultAsync<NewsCategoryModel>(
+            "WebView_NVCMS_NewsCategory_SelectBySlug",
+            new { Slug = slug, PortalId = portalId },
+            commandType: CommandType.StoredProcedure);
+    }
+
     public async Task IncrementViewCountAsync(int newId)
     {
         await using var conn = CreateConn();
