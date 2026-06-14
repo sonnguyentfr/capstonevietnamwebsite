@@ -270,4 +270,28 @@ public class NewsController : Controller
 
         return View("Detail", vm);
     }
+
+    // ── Section /tuyen-dung ───────────────────────────────────────────────────
+
+    // GET /tuyen-dung/{slug}-{id}
+    public async Task<IActionResult> TuyenDungDetail(int id, string? slug)
+    {
+        var vm = await _news.GetDetailAsync(id, _portalId);
+        if (vm is null) return NotFound();
+
+        var canonical = vm.Slug;
+        if (!string.Equals(slug, canonical, StringComparison.OrdinalIgnoreCase))
+            return RedirectToRoutePermanent("tuyen-dung-detail", new { slug = canonical, id });
+
+        ViewData["Title"]           = vm.MetaTitle ?? vm.Title;
+        ViewData["MetaDescription"] = vm.MetaDescription ?? vm.Summary;
+        ViewData["MetaImage"]       = vm.MetaImage ?? vm.ImagePath;
+        ViewData["CanonicalUrl"]    = $"{Request.Scheme}://{Request.Host}/tuyen-dung/{canonical}-{id}";
+        ViewData["SectionName"]     = "Giới thiệu";
+        ViewData["SectionUrl"]      = "/gioi-thieu";
+        ViewData["CategoryName"]    = "Tuyển dụng";
+        ViewData["CategoryUrl"]     = "/tuyen-dung";
+
+        return View("Detail", vm);
+    }
 }

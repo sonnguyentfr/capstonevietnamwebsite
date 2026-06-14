@@ -147,18 +147,19 @@ public class NewsService : INewsService
     public async Task<IEnumerable<NewsItemViewModel>> GetFeaturedAsync(int portalId, int top)
     {
         var items = await _repo.GetFeaturedAsync(portalId, top);
-        var catIds = items.Select(n => n.CategoryId).Distinct();
-
-        // Load categories in batch để map tên/slug
-        var catTasks = catIds.Select(id => _repo.GetCategoryByIdAsync(id));
-        var cats     = (await Task.WhenAll(catTasks))
-                       .Where(c => c is not null)
-                       .ToDictionary(c => c!.CategoryID, c => c!);
+        // Load tất cả categories 1 lần để lookup parent slug
+        var allCats = (await _repo.GetAllCategoriesAsync(portalId))
+                       .ToDictionary(c => c.CategoryID);
 
         return items.Select(n =>
         {
-            cats.TryGetValue(n.CategoryId, out var cat);
-            return MapToItem(n, cat);
+            allCats.TryGetValue(n.CategoryId, out var cat);
+            var parentSlug = cat?.ParentId > 0 && allCats.TryGetValue(cat.ParentId, out var parent)
+                ? (!string.IsNullOrEmpty(parent.Slug) ? parent.Slug : SlugHelper.ToSlug(parent.CategoryName))
+                : null;
+            var vm = MapToItem(n, cat);
+            vm.CategoryParentSlug = parentSlug;
+            return vm;
         });
     }
 

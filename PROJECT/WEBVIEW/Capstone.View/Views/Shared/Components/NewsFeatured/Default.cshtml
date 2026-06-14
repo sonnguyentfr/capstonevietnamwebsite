@@ -5,6 +5,21 @@
     var items = Model?.ToList() ?? [];
     var aosEffects = new[] { "fade-up", "fade-down", "fade-left", "fade-right", "zoom-in", "zoom-in-up", "flip-left", "flip-up" };
     var rng = new Random();
+
+    // Build URL chi tiết dựa theo CategorySlug
+    static string BuildDetailUrl(NewsItemViewModel item)
+    {
+        var catSlug = item.CategorySlug ?? string.Empty;
+        return catSlug switch
+        {
+            "tuyen-dung"                     => $"/tuyen-dung/{item.Slug}-{item.NewId}",
+            "doi-ngu"                        => $"/doi-ngu/{item.Slug}-{item.NewId}",
+            "cam-nang-su-kien-du-hoc"        => $"/cam-nang-su-kien-du-hoc/{catSlug}/{item.Slug}-{item.NewId}",
+            _ when item.CategoryParentSlug == "cam-nang-su-kien-du-hoc"
+                                             => $"/cam-nang-su-kien-du-hoc/{catSlug}/{item.Slug}-{item.NewId}",
+            _                                => $"/tin-tuc/{item.Slug}-{item.NewId}"
+        };
+    }
 }
 
 @if (items.Any())
@@ -12,9 +27,10 @@
     @foreach (var item in items)
     {
         var aos = aosEffects[rng.Next(aosEffects.Length)];
+        var url = BuildDetailUrl(item);
         <div class="news-item" data-aos="@aos">
             <div class="image img-cover">
-                <a href="/tin-tuc/@(item.Slug)-@item.NewId">
+                <a href="@url">
                     @if (!string.IsNullOrEmpty(item.ImagePath))
                     {
                         <img src="@item.ImagePath" alt="@item.Title" loading="lazy" />
@@ -32,7 +48,7 @@
                 }
                 <p class="news-date">@item.PublishedDate.ToString("dd-MM-yyyy")</p>
                 <h3 class="news-title">
-                    <a href="/tin-tuc/@(item.Slug)-@item.NewId">@item.Title</a>
+                    <a href="@url">@item.Title</a>
                 </h3>
             </div>
         </div>

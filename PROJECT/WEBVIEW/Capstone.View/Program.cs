@@ -121,6 +121,12 @@ app.MapControllerRoute(name: "doi-ngu-root", pattern: "doi-ngu", defaults: new {
 // /doi-ngu/{slug}-{id}  VD: /doi-ngu/tien-si-mark-a-ashwill-3352
 app.MapControllerRoute(name: "doi-ngu-detail", pattern: "doi-ngu/{slug}-{id:int}", defaults: new { controller = "News", action = "DoiNguDetail" });
 
+// ── Section: Tuyển dụng (/tuyen-dung) ────────────────────────────────────────
+// /tuyen-dung  (root → danh mục tuyển dụng, CategoryID=200)
+app.MapControllerRoute(name: "tuyen-dung-root", pattern: "tuyen-dung", defaults: new { controller = "News", action = "CategoryBySlug", slug = "tuyen-dung" });
+// /tuyen-dung/{slug}-{id}  VD: /tuyen-dung/ten-bai-viet-7263
+app.MapControllerRoute(name: "tuyen-dung-detail", pattern: "tuyen-dung/{slug}-{id:int}", defaults: new { controller = "News", action = "TuyenDungDetail" });
+
 // Backward compat: /tin-tuc/danh-muc/{slug} → redirect vẫn hoạt động
 app.MapControllerRoute(name: "news-category-slug", pattern: "tin-tuc/danh-muc/{slug}", defaults: new { controller = "News", action = "CategoryBySlug" });
 // Legacy {slug}-{id} → 301 redirect
