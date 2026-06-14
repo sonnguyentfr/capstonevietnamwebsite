@@ -11,7 +11,7 @@
 @foreach (var (item, i) in items.Select((x, i) => (x, i)))
 {
     var delay = delays[i % delays.Length];
-    var url   = $"/tin-tuc/{item.Slug}-{item.NewId}";
+    var url   = $"/doi-ngu/{item.Slug}-{item.NewId}";
     <div class="home-courses-item" data-aos="fade-down" data-aos-delay="@delay">
         <div class="image img-cover">
             <a href="@url">

@@ -8,12 +8,10 @@ namespace Capstone.View.Controllers;
 public class SuKienController : Controller
 {
     private readonly IEventsService _events;
-    private readonly int _portalId;
 
-    public SuKienController(IEventsService events, IConfiguration config)
+    public SuKienController(IEventsService events)
     {
-        _events   = events;
-        _portalId = config.GetValue<int>("SiteSettings:PortalId");
+        _events = events;
     }
 
     // GET /su-kien
@@ -49,7 +47,7 @@ public class SuKienController : Controller
     // GET /su-kien/{slug}-{id}
     public async Task<IActionResult> Detail(int id, string? slug)
     {
-        var vm = await _events.GetCatWithEventsAsync(id, _portalId);
+        var vm = await _events.GetCatWithEventsAsync(id, 50);
         if (vm is null) return NotFound();
 
         var canonical = SlugHelper.ToSlug(vm.CatName);

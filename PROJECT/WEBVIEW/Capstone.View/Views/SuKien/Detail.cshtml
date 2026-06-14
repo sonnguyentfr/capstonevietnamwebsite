@@ -3,7 +3,9 @@
 
 @{
     ViewData["Title"] = Model.CatName;
-    var isUpcoming = Model.EndDate.HasValue && Model.EndDate.Value >= DateTime.Now;
+    var isUpcoming    = Model.EndDate.HasValue && Model.EndDate.Value >= DateTime.Now;
+    var hasCatSchools = Model.Schools != null && Model.Schools.Any();
+    var hasCatOrgs    = Model.Orgs    != null && Model.Orgs.Any();
 }
 
 @* ===== HERO ===== *@
@@ -64,94 +66,406 @@
                     </div>
                 }
 
+                @* ===== DON VI TO CHUC TOAN SU KIEN ===== *@
+                @if (hasCatOrgs || !string.IsNullOrEmpty(Model.FairDonviTaiTro))
+                {
+                    <div class="event-organizer-section mt-10" data-aos="fade-up">
+                        <h2 class="section-sub-title">
+                            <i class="fa-solid fa-building-columns"></i> Đơn vị tổ chức
+                            @if (hasCatOrgs)
+                            {
+                                <span class="section-sub-count">@Model.Orgs!.Count() đơn vị</span>
+                            }
+                        </h2>
+                        @if (hasCatOrgs)
+                        {
+                            <div class="org-card-grid mt-6">
+                                @foreach (var o in Model.Orgs!)
+                                {
+                                    <div class="org-card">
+                                        <div class="org-card-logo">
+                                            @if (!string.IsNullOrEmpty(o.LogoUrl))
+                                            {
+                                                <img src="@(o.LogoUrl)?width=140&height=70&mode=pad"
+                                                     alt="@o.Name" loading="lazy" />
+                                            }
+                                            else
+                                            {
+                                                <i class="fa-solid fa-building"></i>
+                                            }
+                                        </div>
+                                        <div class="org-card-body">
+                                            <p class="org-card-name">@o.Name</p>
+                                            @if (!string.IsNullOrEmpty(o.CountryName))
+                                            {
+                                                <span class="org-card-country">
+                                                    <i class="fa-solid fa-location-dot"></i> @o.CountryName
+                                                </span>
+                                            }
+                                            <div class="org-card-links mt-2">
+                                                @if (!string.IsNullOrEmpty(o.Website))
+                                                {
+                                                    var websiteUrl = o.Website.StartsWith("http") ? o.Website : $"https://{o.Website}";
+                                                    <a class="org-link" href="@websiteUrl" target="_blank" rel="noopener">
+                                                        <i class="fa-solid fa-globe"></i> Website
+                                                    </a>
+                                                }
+                                                @if (!string.IsNullOrEmpty(o.Email))
+                                                {
+                                                    <a class="org-link" href="mailto:@o.Email">
+                                                        <i class="fa-solid fa-envelope"></i> @o.Email
+                                                    </a>
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        }
+                        @if (!string.IsNullOrEmpty(Model.FairDonviTaiTro))
+                        {
+                            <div class="event-organizer-card mt-4">
+                                <div class="eoc-icon eoc-icon--sponsor"><i class="fa-solid fa-hand-holding-heart"></i></div>
+                                <div class="eoc-body">
+                                    <span class="eoc-label">Đơn vị tài trợ</span>
+                                    <span class="eoc-value">@Model.FairDonviTaiTro</span>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+
+                @* ===== TRUONG THAM GIA TOAN SU KIEN ===== *@
+                @if (hasCatSchools)
+                {
+                    <div class="event-schools-section mt-10" data-aos="fade-up">
+                        <div class="event-schools-header">
+                            <h2 class="section-sub-title">
+                                <i class="fa-solid fa-graduation-cap"></i> Trường tham gia
+                            </h2>
+                            <span class="event-schools-count">@Model.Schools.Count() trường</span>
+                        </div>
+                        <div class="event-schools-grid mt-6">
+                            @foreach (var s in Model.Schools)
+                            {
+                                <a class="event-school-card" href="@s.DetailUrl" title="@s.NameofSchool">
+                                    <div class="esc-logo">
+                                        @if (!string.IsNullOrEmpty(s.LogoUrl))
+                                        {
+                                            <img src="@(s.LogoUrl)?width=160&height=80&mode=pad"
+                                                 alt="@s.NameofSchool" loading="lazy" />
+                                        }
+                                        else
+                                        {
+                                            <span class="esc-logo-placeholder"><i class="fa-solid fa-school"></i></span>
+                                        }
+                                    </div>
+                                    <div class="esc-body">
+                                        <p class="esc-name">@s.NameofSchool</p>
+                                        @if (!string.IsNullOrEmpty(s.CountryName))
+                                        {
+                                            <span class="esc-country">
+                                                <i class="fa-solid fa-location-dot"></i> @s.CountryName
+                                            </span>
+                                        }
+                                    </div>
+                                    @if (s.IsPartner)
+                                    {
+                                        <span class="esc-partner-badge" title="Trường đối tác">
+                                            <i class="fa-solid fa-star"></i>
+                                        </span>
+                                    }
+                                </a>
+                            }
+                        </div>
+                    </div>
+                }
+
+                @* ===== TRUONG THAM GIA THEO DIA DIEM ===== *@
+                @{
+                    // Group các event có Schools theo Diadiem, bỏ qua event không có trường
+                    var venueGroups = Model.Events?
+                        .Where(e => !string.IsNullOrWhiteSpace(e.Diadiem) && e.Schools != null && e.Schools.Any())
+                        .GroupBy(e => e.Diadiem!.Trim())
+                        .OrderBy(g => g.Min(e => e.Fromdatetime.HasValue ? e.Fromdatetime : DateTime.MaxValue))
+                        .ToList();
+                }
+                @if (venueGroups != null && venueGroups.Any())
+                {
+                    <div class="event-venue-schools mt-10" data-aos="fade-up">
+                        <h2 class="section-sub-title">
+                            <i class="fa-solid fa-map-location-dot"></i> Trường tham gia theo địa điểm
+                        </h2>
+
+                        <div class="evt-venue-tabs mt-6">
+                            @* Tab buttons *@
+                            <div class="evt-venue-tab-nav" role="tablist">
+                                @foreach (var (grp, gi) in venueGroups.Select((g, i) => (g, i)))
+                                {
+                                    var totalInVenue = grp.SelectMany(e => e.Schools!).Select(s => s.Id).Distinct().Count();
+                                    <button class="evt-venue-tab-btn @(gi == 0 ? "active" : "")"
+                                            data-target="venue-tab-@gi"
+                                            role="tab"
+                                            aria-selected="@(gi == 0 ? "true" : "false")">
+                                        <i class="fa-solid fa-location-dot"></i>
+                                        <span>@grp.Key</span>
+                                        <span class="evt-venue-tab-count">@totalInVenue</span>
+                                    </button>
+                                }
+                            </div>
+
+                            @* Tab panels *@
+                            <div class="evt-venue-tab-panels mt-5">
+                                @foreach (var (grp, gi) in venueGroups.Select((g, i) => (g, i)))
+                                {
+                                    @* Gộp + deduplicate schools trong cùng địa điểm,
+                                       giữ thứ tự: event sớm hơn trước *@
+                                    var seenIds = new HashSet<int>();
+                                    var venueSchools = grp
+                                        .OrderBy(e => e.Fromdatetime ?? DateTime.MaxValue)
+                                        .SelectMany(e => e.Schools!)
+                                        .Where(s => seenIds.Add(s.Id))
+                                        .ToList();
+
+                                    <div id="venue-tab-@gi"
+                                         class="evt-venue-tab-panel @(gi == 0 ? "active" : "")"
+                                         role="tabpanel">
+
+                                        @* Thời gian diễn ra tại địa điểm này *@
+                                        @{
+                                            var venueTimes = grp
+                                                .Where(e => e.Fromdatetime.HasValue)
+                                                .OrderBy(e => e.Fromdatetime)
+                                                .ToList();
+                                        }
+                                        @if (venueTimes.Any())
+                                        {
+                                            <div class="evt-venue-times">
+                                                @foreach (var vt in venueTimes)
+                                                {
+                                                    <span class="evt-venue-time-chip">
+                                                        <i class="fa-solid fa-clock"></i>
+                                                        @vt.Fromdatetime!.Value.ToString("HH:mm, dd/MM/yyyy")
+                                                        @if (vt.Enddatetime.HasValue)
+                                                        {
+                                                            <text> – @vt.Enddatetime.Value.ToString("HH:mm, dd/MM/yyyy")</text>
+                                                        }
+                                                    </span>
+                                                }
+                                            </div>
+                                        }
+
+                                        @* Grid trường *@
+                                        <div class="event-schools-grid mt-4">
+                                            @foreach (var s in venueSchools)
+                                            {
+                                                <a class="event-school-card" href="@s.DetailUrl" title="@s.NameofSchool">
+                                                    <div class="esc-logo">
+                                                        @if (!string.IsNullOrEmpty(s.LogoUrl))
+                                                        {
+                                                            <img src="@(s.LogoUrl)?width=160&height=80&mode=pad"
+                                                                 alt="@s.NameofSchool" loading="lazy" />
+                                                        }
+                                                        else
+                                                        {
+                                                            <span class="esc-logo-placeholder"><i class="fa-solid fa-school"></i></span>
+                                                        }
+                                                    </div>
+                                                    <div class="esc-body">
+                                                        <p class="esc-name">@s.NameofSchool</p>
+                                                        @if (!string.IsNullOrEmpty(s.CountryName))
+                                                        {
+                                                            <span class="esc-country">
+                                                                <i class="fa-solid fa-location-dot"></i> @s.CountryName
+                                                            </span>
+                                                        }
+                                                    </div>
+                                                    @if (s.IsPartner)
+                                                    {
+                                                        <span class="esc-partner-badge" title="Trường đối tác">
+                                                            <i class="fa-solid fa-star"></i>
+                                                        </span>
+                                                    }
+                                                </a>
+                                            }
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+
                 @* ===== CHUONG TRINH / DIA DIEM ===== *@
                 @if (Model.Events != null && Model.Events.Any())
                 {
                     <div class="event-locations mt-10" data-aos="fade-up">
                         <h2 class="section-sub-title">
                             <i class="fa-solid fa-location-dot"></i> Địa điểm tổ chức
+                            <span class="section-sub-count">@Model.Events.Count() địa điểm</span>
                         </h2>
-                        <div class="event-locations-grid mt-6">
-                            @foreach (var ev in Model.Events)
+                        <div class="event-locations-list mt-6">
+                            @foreach (var (ev, idx) in Model.Events.Select((e, i) => (e, i)))
                             {
-                                <div class="event-location-card">
-                                    @if (!string.IsNullOrEmpty(ev.AvatarUrl))
-                                    {
-                                        <div class="elc-thumb">
-                                            <img src="@(ev.AvatarUrl)?width=480&height=280&mode=crop&anchor=middlecenter"
-                                                 alt="@ev.Diadiem" loading="lazy" />
+                                var hasEvSchools = ev.Schools != null && ev.Schools.Any();
+                                var hasEvOrgs    = ev.Orgs    != null && ev.Orgs.Any();
+                                <div class="elc-card" data-aos="fade-up" data-aos-delay="@(idx * 60)">
+
+                                    @* ── HEADER: số thứ tự + địa điểm ── *@
+                                    <div class="elc-card-header">
+                                        <span class="elc-index">@(idx + 1)</span>
+                                        <div class="elc-header-info">
+                                            @if (!string.IsNullOrEmpty(ev.Diadiem))
+                                            {
+                                                <h3 class="elc-venue-name">
+                                                    <i class="fa-solid fa-location-dot"></i> @ev.Diadiem
+                                                </h3>
+                                            }
+                                            @if (ev.Fromdatetime.HasValue || ev.Enddatetime.HasValue)
+                                            {
+                                                <p class="elc-time">
+                                                    <i class="fa-solid fa-clock"></i>
+                                                    @if (ev.Fromdatetime.HasValue) { @ev.Fromdatetime.Value.ToString("HH:mm, dd/MM/yyyy") }
+                                                    @if (ev.Fromdatetime.HasValue && ev.Enddatetime.HasValue) { <text> – </text> }
+                                                    @if (ev.Enddatetime.HasValue) { @ev.Enddatetime.Value.ToString("HH:mm, dd/MM/yyyy") }
+                                                </p>
+                                            }
                                         </div>
-                                    }
-                                    <div class="elc-body">
-                                        @if (!string.IsNullOrEmpty(ev.Diadiem))
+                                        @if (!string.IsNullOrEmpty(ev.AvatarUrl))
                                         {
-                                            <div class="elc-row">
-                                                <i class="fa-solid fa-location-dot"></i>
-                                                <span>@ev.Diadiem</span>
-                                            </div>
+                                            <img class="elc-thumb-inline"
+                                                 src="@(ev.AvatarUrl)?width=200&height=120&mode=crop&anchor=middlecenter"
+                                                 alt="@ev.Diadiem" loading="lazy" />
                                         }
-                                        @if (ev.Fromdatetime.HasValue || ev.Enddatetime.HasValue)
-                                        {
-                                            <div class="elc-row">
-                                                <i class="fa-solid fa-clock"></i>
-                                                <span>
-                                                    @if (ev.Fromdatetime.HasValue) { @ev.Fromdatetime.Value.ToString("HH:mm dd/MM/yyyy") }
-                                                    @if (ev.Fromdatetime.HasValue && ev.Enddatetime.HasValue) { <text> — </text> }
-                                                    @if (ev.Enddatetime.HasValue) { @ev.Enddatetime.Value.ToString("HH:mm dd/MM/yyyy") }
-                                                </span>
-                                            </div>
-                                        }
+                                    </div>
+
+                                    @* ── BODY: thành phần + mô tả ── *@
+                                    <div class="elc-card-body">
                                         @if (!string.IsNullOrEmpty(ev.Thanhphan))
                                         {
-                                            <div class="elc-row">
-                                                <i class="fa-solid fa-users"></i>
-                                                <span>@ev.Thanhphan</span>
+                                            <div class="elc-meta-row">
+                                                <span class="elc-meta-chip">
+                                                    <i class="fa-solid fa-users"></i> @ev.Thanhphan
+                                                </span>
                                             </div>
                                         }
                                         @if (!string.IsNullOrEmpty(ev.Descreption))
                                         {
-                                            <div class="elc-desc mt-3 rich-text">@Html.Raw(ev.Descreption)</div>
+                                            <div class="elc-desc rich-text mt-3">@Html.Raw(ev.Descreption)</div>
                                         }
                                     </div>
+
+                                    @* ── SECTION: ĐƠN VỊ TỔ CHỨC TẠI ĐỊA ĐIỂM ── *@
+                                    @if (hasEvOrgs)
+                                    {
+                                        <div class="elc-orgs-section">
+                                            <div class="elc-section-header elc-section-header--org">
+                                                <i class="fa-solid fa-building-columns"></i>
+                                                <span>Đơn vị tổ chức tại địa điểm này</span>
+                                                <span class="elc-orgs-count-badge">@ev.Orgs!.Count() đơn vị</span>
+                                            </div>
+                                            <div class="elc-orgs-grid">
+                                                @foreach (var o in ev.Orgs!)
+                                                {
+                                                    <div class="elc-org-item">
+                                                        <div class="elc-org-item-logo">
+                                                            @if (!string.IsNullOrEmpty(o.LogoUrl))
+                                                            {
+                                                                <img src="@(o.LogoUrl)?width=120&height=60&mode=pad"
+                                                                     alt="@o.Name" loading="lazy" />
+                                                            }
+                                                            else
+                                                            {
+                                                                <i class="fa-solid fa-building"></i>
+                                                            }
+                                                        </div>
+                                                        <div class="elc-org-item-info">
+                                                            <span class="elc-org-item-name">@o.Name</span>
+                                                            @if (!string.IsNullOrEmpty(o.CountryName))
+                                                            {
+                                                                <span class="elc-org-item-country">
+                                                                    <i class="fa-solid fa-location-dot"></i> @o.CountryName
+                                                                </span>
+                                                            }
+                                                            <div class="elc-org-item-links">
+                                                                @if (!string.IsNullOrEmpty(o.Website))
+                                                                {
+                                                                    var wUrl = o.Website.StartsWith("http") ? o.Website : $"https://{o.Website}";
+                                                                    <a href="@wUrl" target="_blank" rel="noopener" class="elc-org-link">
+                                                                        <i class="fa-solid fa-globe"></i>
+                                                                    </a>
+                                                                }
+                                                                @if (!string.IsNullOrEmpty(o.Email))
+                                                                {
+                                                                    <a href="mailto:@o.Email" class="elc-org-link">
+                                                                        <i class="fa-solid fa-envelope"></i>
+                                                                    </a>
+                                                                }
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                }
+                                            </div>
+                                        </div>
+                                    }
+
+                                    @* ── SECTION: TRƯỜNG THAM DỰ TẠI ĐỊA ĐIỂM ── *@
+                                    @if (hasEvSchools)
+                                    {
+                                        <div class="elc-schools-section">
+                                            <div class="elc-section-header">
+                                                <i class="fa-solid fa-graduation-cap"></i>
+                                                <span>Trường tham dự tại địa điểm này</span>
+                                                <span class="elc-schools-count-badge">@ev.Schools!.Count() trường</span>
+                                            </div>
+                                            <div class="elc-schools-card-grid">
+                                                @foreach (var s in ev.Schools!)
+                                                {
+                                                    <a class="elc-school-item" href="@s.DetailUrl" title="@s.NameofSchool">
+                                                        <div class="elc-school-item-logo">
+                                                            @if (!string.IsNullOrEmpty(s.LogoUrl))
+                                                            {
+                                                                <img src="@(s.LogoUrl)?width=120&height=60&mode=pad"
+                                                                     alt="@s.NameofSchool" loading="lazy" />
+                                                            }
+                                                            else
+                                                            {
+                                                                <i class="fa-solid fa-school"></i>
+                                                            }
+                                                        </div>
+                                                        <div class="elc-school-item-info">
+                                                            <span class="elc-school-item-name">@s.NameofSchool</span>
+                                                            @if (!string.IsNullOrEmpty(s.CountryName))
+                                                            {
+                                                                <span class="elc-school-item-country">
+                                                                    <i class="fa-solid fa-location-dot"></i> @s.CountryName
+                                                                </span>
+                                                            }
+                                                        </div>
+                                                        @if (s.IsPartner)
+                                                        {
+                                                            <span class="elc-school-item-partner" title="Đối tác">
+                                                                <i class="fa-solid fa-star"></i>
+                                                            </span>
+                                                        }
+                                                    </a>
+                                                }
+                                            </div>
+                                        </div>
+                                    }
+
                                 </div>
                             }
                         </div>
                     </div>
                 }
 
-                @* ===== FAIR INFO ===== *@
-                @{
-                    var hasFairInfo = !string.IsNullOrEmpty(Model.FairSchool)
-                                   || !string.IsNullOrEmpty(Model.FairDiengia)
-                                   || !string.IsNullOrEmpty(Model.FairOrg)
-                                   || !string.IsNullOrEmpty(Model.FairDonviTaiTro);
-                }
-                @if (hasFairInfo)
+                @* ===== FAIR INFO PHU (Dien gia, v.v.) ===== *@
+                @if (!string.IsNullOrEmpty(Model.FairDiengia))
                 {
                     <div class="event-fair-info mt-10" data-aos="fade-up">
-                        <h2 class="section-sub-title">Thông tin thêm</h2>
-                        <dl class="fair-dl mt-4">
-                            @if (!string.IsNullOrEmpty(Model.FairSchool))
-                            {
-                                <dt><i class="fa-solid fa-school"></i> Trường tham gia</dt>
-                                <dd>@Model.FairSchool</dd>
-                            }
-                            @if (!string.IsNullOrEmpty(Model.FairDiengia))
-                            {
-                                <dt><i class="fa-solid fa-microphone"></i> Diễn giả</dt>
-                                <dd>@Model.FairDiengia</dd>
-                            }
-                            @if (!string.IsNullOrEmpty(Model.FairOrg))
-                            {
-                                <dt><i class="fa-solid fa-building"></i> Đơn vị tổ chức</dt>
-                                <dd>@Model.FairOrg</dd>
-                            }
-                            @if (!string.IsNullOrEmpty(Model.FairDonviTaiTro))
-                            {
-                                <dt><i class="fa-solid fa-hand-holding-heart"></i> Đơn vị tài trợ</dt>
-                                <dd>@Model.FairDonviTaiTro</dd>
-                            }
-                        </dl>
+                        <h2 class="section-sub-title"><i class="fa-solid fa-microphone"></i> Diễn giả</h2>
+                        <div class="fair-text mt-4">@Html.Raw(Model.FairDiengia)</div>
                     </div>
                 }
             </div>
@@ -195,6 +509,35 @@
                     </div>
                 }
 
+                @* So truong tham gia (summary) *@
+                @if (hasCatSchools)
+                {
+                    <div class="sidebar-box sidebar-schools-summary" data-aos="fade-left" data-aos-delay="120">
+                        <h3 class="sidebar-box-title">
+                            <i class="fa-solid fa-graduation-cap"></i> Trường tham gia
+                        </h3>
+                        <p class="sidebar-schools-count mt-2">
+                            <span class="count-number">@Model.Schools.Count()</span> trường quốc tế
+                        </p>
+                        <div class="sidebar-schools-logos mt-3">
+                            @foreach (var s in Model.Schools.Take(8))
+                            {
+                                @if (!string.IsNullOrEmpty(s.LogoUrl))
+                                {
+                                    <a href="@s.DetailUrl" title="@s.NameofSchool">
+                                        <img src="@(s.LogoUrl)?width=60&height=36&mode=pad"
+                                             alt="@s.NameofSchool" loading="lazy" />
+                                    </a>
+                                }
+                            }
+                        </div>
+                        @if (Model.Schools.Count() > 8)
+                        {
+                            <p class="sidebar-schools-more mt-2">+@(Model.Schools.Count() - 8) trường khác</p>
+                        }
+                    </div>
+                }
+
                 @* Lien he *@
                 @if (!string.IsNullOrEmpty(Model.Email))
                 {
@@ -230,4 +573,24 @@
         organizerName: _siteSettings.General.SiteName,
         organizerUrl:  _siteSettings.General.SiteWeb
     ))
+    <script>
+    (function () {
+        const navs   = document.querySelectorAll('.evt-venue-tab-btn');
+        const panels = document.querySelectorAll('.evt-venue-tab-panel');
+        if (!navs.length) return;
+
+        navs.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const target = btn.dataset.target;
+
+                navs.forEach(b => { b.classList.remove('active'); b.setAttribute('aria-selected','false'); });
+                panels.forEach(p => p.classList.remove('active'));
+
+                btn.classList.add('active');
+                btn.setAttribute('aria-selected', 'true');
+                document.getElementById(target)?.classList.add('active');
+            });
+        });
+    })();
+    </script>
 }

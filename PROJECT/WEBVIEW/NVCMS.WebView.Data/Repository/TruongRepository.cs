@@ -129,6 +129,19 @@ public class TruongRepository : ITruongRepository
     }
 
     // ----------------------------------------------------------------
+    // Inline SQL: lấy nhiều trường theo danh sách ID (dùng cho sự kiện)
+    // ----------------------------------------------------------------
+    public async Task<IEnumerable<TruongModel>> GetByIdsAsync(IEnumerable<int> ids)
+    {
+        var idList = ids.ToList();
+        if (idList.Count == 0) return [];
+        var inClause = string.Join(",", idList);
+        var sql = $"SELECT * FROM Cap_Truong WHERE Id IN ({inClause})";
+        await using var conn = CreateConn();
+        return await conn.QueryAsync<TruongModel>(sql);
+    }
+
+    // ----------------------------------------------------------------
     // SP: WebView_Truong_GetAdmis4Year
     // ----------------------------------------------------------------
     public async Task<TruongAdmis4YearModel?> GetAdmis4YearAsync(int truongId, int? portalId = null)

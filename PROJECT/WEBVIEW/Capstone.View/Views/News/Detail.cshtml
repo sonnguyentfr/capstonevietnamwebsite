@@ -6,6 +6,15 @@
     var pageUrl = ViewData["CanonicalUrl"]?.ToString() ?? string.Empty;
     var encodedUrl   = Uri.EscapeDataString(pageUrl);
     var encodedTitle = Uri.EscapeDataString(Model.Title);
+
+    var sectionName  = ViewData["SectionName"]?.ToString();
+    var sectionUrl   = ViewData["SectionUrl"]?.ToString();
+    // CategoryName có thể override từ ViewData (VD: "Đội ngũ" thay vì tên DB)
+    var categoryName = ViewData["CategoryName"]?.ToString() ?? Model.CategoryName;
+    var categoryUrl  = ViewData["CategoryUrl"]?.ToString()
+                       ?? $"/cam-nang-su-kien-du-hoc/{Model.CategorySlug}";
+    var sidebarMoreUrl = ViewData["CategoryUrl"]?.ToString()
+                         ?? $"/cam-nang-su-kien-du-hoc/{Model.CategorySlug}";
 }
 
 @* ── COVER ── *@
@@ -24,11 +33,18 @@
         <nav class="breadcrumb nd-breadcrumb" aria-label="breadcrumb">
             <a href="/">Trang chủ</a>
             <i class="fa-solid fa-chevron-right"></i>
-            <a href="/cam-nang-va-tin-tuc">Tin tức</a>
-            <i class="fa-solid fa-chevron-right"></i>
-            <a href="/tin-tuc/@(Model.CategorySlug)-@Model.CategoryId">@Model.CategoryName</a>
-            <i class="fa-solid fa-chevron-right"></i>
-            <span>@Model.Title</span>
+            @if (!string.IsNullOrEmpty(sectionName) && !string.IsNullOrEmpty(sectionUrl))
+            {
+                <a href="@sectionUrl">@sectionName</a>
+                <i class="fa-solid fa-chevron-right"></i>
+                <a href="@categoryUrl">@categoryName</a>
+            }
+            else
+            {
+                <a href="/cam-nang-su-kien-du-hoc">Cẩm nang & Tin tức</a>
+                <i class="fa-solid fa-chevron-right"></i>
+                <a href="@categoryUrl">@categoryName</a>
+            }
         </nav>
 
         @* ── HEADER ── *@
@@ -177,7 +193,7 @@
                                 </a>
                             }
                         </div>
-                        <a href="/tin-tuc/@(Model.CategorySlug)-@Model.CategoryId" class="nd-sidebar__more">
+                        <a href="@sidebarMoreUrl" class="nd-sidebar__more">
                             Xem tất cả <i class="fa-solid fa-arrow-right"></i>
                         </a>
                     </div>

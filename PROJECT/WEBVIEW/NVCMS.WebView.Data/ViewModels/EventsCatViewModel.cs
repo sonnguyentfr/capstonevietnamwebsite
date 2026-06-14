@@ -1,5 +1,6 @@
 ﻿namespace NVCMS.WebView.Data.ViewModels;
 
+
 public class EventsCatViewModel
 {
     public int Id { get; set; }
@@ -27,4 +28,10 @@ public class EventsCatViewModel
     public int PortalId { get; set; }
 
     public IEnumerable<EventsViewModel> Events { get; set; } = [];
+
+    /// <summary>Danh sách trường tham gia toàn sự kiện (parse từ FairSchool)</summary>
+    public IEnumerable<TruongCardViewModel> Schools { get; set; } = [];
+
+    /// <summary>Đơn vị tổ chức toàn sự kiện (parse từ FairOrg)</summary>
+    public IEnumerable<OrgCardViewModel> Orgs { get; set; } = [];
 }

@@ -88,8 +88,16 @@ app.MapControllerRoute(name: "news-all",      pattern: "tin-tuc",              d
 app.MapControllerRoute(name: "news-detail",   pattern: "tin-tuc/{slug}-{id:int}", defaults: new { controller = "News", action = "Detail" });
 
 // ── Routes danh mục tin tức theo section ──────────────────────────────────────
-// /cam-nang-va-tin-tuc/{slug}        VD: /cam-nang-va-tin-tuc/tin-tuc-chung
-app.MapControllerRoute(name: "news-camnangtintuc", pattern: "cam-nang-va-tin-tuc/{slug}", defaults: new { controller = "News", action = "CategoryBySlug" });
+// /cam-nang-su-kien-du-hoc               VD: /cam-nang-su-kien-du-hoc  (root – categoryId=67)
+app.MapControllerRoute(name: "cam-nang-su-kien-du-hoc-root", pattern: "cam-nang-su-kien-du-hoc", defaults: new { controller = "News", action = "CategoryBySlug", slug = "cam-nang-su-kien-du-hoc" });
+// /cam-nang-su-kien-du-hoc/{catSlug}/{slug}-{id}   VD: /cam-nang-su-kien-du-hoc/chia-se-tu-du-hoc-sinh/ten-bai-7261
+app.MapControllerRoute(name: "cam-nang-su-kien-du-hoc-detail", pattern: "cam-nang-su-kien-du-hoc/{catSlug}/{slug}-{id:int}", defaults: new { controller = "News", action = "CamNangSuKienDetail" });
+// /cam-nang-su-kien-du-hoc/{slug}        VD: /cam-nang-su-kien-du-hoc/tin-tuc-chung
+app.MapControllerRoute(name: "news-camnangtintuc", pattern: "cam-nang-su-kien-du-hoc/{slug}", defaults: new { controller = "News", action = "CategoryBySlug" });
+// /guong-mat-thanh-cong  (root)
+app.MapControllerRoute(name: "guong-mat-thanh-cong-root", pattern: "guong-mat-thanh-cong", defaults: new { controller = "News", action = "CategoryBySlug", slug = "guong-mat-thanh-cong" });
+// /guong-mat-thanh-cong/{catSlug}/{slug}-{id}
+app.MapControllerRoute(name: "guong-mat-thanh-cong-detail", pattern: "guong-mat-thanh-cong/{catSlug}/{slug}-{id:int}", defaults: new { controller = "News", action = "SectionDetail", section = "guong-mat-thanh-cong" });
 // /guong-mat-thanh-cong/{slug}
 app.MapControllerRoute(name: "news-guongmat", pattern: "guong-mat-thanh-cong/{slug}", defaults: new { controller = "News", action = "CategoryBySlug" });
 // /tu-van-dinh-cu/{slug}             VD: /tu-van-dinh-cu/tin-tuc-dinh-cu
@@ -107,10 +115,30 @@ app.MapControllerRoute(name: "news-thongtinduhoc", pattern: "thong-tin-du-hoc/{s
 // /gioi-thieu/{slug}                 VD: /gioi-thieu/doi-ngu
 app.MapControllerRoute(name: "news-gioithieu", pattern: "gioi-thieu/{slug}", defaults: new { controller = "News", action = "CategoryBySlug" });
 
+// ── Section: Đội ngũ (/doi-ngu) ──────────────────────────────────────────────
+// /doi-ngu  (root → danh mục đội ngũ)
+app.MapControllerRoute(name: "doi-ngu-root", pattern: "doi-ngu", defaults: new { controller = "News", action = "CategoryBySlug", slug = "doi-ngu" });
+// /doi-ngu/{slug}-{id}  VD: /doi-ngu/tien-si-mark-a-ashwill-3352
+app.MapControllerRoute(name: "doi-ngu-detail", pattern: "doi-ngu/{slug}-{id:int}", defaults: new { controller = "News", action = "DoiNguDetail" });
+
 // Backward compat: /tin-tuc/danh-muc/{slug} → redirect vẫn hoạt động
 app.MapControllerRoute(name: "news-category-slug", pattern: "tin-tuc/danh-muc/{slug}", defaults: new { controller = "News", action = "CategoryBySlug" });
 // Legacy {slug}-{id} → 301 redirect
 app.MapControllerRoute(name: "news-category", pattern: "tin-tuc/danh-muc/{slug}-{categoryId:int}", defaults: new { controller = "News", action = "Category" });
+
+// ── Section: Cẩm nang & Tin tức (/cam-nang-va-tin-tuc) ───────────────────────
+// /cam-nang-va-tin-tuc/{catSlug}/{slug}-{id}  VD: .../bang-tin-ve-cac-truong/bai-viet-7261
+app.MapControllerRoute(name: "cam-nang-va-tin-tuc-detail",
+    pattern: "cam-nang-va-tin-tuc/{catSlug}/{slug}-{id:int}",
+    defaults: new { controller = "News", action = "CamNangDetail" });
+// /cam-nang-va-tin-tuc/{slug}-{categoryId}    VD: .../bang-tin-ve-cac-truong-175
+app.MapControllerRoute(name: "cam-nang-va-tin-tuc-cat",
+    pattern: "cam-nang-va-tin-tuc/{slug}-{categoryId:int}",
+    defaults: new { controller = "News", action = "CamNangCategory" });
+// /cam-nang-va-tin-tuc  (root section)
+app.MapControllerRoute(name: "cam-nang-va-tin-tuc-root",
+    pattern: "cam-nang-va-tin-tuc",
+    defaults: new { controller = "News", action = "CamNangSection" });
 
 app.MapControllerRoute(name: "default", pattern: "{controller=Home}/{action=Index}/{id?}");
 

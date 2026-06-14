@@ -22,4 +22,10 @@ public class EventsViewModel
     public string?   LienheMobile  { get; set; }
     public int       CatId         { get; set; }
     public int?      Ordernumber   { get; set; }
+
+    /// <summary>Danh sách trường tham gia sự kiện đơn lẻ (parse từ School)</summary>
+    public IEnumerable<TruongCardViewModel> Schools { get; set; } = [];
+
+    /// <summary>Đơn vị tổ chức sự kiện đơn lẻ (parse từ Org)</summary>
+    public IEnumerable<OrgCardViewModel> Orgs { get; set; } = [];
 }

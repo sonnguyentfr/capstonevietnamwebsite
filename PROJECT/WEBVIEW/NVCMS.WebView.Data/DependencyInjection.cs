@@ -37,6 +37,9 @@ public static class DependencyInjection
         // Repository - CRMConnection (school data)
         services.AddScoped<ITruongRepository>(_ => new TruongRepository(crmConnectionString));
 
+        // Repository - CRMConnection (org data)
+        services.AddScoped<IOrganizationRepository>(_ => new OrganizationRepository(crmConnectionString));
+
         // Service
         services.AddScoped<INewsService>(sp =>
             new NewsService(sp.GetRequiredService<INewsRepository>(), rewriter));
@@ -45,7 +48,11 @@ public static class DependencyInjection
         services.AddScoped<IGioiThieuService>(sp =>
             new GioiThieuService(sp.GetRequiredService<IGioiThieuRepository>(), rewriter));
         services.AddScoped<IEventsService>(sp =>
-            new EventsService(sp.GetRequiredService<IEventsRepository>(), rewriter));
+            new EventsService(
+                sp.GetRequiredService<IEventsRepository>(),
+                sp.GetRequiredService<ITruongRepository>(),
+                sp.GetRequiredService<IOrganizationRepository>(),
+                rewriter));
         services.AddScoped<ITruongService>(sp =>
             new TruongService(
                 sp.GetRequiredService<ITruongRepository>(),

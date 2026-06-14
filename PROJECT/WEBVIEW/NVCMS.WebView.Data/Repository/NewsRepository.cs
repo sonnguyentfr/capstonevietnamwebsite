@@ -42,21 +42,18 @@ public class NewsRepository : INewsRepository
     public async Task<PaginatedList<NewsModel>> GetByCategoryIdsAsync(
         IEnumerable<int> categoryIds, int portalId, int page, int pageSize)
     {
-        var idList = string.Join(",", categoryIds);
-        var offset = (page - 1) * pageSize;
-        var sql = $"""
-            SELECT COUNT(*) FROM NV_News
-            WHERE PortalId = @PortalId AND IsActive = 1
-              AND CategoryId IN ({idList});
-
-            SELECT * FROM NV_News
-            WHERE PortalId = @PortalId AND IsActive = 1
-              AND CategoryId IN ({idList})
-            ORDER BY PublishedDate DESC
-            OFFSET @Offset ROWS FETCH NEXT @PageSize ROWS ONLY;
-            """;
         await using var conn = CreateConn();
-        using var multi = await conn.QueryMultipleAsync(sql, new { PortalId = portalId, Offset = offset, PageSize = pageSize });
+        var param = new
+        {
+            CategoryIds = string.Join(",", categoryIds),
+            PortalId    = portalId,
+            PageIndex   = page,
+            PageSize    = pageSize
+        };
+        using var multi = await conn.QueryMultipleAsync(
+            "WebView_NVCMS_News_SelectByCategoryIds",
+            param,
+            commandType: CommandType.StoredProcedure);
         var total = await multi.ReadFirstOrDefaultAsync<int>();
         var items = await multi.ReadAsync<NewsModel>();
         return new PaginatedList<NewsModel>(items, total, page, pageSize);

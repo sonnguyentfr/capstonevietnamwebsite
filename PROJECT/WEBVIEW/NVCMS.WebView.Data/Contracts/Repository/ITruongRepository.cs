@@ -9,6 +9,7 @@ public interface ITruongRepository
     Task<IEnumerable<TruongModel>> GetRandomPartnersAsync(int count, int? portalId = null);
     Task<IEnumerable<TruongModel>> GetByCountryAsync(int countryId, string? loai = null, int? portalId = null);
     Task<TruongModel?> GetByIdAsync(int id);
+    Task<IEnumerable<TruongModel>> GetByIdsAsync(IEnumerable<int> ids);
     Task<TruongAdmis4YearModel?> GetAdmis4YearAsync(int truongId, int? portalId = null);
     Task<TruongAdmisBFModel?> GetAdmisBFAsync(int truongId, int? portalId = null);
     Task<TruongAdmisESLModel?> GetAdmisESLAsync(int truongId, int? portalId = null);
