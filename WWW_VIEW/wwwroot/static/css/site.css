@@ -498,7 +498,7 @@ body {
             content: '';
             position: absolute;
             inset: 0;
-            background: url('/static/img/world-map-dots.png') center/cover no-repeat;
+            background: url('/static/img/world-map-dots.svg') center/cover no-repeat;
             opacity: .06;
             pointer-events: none;
         }
@@ -679,7 +679,6 @@ body {
             height: 12px;
             object-fit: cover;
             border-radius: 2px;
-            display: none;
         }
     /* CTA */
     .school-finder-cta {
