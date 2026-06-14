@@ -1,21 +1,17 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using Capstone.View.Options;
 using NVCMS.WebView.Data.Contracts.Service;
 
 namespace Capstone.View.ViewComponents;
 
-/// <summary>
-/// Hien thi danh sach su kien dang hoat dong (FromDate &lt;= Now &lt;= EndDate, is_show_website = true).
-/// Su dung: @await Component.InvokeAsync("Events")
-/// </summary>
 public class EventsViewComponent : ViewComponent
 {
     private readonly IEventsService _eventsService;
-    private readonly int _portalId;
 
-    public EventsViewComponent(IEventsService eventsService, IConfiguration config)
+    public EventsViewComponent(IEventsService eventsService)
     {
         _eventsService = eventsService;
-        _portalId = config.GetValue<int>("SiteSettings:PortalId");
     }
 
     public async Task<IViewComponentResult> InvokeAsync()

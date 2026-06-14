@@ -25,36 +25,36 @@
     ViewData["Pagination_QueryString"] = baseQs;
 
     // Build toggle URL for multi-select country
-    string ToggleCountryUrl(int countryId)
-    {
-        var ids = new List<int>(f.QuocGiaIds);
-        if (ids.Contains(countryId)) ids.Remove(countryId); else ids.Add(countryId);
-        var p = new System.Text.StringBuilder();
-        void A(string k, string? v) { if (!string.IsNullOrEmpty(v)) { if (p.Length > 0) p.Append('&'); p.Append(k).Append('=').Append(Uri.EscapeDataString(v)); } }
-        A("ten",       f.Ten);
-        A("loai",      f.Loai);
-        A("tuitionmax",f.TuitionMax?.ToString());
-        if (ids.Count         > 0) A("quocgiaids", string.Join(",", ids));
-        if (f.MajorIds.Count  > 0) A("majorids",   string.Join(",", f.MajorIds));
-        A("page", "1");
-        return "/tim-truong" + (p.Length > 0 ? "?" + p : "");
-    }
+    // string ToggleCountryUrl(int countryId)
+    // {
+    //     var ids = new List<int>(f.QuocGiaIds);
+    //     if (ids.Contains(countryId)) ids.Remove(countryId); else ids.Add(countryId);
+    //     var p = new System.Text.StringBuilder();
+    //     void A(string k, string? v) { if (!string.IsNullOrEmpty(v)) { if (p.Length > 0) p.Append('&'); p.Append(k).Append('=').Append(Uri.EscapeDataString(v)); } }
+    //     A("ten",       f.Ten);
+    //     A("loai",      f.Loai);
+    //     A("tuitionmax",f.TuitionMax?.ToString());
+    //     if (ids.Count         > 0) A("quocgiaids", string.Join(",", ids));
+    //     if (f.MajorIds.Count  > 0) A("majorids",   string.Join(",", f.MajorIds));
+    //     A("page", "1");
+    //     return "/tim-truong" + (p.Length > 0 ? "?" + p : "");
+    // }
 
     // Build toggle URL for multi-select major
-    string ToggleMajorUrl(int majorId)
-    {
-        var ids = new List<int>(f.MajorIds);
-        if (ids.Contains(majorId)) ids.Remove(majorId); else ids.Add(majorId);
-        var p = new System.Text.StringBuilder();
-        void A(string k, string? v) { if (!string.IsNullOrEmpty(v)) { if (p.Length > 0) p.Append('&'); p.Append(k).Append('=').Append(Uri.EscapeDataString(v)); } }
-        A("ten",           f.Ten);
-        A("loai",          f.Loai);
-        A("tuitionmax",    f.TuitionMax?.ToString());
-        if (f.QuocGiaIds.Count > 0) A("quocgiaids", string.Join(",", f.QuocGiaIds));
-        if (ids.Count          > 0) A("majorids",   string.Join(",", ids));
-        A("page", "1");
-        return "/tim-truong" + (p.Length > 0 ? "?" + p : "");
-    }
+    // string ToggleMajorUrl(int majorId)
+    // {
+    //     var ids = new List<int>(f.MajorIds);
+    //     if (ids.Contains(majorId)) ids.Remove(majorId); else ids.Add(majorId);
+    //     var p = new System.Text.StringBuilder();
+    //     void A(string k, string? v) { if (!string.IsNullOrEmpty(v)) { if (p.Length > 0) p.Append('&'); p.Append(k).Append('=').Append(Uri.EscapeDataString(v)); } }
+    //     A("ten",           f.Ten);
+    //     A("loai",          f.Loai);
+    //     A("tuitionmax",    f.TuitionMax?.ToString());
+    //     if (f.QuocGiaIds.Count > 0) A("quocgiaids", string.Join(",", f.QuocGiaIds));
+    //     if (ids.Count          > 0) A("majorids",   string.Join(",", ids));
+    //     A("page", "1");
+    //     return "/tim-truong" + (p.Length > 0 ? "?" + p : "");
+    // }
 
     string FilterUrl(string? ten = null, string? letter = "~~", string? loai = "~~", int? tuitionMax = -1, int? pageSize = null)
     {

@@ -1,6 +1,8 @@
 using Capstone.View.Helpers;
 using Capstone.View.Middleware;
 using Capstone.View.Options;
+using Microsoft.AspNetCore.ResponseCompression;
+using Microsoft.Net.Http.Headers;
 using NVCMS.WebView.Data;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,6 +10,24 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.Configure<SiteSettings>(builder.Configuration.GetSection(SiteSettings.SectionName));
 builder.Services.AddSingleton<ContentUrlHelper>();
+
+// ── Response Compression (Brotli first, then Gzip) ────────────────────────────
+builder.Services.AddResponseCompression(opts =>
+{
+    opts.EnableForHttps = true;
+    opts.Providers.Add<BrotliCompressionProvider>();
+    opts.Providers.Add<GzipCompressionProvider>();
+    opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
+    [
+        "text/html", "text/css", "application/javascript",
+        "application/json", "image/svg+xml", "font/woff2",
+        "text/plain", "application/xml"
+    ]);
+});
+builder.Services.Configure<BrotliCompressionProviderOptions>(o =>
+    o.Level = System.IO.Compression.CompressionLevel.Fastest);
+builder.Services.Configure<GzipCompressionProviderOptions>(o =>
+    o.Level = System.IO.Compression.CompressionLevel.Fastest);
 
 var connStr = builder.Configuration.GetConnectionString("DefaultConnection")!;
 var crmConnStr = builder.Configuration.GetConnectionString("CRMConnection")!;
@@ -21,6 +41,12 @@ builder.Services.AddHttpClient("ApiClient", client =>
 });
 
 var app = builder.Build();
+
+// ── Response Compression — must be first ─────────────────────────────────────
+app.UseResponseCompression();
+
+// ── Request Timing (logs slow requests > 500ms, adds Server-Timing header) ───
+app.UseMiddleware<RequestTimingMiddleware>();
 
 if (!app.Environment.IsDevelopment())
 {
@@ -44,7 +70,46 @@ app.Use(async (context, next) =>
     await next();
 });
 
-app.UseStaticFiles(new StaticFileOptions { ServeUnknownFileTypes = false });
+// ── Static Files with aggressive Cache-Control ────────────────────────────────
+app.UseStaticFiles(new StaticFileOptions
+{
+    ServeUnknownFileTypes = false,
+    OnPrepareResponse = ctx =>
+    {
+        var ext = Path.GetExtension(ctx.File.Name).ToLowerInvariant();
+        var headers = ctx.Context.Response.GetTypedHeaders();
+
+        // Immutable assets (fingerprinted by build tools or rarely change)
+        if (ext is ".css" or ".js" or ".woff" or ".woff2" or ".ttf" or ".eot" or ".otf")
+        {
+            headers.CacheControl = new CacheControlHeaderValue
+            {
+                Public = true,
+                MaxAge = TimeSpan.FromDays(365),
+                // Uncomment below if assets use content-hash filenames:
+                // Extensions = { "immutable" }
+            };
+        }
+        // Images & SVG — 30 days
+        else if (ext is ".png" or ".jpg" or ".jpeg" or ".gif" or ".svg" or ".webp" or ".ico" or ".avif")
+        {
+            headers.CacheControl = new CacheControlHeaderValue
+            {
+                Public = true,
+                MaxAge = TimeSpan.FromDays(30)
+            };
+        }
+        // Everything else — 1 hour
+        else
+        {
+            headers.CacheControl = new CacheControlHeaderValue
+            {
+                Public = true,
+                MaxAge = TimeSpan.FromHours(1)
+            };
+        }
+    }
+});
 
 // ShortUrl: chạy trước UseRouting để ưu tiên short_url hơn bất kỳ route nào
 app.UseMiddleware<ShortUrlMiddleware>();

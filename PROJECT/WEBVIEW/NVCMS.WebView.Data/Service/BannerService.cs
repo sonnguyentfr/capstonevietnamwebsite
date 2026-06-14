@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Caching.Memory;
 using NVCMS.WebView.Data.Common;
 using NVCMS.WebView.Data.Contracts.Repository;
 using NVCMS.WebView.Data.Contracts.Service;
@@ -8,13 +9,15 @@ namespace NVCMS.WebView.Data.Service;
 
 public class BannerService : IBannerService
 {
-    private readonly IBannerRepository _repo;
+    private readonly IBannerRepository  _repo;
     private readonly ContentUrlRewriter _rewriter;
+    private readonly IMemoryCache       _cache;
 
-    public BannerService(IBannerRepository repo, ContentUrlRewriter rewriter)
+    public BannerService(IBannerRepository repo, ContentUrlRewriter rewriter, IMemoryCache cache)
     {
-        _repo = repo;
+        _repo     = repo;
         _rewriter = rewriter;
+        _cache    = cache;
     }
 
     private BannerViewModel Map(BannerModel b) => new()
@@ -37,8 +40,14 @@ public class BannerService : IBannerService
 
     public async Task<IEnumerable<BannerViewModel>> GetAllShowAsync(int portalId, int vitri)
     {
+        var key = CacheKeys.BannerVitri(portalId, vitri);
+        if (_cache.TryGetValue(key, out IEnumerable<BannerViewModel>? cached) && cached is not null)
+            return cached;
+
         var items = await _repo.GetAllShowAsync(portalId, vitri);
-        return items.Select(Map);
+        var vms   = items.Select(Map).ToList();
+        _cache.Set(key, (IEnumerable<BannerViewModel>)vms, CacheKeys.TtlBanner);
+        return vms;
     }
 
     public async Task<IEnumerable<BannerViewModel>> GetByVitriAsync(int vitri, int portalId)
@@ -54,6 +63,5 @@ public class BannerService : IBannerService
     }
 
     public Task UpdateClickAsync(int bannerId) => _repo.UpdateClickAsync(bannerId);
-
-    public Task UpdateViewAsync(int bannerId) => _repo.UpdateViewAsync(bannerId);
+    public Task UpdateViewAsync(int bannerId)  => _repo.UpdateViewAsync(bannerId);
 }

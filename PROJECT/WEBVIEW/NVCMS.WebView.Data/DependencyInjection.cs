@@ -42,9 +42,15 @@ public static class DependencyInjection
 
         // Service
         services.AddScoped<INewsService>(sp =>
-            new NewsService(sp.GetRequiredService<INewsRepository>(), rewriter));
+            new NewsService(
+                sp.GetRequiredService<INewsRepository>(),
+                rewriter,
+                sp.GetRequiredService<IMemoryCache>()));
         services.AddScoped<IBannerService>(sp =>
-            new BannerService(sp.GetRequiredService<IBannerRepository>(), rewriter));
+            new BannerService(
+                sp.GetRequiredService<IBannerRepository>(),
+                rewriter,
+                sp.GetRequiredService<IMemoryCache>()));
         services.AddScoped<IGioiThieuService>(sp =>
             new GioiThieuService(sp.GetRequiredService<IGioiThieuRepository>(), rewriter));
         services.AddScoped<IEventsService>(sp =>
@@ -52,7 +58,8 @@ public static class DependencyInjection
                 sp.GetRequiredService<IEventsRepository>(),
                 sp.GetRequiredService<ITruongRepository>(),
                 sp.GetRequiredService<IOrganizationRepository>(),
-                rewriter));
+                rewriter,
+                sp.GetRequiredService<IMemoryCache>()));
         services.AddScoped<ITruongService>(sp =>
             new TruongService(
                 sp.GetRequiredService<ITruongRepository>(),

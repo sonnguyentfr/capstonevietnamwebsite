@@ -1,4 +1,5 @@
-﻿using NVCMS.WebView.Data.Common;
+﻿using Microsoft.Extensions.Caching.Memory;
+using NVCMS.WebView.Data.Common;
 using NVCMS.WebView.Data.Contracts.Repository;
 using NVCMS.WebView.Data.Contracts.Service;
 using NVCMS.WebView.Data.Models;
@@ -12,24 +13,32 @@ public class EventsService : IEventsService
     private readonly ITruongRepository       _truong;
     private readonly IOrganizationRepository _org;
     private readonly ContentUrlRewriter      _rewriter;
+    private readonly IMemoryCache            _cache;
 
     public EventsService(
         IEventsRepository       repo,
         ITruongRepository       truong,
         IOrganizationRepository org,
-        ContentUrlRewriter      rewriter)
+        ContentUrlRewriter      rewriter,
+        IMemoryCache            cache)
     {
         _repo     = repo;
         _truong   = truong;
         _org      = org;
         _rewriter = rewriter;
+        _cache    = cache;
     }
 
     public async Task<IEnumerable<EventsCatViewModel>> GetActiveCatsWithEventsAsync(int portalid)
     {
-        
+        var key = CacheKeys.EventsActive(portalid);
+        if (_cache.TryGetValue(key, out IEnumerable<EventsCatViewModel>? cached) && cached is not null)
+            return cached;
+
         var cats = await _repo.GetActiveCatsAsync(portalid);
-        return await MapCatsAsync(cats);
+        var result = await MapCatsAsync(cats);
+        _cache.Set(key, result, CacheKeys.TtlHomepage);
+        return result;
     }
 
     public async Task<IEnumerable<EventsCatViewModel>> GetAllCatsWithEventsAsync()
@@ -40,35 +49,56 @@ public class EventsService : IEventsService
 
     public async Task<EventsCatViewModel?> GetCatWithEventsAsync(int catId, int portalId)
     {
+        var key = CacheKeys.EventsCatDetail(catId, portalId);
+        if (_cache.TryGetValue(key, out EventsCatViewModel? cachedVm) && cachedVm is not null)
+            return cachedVm;
+
         var cat = await _repo.GetCatByIdAsync(catId);
         if (cat is null) return null;
 
-        var events    = await _repo.GetEventsByCatAsync(catId, portalId);
-
-        // Sắp xếp theo thời gian diễn ra (null xuống cuối)
+        var events = await _repo.GetEventsByCatAsync(catId, portalId);
         var eventList = events
             .OrderBy(e => e.Fromdatetime.HasValue ? 0 : 1)
             .ThenBy(e => e.Fromdatetime)
             .ToList();
 
-        // ── Category-level schools: FairSchool + tất cả NV_Events.School (theo thứ tự thời gian) ──
-        // Build ordered, deduplicated ID list
-        var catSchoolIds = BuildMergedSchoolIds(cat.FairSchool, eventList);
-        var catSchools   = await ResolveSchoolsByIdsAsync(catSchoolIds);
+        // Collect all unique IDs in one pass — avoids per-event DB round-trips
+        var catSchoolIds         = BuildMergedSchoolIds(cat.FairSchool, eventList);
+        var schoolIdsForEvents   = eventList.Select(e => ParseIds(e.School)).ToList();
+        var allSchoolIds         = catSchoolIds
+            .Concat(schoolIdsForEvents.SelectMany(x => x))
+            .Distinct().ToList();
+        var catOrgIds            = ParseIds(cat.FairOrg);
+        var evOrgIds             = eventList.Select(e => ParseIds(e.Org)).ToList();
+        var allOrgIds            = catOrgIds
+            .Concat(evOrgIds.SelectMany(x => x))
+            .Distinct().ToList();
 
-        // Category-level orgs (FairOrg)
-        var catOrgs = await ResolveOrgsAsync(cat.FairOrg);
+        // Two parallel DB calls instead of N×2 sequential calls
+        var schoolTask = allSchoolIds.Count > 0
+            ? _truong.GetByIdsAsync(allSchoolIds)
+            : Task.FromResult(Enumerable.Empty<TruongModel>());
+        var orgTask = allOrgIds.Count > 0
+            ? _org.GetByIdsAsync(allOrgIds)
+            : Task.FromResult(Enumerable.Empty<OrganizationModel>());
 
-        // Per-event schools + orgs (mỗi event chỉ resolve schools của chính nó)
-        var mappedEvents = new List<EventsViewModel>();
-        foreach (var ev in eventList)
-        {
-            var evSchools = await ResolveSchoolsAsync(ev.School);
-            var evOrgs    = await ResolveOrgsAsync(ev.Org);
-            mappedEvents.Add(MapEvent(ev, evSchools, evOrgs));
-        }
+        await Task.WhenAll(schoolTask, orgTask);
 
-        return MapCat(cat, mappedEvents, catSchools, catOrgs);
+        var schoolMap = (await schoolTask).ToDictionary(t => t.Id);
+        var orgMap    = (await orgTask).ToDictionary(o => o.Id);
+
+        var catSchools = BuildSchoolCards(catSchoolIds, schoolMap);
+        var catOrgs    = BuildOrgCards(catOrgIds, orgMap);
+
+        var mappedEvents = eventList.Select((ev, i) =>
+            MapEvent(ev,
+                BuildSchoolCards(schoolIdsForEvents[i], schoolMap),
+                BuildOrgCards(evOrgIds[i], orgMap))
+        ).ToList();
+
+        var vm = MapCat(cat, mappedEvents, catSchools, catOrgs);
+        _cache.Set(key, vm, CacheKeys.TtlHomepage);
+        return vm;
     }
 
     /// <summary>
@@ -190,31 +220,22 @@ public class EventsService : IEventsService
             Orgs          = orgs
         };
 
-    // Parse "144,4633,290,..." → load TruongCardViewModel list  (dùng cho per-event)
-    private Task<IEnumerable<TruongCardViewModel>> ResolveSchoolsAsync(string? idsCsv)
+    // ── Helpers: parse CSV IDs ───────────────────────────────────────────────
+
+    private static List<int> ParseIds(string? csv)
     {
-        if (string.IsNullOrWhiteSpace(idsCsv)) return Task.FromResult(Enumerable.Empty<TruongCardViewModel>());
-
-        var ids = idsCsv
-            .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
-            .Select(s => int.TryParse(s, out var n) ? (int?)n : null)
-            .Where(n => n.HasValue)
-            .Select(n => n!.Value)
-            .ToList();
-
-        return ResolveSchoolsByIdsAsync(ids);
+        if (string.IsNullOrWhiteSpace(csv)) return [];
+        var result = new List<int>();
+        foreach (var part in csv.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
+            if (int.TryParse(part, out var id)) result.Add(id);
+        return result;
     }
 
-    // Resolve từ danh sách ID đã có sẵn (dùng cho category-level merged list)
-    private async Task<IEnumerable<TruongCardViewModel>> ResolveSchoolsByIdsAsync(List<int> ids)
+    // Build card lists from pre-loaded dictionaries (no DB calls)
+    private IEnumerable<TruongCardViewModel> BuildSchoolCards(
+        List<int> ids, Dictionary<int, TruongModel> map)
     {
-        if (ids.Count == 0) return [];
-
-        var truongs = await _truong.GetByIdsAsync(ids);
-
-        // Giữ thứ tự từ danh sách ID đầu vào
-        var map    = truongs.ToDictionary(t => t.Id);
-        var result = new List<TruongCardViewModel>();
+        var result = new List<TruongCardViewModel>(ids.Count);
         foreach (var id in ids)
         {
             if (!map.TryGetValue(id, out var t)) continue;
@@ -236,35 +257,10 @@ public class EventsService : IEventsService
         return result;
     }
 
-    private static readonly Dictionary<int, string> s_countryNames = new()
+    private IEnumerable<OrgCardViewModel> BuildOrgCards(
+        List<int> ids, Dictionary<int, OrganizationModel> map)
     {
-        {1,   "Úc"},
-        {3,   "Canada"},
-        {23,  "Thụy Sĩ"},
-        {28,  "Anh"},
-        {38,  "Mỹ"},
-        {99,  "New Zealand"},
-        {401, "Ireland"},
-    };
-
-    // Parse "28,44,..." → load OrgCardViewModel list
-    private async Task<IEnumerable<OrgCardViewModel>> ResolveOrgsAsync(string? idsCsv)
-    {
-        if (string.IsNullOrWhiteSpace(idsCsv)) return [];
-
-        var ids = idsCsv
-            .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
-            .Select(s => int.TryParse(s, out var n) ? (int?)n : null)
-            .Where(n => n.HasValue)
-            .Select(n => n!.Value)
-            .ToList();
-
-        if (ids.Count == 0) return [];
-
-        var orgs = await _org.GetByIdsAsync(ids);
-
-        var map    = orgs.ToDictionary(o => o.Id);
-        var result = new List<OrgCardViewModel>();
+        var result = new List<OrgCardViewModel>(ids.Count);
         foreach (var id in ids)
         {
             if (!map.TryGetValue(id, out var o)) continue;
@@ -282,4 +278,16 @@ public class EventsService : IEventsService
         }
         return result;
     }
+
+    private static readonly Dictionary<int, string> s_countryNames = new()
+    {
+        {1,   "Úc"},
+        {3,   "Canada"},
+        {23,  "Thụy Sĩ"},
+        {28,  "Anh"},
+        {38,  "Mỹ"},
+        {99,  "New Zealand"},
+        {401, "Ireland"},
+    };
 }
+
