@@ -1,8 +1,6 @@
-﻿
-using System.Collections;
+﻿using NVCMS.Modules.Marketing;
 using System.Collections.Generic;
 using System.Linq;
-using NVCMS.Modules.Marketing;
 
 namespace NVCMS.API.Marketing.Services.Marketing
 {

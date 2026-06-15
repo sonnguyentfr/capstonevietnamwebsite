@@ -413,3 +413,4 @@ FodyWeavers.xsd
 # npm
 node_modules/
 Capstone.View/package-lock.json
+/PROJECT/API/NVCMS.API.ReadGoogleSheet/Google/capstoneweb-151609-ae0fdb82aef2.json
