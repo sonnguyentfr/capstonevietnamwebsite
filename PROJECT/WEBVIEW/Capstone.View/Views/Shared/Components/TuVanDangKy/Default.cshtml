@@ -1,0 +1,83 @@
+@model NVCMS.WebView.Data.ViewModels.TuVanFormInputViewModel
+
+<section class="contact-form section-b-large">
+    <div class="container">
+        <div class="row">
+            <div class="col lg:w-1/2">
+                <div class="block-wrap">
+                    <h2 class="site-title mb-6 text-center lg:text-left">Đăng ký tư vấn</h2>
+
+                    @if (TempData["TuVanSuccess"] is string ok)
+                    {
+                        <div class="alert alert-success mb-4">@ok</div>
+                    }
+                    @if (TempData["TuVanError"] is string er)
+                    {
+                        <div class="alert alert-danger mb-4">@er</div>
+                    }
+
+                    <form asp-controller="Home" asp-action="DangKyTuVan" method="post" id="tuvan-form">
+                        @Html.AntiForgeryToken()
+                        <div class="grid grid-cols-2 gap-6">
+                            <div class="form-group col-span-2">
+                                <select asp-for="HinhThuc">
+                                    <option value="TUVANDUHOC">Tư vấn du học</option>
+                                    <option value="DINHCU">Định cư</option>
+                                    <option value="DINHHUONGNGHENGHIEP">Định hướng nghề nghiệp</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-span-2">
+                                <select asp-for="VanPhong">
+                                    <option value="HN">Hà Nội</option>
+                                    <option value="HCM">Hồ Chí Minh</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-span-2">
+                                <input asp-for="HoVaTen" placeholder="Họ và tên" />
+                            </div>
+                            <div class="form-group lg:col-span-1 col-span-2">
+                                <input asp-for="Email" placeholder="Email" />
+                            </div>
+                            <div class="form-group lg:col-span-1 col-span-2">
+                                <input asp-for="SoDienThoai" placeholder="Số điện thoại" />
+                            </div>
+                            <div class="form-group col-span-2">
+                                <textarea asp-for="NoiDung" placeholder="Nội dung"></textarea>
+                            </div>
+                            <div class="form-group col-span-2" style="font-style: italic">
+                                <p>Capstone cam kết không chia sẻ thông tin của bạn cho bất kỳ bên thứ ba nào.</p>
+                                <p>
+                                    <label><input asp-for="DongYDieuKhoan" /> Tôi đồng ý với các điều khoản và điều kiện bảo mật thông tin của Capstone</label>
+                                </p>
+                                <p>
+                                    <label><input asp-for="NhanThongTin" /> Tôi muốn nhận thông tin du học và các ưu đãi cập nhật từ Capstone.</label>
+                                </p>
+                            </div>
+                            <div class="frm-btnwrap">
+                                <div class="frm-btn">
+                                    <button type="submit"><span>GỬI</span><em class="fa-regular fa-arrow-right"></em></button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
+                    <script>
+                        document.getElementById('tuvan-form')?.addEventListener('submit', function (e) {
+                            var email = (document.getElementById('Email')?.value || '').trim();
+                            var phone = (document.getElementById('SoDienThoai')?.value || '').trim();
+                            if (!email && !phone) {
+                                e.preventDefault();
+                                alert('Vui lòng nhập Email hoặc Số điện thoại.');
+                            }
+                        });
+                    </script>
+                </div>
+            </div>
+            <div class="col lg:w-1/2">
+                <div class="img img-cover img-zoom-in">
+                    <a><img src="/static/img/48.jpg" alt="alt"></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

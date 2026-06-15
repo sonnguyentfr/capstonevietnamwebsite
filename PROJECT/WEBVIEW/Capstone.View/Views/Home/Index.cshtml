@@ -341,16 +341,23 @@
             <div class="col lg:w-1/2">
                 <div class="block-wrap">
                     <h2 class="site-title mb-6 text-center lg:text-left">Đăng ký tư vấn</h2>
-                    <div class="txt mb-7 text-center lg:text-left">
-                        <p>Mọi sự hợp tác tốt đẹp đều bắt đầu từ một cuộc trò chuyện.</p>
+                    @* <div class="txt mb-7 text-center lg:text-left">
                         <p>Hãy liên hệ với chúng tôi, mọi mong muốn của bạn&nbsp;<span>sẽ được lắng nghe.</span></p>
-                    </div>
+                    </div> *@
                     <div class="wrap-form">
                         <div class="grid grid-cols-2 gap-6">
 
                             <div class="form-group col-span-2">
                                 <select type="text" placeholder="Hình thức tư vấn">
-                                    <option value="">Hình thức tư vấn</option>
+                                    <option value="TUVANDUHOC">Tư vẫn du học</option>
+                                    <option value="DINHCU">Định cư</option>
+                                    <option value="DINHHUONGNGHENGHIEP">Định hướng nghề nghiệp</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-span-2">
+                                <select type="text" placeholder="Văn phòng">
+                                    <option value="HN">Hà Nội</option>
+                                    <option value="HCM">Hồ Chí Minh</option>
                                 </select>
                             </div>
                             <div class="form-group col-span-2">
@@ -413,3 +420,4 @@
         </div>
     </div>
 </section>
+@await Component.InvokeAsync("TuVanDangKy")

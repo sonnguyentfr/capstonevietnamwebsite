@@ -4,6 +4,8 @@ using Capstone.View.Options;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Net.Http.Headers;
 using NVCMS.WebView.Data;
+using NVCMS.WebView.Data.Contracts.Service;
+using NVCMS.WebView.Data.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -34,6 +36,9 @@ var crmConnStr = builder.Configuration.GetConnectionString("CRMConnection")!;
 var webRootPath = builder.Environment.WebRootPath;
 var serverFilesBaseUrl = builder.Configuration["SiteSettings:ServerFilesBaseUrl"] ?? string.Empty;
 builder.Services.AddWebViewData(connStr, crmConnStr, webRootPath, serverFilesBaseUrl);
+
+builder.Services.AddScoped<ITuVanFormService>(sp =>
+    new TuVanFormService(connStr, sp.GetRequiredService<IConfiguration>()));
 
 builder.Services.AddHttpClient("ApiClient", client =>
 {
