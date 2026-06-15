@@ -1,13 +1,15 @@
+using Hangfire;
+using Hangfire.SqlServer;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using NVCMS.API.ReadGoogleSheet.Data;
+using NVCMS.API.ReadGoogleSheet.Jobs;
 using NVCMS.API.ReadGoogleSheet.Models;
 using NVCMS.API.ReadGoogleSheet.Repositories;
 using NVCMS.API.ReadGoogleSheet.Services;
 using System.Text;
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container
@@ -16,6 +18,9 @@ builder.Services.AddEndpointsApiExplorer();
 
 // Configure SMTP Settings
 builder.Services.Configure<SmtpSettings>(builder.Configuration.GetSection("SmtpSettings"));
+
+// Configure SES Settings
+builder.Services.Configure<SesSettings>(builder.Configuration.GetSection("SesSettings"));
 
 // Configure Swagger with JWT
 builder.Services.AddSwaggerGen(c =>
@@ -99,6 +104,48 @@ builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IZaloTokenService, ZaloTokenService>();
 
+// Marketing DbContext (DefaultCRMConnection)
+builder.Services.AddDbContext<MarketingDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultCRMConnection")));
+
+// Marketing Repositories
+builder.Services.AddScoped<IMarketingCampaignRepository,    MarketingCampaignRepository>();
+builder.Services.AddScoped<IMarketingListMailRepository,    MarketingListMailRepository>();
+builder.Services.AddScoped<IMarketingTemplateRepository,    MarketingTemplateRepository>();
+builder.Services.AddScoped<IMarketingEventRepository,       MarketingEventRepository>();
+builder.Services.AddScoped<IMarketingHangfireLogRepository, MarketingHangfireLogRepository>();
+builder.Services.AddScoped<IMarketingUnsubRepository,       MarketingUnsubRepository>();
+builder.Services.AddScoped<IMarketingClickRepository,       MarketingClickRepository>();
+builder.Services.AddScoped<IMarketingCampaignSendRepository, MarketingCampaignSendRepository>();
+builder.Services.AddScoped<IMarketingSendLogRepository,     MarketingSendLogRepository>();
+builder.Services.AddScoped<IEmailMarketingService,          EmailMarketingService>();
+builder.Services.AddScoped<ISESService,                     SESService>();
+
+// ── Hangfire ──────────────────────────────────────────────────────────────────
+var hangfireConn = builder.Configuration.GetConnectionString("DefaultCRMConnection")!;
+builder.Services.AddHangfire(config => config
+    .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
+    .UseSimpleAssemblyNameTypeSerializer()
+    .UseRecommendedSerializerSettings()
+    .UseSqlServerStorage(hangfireConn, new SqlServerStorageOptions
+    {
+        CommandBatchMaxTimeout       = TimeSpan.FromMinutes(5),
+        SlidingInvisibilityTimeout   = TimeSpan.FromMinutes(5),
+        QueuePollInterval            = TimeSpan.FromSeconds(15),
+        UseRecommendedIsolationLevel = true,
+        DisableGlobalLocks           = true
+    }));
+
+builder.Services.AddHangfireServer(options =>
+{
+    options.WorkerCount = Environment.ProcessorCount * 2;
+    options.Queues      = ["default"];
+});
+
+// Register Jobs as transient (Hangfire activator tự resolve qua DI)
+builder.Services.AddTransient<CampaignSchedulerJob>();
+builder.Services.AddTransient<CampaignBatchJob>();
+
 // Add CORS if needed
 builder.Services.AddCors(options =>
 {
@@ -128,9 +175,27 @@ app.UseHttpsRedirection();
 
 app.UseCors("AllowAll");
 
+// ── Hangfire Dashboard (/hangfire) ────────────────────────────────────────────
+app.UseHangfireDashboard("/hangfire", new DashboardOptions
+{
+    // Cho phép tất cả truy cập trong dev; production nên dùng DashboardAuthorizationFilter
+    Authorization = []
+});
+
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+// ── Recurring Jobs ────────────────────────────────────────────────────────────
+// CampaignSchedulerJob chạy mỗi phút để quét campaign Queued đến hạn
+RecurringJob.AddOrUpdate<CampaignSchedulerJob>(
+    recurringJobId: "campaign-scheduler",
+    methodCall:     job => job.ExecuteAsync(),
+    cronExpression: Cron.Minutely(),
+    options:        new RecurringJobOptions
+    {
+        TimeZone = TimeZoneInfo.Utc
+    });
 
 app.Run();
