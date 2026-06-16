@@ -14,7 +14,7 @@ Namespace NVCMS.Modules.Marketing
         Private _sendcount As Integer
         Private _Datetime As DateTime
         Private _UserId As Integer
-        Private _PortalId As String
+        Private _PortalId As Integer
 
 
         '------------------------------------------'
@@ -85,11 +85,11 @@ Namespace NVCMS.Modules.Marketing
         End Property
 
         '------------------------------------------'
-        Public Property PortalId() As String
+        Public Property PortalId() As Integer
             Get
                 Return _PortalId
             End Get
-            Set(ByVal Value As String)
+            Set(ByVal Value As Integer)
                 _PortalId = Value
             End Set
         End Property

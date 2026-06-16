@@ -31,14 +31,6 @@ namespace NVCMS.API.ReadGoogleSheet.Data
                 e.Property(x => x.CreatedDate).HasColumnName("CreatedDate").HasColumnType("datetime");
                 e.Property(x => x.UserId).HasColumnName("UserId");
                 e.Property(x => x.PortalId).HasColumnName("PortalId");
-                e.Property(x => x.Subject).HasColumnName("Subject").HasMaxLength(500);
-                e.Property(x => x.TemplateId).HasColumnName("TemplateId");
-                e.Property(x => x.Status).HasColumnName("Status");
-                e.Property(x => x.ScheduledAt).HasColumnName("ScheduledAt").HasColumnType("datetime");
-                e.Property(x => x.StartedAt).HasColumnName("StartedAt").HasColumnType("datetime");
-                e.Property(x => x.CompletedAt).HasColumnName("CompletedAt").HasColumnType("datetime");
-                e.Property(x => x.CreatedBy).HasColumnName("CreatedBy").HasMaxLength(100);
-                e.Property(x => x.UpdatedDate).HasColumnName("UpdatedDate").HasColumnType("datetime");
             });
 
             modelBuilder.Entity<Marketing_Mail_ListMail>(e =>
@@ -53,16 +45,6 @@ namespace NVCMS.API.ReadGoogleSheet.Data
                 e.Property(x => x.Datetime).HasColumnName("Datetime").HasColumnType("datetime");
                 e.Property(x => x.UserId).HasColumnName("UserId");
                 e.Property(x => x.PortalId).HasColumnName("PortalId");
-                e.Property(x => x.FullName).HasColumnName("FullName").HasMaxLength(500);
-                e.Property(x => x.MessageId).HasColumnName("MessageId").HasMaxLength(255);
-                e.Property(x => x.SentAt).HasColumnName("SentAt").HasColumnType("datetime");
-                e.Property(x => x.DeliveredAt).HasColumnName("DeliveredAt").HasColumnType("datetime");
-                e.Property(x => x.OpenedAt).HasColumnName("OpenedAt").HasColumnType("datetime");
-                e.Property(x => x.ClickedAt).HasColumnName("ClickedAt").HasColumnType("datetime");
-                e.Property(x => x.BounceReason).HasColumnName("BounceReason");
-                e.Property(x => x.ComplaintReason).HasColumnName("ComplaintReason");
-                e.Property(x => x.RetryCount).HasColumnName("RetryCount");
-                e.Property(x => x.RecipientStatus).HasColumnName("RecipientStatus");
             });
 
             modelBuilder.Entity<MarketingMailListMailUnsub>(e =>
@@ -74,9 +56,6 @@ namespace NVCMS.API.ReadGoogleSheet.Data
                 e.Property(x => x.reason).HasColumnName("reason");
                 e.Property(x => x.created_date).HasColumnName("created_date").HasColumnType("datetime");
                 e.Property(x => x.PortalId).HasColumnName("PortalId");
-                e.Property(x => x.Token).HasColumnName("Token");
-                e.Property(x => x.IPAddress).HasColumnName("IPAddress").HasMaxLength(100);
-                e.Property(x => x.UserAgent).HasColumnName("UserAgent").HasMaxLength(1000);
             });
 
             modelBuilder.Entity<Marketing_Mail_Template>(e =>
