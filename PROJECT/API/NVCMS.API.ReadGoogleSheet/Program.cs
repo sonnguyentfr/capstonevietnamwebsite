@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using NVCMS.API.ReadGoogleSheet.Data;
+using NVCMS.API.ReadGoogleSheet.Infrastructure;
 using NVCMS.API.ReadGoogleSheet.Jobs;
 using NVCMS.API.ReadGoogleSheet.Models;
 using NVCMS.API.ReadGoogleSheet.Repositories;
@@ -175,15 +176,25 @@ app.UseHttpsRedirection();
 
 app.UseCors("AllowAll");
 
-// ── Hangfire Dashboard (/hangfire) ────────────────────────────────────────────
-app.UseHangfireDashboard("/hangfire", new DashboardOptions
-{
-    // Cho phép tất cả truy cập trong dev; production nên dùng DashboardAuthorizationFilter
-    Authorization = []
-});
-
 app.UseAuthentication();
 app.UseAuthorization();
+
+// ── Hangfire Dashboard (/hangfire) ────────────────────────────────────────────
+// Bảo vệ bằng JWT: localhost truy cập tự do, môi trường khác phải login qua /hangfire-login
+var _jwtCfg      = builder.Configuration.GetSection("Jwt");
+var _jwtSecret   = _jwtCfg["Secret"]   ?? string.Empty;
+var _jwtIssuer   = _jwtCfg["Issuer"]   ?? string.Empty;
+var _jwtAudience = _jwtCfg["Audience"] ?? string.Empty;
+
+app.UseHangfireDashboard("/hangfire", new DashboardOptions
+{
+    DashboardTitle = "NVCMS – Hangfire Monitor",
+    Authorization  =
+    [
+        new HangfireDashboardAuthFilter(_jwtSecret, _jwtIssuer, _jwtAudience)
+    ],
+    AppPath = "/swagger"   // nút "Back to site" dẫn về Swagger
+});
 
 app.MapControllers();
 

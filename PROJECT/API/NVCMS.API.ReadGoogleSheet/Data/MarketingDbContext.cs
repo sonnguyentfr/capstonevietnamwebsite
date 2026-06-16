@@ -28,7 +28,14 @@ namespace NVCMS.API.ReadGoogleSheet.Data
                 e.Property(x => x.id).HasColumnName("id").UseIdentityColumn();
                 e.Property(x => x.Title).HasColumnName("Title").HasMaxLength(500).IsRequired();
                 e.Property(x => x.Description).HasColumnName("Description").HasMaxLength(500);
+                e.Property(x => x.Subject).HasColumnName("Subject").HasMaxLength(500);
+                e.Property(x => x.TemplateId).HasColumnName("TemplateId");
+                e.Property(x => x.Status).HasColumnName("Status");
+                e.Property(x => x.ScheduledAt).HasColumnName("ScheduledAt").HasColumnType("datetime");
+                e.Property(x => x.StartedAt).HasColumnName("StartedAt").HasColumnType("datetime");
+                e.Property(x => x.CompletedAt).HasColumnName("CompletedAt").HasColumnType("datetime");
                 e.Property(x => x.CreatedDate).HasColumnName("CreatedDate").HasColumnType("datetime");
+                e.Property(x => x.UpdatedDate).HasColumnName("UpdatedDate").HasColumnType("datetime");
                 e.Property(x => x.UserId).HasColumnName("UserId");
                 e.Property(x => x.PortalId).HasColumnName("PortalId");
             });
@@ -40,9 +47,19 @@ namespace NVCMS.API.ReadGoogleSheet.Data
                 e.Property(x => x.id).HasColumnName("id").UseIdentityColumn();
                 e.Property(x => x.CampaingId).HasColumnName("CampaingId");
                 e.Property(x => x.Email).HasColumnName("Email").HasMaxLength(100);
+                e.Property(x => x.FullName).HasColumnName("FullName").HasMaxLength(255);
                 e.Property(x => x.Status).HasColumnName("Status");
                 e.Property(x => x.sendcount).HasColumnName("sendcount");
+                e.Property(x => x.RetryCount).HasColumnName("RetryCount");
+                e.Property(x => x.RecipientStatus).HasColumnName("RecipientStatus");
+                e.Property(x => x.MessageId).HasColumnName("MessageId").HasMaxLength(255);
+                e.Property(x => x.BounceReason).HasColumnName("BounceReason");
+                e.Property(x => x.ComplaintReason).HasColumnName("ComplaintReason");
                 e.Property(x => x.Datetime).HasColumnName("Datetime").HasColumnType("datetime");
+                e.Property(x => x.SentAt).HasColumnName("SentAt").HasColumnType("datetime");
+                e.Property(x => x.DeliveredAt).HasColumnName("DeliveredAt").HasColumnType("datetime");
+                e.Property(x => x.OpenedAt).HasColumnName("OpenedAt").HasColumnType("datetime");
+                e.Property(x => x.ClickedAt).HasColumnName("ClickedAt").HasColumnType("datetime");
                 e.Property(x => x.UserId).HasColumnName("UserId");
                 e.Property(x => x.PortalId).HasColumnName("PortalId");
             });
@@ -54,8 +71,10 @@ namespace NVCMS.API.ReadGoogleSheet.Data
                 e.Property(x => x.id).HasColumnName("id").UseIdentityColumn();
                 e.Property(x => x.Email).HasColumnName("Email").HasMaxLength(500);
                 e.Property(x => x.reason).HasColumnName("reason");
+                e.Property(x => x.Token).HasColumnName("Token");
                 e.Property(x => x.created_date).HasColumnName("created_date").HasColumnType("datetime");
                 e.Property(x => x.PortalId).HasColumnName("PortalId");
+                e.Property(x => x.IPAddress).HasColumnName("IPAddress").HasMaxLength(50);
             });
 
             modelBuilder.Entity<Marketing_Mail_Template>(e =>
@@ -64,7 +83,9 @@ namespace NVCMS.API.ReadGoogleSheet.Data
                 e.HasKey(x => x.Id);
                 e.Property(x => x.Id).HasColumnName("Id").UseIdentityColumn();
                 e.Property(x => x.TemplateName).HasColumnName("TemplateName").HasMaxLength(500);
-                e.Property(x => x.FilePath).HasColumnName("FilePath").HasMaxLength(50);
+                e.Property(x => x.FilePath).HasColumnName("FilePath").HasMaxLength(500);
+                e.Property(x => x.HtmlContent).HasColumnName("HtmlContent");
+                e.Property(x => x.CreatedDate).HasColumnName("CreatedDate").HasColumnType("datetime");
                 e.Property(x => x.PortalId).HasColumnName("PortalId");
             });
 

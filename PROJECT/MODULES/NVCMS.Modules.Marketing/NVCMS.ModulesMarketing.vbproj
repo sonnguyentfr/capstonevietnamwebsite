@@ -102,6 +102,8 @@
     <Compile Include="ListMailUnsub\ListMailUnsub_Info.vb" />
     <Compile Include="ListMail\ListMail_Controller.vb" />
     <Compile Include="ListMail\ListMail_Info.vb" />
+    <Compile Include="SendCampaign\SendCampaignRequest.vb" />
+    <Compile Include="SendCampaign\SendCampaignResponse.vb" />
     <Compile Include="Template\Template_Controller.vb" />
     <Compile Include="Template\Template_Info.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />

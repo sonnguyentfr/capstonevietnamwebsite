@@ -153,8 +153,9 @@ namespace NVCMS.API.ReadGoogleSheet.Controllers
             await WriteEventAsync(sendLog, listMail, messageId, "Delivery", rawPayload);
             if (sendLog is not null)
                 await _campaignSendRepo.IncrementCounterAsync(sendLog.CampaignSendId!.Value, "TotalDelivered");
-            if (listMail is not null && (listMail.RecipientStatus ?? 0) < 2)
-                await _listMailRepo.UpdateRecipientStatusAsync(listMail.id, 2, DateTime.UtcNow);
+            var lm = listMail ?? await FetchListMailFromSendLogAsync(sendLog);
+            if (lm is not null && (lm.RecipientStatus ?? 0) < 2)
+                await _listMailRepo.UpdateRecipientStatusAsync(lm.id, 2, DateTime.UtcNow);
         }
 
         private async Task HandleOpenAsync(
@@ -164,8 +165,9 @@ namespace NVCMS.API.ReadGoogleSheet.Controllers
             await WriteEventAsync(sendLog, listMail, messageId, "Open", rawPayload);
             if (sendLog is not null)
                 await _campaignSendRepo.IncrementCounterAsync(sendLog.CampaignSendId!.Value, "TotalOpened");
-            if (listMail is not null && (listMail.RecipientStatus ?? 0) < 3)
-                await _listMailRepo.UpdateRecipientStatusAsync(listMail.id, 3, DateTime.UtcNow);
+            var lm = listMail ?? await FetchListMailFromSendLogAsync(sendLog);
+            if (lm is not null && (lm.RecipientStatus ?? 0) < 3)
+                await _listMailRepo.UpdateRecipientStatusAsync(lm.id, 3, DateTime.UtcNow);
         }
 
         private async Task HandleClickAsync(
@@ -175,13 +177,14 @@ namespace NVCMS.API.ReadGoogleSheet.Controllers
             await WriteEventAsync(sendLog, listMail, messageId, "Click", rawPayload);
             if (sendLog is not null)
                 await _campaignSendRepo.IncrementCounterAsync(sendLog.CampaignSendId!.Value, "TotalClicked");
-            if (listMail is not null)
-                await _listMailRepo.UpdateRecipientStatusAsync(listMail.id, 4, DateTime.UtcNow);
-            if (!string.IsNullOrWhiteSpace(click?.link) && listMail is not null)
+            var lm = listMail ?? await FetchListMailFromSendLogAsync(sendLog);
+            if (lm is not null)
+                await _listMailRepo.UpdateRecipientStatusAsync(lm.id, 4, DateTime.UtcNow);
+            if (!string.IsNullOrWhiteSpace(click?.link) && lm is not null)
             {
                 await _clickRepo.AddAsync(new MarketingMailClick
                 {
-                    ListMailId = listMail.id,
+                    ListMailId = lm.id,
                     Url        = click.link,
                     ClickedAt  = DateTime.UtcNow
                 });
@@ -195,13 +198,14 @@ namespace NVCMS.API.ReadGoogleSheet.Controllers
             await WriteEventAsync(sendLog, listMail, messageId, "Bounce", rawPayload);
             if (sendLog is not null)
                 await _campaignSendRepo.IncrementCounterAsync(sendLog.CampaignSendId!.Value, "TotalBounced");
-            if (listMail is not null)
+            var lm = listMail ?? await FetchListMailFromSendLogAsync(sendLog);
+            if (lm is not null)
             {
                 var reason = bounce is null ? string.Empty
                     : $"{bounce.bounceType}/{bounce.bounceSubType}";
-                listMail.BounceReason    = reason;
-                listMail.RecipientStatus = 5;
-                await _listMailRepo.UpdateAsync(listMail);
+                lm.BounceReason    = reason;
+                lm.RecipientStatus = 5;
+                await _listMailRepo.UpdateAsync(lm);
             }
         }
 
@@ -212,24 +216,25 @@ namespace NVCMS.API.ReadGoogleSheet.Controllers
             await WriteEventAsync(sendLog, listMail, messageId, "Complaint", rawPayload);
             if (sendLog is not null)
                 await _campaignSendRepo.IncrementCounterAsync(sendLog.CampaignSendId!.Value, "TotalComplaint");
-            if (listMail is not null)
+            var lm = listMail ?? await FetchListMailFromSendLogAsync(sendLog);
+            if (lm is not null)
             {
-                listMail.ComplaintReason = complaint?.complaintFeedbackType ?? "unknown";
-                listMail.RecipientStatus = 6;
-                await _listMailRepo.UpdateAsync(listMail);
+                lm.ComplaintReason = complaint?.complaintFeedbackType ?? "unknown";
+                lm.RecipientStatus = 6;
+                await _listMailRepo.UpdateAsync(lm);
 
-                if (!string.IsNullOrWhiteSpace(listMail.Email))
+                if (!string.IsNullOrWhiteSpace(lm.Email))
                 {
                     var alreadyUnsub = await _unsubRepo.IsUnsubscribedAsync(
-                        listMail.Email, listMail.PortalId ?? 0);
+                        lm.Email, lm.PortalId ?? 0);
                     if (!alreadyUnsub)
                     {
                         await _unsubRepo.AddAsync(new MarketingMailListMailUnsub
                         {
-                            Email        = listMail.Email,
+                            Email        = lm.Email,
                             reason       = 6,
                             created_date = DateTime.UtcNow,
-                            PortalId     = listMail.PortalId,
+                            PortalId     = lm.PortalId,
                             Token        = Guid.NewGuid(),
                             IPAddress    = HttpContext.Connection.RemoteIpAddress?.ToString()
                         });
@@ -256,6 +261,14 @@ namespace NVCMS.API.ReadGoogleSheet.Controllers
                 Payload        = rawPayload,
                 CreatedDate    = DateTime.UtcNow
             });
+        }
+
+        /// <summary>Nếu listMail null, fetch từ sendLog.ListMailId (luồng mới).</summary>
+        private async Task<Marketing_Mail_ListMail?> FetchListMailFromSendLogAsync(
+            MarketingMailSendLog? sendLog)
+        {
+            if (sendLog?.ListMailId is null) return null;
+            return await _listMailRepo.GetByIdAsync(sendLog.ListMailId.Value);
         }
 
         private async Task ConfirmSubscriptionAsync(string? url)
@@ -334,6 +347,42 @@ namespace NVCMS.API.ReadGoogleSheet.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error getting recipients for campaign {Id}", id);
+                return StatusCode(500, ApiResponse<object>.ErrorResponse(ex.Message));
+            }
+        }
+
+        // ── GET /api/emailmarketing/campaign-send/{id} ────────────────────────
+        [HttpGet("campaign-send/{id:int}")]
+        [Authorize]
+        public async Task<IActionResult> GetCampaignSend(int id)
+        {
+            try
+            {
+                var send = await _campaignSendRepo.GetByIdAsync(id);
+                if (send is null)
+                    return NotFound(ApiResponse<object>.ErrorResponse($"CampaignSend {id} not found"));
+                return Ok(ApiResponse<MarketingMailCampaignSend>.SuccessResponse(send));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting campaign-send {Id}", id);
+                return StatusCode(500, ApiResponse<object>.ErrorResponse(ex.Message));
+            }
+        }
+
+        // ── GET /api/emailmarketing/campaign-send/{id}/logs ───────────────────
+        [HttpGet("campaign-send/{id:int}/logs")]
+        [Authorize]
+        public async Task<IActionResult> GetSendLogs(int id)
+        {
+            try
+            {
+                var logs = (await _sendLogRepo.GetAllByCampaignSendIdAsync(id)).ToList();
+                return Ok(ApiResponse<List<MarketingMailSendLog>>.SuccessResponse(logs, totalRecords: logs.Count));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting send logs for campaign-send {Id}", id);
                 return StatusCode(500, ApiResponse<object>.ErrorResponse(ex.Message));
             }
         }

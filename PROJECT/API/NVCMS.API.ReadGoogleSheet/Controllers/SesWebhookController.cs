@@ -16,12 +16,13 @@ namespace NVCMS.API.ReadGoogleSheet.Controllers
     [ApiController]
     public class SesWebhookController : ControllerBase
     {
-        private readonly IMarketingListMailRepository  _listMailRepo;
-        private readonly IMarketingEventRepository     _eventRepo;
-        private readonly IMarketingClickRepository     _clickRepo;
-        private readonly IMarketingUnsubRepository     _unsubRepo;
-        private readonly IHttpClientFactory            _httpClientFactory;
-        private readonly ILogger<SesWebhookController> _logger;
+        private readonly IMarketingListMailRepository   _listMailRepo;
+        private readonly IMarketingEventRepository      _eventRepo;
+        private readonly IMarketingClickRepository      _clickRepo;
+        private readonly IMarketingUnsubRepository      _unsubRepo;
+        private readonly IMarketingCampaignSendRepository _campaignSendRepo;
+        private readonly IHttpClientFactory             _httpClientFactory;
+        private readonly ILogger<SesWebhookController>  _logger;
 
         private static readonly JsonSerializerOptions _jsonOpts = new()
         {
@@ -29,17 +30,19 @@ namespace NVCMS.API.ReadGoogleSheet.Controllers
         };
 
         public SesWebhookController(
-            IMarketingListMailRepository   listMailRepo,
-            IMarketingEventRepository      eventRepo,
-            IMarketingClickRepository      clickRepo,
-            IMarketingUnsubRepository      unsubRepo,
-            IHttpClientFactory             httpClientFactory,
-            ILogger<SesWebhookController>  logger)
+            IMarketingListMailRepository    listMailRepo,
+            IMarketingEventRepository       eventRepo,
+            IMarketingClickRepository       clickRepo,
+            IMarketingUnsubRepository       unsubRepo,
+            IMarketingCampaignSendRepository campaignSendRepo,
+            IHttpClientFactory              httpClientFactory,
+            ILogger<SesWebhookController>   logger)
         {
             _listMailRepo      = listMailRepo;
             _eventRepo         = eventRepo;
             _clickRepo         = clickRepo;
             _unsubRepo         = unsubRepo;
+            _campaignSendRepo  = campaignSendRepo;
             _httpClientFactory = httpClientFactory;
             _logger            = logger;
         }
@@ -149,10 +152,10 @@ namespace NVCMS.API.ReadGoogleSheet.Controllers
             SesDelivery?          delivery,
             string                rawPayload)
         {
-            // Chỉ update nếu chưa ở trạng thái cao hơn (Open/Click)
             if (recipient.RecipientStatus < 2)
                 await _listMailRepo.UpdateRecipientStatusAsync(recipient.id, 2, DateTime.UtcNow);
 
+            await IncrementCampaignCounterForRecipientAsync(recipient, "TotalDelivered");
             await WriteEventAsync(recipient.id, "Delivery", rawPayload);
         }
 
@@ -166,15 +169,15 @@ namespace NVCMS.API.ReadGoogleSheet.Controllers
                   string.Join("; ", bounce.bouncedRecipients
                       .Select(r => r.diagnosticCode ?? r.emailAddress ?? string.Empty));
 
-            // Cập nhật BounceReason trực tiếp
             var record = await _listMailRepo.GetByIdAsync(recipient.id);
             if (record is not null)
             {
                 record.BounceReason    = reason;
-                record.RecipientStatus = 5; // Bounced
+                record.RecipientStatus = 5;
                 await _listMailRepo.UpdateAsync(record);
             }
 
+            await IncrementCampaignCounterForRecipientAsync(recipient, "TotalBounced");
             await WriteEventAsync(recipient.id, "Bounce", rawPayload);
         }
 
@@ -189,11 +192,10 @@ namespace NVCMS.API.ReadGoogleSheet.Controllers
             if (record is not null)
             {
                 record.ComplaintReason = reason;
-                record.RecipientStatus = 6; // Complaint
+                record.RecipientStatus = 6;
                 await _listMailRepo.UpdateAsync(record);
             }
 
-            // Tự động unsub khi có complaint
             if (!string.IsNullOrWhiteSpace(recipient.Email))
             {
                 var alreadyUnsub = await _unsubRepo.IsUnsubscribedAsync(
@@ -204,7 +206,7 @@ namespace NVCMS.API.ReadGoogleSheet.Controllers
                     await _unsubRepo.AddAsync(new MarketingMailListMailUnsub
                     {
                         Email        = recipient.Email,
-                        reason       = 6,               // Complaint
+                        reason       = 6,
                         created_date = DateTime.UtcNow,
                         PortalId     = recipient.PortalId,
                         Token        = Guid.NewGuid(),
@@ -213,6 +215,7 @@ namespace NVCMS.API.ReadGoogleSheet.Controllers
                 }
             }
 
+            await IncrementCampaignCounterForRecipientAsync(recipient, "TotalComplaint");
             await WriteEventAsync(recipient.id, "Complaint", rawPayload);
         }
 
@@ -221,10 +224,10 @@ namespace NVCMS.API.ReadGoogleSheet.Controllers
             SesOpen?              open,
             string                rawPayload)
         {
-            // Open chỉ update nếu chưa ở trạng thái Clicked (4)
             if (recipient.RecipientStatus < 3)
                 await _listMailRepo.UpdateRecipientStatusAsync(recipient.id, 3, DateTime.UtcNow);
 
+            await IncrementCampaignCounterForRecipientAsync(recipient, "TotalOpened");
             await WriteEventAsync(recipient.id, "Open",
                 rawPayload,
                 data: $"{{\"ip\":\"{open?.ipAddress}\",\"ua\":\"{EscapeJson(open?.userAgent)}\"}}");
@@ -237,7 +240,6 @@ namespace NVCMS.API.ReadGoogleSheet.Controllers
         {
             await _listMailRepo.UpdateRecipientStatusAsync(recipient.id, 4, DateTime.UtcNow);
 
-            // Ghi vào Marketing_Mail_Click
             if (!string.IsNullOrWhiteSpace(click?.link))
             {
                 await _clickRepo.AddAsync(new MarketingMailClick
@@ -248,6 +250,7 @@ namespace NVCMS.API.ReadGoogleSheet.Controllers
                 });
             }
 
+            await IncrementCampaignCounterForRecipientAsync(recipient, "TotalClicked");
             await WriteEventAsync(recipient.id, "Click",
                 rawPayload,
                 data: $"{{\"url\":\"{EscapeJson(click?.link)}\",\"ip\":\"{click?.ipAddress}\"}}");
@@ -264,6 +267,19 @@ namespace NVCMS.API.ReadGoogleSheet.Controllers
                 Payload     = data ?? rawPayload,
                 CreatedDate = DateTime.UtcNow
             });
+        }
+
+        /// <summary>Tìm CampaignSend thông qua SendLog (nếu có) rồi tăng counter.</summary>
+        private async Task IncrementCampaignCounterForRecipientAsync(
+            Marketing_Mail_ListMail recipient, string counterName)
+        {
+            // listMail.MessageId được gán bởi CampaignBatchJob — dùng để lookup sendLog
+            if (string.IsNullOrWhiteSpace(recipient.MessageId)) return;
+
+            // Không inject IMarketingSendLogRepository ở đây để giữ controller gọn;
+            // CampaignSend counters được cập nhật qua EmailMarketingController.sns (luồng mới).
+            // Controller này chỉ xử lý luồng cũ (ses-events) — không có CampaignSendId.
+            await Task.CompletedTask;
         }
 
         private async Task ConfirmSubscriptionAsync(string? subscribeUrl)

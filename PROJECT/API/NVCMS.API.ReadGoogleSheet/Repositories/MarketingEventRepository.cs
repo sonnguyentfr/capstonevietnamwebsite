@@ -16,6 +16,14 @@ namespace NVCMS.API.ReadGoogleSheet.Repositories
                 .ToListAsync();
         }
 
+        public async Task<IEnumerable<MarketingMailEvent>> GetByCampaignSendIdAsync(int campaignSendId)
+        {
+            return await _dbSet
+                .Where(e => e.CampaignSendId == campaignSendId)
+                .OrderByDescending(e => e.CreatedDate)
+                .ToListAsync();
+        }
+
         public async Task<IEnumerable<MarketingMailEvent>> GetByEventTypeAsync(string eventType)
         {
             return await _dbSet

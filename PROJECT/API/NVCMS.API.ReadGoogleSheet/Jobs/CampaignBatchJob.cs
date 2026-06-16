@@ -16,6 +16,7 @@ namespace NVCMS.API.ReadGoogleSheet.Jobs
 
         private readonly IMarketingCampaignSendRepository _campaignSendRepo;
         private readonly IMarketingSendLogRepository      _sendLogRepo;
+        private readonly IMarketingListMailRepository     _listMailRepo;
         private readonly IMarketingEventRepository        _eventRepo;
         private readonly ISESService                      _sesService;
         private readonly ILogger<CampaignBatchJob>        _logger;
@@ -23,12 +24,14 @@ namespace NVCMS.API.ReadGoogleSheet.Jobs
         public CampaignBatchJob(
             IMarketingCampaignSendRepository campaignSendRepo,
             IMarketingSendLogRepository      sendLogRepo,
+            IMarketingListMailRepository     listMailRepo,
             IMarketingEventRepository        eventRepo,
             ISESService                      sesService,
             ILogger<CampaignBatchJob>        logger)
         {
             _campaignSendRepo = campaignSendRepo;
             _sendLogRepo      = sendLogRepo;
+            _listMailRepo     = listMailRepo;
             _eventRepo        = eventRepo;
             _sesService       = sesService;
             _logger           = logger;
@@ -86,8 +89,22 @@ namespace NVCMS.API.ReadGoogleSheet.Jobs
                             body);
 
                         await _sendLogRepo.UpdateStatusAsync(log.Id, "Sent", sesMessageId: messageId);
-                        totalSent++;
 
+                        // Cập nhật MessageId vào listMail để SNS webhook lookup được
+                        if (log.ListMailId.HasValue)
+                        {
+                            var listMail = await _listMailRepo.GetByIdAsync(log.ListMailId.Value);
+                            if (listMail is not null)
+                            {
+                                listMail.MessageId      = messageId;
+                                listMail.RecipientStatus = 1; // Sent
+                                listMail.SentAt          = DateTime.UtcNow;
+                                listMail.sendcount       = (listMail.sendcount ?? 0) + 1;
+                                await _listMailRepo.UpdateAsync(listMail);
+                            }
+                        }
+
+                        totalSent++;
                         _logger.LogDebug("Sent to {Email} msgId={MsgId}", log.Email, messageId);
                     }
                     catch (Exception ex)
