@@ -39,6 +39,7 @@ _[Dd]oc/
 DATABASE/
 _BAK/
 [Dd]ATAFILE/
+WWW_VIEW/
 # Visual Studio 2015/2017 cache/options directory
 .vs/
 # Uncomment if you have tasks that create the project's   static files in wwwroot
@@ -188,7 +189,7 @@ DocProject/Help/*.hhk
 DocProject/Help/*.hhp
 DocProject/Help/Html2
 DocProject/Help/html
-
+WWW_API/
 # Click-Once directory
 publish/
 
