@@ -1,93 +1,63 @@
 using Hangfire.Dashboard;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace NVCMS.API.ReadGoogleSheet.Infrastructure
 {
     /// <summary>
-    /// Cho phép truy cập Hangfire Dashboard nếu:
-    ///   - Request đến từ localhost (dev), HOẶC
-    ///   - Cookie "HangfireToken" chứa JWT hợp lệ (được set bởi /hangfire-login).
+    /// IDashboardAuthorizationFilter chỉ làm nhiệm vụ cho qua — việc kiểm tra
+    /// cookie/redirect đã được xử lý bởi middleware UseHangfireAuthMiddleware()
+    /// đặt TRƯỚC UseHangfireDashboard() trong Program.cs.
     /// </summary>
     public class HangfireDashboardAuthFilter : IDashboardAuthorizationFilter
     {
-        private readonly string _jwtSecret;
-        private readonly string _jwtIssuer;
-        private readonly string _jwtAudience;
+        internal const string CookieName = "HangfireAuth";
 
-        public HangfireDashboardAuthFilter(string jwtSecret, string jwtIssuer, string jwtAudience)
+        private readonly string _cookieSecret;
+
+        public HangfireDashboardAuthFilter(string cookieSecret)
         {
-            _jwtSecret   = jwtSecret;
-            _jwtIssuer   = jwtIssuer;
-            _jwtAudience = jwtAudience;
+            _cookieSecret = cookieSecret;
         }
 
-        public bool Authorize(DashboardContext context)
+        // Middleware đã xác thực rồi → luôn cho qua
+        public bool Authorize(DashboardContext context) => true;
+
+        /// <summary>Tạo signed cookie: "expiry|HMAC-SHA256(secret, expiry)"</summary>
+        internal string BuildCookieValue(int expiryHours = 8)
         {
-            var httpContext = context.GetHttpContext();
-
-            // ── 1. Localhost luôn được phép (dev) ─────────────────────────────
-            if (IsLocalRequest(httpContext))
-                return true;
-
-            // ── 2. Kiểm tra Bearer token trong header Authorization ────────────
-            var authHeader = httpContext.Request.Headers["Authorization"].FirstOrDefault();
-            if (authHeader?.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase) == true)
-            {
-                var token = authHeader["Bearer ".Length..].Trim();
-                if (ValidateToken(token))
-                    return true;
-            }
-
-            // ── 3. Kiểm tra cookie HangfireToken (sau khi login qua /hangfire-login) ──
-            var cookieToken = httpContext.Request.Cookies["HangfireToken"];
-            if (!string.IsNullOrWhiteSpace(cookieToken) && ValidateToken(cookieToken))
-                return true;
-
-            // ── 4. Redirect về trang login thân thiện ─────────────────────────
-            httpContext.Response.Redirect("/hangfire-login");
-            return false;
+            var expiry = DateTimeOffset.UtcNow.AddHours(expiryHours).ToUnixTimeSeconds().ToString();
+            var sig    = ComputeHmac(_cookieSecret, expiry);
+            return $"{expiry}|{sig}";
         }
 
-        private bool ValidateToken(string token)
+        /// <summary>Dùng bởi middleware trong Program.cs để kiểm tra cookie.</summary>
+        internal static bool IsValidCookieValue(string? value, string secret)
         {
-            try
-            {
-                var handler    = new JwtSecurityTokenHandler();
-                var key        = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSecret));
-                var parameters = new TokenValidationParameters
-                {
-                    ValidateIssuer           = true,
-                    ValidateAudience         = true,
-                    ValidateLifetime         = true,
-                    ValidateIssuerSigningKey = true,
-                    ValidIssuer              = _jwtIssuer,
-                    ValidAudience            = _jwtAudience,
-                    IssuerSigningKey         = key,
-                    ClockSkew                = TimeSpan.FromSeconds(30)
-                };
+            if (string.IsNullOrWhiteSpace(value)) return false;
 
-                handler.ValidateToken(token, parameters, out _);
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
+            var parts = value.Split('|');
+            if (parts.Length != 2) return false;
+
+            var expiry   = parts[0];
+            var sig      = parts[1];
+            var expected = ComputeHmac(secret, expiry);
+
+            // So sánh constant-time để tránh timing attack
+            var sigBytes      = Encoding.UTF8.GetBytes(sig);
+            var expectedBytes = Encoding.UTF8.GetBytes(expected);
+            if (sigBytes.Length != expectedBytes.Length) return false;
+            if (!CryptographicOperations.FixedTimeEquals(sigBytes, expectedBytes)) return false;
+
+            if (!long.TryParse(expiry, out var expiryTs)) return false;
+            return DateTimeOffset.UtcNow.ToUnixTimeSeconds() < expiryTs;
         }
 
-        private static bool IsLocalRequest(HttpContext context)
+        private static string ComputeHmac(string secret, string message)
         {
-            var connection = context.Connection;
-            if (connection.RemoteIpAddress is null)
-                return true; // không xác định được → giả định local khi dev
-
-            if (connection.LocalIpAddress is not null)
-                return connection.RemoteIpAddress.Equals(connection.LocalIpAddress);
-
-            return System.Net.IPAddress.IsLoopback(connection.RemoteIpAddress);
+            var keyBytes = Encoding.UTF8.GetBytes(secret);
+            var msgBytes = Encoding.UTF8.GetBytes(message);
+            return Convert.ToHexString(HMACSHA256.HashData(keyBytes, msgBytes)).ToLowerInvariant();
         }
     }
 }

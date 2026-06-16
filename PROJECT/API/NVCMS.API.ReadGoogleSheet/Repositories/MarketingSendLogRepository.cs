@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using NVCMS.API.ReadGoogleSheet.Common;
 using NVCMS.API.ReadGoogleSheet.Data;
 using NVCMS.API.ReadGoogleSheet.Entities;
 
@@ -9,17 +10,18 @@ namespace NVCMS.API.ReadGoogleSheet.Repositories
     {
         public MarketingSendLogRepository(MarketingDbContext context) : base(context) { }
 
-        public async Task<IEnumerable<MarketingMailSendLog>> GetQueuedByCampaignSendIdAsync(int campaignSendId)
+        public async Task<IEnumerable<MarketingMailSendLog>> GetQueuedByCampaignIdAsync(int campaignId)
         {
             return await _dbSet
-                .Where(l => l.CampaignSendId == campaignSendId && l.Status == "Queued")
+                .Where(l => l.CampaignSendId == campaignId
+                         && l.Status == MailSendStatus.Queued)
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<MarketingMailSendLog>> GetAllByCampaignSendIdAsync(int campaignSendId)
+        public async Task<IEnumerable<MarketingMailSendLog>> GetAllByCampaignIdAsync(int campaignId)
         {
             return await _dbSet
-                .Where(l => l.CampaignSendId == campaignSendId)
+                .Where(l => l.CampaignSendId == campaignId)
                 .OrderBy(l => l.Id)
                 .ToListAsync();
         }
@@ -30,18 +32,25 @@ namespace NVCMS.API.ReadGoogleSheet.Repositories
                 .FirstOrDefaultAsync(l => l.SesMessageId == sesMessageId);
         }
 
-        public async Task UpdateStatusAsync(int id, string status, string? sesMessageId = null, string? errorMessage = null)
+        public async Task UpdateStatusAsync(long id, string status,
+            string? sesMessageId = null, string? errorMessage = null)
         {
             var record = await _dbSet.FindAsync(id);
             if (record is null) return;
 
             record.Status = status;
-            if (status == "Sent")
-                record.SentTime = DateTime.UtcNow;
-            if (sesMessageId is not null)
-                record.SesMessageId = sesMessageId;
-            if (errorMessage is not null)
-                record.ErrorMessage = errorMessage;
+
+            var now = DateTime.UtcNow;
+            switch (status)
+            {
+                case MailSendStatus.Sent:       record.SentTime       = now; break;
+                case MailSendStatus.Delivered:  record.DeliveredTime  = now; break;
+                case MailSendStatus.Opened:     record.OpenedTime     = now; break;
+                case MailSendStatus.Clicked:    record.ClickedTime    = now; break;
+            }
+
+            if (sesMessageId is not null) record.SesMessageId = sesMessageId;
+            if (errorMessage  is not null) record.ErrorMessage  = errorMessage;
 
             await _context.SaveChangesAsync();
         }

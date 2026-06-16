@@ -13,20 +13,17 @@ namespace NVCMS.API.ReadGoogleSheet.Services
     {
         private readonly SesSettings                  _settings;
         private readonly IMarketingListMailRepository _listMailRepo;
-        private readonly IMarketingEventRepository    _eventRepo;
         private readonly IWebHostEnvironment          _env;
         private readonly ILogger<SESService>          _logger;
 
         public SESService(
             IOptions<SesSettings>           settings,
             IMarketingListMailRepository     listMailRepo,
-            IMarketingEventRepository        eventRepo,
             IWebHostEnvironment              env,
             ILogger<SESService>              logger)
         {
             _settings     = settings.Value;
             _listMailRepo = listMailRepo;
-            _eventRepo    = eventRepo;
             _env          = env;
             _logger       = logger;
         }
@@ -124,42 +121,18 @@ namespace NVCMS.API.ReadGoogleSheet.Services
                 messageId = await SendTemplatedEmailAsync(
                     template,
                     recipient.Email ?? throw new InvalidOperationException("Recipient email is null"),
-                    recipient.FullName ?? string.Empty,
+                    string.Empty,
                     placeholders);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "SES failed for recipient {Id} <{Email}>",
                     recipient.id, recipient.Email);
-
-                // Ghi event Failed
-                await _eventRepo.AddAsync(new MarketingMailEvent
-                {
-                    ListMailId  = recipient.id,
-                    EventType   = "Failed",
-                    Payload     = ex.Message,
-                    CreatedDate = DateTime.UtcNow
-                });
-
-                await _listMailRepo.UpdateRecipientStatusAsync(recipient.id, 5); // Bounced
                 throw;
             }
 
-            // Lưu MessageId và đánh dấu Sent
-            recipient.MessageId = messageId;
-            recipient.SentAt    = DateTime.UtcNow;
-            await _listMailRepo.UpdateAsync(recipient);
-            await _listMailRepo.UpdateRecipientStatusAsync(recipient.id, 1); // Sent
-            await _listMailRepo.IncrementSendCountAsync(recipient.id);
-
-            // Ghi event Sent
-            await _eventRepo.AddAsync(new MarketingMailEvent
-            {
-                ListMailId  = recipient.id,
-                EventType   = "Sent",
-                Payload     = $"{{\"messageId\":\"{messageId}\"}}",
-                CreatedDate = DateTime.UtcNow
-            });
+            _logger.LogInformation("SES sent to recipient {Id} <{Email}> messageId={MsgId}",
+                recipient.id, recipient.Email, messageId);
         }
 
         // ── Private helpers ───────────────────────────────────────────────────
@@ -209,17 +182,10 @@ namespace NVCMS.API.ReadGoogleSheet.Services
         private static Dictionary<string, string> BuildRecipientPlaceholders(
             Marketing_Mail_ListMail recipient) => new()
         {
-            ["FullName"]   = recipient.FullName ?? string.Empty,
-            ["Email"]      = recipient.Email    ?? string.Empty,
-            ["FirstName"]  = ExtractFirstName(recipient.FullName),
+            ["FullName"]   = string.Empty,
+            ["Email"]      = recipient.Email ?? string.Empty,
+            ["FirstName"]  = string.Empty,
         };
-
-        private static string ExtractFirstName(string? fullName)
-        {
-            if (string.IsNullOrWhiteSpace(fullName)) return string.Empty;
-            var parts = fullName.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries);
-            return parts[^1]; // last token = tên (Vietnamese convention)
-        }
 
         private static string FormatAddress(string email, string? name) =>
             string.IsNullOrWhiteSpace(name) ? email : $"{name} <{email}>";

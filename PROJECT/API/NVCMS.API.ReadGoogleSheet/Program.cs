@@ -110,17 +110,13 @@ builder.Services.AddDbContext<MarketingDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultCRMConnection")));
 
 // Marketing Repositories
-builder.Services.AddScoped<IMarketingCampaignRepository,    MarketingCampaignRepository>();
-builder.Services.AddScoped<IMarketingListMailRepository,    MarketingListMailRepository>();
-builder.Services.AddScoped<IMarketingTemplateRepository,    MarketingTemplateRepository>();
-builder.Services.AddScoped<IMarketingEventRepository,       MarketingEventRepository>();
-builder.Services.AddScoped<IMarketingHangfireLogRepository, MarketingHangfireLogRepository>();
-builder.Services.AddScoped<IMarketingUnsubRepository,       MarketingUnsubRepository>();
-builder.Services.AddScoped<IMarketingClickRepository,       MarketingClickRepository>();
-builder.Services.AddScoped<IMarketingCampaignSendRepository, MarketingCampaignSendRepository>();
-builder.Services.AddScoped<IMarketingSendLogRepository,     MarketingSendLogRepository>();
-builder.Services.AddScoped<IEmailMarketingService,          EmailMarketingService>();
-builder.Services.AddScoped<ISESService,                     SESService>();
+builder.Services.AddScoped<IMarketingCampaignRepository, MarketingCampaignRepository>();
+builder.Services.AddScoped<IMarketingListMailRepository,  MarketingListMailRepository>();
+builder.Services.AddScoped<IMarketingTemplateRepository,  MarketingTemplateRepository>();
+builder.Services.AddScoped<IMarketingUnsubRepository,    MarketingUnsubRepository>();
+builder.Services.AddScoped<IMarketingSendLogRepository,  MarketingSendLogRepository>();
+builder.Services.AddScoped<IEmailMarketingService,       EmailMarketingService>();
+builder.Services.AddScoped<ISESService,                  SESService>();
 
 // ── Hangfire ──────────────────────────────────────────────────────────────────
 var hangfireConn = builder.Configuration.GetConnectionString("DefaultCRMConnection")!;
@@ -144,7 +140,6 @@ builder.Services.AddHangfireServer(options =>
 });
 
 // Register Jobs as transient (Hangfire activator tự resolve qua DI)
-builder.Services.AddTransient<CampaignSchedulerJob>();
 builder.Services.AddTransient<CampaignBatchJob>();
 
 // Add CORS if needed
@@ -180,33 +175,35 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 // ── Hangfire Dashboard (/hangfire) ────────────────────────────────────────────
-// Bảo vệ bằng JWT: localhost truy cập tự do, môi trường khác phải login qua /hangfire-login
-var _jwtCfg      = builder.Configuration.GetSection("Jwt");
-var _jwtSecret   = _jwtCfg["Secret"]   ?? string.Empty;
-var _jwtIssuer   = _jwtCfg["Issuer"]   ?? string.Empty;
-var _jwtAudience = _jwtCfg["Audience"] ?? string.Empty;
+var _hangfireCfg  = builder.Configuration.GetSection("HangfireDashboard");
+var _cookieSecret = _hangfireCfg["CookieSecret"] ?? string.Empty;
+
+// Middleware chặn /hangfire trước khi Hangfire xử lý.
+// Nếu chưa có cookie hợp lệ → redirect sang /hangfire-login (HTTP 302).
+// Làm vậy vì IDashboardAuthorizationFilter.Authorize() trả false thì Hangfire
+// tự trả 401 và ghi đè mọi redirect ta set trong response.
+app.Use(async (context, next) =>
+{
+    if (context.Request.Path.StartsWithSegments("/hangfire"))
+    {
+        var cookie = context.Request.Cookies[HangfireDashboardAuthFilter.CookieName];
+        if (!HangfireDashboardAuthFilter.IsValidCookieValue(cookie, _cookieSecret))
+        {
+            var returnUrl = Uri.EscapeDataString(context.Request.PathBase + context.Request.Path);
+            context.Response.Redirect($"/hangfire-login?returnUrl={returnUrl}");
+            return;
+        }
+    }
+    await next();
+});
 
 app.UseHangfireDashboard("/hangfire", new DashboardOptions
 {
     DashboardTitle = "NVCMS – Hangfire Monitor",
-    Authorization  =
-    [
-        new HangfireDashboardAuthFilter(_jwtSecret, _jwtIssuer, _jwtAudience)
-    ],
-    AppPath = "/swagger"   // nút "Back to site" dẫn về Swagger
+    Authorization  = [new HangfireDashboardAuthFilter(_cookieSecret)],
+    AppPath        = "/swagger"
 });
 
 app.MapControllers();
-
-// ── Recurring Jobs ────────────────────────────────────────────────────────────
-// CampaignSchedulerJob chạy mỗi phút để quét campaign Queued đến hạn
-RecurringJob.AddOrUpdate<CampaignSchedulerJob>(
-    recurringJobId: "campaign-scheduler",
-    methodCall:     job => job.ExecuteAsync(),
-    cronExpression: Cron.Minutely(),
-    options:        new RecurringJobOptions
-    {
-        TimeZone = TimeZoneInfo.Utc
-    });
 
 app.Run();

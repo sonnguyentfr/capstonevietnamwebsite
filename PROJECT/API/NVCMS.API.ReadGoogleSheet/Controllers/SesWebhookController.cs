@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
+using NVCMS.API.ReadGoogleSheet.Common;
 using NVCMS.API.ReadGoogleSheet.Entities;
 using NVCMS.API.ReadGoogleSheet.Models;
 using NVCMS.API.ReadGoogleSheet.Repositories;
-using System.Net.Http;
 using System.Text.Json;
 
 namespace NVCMS.API.ReadGoogleSheet.Controllers
@@ -16,13 +16,10 @@ namespace NVCMS.API.ReadGoogleSheet.Controllers
     [ApiController]
     public class SesWebhookController : ControllerBase
     {
-        private readonly IMarketingListMailRepository   _listMailRepo;
-        private readonly IMarketingEventRepository      _eventRepo;
-        private readonly IMarketingClickRepository      _clickRepo;
+        private readonly IMarketingSendLogRepository    _sendLogRepo;
         private readonly IMarketingUnsubRepository      _unsubRepo;
-        private readonly IMarketingCampaignSendRepository _campaignSendRepo;
         private readonly IHttpClientFactory             _httpClientFactory;
-        private readonly ILogger<SesWebhookController>  _logger;
+        private readonly ILogger<SesWebhookController> _logger;
 
         private static readonly JsonSerializerOptions _jsonOpts = new()
         {
@@ -30,19 +27,13 @@ namespace NVCMS.API.ReadGoogleSheet.Controllers
         };
 
         public SesWebhookController(
-            IMarketingListMailRepository    listMailRepo,
-            IMarketingEventRepository       eventRepo,
-            IMarketingClickRepository       clickRepo,
-            IMarketingUnsubRepository       unsubRepo,
-            IMarketingCampaignSendRepository campaignSendRepo,
-            IHttpClientFactory              httpClientFactory,
-            ILogger<SesWebhookController>   logger)
+            IMarketingSendLogRepository    sendLogRepo,
+            IMarketingUnsubRepository      unsubRepo,
+            IHttpClientFactory             httpClientFactory,
+            ILogger<SesWebhookController>  logger)
         {
-            _listMailRepo      = listMailRepo;
-            _eventRepo         = eventRepo;
-            _clickRepo         = clickRepo;
+            _sendLogRepo       = sendLogRepo;
             _unsubRepo         = unsubRepo;
-            _campaignSendRepo  = campaignSendRepo;
             _httpClientFactory = httpClientFactory;
             _logger            = logger;
         }
@@ -51,16 +42,12 @@ namespace NVCMS.API.ReadGoogleSheet.Controllers
         [HttpPost("ses-events")]
         public async Task<IActionResult> HandleSesEvent()
         {
-            // Đọc raw body để parse SNS envelope
             string rawBody;
             using (var reader = new StreamReader(Request.Body))
                 rawBody = await reader.ReadToEndAsync();
 
             SnsNotification? sns;
-            try
-            {
-                sns = JsonSerializer.Deserialize<SnsNotification>(rawBody, _jsonOpts);
-            }
+            try { sns = JsonSerializer.Deserialize<SnsNotification>(rawBody, _jsonOpts); }
             catch (Exception ex)
             {
                 _logger.LogWarning(ex, "SES webhook: failed to parse SNS envelope");
@@ -69,14 +56,12 @@ namespace NVCMS.API.ReadGoogleSheet.Controllers
 
             if (sns is null) return BadRequest("Empty payload");
 
-            // ── SNS subscription confirmation ─────────────────────────────────
             if (string.Equals(sns.Type, "SubscriptionConfirmation", StringComparison.OrdinalIgnoreCase))
             {
                 await ConfirmSubscriptionAsync(sns.SubscribeURL);
                 return Ok("Subscription confirmed");
             }
 
-            // ── SNS Notification ──────────────────────────────────────────────
             if (!string.Equals(sns.Type, "Notification", StringComparison.OrdinalIgnoreCase))
                 return Ok("Ignored");
 
@@ -84,57 +69,61 @@ namespace NVCMS.API.ReadGoogleSheet.Controllers
                 return BadRequest("Empty Message field");
 
             SesEventPayload? payload;
-            try
-            {
-                payload = JsonSerializer.Deserialize<SesEventPayload>(sns.Message, _jsonOpts);
-            }
+            try { payload = JsonSerializer.Deserialize<SesEventPayload>(sns.Message, _jsonOpts); }
             catch (Exception ex)
             {
                 _logger.LogWarning(ex, "SES webhook: failed to parse SES event payload");
                 return BadRequest("Invalid SES event payload");
             }
 
-            if (payload?.mail is null)
-                return Ok("No mail info");
+            if (payload?.mail is null) return Ok("No mail info");
 
             var messageId = payload.mail.messageId;
-            if (string.IsNullOrWhiteSpace(messageId))
-                return Ok("No messageId");
+            if (string.IsNullOrWhiteSpace(messageId)) return Ok("No messageId");
 
-            // Tìm recipient theo MessageId
-            var recipient = await _listMailRepo.GetByMessageIdAsync(messageId);
-            if (recipient is null)
+            var sendLog = await _sendLogRepo.GetBySesMessageIdAsync(messageId);
+            if (sendLog is null)
             {
-                _logger.LogWarning("SES webhook: no recipient found for MessageId={MessageId}", messageId);
-                return Ok("Recipient not found – ignored");
+                _logger.LogWarning("SES webhook: no send-log found for MessageId={MessageId}", messageId);
+                return Ok("Not found – ignored");
             }
 
-            // Dispatch theo eventType
-            var eventType = payload.eventType ?? string.Empty;
-            _logger.LogInformation(
-                "SES webhook: eventType={EventType} messageId={MessageId} recipientId={RecipientId}",
-                eventType, messageId, recipient.id);
+            var eventType = (payload.eventType ?? string.Empty).ToUpperInvariant();
+            _logger.LogInformation("SES webhook: eventType={EventType} messageId={MsgId}", eventType, messageId);
 
-            switch (eventType.ToUpperInvariant())
+            switch (eventType)
             {
                 case "DELIVERY":
-                    await HandleDeliveryAsync(recipient, payload.delivery, rawBody);
-                    break;
-
-                case "BOUNCE":
-                    await HandleBounceAsync(recipient, payload.bounce, rawBody);
-                    break;
-
-                case "COMPLAINT":
-                    await HandleComplaintAsync(recipient, payload.complaint, rawBody);
+                    await _sendLogRepo.UpdateStatusAsync(sendLog.Id, MailSendStatus.Delivered);
                     break;
 
                 case "OPEN":
-                    await HandleOpenAsync(recipient, payload.open, rawBody);
+                    await _sendLogRepo.UpdateStatusAsync(sendLog.Id, MailSendStatus.Opened);
                     break;
 
                 case "CLICK":
-                    await HandleClickAsync(recipient, payload.click, rawBody);
+                    await _sendLogRepo.UpdateStatusAsync(sendLog.Id, MailSendStatus.Clicked);
+                    break;
+
+                case "BOUNCE":
+                    await _sendLogRepo.UpdateStatusAsync(sendLog.Id, MailSendStatus.Failed,
+                        errorMessage: $"Bounce: {payload.bounce?.bounceType}/{payload.bounce?.bounceSubType}");
+                    break;
+
+                case "COMPLAINT":
+                    await _sendLogRepo.UpdateStatusAsync(sendLog.Id, MailSendStatus.Failed,
+                        errorMessage: $"Complaint: {payload.complaint?.complaintFeedbackType}");
+
+                    var alreadyUnsub = await _unsubRepo.IsUnsubscribedAsync(sendLog.Email, 0);
+                    if (!alreadyUnsub)
+                    {
+                        await _unsubRepo.AddAsync(new MarketingMailListMailUnsub
+                        {
+                            Email        = sendLog.Email,
+                            reason       = 6,
+                            created_date = DateTime.UtcNow
+                        });
+                    }
                     break;
 
                 default:
@@ -145,149 +134,12 @@ namespace NVCMS.API.ReadGoogleSheet.Controllers
             return Ok("Processed");
         }
 
-        // ── Event handlers ────────────────────────────────────────────────────
-
-        private async Task HandleDeliveryAsync(
-            Marketing_Mail_ListMail recipient,
-            SesDelivery?          delivery,
-            string                rawPayload)
-        {
-            if (recipient.RecipientStatus < 2)
-                await _listMailRepo.UpdateRecipientStatusAsync(recipient.id, 2, DateTime.UtcNow);
-
-            await IncrementCampaignCounterForRecipientAsync(recipient, "TotalDelivered");
-            await WriteEventAsync(recipient.id, "Delivery", rawPayload);
-        }
-
-        private async Task HandleBounceAsync(
-            Marketing_Mail_ListMail recipient,
-            SesBounce?            bounce,
-            string                rawPayload)
-        {
-            var reason = bounce is null ? string.Empty
-                : $"{bounce.bounceType}/{bounce.bounceSubType} – " +
-                  string.Join("; ", bounce.bouncedRecipients
-                      .Select(r => r.diagnosticCode ?? r.emailAddress ?? string.Empty));
-
-            var record = await _listMailRepo.GetByIdAsync(recipient.id);
-            if (record is not null)
-            {
-                record.BounceReason    = reason;
-                record.RecipientStatus = 5;
-                await _listMailRepo.UpdateAsync(record);
-            }
-
-            await IncrementCampaignCounterForRecipientAsync(recipient, "TotalBounced");
-            await WriteEventAsync(recipient.id, "Bounce", rawPayload);
-        }
-
-        private async Task HandleComplaintAsync(
-            Marketing_Mail_ListMail recipient,
-            SesComplaint?         complaint,
-            string                rawPayload)
-        {
-            var reason = complaint?.complaintFeedbackType ?? "unknown";
-
-            var record = await _listMailRepo.GetByIdAsync(recipient.id);
-            if (record is not null)
-            {
-                record.ComplaintReason = reason;
-                record.RecipientStatus = 6;
-                await _listMailRepo.UpdateAsync(record);
-            }
-
-            if (!string.IsNullOrWhiteSpace(recipient.Email))
-            {
-                var alreadyUnsub = await _unsubRepo.IsUnsubscribedAsync(
-                    recipient.Email, recipient.PortalId ?? 0);
-
-                if (!alreadyUnsub)
-                {
-                    await _unsubRepo.AddAsync(new MarketingMailListMailUnsub
-                    {
-                        Email        = recipient.Email,
-                        reason       = 6,
-                        created_date = DateTime.UtcNow,
-                        PortalId     = recipient.PortalId,
-                        Token        = Guid.NewGuid(),
-                        IPAddress    = HttpContext.Connection.RemoteIpAddress?.ToString()
-                    });
-                }
-            }
-
-            await IncrementCampaignCounterForRecipientAsync(recipient, "TotalComplaint");
-            await WriteEventAsync(recipient.id, "Complaint", rawPayload);
-        }
-
-        private async Task HandleOpenAsync(
-            Marketing_Mail_ListMail recipient,
-            SesOpen?              open,
-            string                rawPayload)
-        {
-            if (recipient.RecipientStatus < 3)
-                await _listMailRepo.UpdateRecipientStatusAsync(recipient.id, 3, DateTime.UtcNow);
-
-            await IncrementCampaignCounterForRecipientAsync(recipient, "TotalOpened");
-            await WriteEventAsync(recipient.id, "Open",
-                rawPayload,
-                data: $"{{\"ip\":\"{open?.ipAddress}\",\"ua\":\"{EscapeJson(open?.userAgent)}\"}}");
-        }
-
-        private async Task HandleClickAsync(
-            Marketing_Mail_ListMail recipient,
-            SesClick?             click,
-            string                rawPayload)
-        {
-            await _listMailRepo.UpdateRecipientStatusAsync(recipient.id, 4, DateTime.UtcNow);
-
-            if (!string.IsNullOrWhiteSpace(click?.link))
-            {
-                await _clickRepo.AddAsync(new MarketingMailClick
-                {
-                    ListMailId = recipient.id,
-                    Url        = click.link,
-                    ClickedAt  = DateTime.UtcNow
-                });
-            }
-
-            await IncrementCampaignCounterForRecipientAsync(recipient, "TotalClicked");
-            await WriteEventAsync(recipient.id, "Click",
-                rawPayload,
-                data: $"{{\"url\":\"{EscapeJson(click?.link)}\",\"ip\":\"{click?.ipAddress}\"}}");
-        }
-
-        // ── Helpers ───────────────────────────────────────────────────────────
-
-        private async Task WriteEventAsync(int listMailId, string eventType, string rawPayload, string? data = null)
-        {
-            await _eventRepo.AddAsync(new MarketingMailEvent
-            {
-                ListMailId  = listMailId,
-                EventType   = eventType,
-                Payload     = data ?? rawPayload,
-                CreatedDate = DateTime.UtcNow
-            });
-        }
-
-        /// <summary>Tìm CampaignSend thông qua SendLog (nếu có) rồi tăng counter.</summary>
-        private async Task IncrementCampaignCounterForRecipientAsync(
-            Marketing_Mail_ListMail recipient, string counterName)
-        {
-            // listMail.MessageId được gán bởi CampaignBatchJob — dùng để lookup sendLog
-            if (string.IsNullOrWhiteSpace(recipient.MessageId)) return;
-
-            // Không inject IMarketingSendLogRepository ở đây để giữ controller gọn;
-            // CampaignSend counters được cập nhật qua EmailMarketingController.sns (luồng mới).
-            // Controller này chỉ xử lý luồng cũ (ses-events) — không có CampaignSendId.
-            await Task.CompletedTask;
-        }
-
         private async Task ConfirmSubscriptionAsync(string? subscribeUrl)
         {
             if (string.IsNullOrWhiteSpace(subscribeUrl)) return;
             try
             {
-                var client = _httpClientFactory.CreateClient("ApiClient");
+                var client = _httpClientFactory.CreateClient();
                 await client.GetAsync(subscribeUrl);
                 _logger.LogInformation("SNS subscription confirmed: {Url}", subscribeUrl);
             }
@@ -296,10 +148,5 @@ namespace NVCMS.API.ReadGoogleSheet.Controllers
                 _logger.LogError(ex, "Failed to confirm SNS subscription");
             }
         }
-
-        private static string EscapeJson(string? value) =>
-            (value ?? string.Empty)
-                .Replace("\\", "\\\\")
-                .Replace("\"", "\\\"");
     }
 }

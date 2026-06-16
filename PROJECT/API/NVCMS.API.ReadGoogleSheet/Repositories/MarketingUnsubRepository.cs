@@ -13,11 +13,5 @@ namespace NVCMS.API.ReadGoogleSheet.Repositories
             return await _dbSet
                 .AnyAsync(u => u.Email == email && u.PortalId == portalId);
         }
-
-        public async Task<MarketingMailListMailUnsub?> GetByTokenAsync(Guid token)
-        {
-            return await _dbSet
-                .FirstOrDefaultAsync(u => u.Token == token);
-        }
     }
 }

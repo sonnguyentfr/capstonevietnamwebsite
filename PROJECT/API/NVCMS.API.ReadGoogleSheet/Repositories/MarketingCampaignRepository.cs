@@ -16,26 +16,24 @@ namespace NVCMS.API.ReadGoogleSheet.Repositories
                 .ToListAsync();
         }
 
+        /// <summary>
+        /// DB không có cột Status trên bảng Marketing_Mail_Campaing.
+        /// Trả về tất cả campaign theo portalId — caller tự lọc theo nghiệp vụ.
+        /// </summary>
         public async Task<IEnumerable<Marketing_Mail_Campaing>> GetByStatusAsync(int status)
         {
-            return await _dbSet
-                .Where(c => c.Status == status)
-                .OrderBy(c => c.ScheduledAt)
-                .ToListAsync();
+            // Bảng Marketing_Mail_Campaing không có cột Status.
+            // Trả toàn bộ để CampaignSchedulerJob tự quyết định qua CampaignSend.
+            return await _dbSet.ToListAsync();
         }
 
-        public async Task UpdateStatusAsync(int campaignId, int status, DateTime? timestamp = null)
+        /// <summary>
+        /// Bảng Marketing_Mail_Campaing không có cột Status/UpdatedDate/StartedAt/CompletedAt.
+        /// Method này là no-op để tránh lỗi runtime — trạng thái được quản lý qua Marketing_Mail_Campaign_Send.
+        /// </summary>
+        public Task UpdateStatusAsync(int campaignId, int status, DateTime? timestamp = null)
         {
-            var campaign = await _dbSet.FindAsync(campaignId);
-            if (campaign is null) return;
-
-            campaign.Status = status;
-            campaign.UpdatedDate = DateTime.UtcNow;
-
-            if (status == 2) campaign.StartedAt = timestamp ?? DateTime.UtcNow;
-            if (status == 3 || status == 4) campaign.CompletedAt = timestamp ?? DateTime.UtcNow;
-
-            await _context.SaveChangesAsync();
+            return Task.CompletedTask;
         }
     }
 }
