@@ -175,11 +175,11 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\NVCMS.Modules.Events\07. NVCMS.Modules.EventsWebsite.vbproj">
+    <ProjectReference Include="..\NVCMS.Modules.EventsWebsite\NVCMS.Modules.EventsWebsite.vbproj">
       <Project>{69b607a1-ba4e-4ef4-882e-0bcdc941a077}</Project>
       <Name>07. NVCMS.Modules.EventsWebsite</Name>
     </ProjectReference>
-    <ProjectReference Include="..\NVCMS.Modules.Student\14. NVCMS.Modules.Student.vbproj">
+    <ProjectReference Include="..\NVCMS.Modules.Student\NVCMS.Modules.Student.vbproj">
       <Project>{dd42071e-7d88-4890-a647-5439b99f12bd}</Project>
       <Name>14. NVCMS.Modules.Student</Name>
     </ProjectReference>
