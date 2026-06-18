@@ -3,6 +3,6 @@ using System.Threading.Tasks;
 
 public interface IZaloTokenRepository
 {
-    Task AddAsync(ZaloToken token);
-    Task<ZaloToken> GetLastAsync();
+    Task AddAsync(Zalo_Token token);
+    Task<Zalo_Token> GetLastAsync();
 }

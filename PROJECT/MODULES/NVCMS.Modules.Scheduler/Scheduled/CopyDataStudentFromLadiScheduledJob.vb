@@ -1,4 +1,5 @@
-﻿Imports System.Threading.Tasks
+﻿Imports System.Configuration
+Imports System.Threading.Tasks
 Imports System.Web
 Imports DotNetNuke.Services.Scheduling
 Imports NVCMS.Modules.EventsWebsite
@@ -510,9 +511,9 @@ Namespace NVCMS.Modules.Scheduler
             Return result.ToString()
         End Function
         Private Sub SendMail(strFrom As String, strTo As String, strCC As String, strBCC As String, strSubject As String, strBody As String)
-            Dim strSMTP As String = "email-smtp.ap-southeast-1.amazonaws.com:587"
-            Dim account As String = "AKIAU63W444UQCIOEFTD"
-            Dim password As String = "BBxtUK/c9kVBXyqA5EGkn5bAHlrY5S+Ie05PlZWe8u74"
+            Dim strSMTP As String = ConfigurationManager.AppSettings("aws_ses_srv")
+            Dim account As String = ConfigurationManager.AppSettings("aws_ses_account")
+            Dim password As String = ConfigurationManager.AppSettings("aws_ses_key")
             DotNetNuke.Services.Mail.Mail.SendMail(strFrom, strTo, strCC, strBCC, DotNetNuke.Services.Mail.MailPriority.High, strSubject, DotNetNuke.Services.Mail.MailFormat.Html, System.Text.Encoding.UTF8, strBody, "", strSMTP, "1", account, password, True)
             System.Threading.Thread.Sleep(100)
         End Sub

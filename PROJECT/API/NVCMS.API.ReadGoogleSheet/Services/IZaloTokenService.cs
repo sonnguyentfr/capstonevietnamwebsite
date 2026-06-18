@@ -5,5 +5,5 @@ public interface IZaloTokenService
 {
     Task<ZaloTokenResponse> GetAndSaveTokenAsync(string code);
     Task<ZaloTokenResponse> RefreshAndSaveTokenAsync(string refresh_token);
-    Task<ZaloToken> GetLastTokenAsync();
+    Task<Zalo_Token> GetLastTokenAsync();
 }
