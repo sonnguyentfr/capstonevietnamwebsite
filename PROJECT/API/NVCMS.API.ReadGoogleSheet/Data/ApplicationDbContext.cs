@@ -9,7 +9,7 @@ namespace NVCMS.API.ReadGoogleSheet.Data
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
         public DbSet<student_from_ladipage> CrmDataLadings { get; set; }
-        public DbSet<ZaloToken> Zalo_Token { get; set; }
+        public DbSet<Zalo_Token> Zalo_Token { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

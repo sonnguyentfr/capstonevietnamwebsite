@@ -1,8 +1,5 @@
-using Amazon;
-using Amazon.Runtime;
-using Amazon.SimpleEmailV2;
-using Amazon.SimpleEmailV2.Model;
 using Microsoft.Extensions.Options;
+using NVCMS.API.ReadGoogleSheet.Common;
 using NVCMS.API.ReadGoogleSheet.Entities;
 using NVCMS.API.ReadGoogleSheet.Models;
 using NVCMS.API.ReadGoogleSheet.Repositories;
@@ -11,18 +8,21 @@ namespace NVCMS.API.ReadGoogleSheet.Services
 {
     public class SESService : ISESService
     {
-        private readonly SesSettings                  _settings;
+        private readonly SmtpSettings                 _smtpSettings;
+        private readonly SesSettings                  _sesSettings;
         private readonly IMarketingListMailRepository _listMailRepo;
         private readonly IWebHostEnvironment          _env;
         private readonly ILogger<SESService>          _logger;
 
         public SESService(
-            IOptions<SesSettings>           settings,
+            IOptions<SmtpSettings>          smtpSettings,
+            IOptions<SesSettings>           sesSettings,
             IMarketingListMailRepository     listMailRepo,
             IWebHostEnvironment              env,
             ILogger<SESService>              logger)
         {
-            _settings     = settings.Value;
+            _smtpSettings = smtpSettings.Value;
+            _sesSettings  = sesSettings.Value;
             _listMailRepo = listMailRepo;
             _env          = env;
             _logger       = logger;
@@ -35,34 +35,25 @@ namespace NVCMS.API.ReadGoogleSheet.Services
             string subject,
             string htmlBody)
         {
-            using var client = CreateClient();
+            var messageId = Guid.NewGuid().ToString("N");
 
-            var request = new SendEmailRequest
-            {
-                FromEmailAddress = FormatAddress(_settings.FromEmail, _settings.FromName),
-                Destination = new Destination
-                {
-                    ToAddresses = [FormatAddress(toEmail, toName)]
-                },
-                Content = new EmailContent
-                {
-                    Simple = new Message
-                    {
-                        Subject = new Content { Data = subject,  Charset = "UTF-8" },
-                        Body    = new Body
-                        {
-                            Html = new Content { Data = htmlBody, Charset = "UTF-8" }
-                        }
-                    }
-                }
-            };
+            await UltilHelper.SendMailAsync(
+                _smtpSettings.Host,
+                _smtpSettings.Port,
+                _smtpSettings.EnableSsl,
+                _smtpSettings.Username,
+                _smtpSettings.Password,
+                _sesSettings.FromEmail,
+                toEmail,
+                ccEmail:  null,
+                bccEmail: null,
+                subject,
+                htmlBody,
+                isBodyHtml: true,
+                fromName: _sesSettings.FromName);
 
-            var response = await client.SendEmailAsync(request);
-            _logger.LogInformation(
-                "SES sent to {Email} | MessageId={MessageId} | Status={Status}",
-                toEmail, response.MessageId, response.HttpStatusCode);
-
-            return response.MessageId;
+            _logger.LogInformation("SMTP sent to {Email} | MessageId={MessageId}", toEmail, messageId);
+            return messageId;
         }
 
         // ── SendTemplatedEmailAsync ───────────────────────────────────────────
@@ -75,33 +66,7 @@ namespace NVCMS.API.ReadGoogleSheet.Services
             var htmlBody = await LoadAndRenderTemplateAsync(template, placeholders);
             var subject  = ReplacePlaceholders(template.TemplateName ?? "(no subject)", placeholders);
 
-            using var client = CreateClient();
-
-            var request = new SendEmailRequest
-            {
-                FromEmailAddress = FormatAddress(_settings.FromEmail, _settings.FromName),
-                Destination = new Destination
-                {
-                    ToAddresses = [FormatAddress(toEmail, toName)]
-                },
-                Content = new EmailContent
-                {
-                    Simple = new Message
-                    {
-                        Subject = new Content { Data = subject, Charset = "UTF-8" },
-                        Body = new Body
-                        {
-                            Html = new Content { Data = htmlBody, Charset = "UTF-8" }
-                        }
-                    }
-                }
-            };
-
-            var response = await client.SendEmailAsync(request);
-            _logger.LogInformation("SES sent to {Email} | MessageId={MessageId} | Status={Status}",
-                toEmail, response.MessageId, response.HttpStatusCode);
-
-            return response.MessageId;
+            return await SendBodyEmailAsync(toEmail, toName, subject, htmlBody);
         }
 
         // ── SendToRecipientAsync ──────────────────────────────────────────────
@@ -126,12 +91,12 @@ namespace NVCMS.API.ReadGoogleSheet.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "SES failed for recipient {Id} <{Email}>",
+                _logger.LogError(ex, "SMTP failed for recipient {Id} <{Email}>",
                     recipient.id, recipient.Email);
                 throw;
             }
 
-            _logger.LogInformation("SES sent to recipient {Id} <{Email}> messageId={MsgId}",
+            _logger.LogInformation("SMTP sent to recipient {Id} <{Email}> messageId={MsgId}",
                 recipient.id, recipient.Email, messageId);
         }
 
@@ -156,7 +121,7 @@ namespace NVCMS.API.ReadGoogleSheet.Services
             {
                 fullPath = Path.Combine(
                     _env.WebRootPath,
-                    _settings.TemplateBasePath.TrimEnd('/', '\\'),
+                    _sesSettings.TemplateBasePath.TrimEnd('/', '\\'),
                     template.FilePath.TrimStart('/', '\\'));
             }
 
@@ -187,15 +152,6 @@ namespace NVCMS.API.ReadGoogleSheet.Services
             ["FirstName"]  = string.Empty,
         };
 
-        private static string FormatAddress(string email, string? name) =>
-            string.IsNullOrWhiteSpace(name) ? email : $"{name} <{email}>";
 
-        private AmazonSimpleEmailServiceV2Client CreateClient()
-        {
-            var credentials = new BasicAWSCredentials(
-                _settings.AccessKeyId, _settings.SecretAccessKey);
-            var region = RegionEndpoint.GetBySystemName(_settings.Region);
-            return new AmazonSimpleEmailServiceV2Client(credentials, region);
-        }
     }
 }

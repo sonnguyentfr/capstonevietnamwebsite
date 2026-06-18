@@ -49,11 +49,11 @@ public class ZaloTokenService : IZaloTokenService
 
         if ( tokenResponse != null && !string.IsNullOrEmpty(tokenResponse.access_token))
         {
-            var token = new ZaloToken
+            var token = new Zalo_Token
             {
                 AccessToken = tokenResponse.access_token,
                 RefreshToken = tokenResponse.refresh_token,
-                ExpiresIn = int.TryParse(tokenResponse.expires_in, out var expires) ? expires : 0,
+                ExpiresIn = tokenResponse.expires_in,
                 CreatedAt = DateTime.UtcNow
             };
             await _repository.AddAsync(token);
@@ -86,11 +86,11 @@ public class ZaloTokenService : IZaloTokenService
 
         if (response.IsSuccessStatusCode && tokenResponse != null && !string.IsNullOrEmpty(tokenResponse.access_token))
         {
-            var token = new ZaloToken
+            var token = new Zalo_Token
             {
                 AccessToken = tokenResponse.access_token,
                 RefreshToken = tokenResponse.refresh_token,
-                ExpiresIn = int.TryParse(tokenResponse.expires_in, out var expires) ? expires : 0,
+                ExpiresIn = tokenResponse.expires_in,
                 CreatedAt = DateTime.UtcNow
             };
             await _repository.AddAsync(token);
@@ -100,7 +100,7 @@ public class ZaloTokenService : IZaloTokenService
     }
     
 
-    public async Task<ZaloToken> GetLastTokenAsync()
+    public async Task<Zalo_Token> GetLastTokenAsync()
     {
         return await _repository.GetLastAsync();
     }

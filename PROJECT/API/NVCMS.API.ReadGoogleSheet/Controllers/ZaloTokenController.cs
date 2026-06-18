@@ -41,7 +41,7 @@ namespace NVCMS.API.ReadGoogleSheet.Controllers
             return Ok(result);
         }
         [HttpGet("last")]
-        public async Task<ActionResult<ZaloToken>> GetLastZaloToken()
+        public async Task<ActionResult<Zalo_Token>> GetLastZaloToken()
         {
             var token = await _zaloTokenService.GetLastTokenAsync();
             if (token == null)

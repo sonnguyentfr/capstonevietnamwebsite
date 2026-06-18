@@ -11,17 +11,25 @@ public class ZaloTokenRepository : IZaloTokenRepository
         _context = context;
     }
 
-    public async Task AddAsync(ZaloToken token)
+    public async Task AddAsync(Zalo_Token token)
     {
         _context.Zalo_Token.Add(token);
         await _context.SaveChangesAsync();
     }
 
-    public async Task<ZaloToken> GetLastAsync()
+    public async Task<Zalo_Token> GetLastAsync()
     {
-        var token = await _context.Zalo_Token.OrderByDescending(z => z.CreatedAt).FirstOrDefaultAsync();
-        if (token == null)
-            throw new InvalidOperationException("No ZaloToken found.");
-        return token;
+        try
+        {
+            var token = await _context.Zalo_Token.OrderByDescending(z => z.CreatedAt).FirstOrDefaultAsync();
+            if (token == null)
+                throw new InvalidOperationException("No ZaloToken found.");
+            return token;
+        }
+        catch (Exception ex)
+        {
+            throw ex;
+        } 
+
     }
 }

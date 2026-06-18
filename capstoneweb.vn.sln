@@ -23,6 +23,25 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "http://capstoneweb.vn", "ht
 		Release.AspNetCompiler.Debug = "False"
 		SlnRelativePath = "WWW\"
 	EndProjectSection
+	ProjectSection(WebsiteProperties) = preProject
+		UseIISExpress = "false"
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.7.2"
+		Debug.AspNetCompiler.VirtualPath = "/capstoneweb.vn"
+		Debug.AspNetCompiler.PhysicalPath = "WWW\"
+		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\capstoneweb.vn\"
+		Debug.AspNetCompiler.Updateable = "true"
+		Debug.AspNetCompiler.ForceOverwrite = "true"
+		Debug.AspNetCompiler.FixedNames = "false"
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.VirtualPath = "/capstoneweb.vn"
+		Release.AspNetCompiler.PhysicalPath = "WWW\"
+		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\capstoneweb.vn\"
+		Release.AspNetCompiler.Updateable = "true"
+		Release.AspNetCompiler.ForceOverwrite = "true"
+		Release.AspNetCompiler.FixedNames = "false"
+		Release.AspNetCompiler.Debug = "False"
+		SlnRelativePath = "WWW\"
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MODULES", "MODULES", "{6A6B662A-1283-4A8E-9C67-22E2B4B80618}"
 EndProject
@@ -74,6 +93,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AI", "AI", "{B8D31861-E8A8-
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NVCMS.API.ReadGoogleSheet", "PROJECT\API\NVCMS.API.ReadGoogleSheet\NVCMS.API.ReadGoogleSheet.csproj", "{F74E06F3-C0AA-4CAA-CCF8-47940562E045}"
+EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "NVCMS.Modules.Scheduler", "PROJECT\MODULES\NVCMS.Modules.Scheduler\NVCMS.Modules.Scheduler.vbproj", "{6F378C46-991F-4271-B00B-EFCFE01937E2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -301,6 +322,18 @@ Global
 		{F74E06F3-C0AA-4CAA-CCF8-47940562E045}.Release|x64.Build.0 = Release|Any CPU
 		{F74E06F3-C0AA-4CAA-CCF8-47940562E045}.Release|x86.ActiveCfg = Release|Any CPU
 		{F74E06F3-C0AA-4CAA-CCF8-47940562E045}.Release|x86.Build.0 = Release|Any CPU
+		{6F378C46-991F-4271-B00B-EFCFE01937E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F378C46-991F-4271-B00B-EFCFE01937E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F378C46-991F-4271-B00B-EFCFE01937E2}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{6F378C46-991F-4271-B00B-EFCFE01937E2}.Debug|x64.Build.0 = Debug|Any CPU
+		{6F378C46-991F-4271-B00B-EFCFE01937E2}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{6F378C46-991F-4271-B00B-EFCFE01937E2}.Debug|x86.Build.0 = Debug|Any CPU
+		{6F378C46-991F-4271-B00B-EFCFE01937E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F378C46-991F-4271-B00B-EFCFE01937E2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6F378C46-991F-4271-B00B-EFCFE01937E2}.Release|x64.ActiveCfg = Release|Any CPU
+		{6F378C46-991F-4271-B00B-EFCFE01937E2}.Release|x64.Build.0 = Release|Any CPU
+		{6F378C46-991F-4271-B00B-EFCFE01937E2}.Release|x86.ActiveCfg = Release|Any CPU
+		{6F378C46-991F-4271-B00B-EFCFE01937E2}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -325,6 +358,7 @@ Global
 		{B74E12C3-83FB-17D5-FC6B-060C2B9B5045} = {19EDBA47-7ACC-7457-0DDB-1C50445E7661}
 		{B8D31861-E8A8-4E40-B136-65AF9F098DF3} = {19EDBA47-7ACC-7457-0DDB-1C50445E7661}
 		{F74E06F3-C0AA-4CAA-CCF8-47940562E045} = {CD951351-D569-4A36-8824-F44731158394}
+		{6F378C46-991F-4271-B00B-EFCFE01937E2} = {6A6B662A-1283-4A8E-9C67-22E2B4B80618}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {949CE203-E9BD-48CB-A63B-FD3291CE903F}

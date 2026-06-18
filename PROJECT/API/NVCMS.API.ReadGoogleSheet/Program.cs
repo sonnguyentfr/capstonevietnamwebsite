@@ -141,6 +141,8 @@ builder.Services.AddHangfireServer(options =>
 
 // Register Jobs as transient (Hangfire activator tự resolve qua DI)
 builder.Services.AddTransient<CampaignBatchJob>();
+//ZNS refresh token
+builder.Services.AddTransient<ZnsRefreshTokenJob>();
 
 // Add CORS if needed
 builder.Services.AddCors(options =>
@@ -205,5 +207,10 @@ app.UseHangfireDashboard("/hangfire", new DashboardOptions
 });
 
 app.MapControllers();
-
+BackgroundJob.Enqueue<ZnsRefreshTokenJob>(
+    x => x.Execute());
+RecurringJob.AddOrUpdate<ZnsRefreshTokenJob>(
+    "zns-refresh-token",
+    job => job.Execute(),
+    Cron.Hourly);
 app.Run();
