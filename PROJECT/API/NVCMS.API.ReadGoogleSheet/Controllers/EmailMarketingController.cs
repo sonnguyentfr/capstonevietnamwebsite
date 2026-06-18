@@ -11,6 +11,7 @@ namespace NVCMS.API.ReadGoogleSheet.Controllers
 {
     [Route("api/emailmarketing")]
     [ApiController]
+    [Authorize]
     public class EmailMarketingController : ControllerBase
     {
         private readonly IEmailMarketingService          _marketingService;

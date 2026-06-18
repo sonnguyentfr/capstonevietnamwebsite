@@ -1,6 +1,6 @@
 using Microsoft.Extensions.Options;
 using NVCMS.API.ReadGoogleSheet.Common;
-using NVCMS.API.ReadGoogleSheet.Models;
+using NVCMS.API.ReadGoogleSheet.Models.Config;
 
 namespace NVCMS.API.ReadGoogleSheet.Services
 {

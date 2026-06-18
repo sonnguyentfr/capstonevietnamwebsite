@@ -1,4 +1,4 @@
-namespace NVCMS.API.ReadGoogleSheet.Models
+namespace NVCMS.API.ReadGoogleSheet.Models.Config
 {
     public class SmtpSettings
     {

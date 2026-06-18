@@ -2,11 +2,11 @@ using Microsoft.EntityFrameworkCore;
 using NVCMS.API.ReadGoogleSheet.Data;
 using NVCMS.API.ReadGoogleSheet.Models;
 
-public class ZaloRepository : IZaloTokenRepository
+public class ZaloTokenRepository : IZaloTokenRepository
 {
     private readonly ApplicationDbContext _context;
 
-    public ZaloRepository(ApplicationDbContext context)
+    public ZaloTokenRepository(ApplicationDbContext context)
     {
         _context = context;
     }

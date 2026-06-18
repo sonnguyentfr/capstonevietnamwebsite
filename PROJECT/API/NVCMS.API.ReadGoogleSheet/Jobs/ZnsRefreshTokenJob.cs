@@ -2,11 +2,11 @@
 {
     public class ZnsRefreshTokenJob
     {
-        private readonly IZaloTokenService _zaloTokenService;
+        private readonly IZaloService _zaloTokenService;
         private readonly ILogger<ZnsRefreshTokenJob> _logger;
 
         public ZnsRefreshTokenJob(
-            IZaloTokenService zaloTokenService,
+            IZaloService zaloTokenService,
             ILogger<ZnsRefreshTokenJob> logger)
         {
             _zaloTokenService = zaloTokenService;

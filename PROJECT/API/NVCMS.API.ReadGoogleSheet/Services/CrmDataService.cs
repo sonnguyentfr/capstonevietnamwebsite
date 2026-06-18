@@ -26,13 +26,11 @@ namespace NVCMS.API.ReadGoogleSheet.Services
             {
                 // Read data from Google Sheet
                 var sheetData = await _googleSheetService.ReadSheetDataAsync(spreadsheetId, range);
-
                 if (!sheetData.Any())
                 {
                     _logger.LogInformation("No data to import from spreadsheet {SpreadsheetId}", spreadsheetId);
                     return 0;
                 }
-
                 // Get existing records to avoid duplicates
                 var existingKeys = new HashSet<string>();
 

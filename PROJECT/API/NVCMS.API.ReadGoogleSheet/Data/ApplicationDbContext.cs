@@ -10,6 +10,7 @@ namespace NVCMS.API.ReadGoogleSheet.Data
 
         public DbSet<student_from_ladipage> CrmDataLadings { get; set; }
         public DbSet<Zalo_Token> Zalo_Token { get; set; }
+        public DbSet<Zalo_Message_Log> Zalo_Message_Log { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -6,8 +6,10 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using NVCMS.API.ReadGoogleSheet.Data;
 using NVCMS.API.ReadGoogleSheet.Infrastructure;
+using NVCMS.API.ReadGoogleSheet.Infrastructure.Http;
 using NVCMS.API.ReadGoogleSheet.Jobs;
 using NVCMS.API.ReadGoogleSheet.Models;
+using NVCMS.API.ReadGoogleSheet.Models.Config;
 using NVCMS.API.ReadGoogleSheet.Repositories;
 using NVCMS.API.ReadGoogleSheet.Services;
 using System.Text;
@@ -22,6 +24,10 @@ builder.Services.Configure<SmtpSettings>(builder.Configuration.GetSection("SmtpS
 
 // Configure SES Settings
 builder.Services.Configure<SesSettings>(builder.Configuration.GetSection("SesSettings"));
+// Configure Zalo
+builder.Services.Configure<ZaloSettings>(builder.Configuration.GetSection("ZaloSettings"));
+// Configure HangfireJobs
+builder.Services.Configure<HangfireJobSettings>(builder.Configuration.GetSection("HangfireJobs"));
 
 // Configure Swagger with JWT
 builder.Services.AddSwaggerGen(c =>
@@ -103,7 +109,7 @@ builder.Services.AddScoped<IGoogleSheetService, GoogleSheetService>();
 builder.Services.AddScoped<ICrmDataService, CrmDataService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
-builder.Services.AddScoped<IZaloTokenService, ZaloTokenService>();
+builder.Services.AddScoped<IZaloService, ZaloService>();
 
 // Marketing DbContext (DefaultCRMConnection)
 builder.Services.AddDbContext<MarketingDbContext>(options =>
@@ -111,12 +117,12 @@ builder.Services.AddDbContext<MarketingDbContext>(options =>
 
 // Marketing Repositories
 builder.Services.AddScoped<IMarketingCampaignRepository, MarketingCampaignRepository>();
-builder.Services.AddScoped<IMarketingListMailRepository,  MarketingListMailRepository>();
-builder.Services.AddScoped<IMarketingTemplateRepository,  MarketingTemplateRepository>();
-builder.Services.AddScoped<IMarketingUnsubRepository,    MarketingUnsubRepository>();
-builder.Services.AddScoped<IMarketingSendLogRepository,  MarketingSendLogRepository>();
-builder.Services.AddScoped<IEmailMarketingService,       EmailMarketingService>();
-builder.Services.AddScoped<ISESService,                  SESService>();
+builder.Services.AddScoped<IMarketingListMailRepository, MarketingListMailRepository>();
+builder.Services.AddScoped<IMarketingTemplateRepository, MarketingTemplateRepository>();
+builder.Services.AddScoped<IMarketingUnsubRepository, MarketingUnsubRepository>();
+builder.Services.AddScoped<IMarketingSendLogRepository, MarketingSendLogRepository>();
+builder.Services.AddScoped<IEmailMarketingService, EmailMarketingService>();
+builder.Services.AddScoped<ISESService, SESService>();
 
 // ── Hangfire ──────────────────────────────────────────────────────────────────
 var hangfireConn = builder.Configuration.GetConnectionString("DefaultCRMConnection")!;
@@ -126,17 +132,17 @@ builder.Services.AddHangfire(config => config
     .UseRecommendedSerializerSettings()
     .UseSqlServerStorage(hangfireConn, new SqlServerStorageOptions
     {
-        CommandBatchMaxTimeout       = TimeSpan.FromMinutes(5),
-        SlidingInvisibilityTimeout   = TimeSpan.FromMinutes(5),
-        QueuePollInterval            = TimeSpan.FromSeconds(15),
+        CommandBatchMaxTimeout = TimeSpan.FromMinutes(5),
+        SlidingInvisibilityTimeout = TimeSpan.FromMinutes(5),
+        QueuePollInterval = TimeSpan.FromSeconds(15),
         UseRecommendedIsolationLevel = true,
-        DisableGlobalLocks           = true
+        DisableGlobalLocks = true
     }));
 
 builder.Services.AddHangfireServer(options =>
 {
     options.WorkerCount = Environment.ProcessorCount * 2;
-    options.Queues      = ["default"];
+    options.Queues = ["default"];
 });
 
 // Register Jobs as transient (Hangfire activator tự resolve qua DI)
@@ -155,7 +161,8 @@ builder.Services.AddCors(options =>
     });
 });
 
-builder.Services.AddHttpClient();
+//builder.Services.AddHttpClient();
+builder.Services.AddHttpClient<BaseApi>();
 
 var app = builder.Build();
 
@@ -177,7 +184,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 // ── Hangfire Dashboard (/hangfire) ────────────────────────────────────────────
-var _hangfireCfg  = builder.Configuration.GetSection("HangfireDashboard");
+var _hangfireCfg = builder.Configuration.GetSection("HangfireDashboard");
 var _cookieSecret = _hangfireCfg["CookieSecret"] ?? string.Empty;
 
 // Middleware chặn /hangfire trước khi Hangfire xử lý.
@@ -202,15 +209,10 @@ app.Use(async (context, next) =>
 app.UseHangfireDashboard("/hangfire", new DashboardOptions
 {
     DashboardTitle = "NVCMS – Hangfire Monitor",
-    Authorization  = [new HangfireDashboardAuthFilter(_cookieSecret)],
-    AppPath        = "/swagger"
+    Authorization = [new HangfireDashboardAuthFilter(_cookieSecret)],
+    AppPath = "/swagger"
 });
 
 app.MapControllers();
-BackgroundJob.Enqueue<ZnsRefreshTokenJob>(
-    x => x.Execute());
-RecurringJob.AddOrUpdate<ZnsRefreshTokenJob>(
-    "zns-refresh-token",
-    job => job.Execute(),
-    Cron.Hourly);
+app.RegisterRecurringJobs();
 app.Run();
