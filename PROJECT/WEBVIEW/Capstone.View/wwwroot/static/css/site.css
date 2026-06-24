@@ -1,10 +1,10 @@
-html {
-    font-size: 15px;
+﻿html {
+    font-size: 17px;
 }
 
 @media (min-width: 768px) {
     html {
-        font-size: 14px;
+        font-size: 16px;
     }
 }
 
@@ -31,95 +31,104 @@ body {
 }
 
 /* =============================================
-   TRANG GIOI THIEU - LAYOUT 2 COT
+   TRANG GIOI THIEU - MENU NGANG
    ============================================= */
-.gt-layout {
+
+/* Wrapper noi dung full-width */
+.gt-body {
+    padding-top: 1.5rem;
+}
+
+/* ---- Menu ngang chinh ---- */
+.gt-hnav {
+    background: #fff;
+    border-bottom: 2px solid var(--bs-primary, #0d6efd);
+    margin-bottom: 0;
+}
+
+.gt-hnav-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
     display: flex;
-    gap: 2rem;
-    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 0;
 }
 
-/* Sidebar */
-.gt-sidebar {
-    flex: 0 0 260px;
-    position: sticky;
-    top: 100px;
-    max-height: calc(100vh - 120px);
-    overflow-y: auto;
+.gt-hnav-item {
+    position: relative;
 }
 
-.gt-sidebar-title {
-    font-size: 1.05rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    padding: 0.75rem 1rem;
-    margin: 0;
-    background-color: var(--bs-primary, #0d6efd);
-    color: #fff;
-    border-radius: 4px 4px 0 0;
+.gt-hnav-link {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.75rem 1.25rem;
+    color: #333;
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 500;
+    white-space: nowrap;
+    border-bottom: 3px solid transparent;
+    transition: color 0.2s, border-color 0.2s, background 0.2s;
 }
 
-.gt-sidebar-menu {
+    .gt-hnav-link:hover,
+    .gt-hnav-link.active {
+        color: var(--bs-primary, #0d6efd);
+        border-bottom-color: var(--bs-primary, #0d6efd);
+        background: #f5f8ff;
+    }
+
+.gt-hnav-arrow {
+    font-size: 0.6rem;
+    opacity: 0.6;
+    transition: transform 0.2s;
+}
+
+/* ---- Dropdown sub-menu ---- */
+.gt-hnav-sub {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 999;
     list-style: none;
     margin: 0;
-    padding: 0;
+    padding: 0.4rem 0;
+    background: #fff;
     border: 1px solid #e0e0e0;
-    border-top: none;
-    border-radius: 0 0 4px 4px;
-    overflow: hidden;
+    border-top: 2px solid var(--bs-primary, #0d6efd);
+    border-radius: 0 0 6px 6px;
+    min-width: 200px;
+    box-shadow: 0 6px 20px rgba(0,0,0,.1);
 }
 
-    .gt-sidebar-menu > li > a {
-        display: block;
-        padding: 0.6rem 1rem;
-        color: #333;
-        text-decoration: none;
-        font-size: 1rem;
-        border-bottom: 1px solid #f0f0f0;
-        transition: background 0.2s, color 0.2s;
-    }
-
-        .gt-sidebar-menu > li > a:hover,
-        .gt-sidebar-menu > li.active > a {
-            background-color: #f5f5f5;
-            color: var(--bs-primary, #0d6efd);
-            font-weight: 600;
-        }
-
-    .gt-sidebar-menu > li.active > a {
-        border-left: 3px solid var(--bs-primary, #0d6efd);
-        padding-left: calc(1rem - 3px);
-    }
-
-/* Sub-menu trong sidebar */
-.gt-sidebar-children {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    background: #fafafa;
+.gt-hnav-sub li a {
+    display: block;
+    padding: 0.5rem 1.1rem;
+    color: #444;
+    text-decoration: none;
+    font-size: 0.92rem;
+    white-space: nowrap;
+    transition: background 0.15s, color 0.15s;
 }
 
-    .gt-sidebar-children li a {
-        display: block;
-        padding: 0.45rem 1rem 0.45rem 1.75rem;
-        color: #555;
-        text-decoration: none;
-        font-size: 0.95rem;
-        border-bottom: 1px solid #f0f0f0;
-        transition: background 0.2s, color 0.2s;
+    .gt-hnav-sub li a:hover,
+    .gt-hnav-sub li.active a {
+        background: #f0f4ff;
+        color: var(--bs-primary, #0d6efd);
+        font-weight: 600;
     }
 
-        .gt-sidebar-children li a:hover,
-        .gt-sidebar-children li.active a {
-            color: var(--bs-primary, #0d6efd);
-            background: #f0f4ff;
-        }
+/* Hien dropdown khi hover hoac focus */
+.gt-hnav-dropdown:hover > .gt-hnav-sub,
+.gt-hnav-dropdown:focus-within > .gt-hnav-sub {
+    display: block;
+}
 
-/* Cot noi dung */
-.gt-content {
-    flex: 1;
-    min-width: 0;
+.gt-hnav-dropdown:hover .gt-hnav-arrow {
+    transform: rotate(180deg);
 }
 
 /* =============================================
@@ -128,10 +137,12 @@ body {
    ============================================= */
 .page-tomtat,
 .page-noidung {
-    line-height: 1.85;
-    color: #333;
-    font-size: 1.1rem;
+    line-height: 2;
+    color: #1f2937;
+    font-size: 1.07rem;
     word-break: break-word;
+    letter-spacing: .01em;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
 }
 
     /* Tieu de */
@@ -143,39 +154,58 @@ body {
     .page-tomtat h6, .page-noidung h6 {
         font-weight: 700;
         line-height: 1.4;
-        margin-top: 1.5rem;
-        margin-bottom: 0.75rem;
-        color: #1a1a1a;
+        margin-top: 2rem;
+        margin-bottom: 0.85rem;
+        color: #111827;
+        letter-spacing: -.01em;
     }
 
     .page-tomtat h1, .page-noidung h1 {
-        font-size: 2rem;
+        font-size: 1.95rem;
     }
 
+    /* H2: gach ngang duoi co accent mau */
     .page-tomtat h2, .page-noidung h2 {
-        font-size: 1.75rem;
+        font-size: 1.55rem;
+        padding-bottom: .45rem;
+        border-bottom: 2px solid #e5e7eb;
+        position: relative;
+    }
+    .page-noidung h2::after {
+        content: '';
+        position: absolute;
+        left: 0; bottom: -2px;
+        width: 48px; height: 2px;
+        background: var(--primary, #1a5fb4);
+        border-radius: 2px;
     }
 
+    /* H3: gach trai accent */
     .page-tomtat h3, .page-noidung h3 {
-        font-size: 1.45rem;
+        font-size: 1.3rem;
+        padding-left: .85rem;
+        border-left: 3px solid var(--primary, #1a5fb4);
     }
 
     .page-tomtat h4, .page-noidung h4 {
-        font-size: 1.25rem;
+        font-size: 1.15rem;
+        color: #1e3a5f;
     }
 
     .page-tomtat h5, .page-noidung h5 {
-        font-size: 1.1rem;
+        font-size: 1.05rem;
     }
 
     .page-tomtat h6, .page-noidung h6 {
-        font-size: 1rem;
-        color: #555;
+        font-size: .95rem;
+        color: #4b5563;
+        text-transform: uppercase;
+        letter-spacing: .06em;
     }
 
     /* Doan van */
     .page-tomtat p, .page-noidung p {
-        margin-bottom: 1rem;
+        margin-bottom: 1.25rem;
     }
 
     /* Danh sach */
@@ -194,64 +224,91 @@ body {
     }
 
     .page-tomtat li, .page-noidung li {
-        margin-bottom: 0.35rem;
+        margin-bottom: .5rem;
+        line-height: 1.8;
     }
 
     /* Lien ket */
     .page-tomtat a, .page-noidung a {
-        color: var(--bs-primary, #0d6efd);
-        text-decoration: underline;
+        color: var(--primary, #1a5fb4);
+        text-decoration: none;
+        border-bottom: 1px solid rgba(26,95,180,.3);
+        transition: color .15s, border-color .15s;
     }
 
-        .page-tomtat a:hover, .page-noidung a:hover {
-            opacity: 0.8;
-        }
+    .page-tomtat a:hover, .page-noidung a:hover {
+        color: #0e3d8a;
+        border-bottom-color: #0e3d8a;
+    }
 
-    /* Hinh anh */
+    /* Hinh anh: can giua, do bong, vien nhe */
     .page-tomtat img, .page-noidung img {
+        display: block;
         max-width: 100%;
         height: auto;
-        border-radius: 6px;
-        margin: 0.75rem 0;
-        display: block;
+        margin: 1.75rem auto;
+        border-radius: 10px;
+        box-shadow: 0 4px 24px rgba(0,0,0,.10), 0 1px 4px rgba(0,0,0,.06);
+        border: 1px solid rgba(0,0,0,.06);
     }
 
     /* Blockquote */
     .page-tomtat blockquote, .page-noidung blockquote {
-        border-left: 4px solid var(--bs-primary, #0d6efd);
-        padding: 0.75rem 1.25rem;
-        margin: 1rem 0;
-        background: #f8f9ff;
-        border-radius: 0 4px 4px 0;
-        color: #555;
+        position: relative;
+        border-left: 4px solid var(--primary, #1a5fb4);
+        padding: 1rem 1.25rem 1rem 3rem;
+        margin: 1.75rem 0;
+        background: linear-gradient(135deg, #f0f6ff 0%, #f8fafc 100%);
+        border-radius: 0 10px 10px 0;
+        color: #374151;
         font-style: italic;
+        font-size: 1.05rem;
+        line-height: 1.8;
+        box-shadow: 0 2px 8px rgba(26,95,180,.07);
+    }
+    .page-tomtat blockquote::before, .page-noidung blockquote::before {
+        content: '\201C';
+        position: absolute;
+        left: .6rem;
+        top: .1rem;
+        font-size: 3rem;
+        line-height: 1;
+        color: var(--primary, #1a5fb4);
+        opacity: .35;
+        font-style: normal;
+        font-weight: 900;
     }
 
     /* Bang */
     .page-tomtat table, .page-noidung table {
         width: 100%;
         border-collapse: collapse;
-        margin-bottom: 1rem;
-        font-size: 1rem;
+        margin: 1.5rem 0;
+        font-size: .97rem;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 1px 6px rgba(0,0,0,.07);
     }
-
     .page-tomtat th, .page-noidung th {
-        background: var(--bs-primary, #0d6efd);
+        background: var(--primary, #1a5fb4);
         color: #fff;
-        padding: 0.6rem 0.85rem;
+        padding: .65rem .95rem;
         text-align: left;
         font-weight: 600;
+        font-size: .9rem;
+        letter-spacing: .03em;
     }
-
     .page-tomtat td, .page-noidung td {
-        padding: 0.55rem 0.85rem;
-        border-bottom: 1px solid #e8e8e8;
+        padding: .6rem .95rem;
+        border-bottom: 1px solid #f0f0f0;
         vertical-align: top;
     }
-
     .page-tomtat tr:nth-child(even) td,
     .page-noidung tr:nth-child(even) td {
-        background: #f9f9f9;
+        background: #f8fafc;
+    }
+    .page-noidung tr:hover td {
+        background: #eef3fb;
     }
 
     /* Code */
@@ -280,8 +337,11 @@ body {
     /* Duong ngang */
     .page-tomtat hr, .page-noidung hr {
         border: none;
-        border-top: 1px solid #e0e0e0;
-        margin: 1.5rem 0;
+        height: 2px;
+        background: linear-gradient(90deg, var(--primary,#1a5fb4) 0%, transparent 100%);
+        margin: 2rem 0;
+        opacity: .25;
+        border-radius: 2px;
     }
 
     /* Strong / Em */
@@ -293,17 +353,30 @@ body {
         font-style: italic;
     }
 
-/* Responsive: doi sang 1 cot khi man hinh nho */
+/* Responsive: menu ngang cuon ngang tren mobile */
 @media (max-width: 768px) {
-    .gt-layout {
-        flex-direction: column;
+    .gt-hnav-list {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
     }
 
-    .gt-sidebar {
-        flex: none;
-        width: 100%;
+    .gt-hnav-link {
+        padding: 0.65rem 1rem;
+        font-size: 0.88rem;
+    }
+
+    .gt-hnav-sub {
         position: static;
-        max-height: none;
+        box-shadow: none;
+        border: none;
+        border-top: 1px solid #eee;
+        display: none;
+    }
+
+    .gt-hnav-dropdown:hover > .gt-hnav-sub,
+    .gt-hnav-dropdown:focus-within > .gt-hnav-sub {
+        display: block;
     }
 }
 
@@ -1185,7 +1258,7 @@ body {
             object-fit: contain;
         }
     /* ============================================================
-   TRUONG QUOCGIA � Sidebar layout + Filter chips + Pagination
+   TRUONG QUOCGIA – Sidebar layout + Filter chips + Pagination
    ============================================================ */
     .truong-quocgia-layout {
         display: grid;
@@ -1306,7 +1379,7 @@ body {
         pointer-events: none;
     }
     /* ================================================================
-   TRUONG SEARCH LAYOUT  (d�ng chung Index + QuocGia)
+   TRUONG SEARCH LAYOUT  (dùng chung Index + QuocGia)
    ================================================================ */
       .truong-search-layout {
          display: grid;
@@ -1514,7 +1587,7 @@ body {
         padding: .15rem .6rem;
         border-radius: 999px;
     }
-    /* grid trong trang search: 3 c?t thay v� auto-fill d? kh�ng qu� r?ng */
+    /* grid trong trang search: 3 c?t thay vì auto-fill d? không quá r?ng */
     .school-grid--search {
         grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
     }
@@ -1616,7 +1689,7 @@ body {
             background: #cf6d17;
         }
     /* ================================================================
-   SITE PAGINATION  (d�ng chung _Pagination.cshtml)
+   SITE PAGINATION  (dùng chung _Pagination.cshtml)
    ================================================================ */
     .site-pagination {
         display: flex;
@@ -1693,7 +1766,7 @@ body {
     }
 
 /* =============================================
-   TRUONG DETAIL � LEVELS BADGES
+   TRUONG DETAIL – LEVELS BADGES
    ============================================= */
 .truong-hero__levels {
     display: flex;
@@ -1727,7 +1800,7 @@ body {
 }
 
 /* =============================================
-   TRUONG DETAIL � SCHOLARSHIP GRID
+   TRUONG DETAIL – SCHOLARSHIP GRID
    ============================================= */
 .scholarship-grid {
     display: grid;
@@ -1793,7 +1866,7 @@ body {
 .financial-aid-box p { font-size: .93rem; color: #555; margin: 0; }
 
 /* =============================================
-   TRUONG DETAIL � SUBSECTION TITLE
+   TRUONG DETAIL – SUBSECTION TITLE
    ============================================= */
 .truong-subsection__title {
     font-size: 1rem;
@@ -1805,7 +1878,7 @@ body {
 }
 
 /* =============================================
-   TRUONG DETAIL � NO DATA NOTICE
+   TRUONG DETAIL – NO DATA NOTICE
    ============================================= */
 .no-data-notice {
     display: flex;
@@ -1836,7 +1909,7 @@ body {
 .no-data-section p { margin-bottom: 1.25rem; font-size: .95rem; }
 
 /* =============================================
-   SIDEBAR � LEVELS LIST
+   SIDEBAR – LEVELS LIST
    ============================================= */
 .sidebar-levels {
     list-style: none;
@@ -1917,11 +1990,12 @@ body {
     text-transform: uppercase;
 }
 .nd-title {
-    font-size: 1.9rem;
+    font-size: 2rem;
     font-weight: 800;
     line-height: 1.3;
-    margin-bottom: .75rem;
-    color: #111;
+    margin-bottom: .85rem;
+    color: #0f172a;
+    letter-spacing: -.02em;
 }
 .nd-meta {
     display: flex;
@@ -1943,10 +2017,9 @@ body {
 }
 @media (max-width: 960px) {
     .nd-body { grid-template-columns: 1fr; }
-    .nd-sidebar { order: -1; }
 }
 
-/* Main cột trái */
+/* Main cá»™t trÃ¡i */
 .nd-main {
     display: grid;
     grid-template-columns: 40px 1fr;
@@ -1997,12 +2070,15 @@ body {
 /* Summary */
 .nd-summary {
     border-left: 4px solid var(--primary, #1a5fb4);
-    padding: .75rem 1rem;
-    background: #f0f6ff;
-    border-radius: 0 8px 8px 0;
-    margin-bottom: 1.5rem;
+    padding: 1rem 1.25rem;
+    background: linear-gradient(135deg, #eef4ff 0%, #f8fafc 100%);
+    border-radius: 0 10px 10px 0;
+    margin-bottom: 2rem;
     font-style: italic;
-    color: #374151;
+    font-size: 1.08rem;
+    line-height: 1.85;
+    color: #1e3a5f;
+    box-shadow: 0 2px 10px rgba(26,95,180,.08);
 }
 
 /* TOC trong content */
@@ -2195,7 +2271,7 @@ body {
     overflow: hidden;
 }
 
-/* ── SIDEBAR phải ── */
+/* â”€â”€ SIDEBAR pháº£i â”€â”€ */
 .nd-sidebar__sticky {
     position: sticky;
     top: 80px;
@@ -2270,6 +2346,22 @@ body {
     .nd-cover img { height: 240px; }
     .nd-title { font-size: 1.4rem; }
     .nd-toc-float { display: none; }
+
+    /* Sidebar tin lien quan xuong duoi noi dung chinh */
+    .nd-sidebar { order: 2; }
+
+    /* Bo sticky cua wrapper trong sidebar, de scroll noi dung binh thuong */
+    .nd-sidebar__sticky { position: static; }
+
+    /* Sticky title "Tin cùng chuyên mục" tren mobile */
+    .nd-sidebar__heading--mobile-fixed {
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        background: #f8fafc;
+        border-bottom: 1px solid #e5e7eb;
+        margin: 0;
+    }
 }
 
 /* NewsBySchool */

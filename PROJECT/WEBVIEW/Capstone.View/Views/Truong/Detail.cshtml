@@ -587,14 +587,14 @@
                 {
                     <p><i class="fa-solid fa-graduation-cap"></i> Loại trường: @Model.Loaitruongtext</p>
                 }
-                @if (!string.IsNullOrEmpty(Model.Phone))
+                @* @if (!string.IsNullOrEmpty(Model.Phone))
                 {
                     <p><i class="fa-solid fa-phone"></i> <a href="tel:@Model.Phone.Replace(" ","")">@Model.Phone</a></p>
                 }
                 @if (!string.IsNullOrEmpty(Model.Email))
                 {
                     <p><i class="fa-solid fa-envelope"></i> <a href="mailto:@Model.Email">@Model.Email</a></p>
-                }
+                } *@
                 @if (!string.IsNullOrEmpty(Model.Website))
                 {
                     <p><i class="fa-solid fa-globe"></i> <a href="@Model.Website" target="_blank" rel="noopener">Website chính thức</a></p>

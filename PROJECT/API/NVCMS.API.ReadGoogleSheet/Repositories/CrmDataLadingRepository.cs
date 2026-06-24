@@ -4,14 +4,9 @@ using NVCMS.API.ReadGoogleSheet.Entities;
 
 namespace NVCMS.API.ReadGoogleSheet.Repositories
 {
-    public class CrmDataLadingRepository : Repository<student_from_ladipage>, ICrmDataLadingRepository
+    public class CrmDataLadingRepository : MarketingRepository<student_from_ladipage>, ICrmDataLadingRepository
     {
-        private readonly ApplicationDbContext _context;
-
-        public CrmDataLadingRepository(ApplicationDbContext context) : base(context)
-        {
-            _context = context;
-        }
+        public CrmDataLadingRepository(CRMDbContext context) : base(context) { }
 
         public async Task<IEnumerable<student_from_ladipage>> GetByEmailOrPhoneAsync(string emails, string phones)
         {

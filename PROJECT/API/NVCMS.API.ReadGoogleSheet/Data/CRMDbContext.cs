@@ -3,15 +3,16 @@ using NVCMS.API.ReadGoogleSheet.Entities;
 
 namespace NVCMS.API.ReadGoogleSheet.Data
 {
-    public class MarketingDbContext : DbContext
+    public class CRMDbContext : DbContext
     {
-        public MarketingDbContext(DbContextOptions<MarketingDbContext> options) : base(options) { }
+        public CRMDbContext(DbContextOptions<CRMDbContext> options) : base(options) { }
 
-        public DbSet<Marketing_Mail_Campaing>    Campaigns { get; set; }
-        public DbSet<Marketing_Mail_ListMail>    ListMails { get; set; }
-        public DbSet<MarketingMailListMailUnsub> Unsubs    { get; set; }
-        public DbSet<Marketing_Mail_Template>    Templates { get; set; }
-        public DbSet<MarketingMailSendLog>       SendLogs  { get; set; }
+        public DbSet<Marketing_Mail_Campaing>    Campaigns      { get; set; }
+        public DbSet<Marketing_Mail_ListMail>    ListMails      { get; set; }
+        public DbSet<MarketingMailListMailUnsub> Unsubs         { get; set; }
+        public DbSet<Marketing_Mail_Template>    Templates      { get; set; }
+        public DbSet<MarketingMailSendLog>       SendLogs       { get; set; }
+        public DbSet<student_from_ladipage>      CrmDataLadings { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -80,6 +81,30 @@ namespace NVCMS.API.ReadGoogleSheet.Data
                 e.Property(x => x.OpenedTime).HasColumnName("OpenedTime").HasColumnType("datetime");
                 e.Property(x => x.ClickedTime).HasColumnName("ClickedTime").HasColumnType("datetime");
                 e.Property(x => x.CreatedDate).HasColumnName("CreatedDate").HasColumnType("datetime");
+            });
+
+            modelBuilder.Entity<student_from_ladipage>(entity =>
+            {
+                entity.ToTable("student_from_ladipage");
+                entity.HasKey(e => e.id);
+                entity.Property(e => e.id).HasColumnName("id");
+                entity.Property(e => e.hotendem).HasColumnName("hotendem").HasMaxLength(200);
+                entity.Property(e => e.ten).HasColumnName("ten").HasMaxLength(50);
+                entity.Property(e => e.gioi_tinh).HasColumnName("gioi_tinh");
+                entity.Property(e => e.ngay_sinh).HasColumnName("ngay_sinh").HasColumnType("date");
+                entity.Property(e => e.so_dien_thoai).HasColumnName("so_dien_thoai").HasMaxLength(30);
+                entity.Property(e => e.email).HasColumnName("email").HasMaxLength(50);
+                entity.Property(e => e.truong_dang_hoc).HasColumnName("truong_dang_hoc").HasMaxLength(500);
+                entity.Property(e => e.event_dia_diem).HasColumnName("event_dia_diem").HasMaxLength(500);
+                entity.Property(e => e.event_id).HasColumnName("event_id");
+                entity.Property(e => e.event_dia_diem_id).HasColumnName("event_dia_diem_id");
+                entity.Property(e => e.source).HasColumnName("source").HasMaxLength(500);
+                entity.Property(e => e.medium).HasColumnName("medium").HasMaxLength(500);
+                entity.Property(e => e.link).HasColumnName("link").HasMaxLength(500);
+                entity.Property(e => e.ladi_page_id).HasColumnName("ladi_page_id").HasMaxLength(500);
+                entity.Property(e => e.client_ip).HasColumnName("client_ip").HasMaxLength(50);
+                entity.Property(e => e.thong_tin_khac).HasColumnName("thong_tin_khac").HasMaxLength(50);
+                entity.Property(e => e.created_date).HasColumnName("created_date").HasColumnType("datetime");
             });
         }
     }

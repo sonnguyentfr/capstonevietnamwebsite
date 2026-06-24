@@ -112,7 +112,7 @@ builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IZaloService, ZaloService>();
 
 // Marketing DbContext (DefaultCRMConnection)
-builder.Services.AddDbContext<MarketingDbContext>(options =>
+builder.Services.AddDbContext<CRMDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultCRMConnection")));
 
 // Marketing Repositories

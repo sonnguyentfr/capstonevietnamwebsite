@@ -6,7 +6,7 @@ namespace NVCMS.API.ReadGoogleSheet.Repositories
 {
     public class MarketingUnsubRepository : MarketingRepository<MarketingMailListMailUnsub>, IMarketingUnsubRepository
     {
-        public MarketingUnsubRepository(MarketingDbContext context) : base(context) { }
+        public MarketingUnsubRepository(CRMDbContext context) : base(context) { }
 
         public async Task<bool> IsUnsubscribedAsync(string email, int portalId)
         {

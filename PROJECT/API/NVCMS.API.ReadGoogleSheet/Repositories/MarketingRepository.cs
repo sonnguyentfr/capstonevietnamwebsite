@@ -5,15 +5,15 @@ using System.Linq.Expressions;
 namespace NVCMS.API.ReadGoogleSheet.Repositories
 {
     /// <summary>
-    /// Generic repository base dùng MarketingDbContext (DefaultCRMConnection).
+    /// Generic repository base dùng CRMDbContext (DefaultCRMConnection).
     /// Tách biệt với Repository&lt;T&gt; để không ảnh hưởng code hiện tại.
     /// </summary>
     public class MarketingRepository<T> : IRepository<T> where T : class
     {
-        protected readonly MarketingDbContext _context;
+        protected readonly CRMDbContext _context;
         protected readonly DbSet<T> _dbSet;
 
-        public MarketingRepository(MarketingDbContext context)
+        public MarketingRepository(CRMDbContext context)
         {
             _context = context;
             _dbSet   = context.Set<T>();

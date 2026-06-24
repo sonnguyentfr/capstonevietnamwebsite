@@ -1,68 +1,72 @@
 ﻿@model NVCMS.WebView.Data.ViewModels.GioiThieuViewModel?
 @if (Model != null)
 {
-    <div class="page-gioi-thieu">
-        @* @if (!string.IsNullOrEmpty(Model.ImagePath))
-        {
-            <div class="page-banner img-cover">
-                <img src="@Model.ImagePath" alt="@Model.TrangDanhMuc" loading="lazy">
-            </div>
-        } *@
-        <div class="container section-large">
-            <div class="gt-layout">
-                @* Cot trai: sidebar menu co dinh *@
-                <aside class="gt-sidebar">
-                    <nav class="gt-sidebar-nav">
-                        <h3 class="gt-sidebar-title">Giới thiệu</h3>
-                        <ul class="gt-sidebar-menu">
-                            @foreach (var item in Model.SidebarMenu)
-                            {
-                                var isActive = Context.Request.Path.Value?.TrimEnd('/') == item.Url.TrimEnd('/');
-                                <li class="@(isActive ? "active" : "")">
-                                    <a href="@item.Url">@item.Title</a>
-                                    @if (item.Children.Count > 0)
-                                    {
-                                        <ul class="gt-sidebar-children">
-                                            @foreach (var child in item.Children)
-                                            {
-                                                var isChildActive = Context.Request.Path.Value?.TrimEnd('/') == child.Url.TrimEnd('/');
-                                                <li class="@(isChildActive ? "active" : "")">
-                                                    <a href="@child.Url">@child.Title</a>
-                                                </li>
-                                            }
-                                        </ul>
-                                    }
-                                </li>
-                            }
-                        </ul>
-                    </nav>
-                </aside>
+    var currentPath = Context.Request.Path.Value?.TrimEnd('/') ?? string.Empty;
 
-                @* Cot phai: noi dung *@
-                <div class="trangioithieu">
-                    <div class="post">
-                        <div class="section-title text-center">
-                            <h2>@Model.TrangDanhMuc</h2>
-                            <div class="bar"></div>
-                        </div>
-                        <div class="post-entry-full">
-                            @if (!string.IsNullOrEmpty(Model.Tieudephu))
-                            {
-                                <p class="page-subtitle text-muted">@Model.Tieudephu</p>
-                            }
-                            @if (!string.IsNullOrEmpty(Model.Tomtat))
-                            {
-                                <div class="page-tomtat mt-4">@Html.Raw(Model.Tomtat)</div>
-                            }
-                            @if (!string.IsNullOrEmpty(Model.Noidung))
-                            {
-                                <div class="page-noidung mt-4">@Html.Raw(System.Net.WebUtility.HtmlDecode(Model.Noidung))</div>
-                            }
-                        </div>
+    <div class="page-gioi-thieu">
+        <div class="container section-large">
+
+            @* Menu ngang - nhom tung thanh phan *@
+            @if (Model.SidebarMenu.Count > 0)
+            {
+                <nav class="gt-hnav">
+                    <ul class="gt-hnav-list">
+                        @foreach (var item in Model.SidebarMenu)
+                        {
+                            var isActive = currentPath == item.Url.TrimEnd('/');
+                            var hasChildren = item.Children.Count > 0;
+                            var isGroupActive = isActive || item.Children.Any(c => currentPath == c.Url.TrimEnd('/'));
+
+                            <li class="gt-hnav-item @(hasChildren ? "gt-hnav-dropdown" : "") @(isGroupActive ? "active" : "")">
+                                <a href="@item.Url" class="gt-hnav-link @(isGroupActive ? "active" : "")">
+                                    @item.Title
+                                    @if (hasChildren)
+                                    {
+                                        <span class="gt-hnav-arrow">&#9660;</span>
+                                    }
+                                </a>
+                                @if (hasChildren)
+                                {
+                                    <ul class="gt-hnav-sub">
+                                        @foreach (var child in item.Children)
+                                        {
+                                            var isChildActive = currentPath == child.Url.TrimEnd('/');
+                                            <li class="@(isChildActive ? "active" : "")">
+                                                <a href="@child.Url">@child.Title</a>
+                                            </li>
+                                        }
+                                    </ul>
+                                }
+                            </li>
+                        }
+                    </ul>
+                </nav>
+            }
+
+            @* Noi dung full width *@
+            <div class="gt-body">
+                <div class="post">
+                    <div class="section-title text-center">
+                        <h2>@Model.TrangDanhMuc</h2>
+                        <div class="bar"></div>
                     </div>
-                    
+                    <div class="post-entry-full">
+                        @if (!string.IsNullOrEmpty(Model.Tieudephu))
+                        {
+                            <p class="page-subtitle text-muted">@Model.Tieudephu</p>
+                        }
+                        @if (!string.IsNullOrEmpty(Model.Tomtat))
+                        {
+                            <div class="page-tomtat mt-4">@Html.Raw(Model.Tomtat)</div>
+                        }
+                        @if (!string.IsNullOrEmpty(Model.Noidung))
+                        {
+                            <div class="page-noidung mt-4">@Html.Raw(System.Net.WebUtility.HtmlDecode(Model.Noidung))</div>
+                        }
+                    </div>
                 </div>
             </div>
+
         </div>
     </div>
 }

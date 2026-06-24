@@ -7,7 +7,7 @@ namespace NVCMS.API.ReadGoogleSheet.Repositories
     public class MarketingListMailRepository
         : MarketingRepository<Marketing_Mail_ListMail>, IMarketingListMailRepository
     {
-        public MarketingListMailRepository(MarketingDbContext context) : base(context) { }
+        public MarketingListMailRepository(CRMDbContext context) : base(context) { }
 
         public async Task<IEnumerable<Marketing_Mail_ListMail>> GetByCampaignIdAsync(int campaignId)
         {

@@ -8,7 +8,7 @@ namespace NVCMS.API.ReadGoogleSheet.Repositories
     public class MarketingSendLogRepository
         : MarketingRepository<MarketingMailSendLog>, IMarketingSendLogRepository
     {
-        public MarketingSendLogRepository(MarketingDbContext context) : base(context) { }
+        public MarketingSendLogRepository(CRMDbContext context) : base(context) { }
 
         public async Task<IEnumerable<MarketingMailSendLog>> GetQueuedByCampaignIdAsync(int campaignId)
         {
