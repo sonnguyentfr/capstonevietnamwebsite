@@ -1,17 +1,20 @@
 using Microsoft.AspNetCore.Mvc;
 using NVCMS.WebView.Data.Contracts.Service;
+using NVCMS.WebView.Data.Common;
 
 namespace Capstone.View.Controllers;
 
 public class NewsController : Controller
 {
     private readonly INewsService _news;
+    private readonly INewsUrlService _urlService;
     private readonly int _portalId;
 
-    public NewsController(INewsService news, IConfiguration config)
+    public NewsController(INewsService news, INewsUrlService urlService, IConfiguration config)
     {
-        _news     = news;
-        _portalId = config.GetValue<int>("SiteSettings:PortalId");
+        _news       = news;
+        _urlService = urlService;
+        _portalId   = config.GetValue<int>("SiteSettings:PortalId");
     }
 
     // GET /cam-nang-su-kien-du-hoc
@@ -38,11 +41,29 @@ public class NewsController : Controller
         if (category == null)
             return NotFound();
 
+        // ================= CANONICAL SLUG CHECK =================
+        if (!string.Equals(slug, category.Slug, StringComparison.OrdinalIgnoreCase))
+        {
+            return RedirectToActionPermanent(nameof(CategoryBySlug), new
+            {
+                slug = category.Slug,
+                page = page > 1 ? page : 1
+            });
+        }
+
         var paged = await _news.GetByCategoryIdAsync(category.CategoryID, _portalId, page, pageSize);
 
+        // ================= SEO META =================
         ViewData["Title"] = category.CategoryName;
         ViewData["MetaDescription"] = category.Description ?? category.CategoryName;
-        ViewData["CanonicalUrl"] = $"{Request.Scheme}://{Request.Host}{Request.Path}";
+
+        // ================= CANONICAL URL FIX =================
+        var baseUrl = $"{Request.Scheme}://{Request.Host}{Request.Path}";
+
+        ViewData["CanonicalUrl"] = page > 1
+            ? $"{baseUrl}?page={page}"
+            : baseUrl;
+
         ViewData["Category"] = category;
         ViewData["Categories"] = await _news.GetCategoriesWithCountAsync(_portalId);
 
@@ -90,12 +111,12 @@ public class NewsController : Controller
         ViewData["Title"]           = vm.MetaTitle ?? vm.Title;
         ViewData["MetaDescription"] = vm.MetaDescription ?? vm.Summary;
         ViewData["MetaImage"]       = vm.MetaImage ?? vm.ImagePath;
-        ViewData["CanonicalUrl"]    = $"{Request.Scheme}://{Request.Host}/tin-tuc/{canonical}-{id}";
+        ViewData["CanonicalUrl"]    = NewsUrlBuilder.BuildFullNewsUrl(Request.Scheme, Request.Host.Value, vm);
 
         return View(vm);
     }
 
-    // GET /{section}/{catSlug}/{slug}-{id}  — dùng chung cho tất cả section có detail 3 segment
+    // GET /{section}/{catSlug}/{slug}-{id}
     public async Task<IActionResult> SectionDetail(int id, string? slug, string? catSlug, string? section)
     {
         var vm = await _news.GetDetailAsync(id, _portalId);
@@ -114,23 +135,10 @@ public class NewsController : Controller
                 new { catSlug = canonicalCatSlug, slug = canonical, id });
         }
 
-        var (sectionName, sectionUrl) = sec switch
-        {
-            "guong-mat-thanh-cong" => ("Gương mặt thành công", "/guong-mat-thanh-cong"),
-            "hoc-bong-du-hoc"      => ("Học bổng du học",       "/hoc-bong-du-hoc"),
-            "huong-nghiep"         => ("Hướng nghiệp",          "/huong-nghiep"),
-            "tu-van-du-hoc"        => ("Tư vấn Du học",         "/tu-van-du-hoc"),
-            "tu-van-dinh-cu"       => ("Tư vấn Định cư",        "/tu-van-dinh-cu"),
-            _                      => ("Cẩm nang & Tin tức",    "/cam-nang-su-kien-du-hoc")
-        };
-
         ViewData["Title"]           = vm.MetaTitle ?? vm.Title;
         ViewData["MetaDescription"] = vm.MetaDescription ?? vm.Summary;
         ViewData["MetaImage"]       = vm.MetaImage ?? vm.ImagePath;
-        ViewData["CanonicalUrl"]    = $"{Request.Scheme}://{Request.Host}/{sec}/{canonicalCatSlug}/{canonical}-{id}";
-        ViewData["SectionName"]     = sectionName;
-        ViewData["SectionUrl"]      = sectionUrl;
-        ViewData["CategoryUrl"]     = $"/{sec}/{canonicalCatSlug}";
+        ViewData["CanonicalUrl"]    = NewsUrlBuilder.BuildFullNewsUrl(Request.Scheme, Request.Host.Value, vm);
 
         return View("Detail", vm);
     }
@@ -148,11 +156,7 @@ public class NewsController : Controller
         ViewData["Title"]           = vm.MetaTitle ?? vm.Title;
         ViewData["MetaDescription"] = vm.MetaDescription ?? vm.Summary;
         ViewData["MetaImage"]       = vm.MetaImage ?? vm.ImagePath;
-        ViewData["CanonicalUrl"]    = $"{Request.Scheme}://{Request.Host}/doi-ngu/{canonical}-{id}";
-        ViewData["SectionName"]     = "Giới thiệu";
-        ViewData["SectionUrl"]      = "/gioi-thieu";
-        ViewData["CategoryUrl"]     = "/doi-ngu";
-        ViewData["CategoryName"]    = "Đội ngũ";
+        ViewData["CanonicalUrl"]    = NewsUrlBuilder.BuildFullNewsUrl(Request.Scheme, Request.Host.Value, vm);
 
         return View("Detail", vm);
     }
@@ -175,10 +179,7 @@ public class NewsController : Controller
         ViewData["Title"]           = vm.MetaTitle ?? vm.Title;
         ViewData["MetaDescription"] = vm.MetaDescription ?? vm.Summary;
         ViewData["MetaImage"]       = vm.MetaImage ?? vm.ImagePath;
-        ViewData["CanonicalUrl"]    = $"{Request.Scheme}://{Request.Host}/cam-nang-su-kien-du-hoc/{canonicalCatSlug}/{canonical}-{id}";
-        ViewData["SectionName"]     = "Cẩm nang & Tin tức";
-        ViewData["SectionUrl"]      = "/cam-nang-su-kien-du-hoc";
-        ViewData["CategoryUrl"]     = $"/cam-nang-su-kien-du-hoc/{canonicalCatSlug}";
+        ViewData["CanonicalUrl"]    = NewsUrlBuilder.BuildFullNewsUrl(Request.Scheme, Request.Host.Value, vm);
 
         return View("Detail", vm);
     }
@@ -214,8 +215,6 @@ public class NewsController : Controller
         ViewData["Category"]        = category;
         ViewData["Categories"]      = categories;
         ViewData["Section"]         = "cam-nang-va-tin-tuc";
-        ViewData["SectionName"]     = "Cẩm nang & Tin tức";
-        ViewData["SectionUrl"]      = "/cam-nang-va-tin-tuc";
         ViewData["DetailRoute"]     = "cam-nang-va-tin-tuc-detail";
         ViewData["DetailCatSlug"]   = category.Slug;
 
@@ -237,11 +236,7 @@ public class NewsController : Controller
         ViewData["Title"]           = vm.MetaTitle ?? vm.Title;
         ViewData["MetaDescription"] = vm.MetaDescription ?? vm.Summary;
         ViewData["MetaImage"]       = vm.MetaImage ?? vm.ImagePath;
-        ViewData["CanonicalUrl"]    = $"{Request.Scheme}://{Request.Host}/cam-nang-va-tin-tuc/{vm.CategorySlug}/{canonical}-{id}";
-        ViewData["Section"]         = "cam-nang-va-tin-tuc";
-        ViewData["SectionName"]     = "Cẩm nang & Tin tức";
-        ViewData["SectionUrl"]      = "/cam-nang-va-tin-tuc";
-        ViewData["CategoryUrl"]     = $"/cam-nang-va-tin-tuc/{vm.CategorySlug}-{vm.CategoryId}";
+        ViewData["CanonicalUrl"]    = NewsUrlBuilder.BuildFullNewsUrl(Request.Scheme, Request.Host.Value, vm);
 
         return View("Detail", vm);
     }
@@ -261,11 +256,34 @@ public class NewsController : Controller
         ViewData["Title"]           = vm.MetaTitle ?? vm.Title;
         ViewData["MetaDescription"] = vm.MetaDescription ?? vm.Summary;
         ViewData["MetaImage"]       = vm.MetaImage ?? vm.ImagePath;
-        ViewData["CanonicalUrl"]    = $"{Request.Scheme}://{Request.Host}/tuyen-dung/{canonical}-{id}";
-        ViewData["SectionName"]     = "Giới thiệu";
-        ViewData["SectionUrl"]      = "/gioi-thieu";
-        ViewData["CategoryName"]    = "Tuyển dụng";
-        ViewData["CategoryUrl"]     = "/tuyen-dung";
+        ViewData["CanonicalUrl"]    = NewsUrlBuilder.BuildFullNewsUrl(Request.Scheme, Request.Host.Value, vm);
+
+        return View("Detail", vm);
+    }
+
+    // GET /{*slug} — catch-all route
+    public async Task<IActionResult> DetailCatchAll(string slug)
+    {
+        var newsId = _urlService.ExtractNewsId(slug);
+        if (newsId is null) return NotFound();
+
+        var news = await _news.GetByIdAsync(newsId.Value, _portalId);
+        if (news is null) return NotFound();
+
+        var canonicalUrl = await _urlService.BuildCanonicalUrl(news, Request.Scheme, Request.Host.Value);
+        if (canonicalUrl is null) return NotFound();
+
+        var requestUrl = $"{Request.Scheme}://{Request.Host}{Request.Path}";
+        if (!_urlService.IsCanonical(requestUrl, canonicalUrl))
+            return RedirectPermanent(canonicalUrl);
+
+        var vm = await _news.GetDetailAsync(newsId.Value, _portalId);
+        if (vm is null) return NotFound();
+
+        ViewData["Title"]           = vm.MetaTitle ?? vm.Title;
+        ViewData["MetaDescription"] = vm.MetaDescription ?? vm.Summary;
+        ViewData["MetaImage"]       = vm.MetaImage ?? vm.ImagePath;
+        ViewData["CanonicalUrl"]    = canonicalUrl;
 
         return View("Detail", vm);
     }

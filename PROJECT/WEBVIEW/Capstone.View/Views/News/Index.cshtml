@@ -22,7 +22,7 @@
         {
             <div class="no-data-section">
                 <i class="fa-regular fa-newspaper"></i>
-                <p>Chua co danh muc tin tuc nao 111.</p>
+                <p>Chua co danh muc tin tuc nao.</p>
             </div>
         }
         else
@@ -30,18 +30,7 @@
             <div class="news-cat-grid">
                 @foreach (var cat in Model)
                 {
-                    @* Map CategoryID → URL chuẩn {slug}-{categoryId} *@
-                    var catUrl = cat.CategoryID switch
-                    {
-                        200 => "/tuyen-dung",
-                        227 => "/cam-nang-su-kien-du-hoc/chia-se-tu-du-hoc-sinh",
-                        244 => "/thong-tin-du-hoc/du-hoc-my/tin-tuc",
-                        202 => "/tu-van-dinh-cu/tin-tuc-dinh-cu-eb5",
-                        225 => "/cam-nang-su-kien-du-hoc/cam-nang-du-hoc",
-                        228 => "/cam-nang-su-kien-du-hoc/tin-tuc",
-                        229 => "/cam-nang-su-kien-du-hoc/ban-tin-truong",
-                        _   => $"/tin-tuc/danh-muc/{cat.Slug}-{cat.CategoryID}"
-                    };
+                    var catUrl = $"/{cat.Slug}";
                     <a href="@catUrl" class="news-cat-card" data-aos="fade-up">
                         <span class="news-cat-card__name">@cat.CategoryName</span>
                         @if (!string.IsNullOrEmpty(cat.Description))

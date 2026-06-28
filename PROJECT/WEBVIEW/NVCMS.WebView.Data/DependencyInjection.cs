@@ -46,6 +46,8 @@ public static class DependencyInjection
                 sp.GetRequiredService<INewsRepository>(),
                 rewriter,
                 sp.GetRequiredService<IMemoryCache>()));
+        services.AddScoped<INewsUrlService>(sp =>
+            new NewsUrlService(sp.GetRequiredService<INewsRepository>()));
         services.AddScoped<IBannerService>(sp =>
             new BannerService(
                 sp.GetRequiredService<IBannerRepository>(),

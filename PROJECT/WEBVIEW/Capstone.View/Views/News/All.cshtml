@@ -37,8 +37,9 @@
                 <div class="news-featured-grid">
                     @foreach (var item in featured)
                     {
+                        var url = NewsUrlBuilder.BuildNewsUrl(item);
                         <article class="news-featured-card" data-aos="fade-up">
-                            <a href="/tin-tuc/@(item.Slug)-@item.NewId" class="news-featured-card__img-wrap">
+                            <a href="@url" class="news-featured-card__img-wrap">
                                 <img src="@(!string.IsNullOrEmpty(item.ImagePath) ? item.ImagePath : "/static/images/no-photo.png")" alt="@item.Title" loading="lazy" />
                             </a>
                             <div class="news-featured-card__body">
@@ -46,7 +47,7 @@
                                     <span class="news-card__cat">@item.CategoryName</span>
                                     <time class="news-card__date" datetime="@item.PublishedDate.ToString("yyyy-MM-dd")">@item.PublishedDate.ToString("dd/MM/yyyy")</time>
                                 </div>
-                                <h2 class="news-featured-card__title"><a href="/tin-tuc/@(item.Slug)-@item.NewId">@item.Title</a></h2>
+                                <h2 class="news-featured-card__title"><a href="@url">@item.Title</a></h2>
                                 @if (!string.IsNullOrEmpty(item.Summary)) { <p class="news-card__summary">@Html.Raw(item.Summary)</p> }
                             </div>
                         </article>
@@ -59,8 +60,9 @@
                 <div class="news-grid news-grid--4col">
                     @foreach (var item in rest)
                     {
+                        var url = NewsUrlBuilder.BuildNewsUrl(item);
                         <article class="news-card" data-aos="fade-up">
-                            <a href="/tin-tuc/@(item.Slug)-@item.NewId" class="news-card__img-wrap">
+                            <a href="@url" class="news-card__img-wrap">
                                 <img src="@(!string.IsNullOrEmpty(item.ImagePath) ? item.ImagePath : "/static/images/no-photo.png")" alt="@item.Title" loading="lazy" />
                             </a>
                             <div class="news-card__body">
@@ -68,7 +70,7 @@
                                     <span class="news-card__cat">@item.CategoryName</span>
                                     <time class="news-card__date" datetime="@item.PublishedDate.ToString("yyyy-MM-dd")">@item.PublishedDate.ToString("dd/MM/yyyy")</time>
                                 </div>
-                                <h2 class="news-card__title"><a href="/tin-tuc/@(item.Slug)-@item.NewId">@item.Title</a></h2>
+                                <h2 class="news-card__title"><a href="@url">@item.Title</a></h2>
                                 @if (!string.IsNullOrEmpty(item.Summary)) { <p class="news-card__summary">@Html.Raw(item.Summary)</p> }
                                 @if (!string.IsNullOrEmpty(item.Tacgia)) { <span class="news-card__author"><i class="fa-solid fa-pen-nib"></i> @item.Tacgia</span> }
                             </div>

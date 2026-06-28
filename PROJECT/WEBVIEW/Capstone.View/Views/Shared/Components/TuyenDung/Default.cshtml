@@ -11,7 +11,7 @@
 @foreach (var (item, i) in items.Select((x, i) => (x, i)))
 {
     var delay = delays[i % delays.Length];
-    var url   = $"/tuyen-dung/{item.Slug}-{item.NewId}";
+    var url = NVCMS.WebView.Data.Common.NewsUrlBuilder.BuildNewsUrl(item);
     <div class="home-courses-item" data-aos="fade-down" data-aos-delay="@delay">
         <div class="image img-cover">
             <a href="@url">

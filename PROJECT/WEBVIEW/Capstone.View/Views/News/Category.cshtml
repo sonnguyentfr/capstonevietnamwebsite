@@ -79,13 +79,6 @@
     var parentCat = allCats?.FirstOrDefault(c => c.CategoryID == parentId);
     var parentName = parentCat?.CategoryName;
     var parentSlug = parentCat?.Slug ?? string.Empty;
-
-    // Section override (từ CamNangCategory, v.v.)
-    var sectionName = ViewData["SectionName"]?.ToString();
-    var sectionUrl  = ViewData["SectionUrl"]?.ToString();
-    // URL cho từng item trong danh sách (nếu route section dùng slug-id thay /tin-tuc/{slug}-{id})
-    var detailRoute   = ViewData["DetailRoute"]?.ToString();   // "cam-nang-va-tin-tuc-detail"
-    var detailCatSlug = ViewData["DetailCatSlug"]?.ToString(); // slug của category cha
 }
 
 <section class="cat-hero" style="--hero-gradient: linear-gradient(@heroGradient);@(!string.IsNullOrEmpty(heroBgImage) ? $" --hero-bg: url('{heroBgImage}');" : "")">
@@ -95,20 +88,9 @@
         <nav class="breadcrumb cat-hero__breadcrumb" aria-label="breadcrumb">
             <a href="/">Trang chủ</a>
             <i class="fa-solid fa-chevron-right"></i>
-            @if (!string.IsNullOrEmpty(sectionName) && !string.IsNullOrEmpty(sectionUrl))
+            @if (!string.IsNullOrEmpty(parentName))
             {
-                @* section cụ thể: Cẩm nang & Tin tức → tên danh mục *@
-                <a href="@sectionUrl">@sectionName</a>
-                <i class="fa-solid fa-chevron-right"></i>
-            }
-            else if (!string.IsNullOrEmpty(parentName))
-            {
-                <a href="/tin-tuc/danh-muc/@parentSlug-@parentId">@parentName</a>
-                <i class="fa-solid fa-chevron-right"></i>
-            }
-            else
-            {
-                <a href="/cam-nang-su-kien-du-hoc">Cẩm nang & Tin tức</a>
+                <a href="/">@parentName</a>
                 <i class="fa-solid fa-chevron-right"></i>
             }
             <span>@catName</span>
@@ -148,12 +130,10 @@
                     {
                         // detailCatSlug != null  → dùng /section/catSlug/slug-id  (cam-nang-va-tin-tuc)
                         // sectionKey != null     → dùng /section/slug-id          (cam-nang-su-kien-du-hoc, v.v.)
-                        // else                   → fallback /tin-tuc/slug-id
-                        var itemUrl = !string.IsNullOrEmpty(detailCatSlug)
-                            ? $"/{ViewData["Section"]}/{detailCatSlug}/{item.Slug}-{item.NewId}"
-                            : !string.IsNullOrEmpty(sectionUrl)
-                                ? $"{sectionUrl}/{item.Slug}-{item.NewId}"
-                                : $"/tin-tuc/{item.Slug}-{item.NewId}";
+                        // else                   → fallback canonical URL
+                        var helper = Context.RequestServices.GetRequiredService<Capstone.View.Helpers.NewsUrlHelper>();
+                        // Use CategorySlug directly - no parent traversal
+                        var itemUrl = NVCMS.WebView.Data.Common.NewsUrlBuilder.BuildNewsUrl(item);
                         <div class="news-item">
                             <div class="image img-cover">
                                 <a href="@itemUrl">

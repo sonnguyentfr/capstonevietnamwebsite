@@ -679,7 +679,8 @@
                     <div class="truong-related-news">
                         @foreach (var n in Model.RelatedNews)
                         {
-                            <a href="/tin-tuc/@(n.Slug)-@n.NewId" class="truong-related-news__item">
+                            var nUrl = NVCMS.WebView.Data.Common.NewsUrlBuilder.BuildNewsUrl(n);
+                            <a href="@nUrl" class="truong-related-news__item">
                                 @if (!string.IsNullOrEmpty(n.ImagePath))
                                 {
                                     <div class="truong-related-news__img">

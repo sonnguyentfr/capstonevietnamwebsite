@@ -6,15 +6,6 @@
     var pageUrl = ViewData["CanonicalUrl"]?.ToString() ?? string.Empty;
     var encodedUrl   = Uri.EscapeDataString(pageUrl);
     var encodedTitle = Uri.EscapeDataString(Model.Title);
-
-    var sectionName  = ViewData["SectionName"]?.ToString();
-    var sectionUrl   = ViewData["SectionUrl"]?.ToString();
-    // CategoryName có thể override từ ViewData (VD: "Đội ngũ" thay vì tên DB)
-    var categoryName = ViewData["CategoryName"]?.ToString() ?? Model.CategoryName;
-    var categoryUrl  = ViewData["CategoryUrl"]?.ToString()
-                       ?? $"/cam-nang-su-kien-du-hoc/{Model.CategorySlug}";
-    var sidebarMoreUrl = ViewData["CategoryUrl"]?.ToString()
-                         ?? $"/cam-nang-su-kien-du-hoc/{Model.CategorySlug}";
 }
 
 @* ── COVER ── *@
@@ -33,18 +24,7 @@
         <nav class="breadcrumb nd-breadcrumb" aria-label="breadcrumb">
             <a href="/">Trang chủ</a>
             <i class="fa-solid fa-chevron-right"></i>
-            @if (!string.IsNullOrEmpty(sectionName) && !string.IsNullOrEmpty(sectionUrl))
-            {
-                <a href="@sectionUrl">@sectionName</a>
-                <i class="fa-solid fa-chevron-right"></i>
-                <a href="@categoryUrl">@categoryName</a>
-            }
-            else
-            {
-                <a href="/cam-nang-su-kien-du-hoc">Cẩm nang & Tin tức</a>
-                <i class="fa-solid fa-chevron-right"></i>
-                <a href="@categoryUrl">@categoryName</a>
-            }
+            <a href="/">@Model.CategoryName</a>
         </nav>
 
         @* ── HEADER ── *@
@@ -179,7 +159,8 @@
                         <div class="nd-sidebar__news">
                             @foreach (var r in Model.RelatedNews.Take(8))
                             {
-                                <a href="/tin-tuc/@(r.Slug)-@r.NewId" class="nd-snews-item @(r.NewId == Model.NewId ? "nd-snews-item--active" : "")">
+                                var rUrl = NVCMS.WebView.Data.Common.NewsUrlBuilder.BuildNewsUrl(r);
+                                <a href="@rUrl" class="nd-snews-item @(r.NewId == Model.NewId ? "nd-snews-item--active" : "")">
                                     @if (!string.IsNullOrEmpty(r.ImagePath))
                                     {
                                         <div class="nd-snews-item__img">
@@ -193,7 +174,7 @@
                                 </a>
                             }
                         </div>
-                        <a href="@sidebarMoreUrl" class="nd-sidebar__more">
+                        <a href="/" class="nd-sidebar__more">
                             Xem tất cả <i class="fa-solid fa-arrow-right"></i>
                         </a>
                     </div>

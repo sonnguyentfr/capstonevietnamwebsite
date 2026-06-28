@@ -5,21 +5,6 @@
     var items = Model?.ToList() ?? [];
     var aosEffects = new[] { "fade-up", "fade-down", "fade-left", "fade-right", "zoom-in", "zoom-in-up", "flip-left", "flip-up" };
     var rng = new Random();
-
-    // Build URL chi tiết dựa theo CategorySlug
-    static string BuildDetailUrl(NewsItemViewModel item)
-    {
-        var catSlug = item.CategorySlug ?? string.Empty;
-        return catSlug switch
-        {
-            "tuyen-dung"                     => $"/tuyen-dung/{item.Slug}-{item.NewId}",
-            "doi-ngu"                        => $"/doi-ngu/{item.Slug}-{item.NewId}",
-            "cam-nang-su-kien-du-hoc"        => $"/cam-nang-su-kien-du-hoc/{catSlug}/{item.Slug}-{item.NewId}",
-            _ when item.CategoryParentSlug == "cam-nang-su-kien-du-hoc"
-                                             => $"/cam-nang-su-kien-du-hoc/{catSlug}/{item.Slug}-{item.NewId}",
-            _                                => $"/tin-tuc/{item.Slug}-{item.NewId}"
-        };
-    }
 }
 
 @if (items.Any())
@@ -27,7 +12,7 @@
     @foreach (var item in items)
     {
         var aos = aosEffects[rng.Next(aosEffects.Length)];
-        var url = BuildDetailUrl(item);
+        var url = NVCMS.WebView.Data.Common.NewsUrlBuilder.BuildNewsUrl(item);
         <div class="news-item" data-aos="@aos">
             <div class="image img-cover">
                 <a href="@url">

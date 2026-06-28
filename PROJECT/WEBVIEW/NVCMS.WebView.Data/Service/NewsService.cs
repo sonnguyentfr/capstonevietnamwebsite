@@ -88,6 +88,11 @@ public class NewsService : INewsService
         return vm;
     }
 
+    public async Task<NewsModel?> GetByIdAsync(int newId, int portalId)
+    {
+        return await _repo.GetByIdAsync(newId, portalId);
+    }
+
     public async Task<IEnumerable<CategoryViewModel>> GetMenuCategoriesAsync(int portalId)
     {
         var all = await GetAllCatsCachedAsync(portalId);

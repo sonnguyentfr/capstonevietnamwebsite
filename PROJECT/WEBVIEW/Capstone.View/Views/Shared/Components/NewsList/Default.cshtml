@@ -27,8 +27,9 @@
         <div class="news-list-component__grid">
             @foreach (var item in items)
             {
+                var itemUrl = NVCMS.WebView.Data.Common.NewsUrlBuilder.BuildNewsUrl(item);
                 <article class="news-card news-card--sm">
-                    <a href="/tin-tuc/@(item.Slug)-@item.NewId" class="news-card__img-wrap">
+                    <a href="@itemUrl" class="news-card__img-wrap">
                         @if (!string.IsNullOrEmpty(item.ImagePath))
                         {
                             <img src="@item.ImagePath" alt="@item.Title" loading="lazy" />
@@ -43,7 +44,7 @@
                             @item.PublishedDate.ToString("dd/MM/yyyy")
                         </time>
                         <h4 class="news-card__title">
-                            <a href="/tin-tuc/@(item.Slug)-@item.NewId">@item.Title</a>
+                            <a href="@itemUrl">@item.Title</a>
                         </h4>
                     </div>
                 </article>
