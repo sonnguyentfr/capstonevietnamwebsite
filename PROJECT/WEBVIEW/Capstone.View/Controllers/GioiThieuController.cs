@@ -15,4 +15,6 @@ public class GioiThieuController : Controller
     {
         return View();
     }
+    // /gioi-thieu/quy-trinh-tu-van
+    public IActionResult QuyTrinhTuVan() => View();
 }

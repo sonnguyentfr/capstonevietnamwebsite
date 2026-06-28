@@ -124,6 +124,7 @@ app.UseAuthorization();
 
 app.MapControllerRoute(name: "gioi-thieu-ve-capstone", pattern: "gioi-thieu/ve-capstone", defaults: new { controller = "GioiThieu", action = "VeCapstone" });
 app.MapControllerRoute(name: "gioi-thieu", pattern: "gioi-thieu", defaults: new { controller = "GioiThieu", action = "Index" });
+app.MapControllerRoute(name: "quy-trinh-tu-van", pattern: "gioi-thieu/quy-trinh-tu-van", defaults: new { controller = "GioiThieu", action = "QuyTrinhTuVan" });
 
 app.MapControllerRoute(name: "su-kien-past-paged", pattern: "su-kien/past-paged", defaults: new { controller = "SuKien", action = "PastPaged" });
 app.MapControllerRoute(name: "su-kien-detail", pattern: "su-kien/{slug}-{id:int}", defaults: new { controller = "SuKien", action = "Detail" });
@@ -190,7 +191,8 @@ app.MapControllerRoute(name: "news-gioithieu", pattern: "gioi-thieu/{slug}", def
 app.MapControllerRoute(name: "doi-ngu-root", pattern: "doi-ngu", defaults: new { controller = "News", action = "CategoryBySlug", slug = "doi-ngu" });
 // /doi-ngu/{slug}-{id}  VD: /doi-ngu/tien-si-mark-a-ashwill-3352
 app.MapControllerRoute(name: "doi-ngu-detail", pattern: "doi-ngu/{slug}-{id:int}", defaults: new { controller = "News", action = "DoiNguDetail" });
-
+// /tuyen-dung/{slug}-{id}  VD: /tuyen-dung/tien-si-mark-a-ashwill-3352
+app.MapControllerRoute(name: "tuyen-dung-detail", pattern: "tuyen-dung/{slug}-{id:int}", defaults: new { controller = "News", action = "TuyenDungDetail" });
 // ── Section: Tuyển dụng (/tuyen-dung) ────────────────────────────────────────
 // /tuyen-dung  (root → danh mục tuyển dụng, CategoryID=200)
 app.MapControllerRoute(name: "tuyen-dung-root", pattern: "tuyen-dung", defaults: new { controller = "News", action = "CategoryBySlug", slug = "tuyen-dung" });

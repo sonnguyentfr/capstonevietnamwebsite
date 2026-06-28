@@ -143,42 +143,6 @@
         {
             @if (rest.Any())
             {
-                @* <div class="news-grid news-grid--4col">
-                    @foreach (var item in rest)
-                    {
-                        <article class="news-card" data-aos="fade-up">
-                            <a href="/tin-tuc/@(item.Slug)-@item.NewId" class="news-card__img-wrap">
-                                @if (!string.IsNullOrEmpty(item.ImagePath))
-                                {
-                                    <img src="@item.ImagePath" alt="@item.Title" loading="lazy" />
-                                }
-                                else
-                                {
-                                    <img src="/static/images/no-photo.png" alt="@item.Title" loading="lazy" />
-                                }
-                            </a>
-                            <div class="news-card__body">
-                                <div class="news-card__meta">
-                                    <span class="news-card__cat">@item.CategoryName</span>
-                                    <time class="news-card__date" datetime="@item.PublishedDate.ToString("yyyy-MM-dd")">
-                                        @item.PublishedDate.ToString("dd/MM/yyyy")
-                                    </time>
-                                </div>
-                                <h2 class="news-card__title">
-                                    <a href="/tin-tuc/@(item.Slug)-@item.NewId">@item.Title</a>
-                                </h2>
-                                @if (!string.IsNullOrEmpty(item.Summary))
-                                {
-                                    <p class="news-card__summary">@Html.Raw(item.Summary)</p>
-                                }
-                                @if (!string.IsNullOrEmpty(item.Tacgia))
-                                {
-                                    <span class="news-card__author"><i class="fa-solid fa-pen-nib"></i> @item.Tacgia</span>
-                                }
-                            </div>
-                        </article>
-                    }
-                </div> *@
                 <div class="news-list mt-8">
                     @foreach (var item in rest)
                     {

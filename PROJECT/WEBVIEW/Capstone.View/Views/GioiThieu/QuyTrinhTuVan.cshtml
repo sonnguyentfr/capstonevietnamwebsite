@@ -1,0 +1,20 @@
+﻿@{
+    ViewData["Title"] = "Quy trình Tư vấn";
+}
+
+@await Component.InvokeAsync("GioiThieu", new { id = 361 })
+
+@section Scripts {
+    @{
+        var _vcSettings = await SiteHelper.GetSettingsAsync(SiteOptions.Value.PortalId);
+        var _vcUrl = $"{Context.Request.Scheme}://{Context.Request.Host}/gioi-thieu/quy-trinh-tu-van";
+    }
+    @Html.Raw(SeoSchemaHelper.WebPage(
+        name:          "Quy trình Tư vấn",
+        description:   _vcSettings.General.SiteSummary,
+        url:           _vcUrl,
+        publisherName: _vcSettings.General.SiteName,
+        publisherUrl:  _vcSettings.General.SiteWeb,
+        isAboutPage:   true
+    ))
+}

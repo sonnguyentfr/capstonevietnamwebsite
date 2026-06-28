@@ -1,0 +1,38 @@
+﻿@using NVCMS.WebView.Data.ViewModels
+@model IEnumerable<NewsItemViewModel>
+
+@{
+    var items   = Model?.ToList() ?? [];
+    var catId   = ViewData["CategoryId"] is int id ? id : 0;
+    var catSlug = ViewData["CategorySlug"]?.ToString() ?? string.Empty;
+    var delays  = new[] { 50, 100, 150, 200, 250, 300, 350, 400, 450, 500 };
+}
+
+@foreach (var (item, i) in items.Select((x, i) => (x, i)))
+{
+    var delay = delays[i % delays.Length];
+    var url   = $"/tuyen-dung/{item.Slug}-{item.NewId}";
+    <div class="home-courses-item" data-aos="fade-down" data-aos-delay="@delay">
+        <div class="image img-cover">
+            <a href="@url">
+                @if (!string.IsNullOrEmpty(item.ImagePath))
+                {
+                    <img src="@item.ImagePath" alt="@item.Title" loading="lazy" />
+                }
+                else
+                {
+                    <img src="/static/images/no-photo.png" alt="@item.Title" loading="lazy" />
+                }
+            </a>
+        </div>
+        <div class="caption">
+            <h3 class="title">
+                <a href="@url">@item.Title</a>
+            </h3>
+            @if (!string.IsNullOrEmpty(item.Summary))
+            {
+                <p class="font-color-white">@item.Summary</p>
+            }
+        </div>
+    </div>
+}

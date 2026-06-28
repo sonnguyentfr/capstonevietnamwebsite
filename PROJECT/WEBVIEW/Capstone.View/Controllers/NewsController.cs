@@ -35,41 +35,16 @@ public class NewsController : Controller
     public async Task<IActionResult> CategoryBySlug(string slug, int page = 1, int pageSize = 27)
     {
         var category = await _news.GetCategoryBySlugAsync(slug, _portalId);
-        if (category is null) return NotFound();
+        if (category == null)
+            return NotFound();
 
-        var paged      = await _news.GetByCategoryIdAsync(category.CategoryID, _portalId, page, pageSize);
-        var categories = await _news.GetCategoriesWithCountAsync(_portalId);
+        var paged = await _news.GetByCategoryIdAsync(category.CategoryID, _portalId, page, pageSize);
 
-        // Canonical = đúng URL đang truy cập (không ép về /tin-tuc/danh-muc/)
-        var canonicalUrl = $"{Request.Scheme}://{Request.Host}{Request.Path}";
-
-        // Resolve section dựa theo path segment đầu tiên
-        var firstSegment = Request.Path.Value?.TrimStart('/').Split('/')[0] ?? string.Empty;
-        var (sectionName, sectionUrl, sectionKey) = firstSegment switch
-        {
-            "cam-nang-su-kien-du-hoc" => ("Cẩm nang & Tin tức",    "/cam-nang-su-kien-du-hoc", "cam-nang-su-kien-du-hoc"),
-            "guong-mat-thanh-cong"    => ("Gương mặt thành công",   "/guong-mat-thanh-cong",    "guong-mat-thanh-cong"),
-            "hoc-bong-du-hoc"         => ("Học bổng du học",         "/hoc-bong-du-hoc",         "hoc-bong-du-hoc"),
-            "huong-nghiep"            => ("Hướng nghiệp",            "/huong-nghiep",            "huong-nghiep"),
-            "tu-van-du-hoc"           => ("Tư vấn Du học",           "/tu-van-du-hoc",           "tu-van-du-hoc"),
-            "tu-van-dinh-cu"          => ("Tư vấn Định cư",          "/tu-van-dinh-cu",          "tu-van-dinh-cu"),
-            _                         => ((string?)null, (string?)null, (string?)null)
-        };
-
-        ViewData["Title"]           = category.CategoryName;
+        ViewData["Title"] = category.CategoryName;
         ViewData["MetaDescription"] = category.Description ?? category.CategoryName;
-        ViewData["CanonicalUrl"]    = canonicalUrl;
-        ViewData["Category"]        = category;
-        ViewData["Categories"]      = categories;
-
-        if (sectionName is not null)
-        {
-            ViewData["SectionName"]   = sectionName;
-            ViewData["SectionUrl"]    = sectionUrl;
-            ViewData["Section"]       = sectionKey;
-            // Dùng catSlug của category hiện tại để build URL detail: /{section}/{catSlug}/{slug}-{id}
-            ViewData["DetailCatSlug"] = category.Slug;
-        }
+        ViewData["CanonicalUrl"] = $"{Request.Scheme}://{Request.Host}{Request.Path}";
+        ViewData["Category"] = category;
+        ViewData["Categories"] = await _news.GetCategoriesWithCountAsync(_portalId);
 
         return View("Category", paged);
     }
@@ -181,7 +156,7 @@ public class NewsController : Controller
 
         return View("Detail", vm);
     }
-
+    
     // GET /cam-nang-su-kien-du-hoc/{catSlug}/{slug}-{id}
     public async Task<IActionResult> CamNangSuKienDetail(int id, string? slug, string? catSlug)
     {

@@ -347,37 +347,37 @@ body {
     --tw-text-opacity: 1;
     overflow-y: overlay;
     color: rgb(51 51 51 / var(--tw-text-opacity));
-    font-family: Montserrat, sans-serif;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif
 }
 
 h1 {
     font-weight: 700;
-    font-size: clamp(12px,calc(30/1920*100rem),calc(30/1920*100rem));
+    font-size: clamp(16px,calc(30/1920*100rem),calc(30/1920*100rem));
 }
 
 h2 {
     font-weight: 700;
-    font-size: clamp(12px,calc(24/1920*100rem),calc(24/1920*100rem));
+    font-size: clamp(14px,calc(24/1920*100rem),calc(24/1920*100rem));
 }
 
 h3 {
     font-weight: 700;
-    font-size: clamp(12px,calc(20/1920*100rem),calc(20/1920*100rem));
+    font-size: clamp(14px,calc(20/1920*100rem),calc(20/1920*100rem));
 }
 
 h4 {
     font-weight: 700;
-    font-size: clamp(12px,calc(18/1920*100rem),calc(18/1920*100rem));
+    font-size: clamp(14px,calc(18/1920*100rem),calc(18/1920*100rem));
 }
 
 h5 {
     font-weight: 700;
-    font-size: clamp(12px,calc(16/1920*100rem),calc(16/1920*100rem));
+    font-size: clamp(14px,calc(16/1920*100rem),calc(16/1920*100rem));
 }
 
 h6 {
     font-weight: 700;
-    font-size: clamp(12px,calc(14/1920*100rem),calc(14/1920*100rem));
+    font-size: clamp(14px,calc(14/1920*100rem),calc(14/1920*100rem));
 }
 
 a {
@@ -398,7 +398,7 @@ img {
 
 @media (min-width: 1200px) {
     main, div {
-        font-size: clamp(12px,calc(16/1920*100rem),calc(16/1920*100rem));
+        font-size: clamp(16px,calc(16/1920*100rem),calc(16/1920*100rem));
     }
 }
 ol li {
@@ -1091,7 +1091,7 @@ html, body {
 
 @media (min-width: 1200px) {
     .tabslet-tabs a {
-        font-size: clamp(12px,calc(16/1920*100rem),calc(16/1920*100rem));
+        font-size: clamp(14px,calc(16/1920*100rem),calc(16/1920*100rem));
     }
 }
 
@@ -1175,7 +1175,7 @@ html, body {
 
 @media (min-width: 1200px) {
     .nav-section .nav-heading {
-        font-size: clamp(12px,calc(18/1920*100rem),calc(18/1920*100rem));
+        font-size: clamp(14px,calc(18/1920*100rem),calc(18/1920*100rem));
     }
 }
 
@@ -1235,7 +1235,7 @@ html, body {
 
 @media (min-width: 1200px) {
     .nav-section .nav-list a {
-        font-size: clamp(12px,calc(16/1920*100rem),calc(16/1920*100rem));
+        font-size: clamp(14px,calc(16/1920*100rem),calc(16/1920*100rem));
     }
 }
 
@@ -1392,7 +1392,7 @@ html, body {
 
 @media (min-width: 1200px) {
     .header-48 {
-        font-size: clamp(12px,calc(48/1920*100rem),calc(48/1920*100rem));
+        font-size: clamp(14px,calc(48/1920*100rem),calc(48/1920*100rem));
     }
 }
 
@@ -1403,7 +1403,7 @@ html, body {
 
 @media (min-width: 1200px) {
     .header-40 {
-        font-size: clamp(12px,calc(40/1920*100rem),calc(40/1920*100rem));
+        font-size: clamp(14px,calc(40/1920*100rem),calc(40/1920*100rem));
     }
 }
 
@@ -1414,7 +1414,7 @@ html, body {
 
 @media (min-width: 1200px) {
     .section-header-32 {
-        font-size: clamp(12px,calc(32/1920*100rem),calc(32/1920*100rem));
+        font-size: clamp(14px,calc(32/1920*100rem),calc(32/1920*100rem));
     }
 }
 
@@ -1425,7 +1425,7 @@ html, body {
 
 @media (min-width: 1200px) {
     .sub-header-24 {
-        font-size: clamp(12px,calc(24/1920*100rem),calc(24/1920*100rem));
+        font-size: clamp(14px,calc(24/1920*100rem),calc(24/1920*100rem));
     }
 }
 
@@ -1436,7 +1436,7 @@ html, body {
 
 @media (min-width: 1200px) {
     .sub-header-20 {
-        font-size: clamp(12px,calc(20/1920*100rem),calc(20/1920*100rem));
+        font-size: clamp(14px,calc(20/1920*100rem),calc(20/1920*100rem));
     }
 }
 
@@ -1447,7 +1447,7 @@ html, body {
 
 @media (min-width: 1200px) {
     .body-18 {
-        font-size: clamp(12px,calc(18/1920*100rem),calc(18/1920*100rem));
+        font-size: clamp(14px,calc(18/1920*100rem),calc(18/1920*100rem));
     }
 }
 
@@ -1458,7 +1458,7 @@ html, body {
 
 @media (min-width: 1200px) {
     .body-16 {
-        font-size: clamp(12px,calc(16/1920*100rem),calc(16/1920*100rem));
+        font-size: clamp(14px,calc(16/1920*100rem),calc(16/1920*100rem));
     }
 }
 
@@ -1469,7 +1469,7 @@ html, body {
 
 @media (min-width: 1200px) {
     .body-14 {
-        font-size: clamp(12px,calc(14/1920*100rem),calc(14/1920*100rem));
+        font-size: clamp(14px,calc(14/1920*100rem),calc(14/1920*100rem));
     }
 }
 
@@ -1480,7 +1480,7 @@ html, body {
 
 @media (min-width: 1200px) {
     .label-12 {
-        font-size: clamp(12px,calc(14/1920*100rem),calc(14/1920*100rem));
+        font-size: clamp(14px,calc(14/1920*100rem),calc(14/1920*100rem));
     }
 }
 
@@ -1491,7 +1491,7 @@ html, body {
 
 @media (min-width: 1200px) {
     .regular-18 {
-        font-size: clamp(12px,calc(18/1920*100rem),calc(18/1920*100rem));
+        font-size: clamp(14px,calc(18/1920*100rem),calc(18/1920*100rem));
     }
 }
 
@@ -1505,7 +1505,7 @@ html, body {
 
 @media (min-width: 1200px) {
     .site-title {
-        font-size: clamp(12px,calc(48/1920*100rem),calc(48/1920*100rem));
+        font-size: clamp(14px,calc(48/1920*100rem),calc(48/1920*100rem));
     }
 }
 
@@ -1519,7 +1519,7 @@ html, body {
 
 @media (min-width: 1200px) {
     .site-sub-title {
-        font-size: clamp(12px,calc(32/1920*100rem),calc(32/1920*100rem));
+        font-size: clamp(14px,calc(32/1920*100rem),calc(32/1920*100rem));
     }
 }
 
@@ -1533,7 +1533,7 @@ html, body {
 
 @media (min-width: 1200px) {
     .site-desc {
-        font-size: clamp(12px,calc(16/1920*100rem),calc(16/1920*100rem));
+        font-size: clamp(14px,calc(16/1920*100rem),calc(16/1920*100rem));
     }
 }
 
@@ -2077,7 +2077,7 @@ html, body {
 
 @media (min-width: 1200px) {
     .full-content {
-        font-size: clamp(12px,calc(16/1920*100rem),calc(16/1920*100rem));
+        font-size: clamp(14px,calc(16/1920*100rem),calc(16/1920*100rem));
     }
 }
 
@@ -2130,11 +2130,11 @@ html, body {
 
 @media screen and (max-width: 1024px) {
     .fullcontent {
-        font-size: clamp(12px,calc(16/1920*100rem),calc(16/1920*100rem));
+        font-size: clamp(14px,calc(16/1920*100rem),calc(16/1920*100rem));
     }
 
         .fullcontent * {
-            font-size: clamp(12px,calc(16/1920*100rem),calc(16/1920*100rem));
+            font-size: clamp(14px,calc(16/1920*100rem),calc(16/1920*100rem));
         }
 }
 
@@ -2150,20 +2150,20 @@ html, body {
 
 .fullcontent p {
     margin-bottom: calc(12/1920*100rem);
-    font-size: clamp(12px,calc(16/1920*100rem),calc(16/1920*100rem));
+    font-size: clamp(14px,calc(16/1920*100rem),calc(16/1920*100rem));
 }
 
     .fullcontent p * {
-        font-size: clamp(12px,calc(16/1920*100rem),calc(16/1920*100rem));
+        font-size: clamp(14px,calc(16/1920*100rem),calc(16/1920*100rem));
     }
 
 @media screen and (max-width: 1024px) {
     .fullcontent p {
-        font-size: clamp(12px,calc(16/1920*100rem),calc(16/1920*100rem));
+        font-size: clamp(14px,calc(16/1920*100rem),calc(16/1920*100rem));
     }
 
         .fullcontent p * {
-            font-size: clamp(12px,calc(16/1920*100rem),calc(16/1920*100rem));
+            font-size: clamp(14px,calc(16/1920*100rem),calc(16/1920*100rem));
         }
 }
 
@@ -2218,31 +2218,31 @@ html, body {
     }
 
 .fullcontent h2 {
-    font-size: clamp(12px,calc(36/1920*100rem),calc(36/1920*100rem));
+    font-size: clamp(14px,calc(36/1920*100rem),calc(36/1920*100rem));
 }
 
 @media screen and (max-width: 576px) {
     .fullcontent h2 {
-        font-size: clamp(12px,calc(30/1920*100rem),calc(30/1920*100rem));
+        font-size: clamp(14px,calc(30/1920*100rem),calc(30/1920*100rem));
     }
 }
 
 .fullcontent h3 {
-    font-size: clamp(12px,calc(30/1920*100rem),calc(30/1920*100rem));
+    font-size: clamp(14px,calc(30/1920*100rem),calc(30/1920*100rem));
 }
 
 @media screen and (max-width: 576px) {
     .fullcontent h3 {
-        font-size: clamp(12px,calc(24/1920*100rem),calc(24/1920*100rem));
+        font-size: clamp(14px,calc(24/1920*100rem),calc(24/1920*100rem));
     }
 }
 
 .fullcontent h4 {
-    font-size: clamp(12px,calc(20/1920*100rem),calc(20/1920*100rem));
+    font-size: clamp(14px,calc(20/1920*100rem),calc(20/1920*100rem));
 }
 
 .fullcontent h5 {
-    font-size: clamp(12px,calc(18/1920*100rem),calc(18/1920*100rem));
+    font-size: clamp(14px,calc(18/1920*100rem),calc(18/1920*100rem));
 }
 
 .fullcontent .row {
@@ -2264,14 +2264,14 @@ html, body {
         padding-bottom: calc(12/1920*100rem);
         color: rgb(0 0 0 / var(--tw-text-opacity));
         font-weight: 400;
-        font-size: clamp(12px,calc(16/1920*100rem),calc(16/1920*100rem));
+        font-size: clamp(14px,calc(16/1920*100rem),calc(16/1920*100rem));
     }
 
         .fullcontent table tbody td * {
             --tw-text-opacity: 1;
             color: rgb(0 0 0 / var(--tw-text-opacity));
             font-weight: 400;
-            font-size: clamp(12px,calc(16/1920*100rem),calc(16/1920*100rem));
+            font-size: clamp(14px,calc(16/1920*100rem),calc(16/1920*100rem));
         }
 
         .fullcontent table tbody td:first-child {
@@ -2306,7 +2306,7 @@ html, body {
     background: linear-gradient(0deg, currentColor, currentColor) no-repeat right bottom/0 1px;
     color: rgb(124 124 124 / var(--tw-text-opacity));
     font-weight: 500;
-    font-size: clamp(12px,calc(16/1920*100rem),calc(16/1920*100rem));
+    font-size: clamp(14px,calc(16/1920*100rem),calc(16/1920*100rem));
     line-height: 1.5;
     text-align: center;
 }
@@ -2337,7 +2337,7 @@ html, body {
     height: calc(44/1920*100rem);
     color: rgb(255 255 255 / var(--tw-text-opacity));
     font-weight: 500;
-    font-size: clamp(12px,calc(16/1920*100rem),calc(16/1920*100rem));
+    font-size: clamp(14px,calc(16/1920*100rem),calc(16/1920*100rem));
 }
 
     .btn-solid:hover {
@@ -2374,7 +2374,7 @@ html, body {
     .btn-download em, .btn-download span {
         --tw-text-opacity: 1;
         color: rgb(38 86 207 / var(--tw-text-opacity));
-        font-size: clamp(12px,calc(16/1920*100rem),calc(16/1920*100rem));
+        font-size: clamp(14px,calc(16/1920*100rem),calc(16/1920*100rem));
         line-height: 1;
     }
 
@@ -2596,7 +2596,7 @@ html, body {
     padding-right: calc(16/1920*100rem);
     padding-bottom: calc(12/1920*100rem);
     padding-left: calc(16/1920*100rem);
-    font-size: clamp(12px,calc(14/1920*100rem),calc(14/1920*100rem));
+    font-size: clamp(14px,calc(14/1920*100rem),calc(14/1920*100rem));
     line-height: 1.25;
 }
 
@@ -2694,7 +2694,7 @@ html, body {
     align-items: center;
     width: calc(32/1920*100rem);
     height: calc(32/1920*100rem);
-    font-size: clamp(12px,calc(24/1920*100rem),calc(24/1920*100rem));
+    font-size: clamp(14px,calc(24/1920*100rem),calc(24/1920*100rem));
 }
 
 .cta-fixed li img {
@@ -2747,7 +2747,7 @@ html, body {
     width: calc(48/1920*100rem);
     height: calc(48/1920*100rem);
     color: rgb(255 255 255 / var(--tw-text-opacity));
-    font-size: clamp(12px,calc(20/1920*100rem),calc(20/1920*100rem));
+    font-size: clamp(14px,calc(20/1920*100rem),calc(20/1920*100rem));
 }
 
     .social-list a:hover {
@@ -2836,7 +2836,7 @@ select {
     height: calc(48/1920*100rem);
     color: rgb(38 86 207 / var(--tw-text-opacity));
     font-weight: 400;
-    font-size: clamp(12px,calc(16/1920*100rem),calc(16/1920*100rem));
+    font-size: clamp(14px,calc(16/1920*100rem),calc(16/1920*100rem));
     line-height: 1.5;
 }
 
@@ -2964,7 +2964,7 @@ input[type='file'] {
         height: calc(48/1920*100rem);
         color: rgb(38 86 207 / var(--tw-text-opacity));
         font-weight: 400;
-        font-size: clamp(12px,calc(16/1920*100rem),calc(16/1920*100rem));
+        font-size: clamp(14px,calc(16/1920*100rem),calc(16/1920*100rem));
     }
 
         input[type='file'] ~ label:hover {
@@ -2992,7 +2992,7 @@ input[type='checkbox'] ~ label {
         content: var(--tw-content);
         color: rgb(70 70 70 / var(--tw-text-opacity));
         font-weight: 400;
-        font-size: clamp(12px,calc(16/1920*100rem),calc(16/1920*100rem));
+        font-size: clamp(14px,calc(16/1920*100rem),calc(16/1920*100rem));
         font-family: "Font Awesome 6 Pro";
     }
 
@@ -3021,7 +3021,7 @@ input[type='radio'] {
             content: var(--tw-content);
             color: rgb(70 70 70 / var(--tw-text-opacity));
             font-weight: 400;
-            font-size: clamp(12px,calc(16/1920*100rem),calc(16/1920*100rem));
+            font-size: clamp(14px,calc(16/1920*100rem),calc(16/1920*100rem));
             font-family: "Font Awesome 6 Pro";
         }
 
@@ -3040,7 +3040,7 @@ input[type='radio'] {
         position: relative;
         color: rgb(70 70 70 / var(--tw-text-opacity));
         font-weight: 400;
-        font-size: clamp(12px,calc(16/1920*100rem),calc(16/1920*100rem));
+        font-size: clamp(14px,calc(16/1920*100rem),calc(16/1920*100rem));
         line-height: 1.5;
     }
 
@@ -3120,7 +3120,7 @@ input[type='radio'] {
 
 @media (min-width: 1200px) {
     .pagination span, .pagination a {
-        font-size: clamp(12px,calc(16/1920*100rem),calc(16/1920*100rem));
+        font-size: clamp(14px,calc(16/1920*100rem),calc(16/1920*100rem));
     }
 }
 
@@ -3255,7 +3255,7 @@ input[type='radio'] {
     width: calc(48/1920*100rem);
     height: calc(48/1920*100rem);
     color: rgb(164 16 52 / var(--tw-text-opacity));
-    font-size: clamp(12px,calc(24/1920*100rem),calc(24/1920*100rem));
+    font-size: clamp(14px,calc(24/1920*100rem),calc(24/1920*100rem));
 }
 
     .swiper-button > *:hover {
@@ -3421,7 +3421,7 @@ input[type='radio'] {
 
 @media (min-width: 1200px) {
     .about-item .number {
-        font-size: clamp(12px,calc(40/1920*100rem),calc(40/1920*100rem));
+        font-size: clamp(14px,calc(40/1920*100rem),calc(40/1920*100rem));
     }
 }
 
@@ -3442,7 +3442,7 @@ input[type='radio'] {
 
 @media (min-width: 1200px) {
     .about-item .caption {
-        font-size: clamp(12px,calc(14/1920*100rem),calc(14/1920*100rem));
+        font-size: clamp(14px,calc(14/1920*100rem),calc(14/1920*100rem));
     }
 }
 
@@ -3473,7 +3473,7 @@ input[type='radio'] {
     .box-slogan {
         padding-right: calc(32/1920*100rem);
         padding-left: calc(32/1920*100rem);
-        font-size: clamp(12px,calc(32/1920*100rem),calc(32/1920*100rem));
+        font-size: clamp(14px,calc(32/1920*100rem),calc(32/1920*100rem));
     }
 }
 
@@ -3487,7 +3487,7 @@ input[type='radio'] {
 
 @media (min-width: 1200px) {
     .university-name {
-        font-size: clamp(12px,calc(20/1920*100rem),calc(20/1920*100rem));
+        font-size: clamp(14px,calc(20/1920*100rem),calc(20/1920*100rem));
     }
 }
 
@@ -3623,7 +3623,7 @@ input[type='radio'] {
 
 @media (min-width: 1200px) {
     .vision-mission-item .title {
-        font-size: clamp(12px,calc(24/1920*100rem),calc(24/1920*100rem));
+        font-size: clamp(14px,calc(24/1920*100rem),calc(24/1920*100rem));
     }
 }
 
@@ -3637,7 +3637,7 @@ input[type='radio'] {
 
 @media (min-width: 1200px) {
     .vision-mission-item .brief {
-        font-size: clamp(12px,calc(16/1920*100rem),calc(16/1920*100rem));
+        font-size: clamp(14px,calc(16/1920*100rem),calc(16/1920*100rem));
     }
 }
 
@@ -3683,7 +3683,7 @@ input[type='radio'] {
 
 @media (min-width: 1200px) {
     .about-4 .full-content h3 {
-        font-size: clamp(12px,calc(20/1920*100rem),calc(20/1920*100rem));
+        font-size: clamp(14px,calc(20/1920*100rem),calc(20/1920*100rem));
     }
 
     .about-4 .box-content {
@@ -3725,7 +3725,7 @@ input[type='radio'] {
 
 @media (min-width: 1200px) {
     .count-up-item {
-        font-size: clamp(12px,calc(16/1920*100rem),calc(16/1920*100rem));
+        font-size: clamp(14px,calc(16/1920*100rem),calc(16/1920*100rem));
     }
 }
 
@@ -3738,7 +3738,7 @@ input[type='radio'] {
 
 @media (min-width: 1200px) {
     .count-up-item .count-up {
-        font-size: clamp(12px,calc(48/1920*100rem),calc(48/1920*100rem));
+        font-size: clamp(14px,calc(48/1920*100rem),calc(48/1920*100rem));
     }
 }
 
@@ -3793,7 +3793,7 @@ input[type='radio'] {
 
 @media (min-width: 1200px) {
     .about-6-item .title {
-        font-size: clamp(12px,calc(20/1920*100rem),calc(20/1920*100rem));
+        font-size: clamp(14px,calc(20/1920*100rem),calc(20/1920*100rem));
     }
 }
 
@@ -3838,7 +3838,7 @@ input[type='radio'] {
 
 @media (min-width: 1200px) {
     .scientist-item {
-        font-size: clamp(12px,calc(20/1920*100rem),calc(20/1920*100rem));
+        font-size: clamp(14px,calc(20/1920*100rem),calc(20/1920*100rem));
     }
 }
 
@@ -3865,7 +3865,7 @@ input[type='radio'] {
     width: calc(44/1920*100rem);
     height: calc(44/1920*100rem);
     color: rgb(255 255 255 / var(--tw-text-opacity));
-    font-size: clamp(12px,calc(18/1920*100rem),calc(18/1920*100rem));
+    font-size: clamp(14px,calc(18/1920*100rem),calc(18/1920*100rem));
 }
 
 .scientist-list {
@@ -3943,7 +3943,7 @@ input[type='radio'] {
 
 @media (min-width: 1200px) {
     .year-slide .year {
-        font-size: clamp(12px,calc(20/1920*100rem),calc(20/1920*100rem));
+        font-size: clamp(14px,calc(20/1920*100rem),calc(20/1920*100rem));
     }
 }
 
@@ -4035,7 +4035,7 @@ input[type='radio'] {
 
 @media (min-width: 1200px) {
     .history-item .year {
-        font-size: clamp(12px,calc(20/1920*100rem),calc(20/1920*100rem));
+        font-size: clamp(14px,calc(20/1920*100rem),calc(20/1920*100rem));
     }
 }
 
@@ -4054,7 +4054,7 @@ input[type='radio'] {
 
 @media (min-width: 1200px) {
     .history-item .brief {
-        font-size: clamp(12px,calc(16/1920*100rem),calc(16/1920*100rem));
+        font-size: clamp(14px,calc(16/1920*100rem),calc(16/1920*100rem));
     }
 
     .history-item {
@@ -4090,7 +4090,7 @@ input[type='radio'] {
 
 @media (min-width: 1200px) {
     .leader-item .caption {
-        font-size: clamp(12px,calc(14/1920*100rem),calc(14/1920*100rem));
+        font-size: clamp(14px,calc(14/1920*100rem),calc(14/1920*100rem));
     }
 }
 
@@ -4108,7 +4108,7 @@ input[type='radio'] {
 
 @media (min-width: 1200px) {
     .leader-item .name {
-        font-size: clamp(12px,calc(14/1920*100rem),calc(14/1920*100rem));
+        font-size: clamp(14px,calc(14/1920*100rem),calc(14/1920*100rem));
     }
 }
 
@@ -4188,7 +4188,7 @@ input[type='radio'] {
 
 @media (min-width: 1200px) {
     .table-responsive th {
-        font-size: clamp(12px,calc(20/1920*100rem),calc(20/1920*100rem));
+        font-size: clamp(14px,calc(20/1920*100rem),calc(20/1920*100rem));
     }
 }
 
@@ -4212,7 +4212,7 @@ input[type='radio'] {
 
 @media (min-width: 1200px) {
     .table-responsive td {
-        font-size: clamp(12px,calc(16/1920*100rem),calc(16/1920*100rem));
+        font-size: clamp(14px,calc(16/1920*100rem),calc(16/1920*100rem));
     }
 }
 
@@ -4241,7 +4241,7 @@ input[type='radio'] {
 
 @media (min-width: 1200px) {
     .table-responsive a {
-        font-size: clamp(12px,calc(16/1920*100rem),calc(16/1920*100rem));
+        font-size: clamp(14px,calc(16/1920*100rem),calc(16/1920*100rem));
     }
 }
 
@@ -4325,7 +4325,7 @@ input[type='radio'] {
 
 @media (min-width: 1200px) {
     .assurance-detail-section .brief-content {
-        font-size: clamp(12px,calc(16/1920*100rem),calc(16/1920*100rem));
+        font-size: clamp(14px,calc(16/1920*100rem),calc(16/1920*100rem));
     }
 }
 
@@ -4382,7 +4382,7 @@ input[type='radio'] {
 
 @media (min-width: 1200px) {
     .global-breadcrumb .breadcrumb a {
-        font-size: clamp(12px,calc(14/1920*100rem),calc(14/1920*100rem));
+        font-size: clamp(14px,calc(14/1920*100rem),calc(14/1920*100rem));
     }
 }
 
@@ -4422,7 +4422,7 @@ input[type='radio'] {
             content: var(--tw-content);
             color: rgb(124 124 124 / var(--tw-text-opacity));
             font-weight: 400;
-            font-size: clamp(12px,calc(16/1920*100rem),calc(16/1920*100rem));
+            font-size: clamp(14px,calc(16/1920*100rem),calc(16/1920*100rem));
             line-height: 1;
             font-family: "Font Awesome 6 Pro";
         }
@@ -4456,7 +4456,7 @@ input[type='radio'] {
     }
 
     .academic-detail-section .academic-item .title {
-        font-size: clamp(12px,calc(20/1920*100rem),calc(20/1920*100rem));
+        font-size: clamp(14px,calc(20/1920*100rem),calc(20/1920*100rem));
     }
 }
 
@@ -4485,7 +4485,7 @@ input[type='radio'] {
 
 @media (min-width: 1200px) {
     .courses-item .title {
-        font-size: clamp(12px,calc(18/1920*100rem),calc(18/1920*100rem));
+        font-size: clamp(14px,calc(18/1920*100rem),calc(18/1920*100rem));
     }
 }
 
@@ -4499,7 +4499,7 @@ input[type='radio'] {
 
 @media (min-width: 1200px) {
     .courses-item .brief {
-        font-size: clamp(12px,calc(16/1920*100rem),calc(16/1920*100rem));
+        font-size: clamp(14px,calc(16/1920*100rem),calc(16/1920*100rem));
     }
 }
 
@@ -4534,7 +4534,7 @@ input[type='radio'] {
 
 @media (min-width: 1200px) {
     .site-nav a {
-        font-size: clamp(12px,calc(16/1920*100rem),calc(16/1920*100rem));
+        font-size: clamp(14px,calc(16/1920*100rem),calc(16/1920*100rem));
     }
 }
 
@@ -4610,7 +4610,7 @@ input[type='radio'] {
 
 @media (min-width: 1200px) {
     .academic-item .title {
-        font-size: clamp(12px,calc(18/1920*100rem),calc(18/1920*100rem));
+        font-size: clamp(14px,calc(18/1920*100rem),calc(18/1920*100rem));
     }
 }
 
@@ -4694,7 +4694,7 @@ input[type='radio'] {
 
 @media (min-width: 1200px) {
     .box-categories .category-title {
-        font-size: clamp(12px,calc(18/1920*100rem),calc(18/1920*100rem));
+        font-size: clamp(14px,calc(18/1920*100rem),calc(18/1920*100rem));
     }
 }
 
@@ -4707,7 +4707,7 @@ input[type='radio'] {
     --tw-text-opacity: 1;
     cursor: pointer;
     color: rgb(124 124 124 / var(--tw-text-opacity));
-    font-size: clamp(12px,calc(20/1920*100rem),calc(20/1920*100rem));
+    font-size: clamp(14px,calc(20/1920*100rem),calc(20/1920*100rem));
 }
 
 .box-categories .category-list > li {
@@ -4777,7 +4777,7 @@ input[type='radio'] {
 
 @media (min-width: 1200px) {
     .box-categories .sub-category a {
-        font-size: clamp(12px,calc(16/1920*100rem),calc(16/1920*100rem));
+        font-size: clamp(14px,calc(16/1920*100rem),calc(16/1920*100rem));
     }
 }
 
@@ -4802,7 +4802,7 @@ input[type='radio'] {
 
 @media (min-width: 1200px) {
     .course-content {
-        font-size: clamp(12px,calc(16/1920*100rem),calc(16/1920*100rem));
+        font-size: clamp(14px,calc(16/1920*100rem),calc(16/1920*100rem));
     }
 }
 
@@ -5326,7 +5326,7 @@ input[type='radio'] {
 
 @media (min-width: 1200px) {
     .box-course-content {
-        font-size: clamp(12px,calc(16/1920*100rem),calc(16/1920*100rem));
+        font-size: clamp(14px,calc(16/1920*100rem),calc(16/1920*100rem));
     }
 }
 
@@ -5353,7 +5353,7 @@ input[type='radio'] {
 
 @media (min-width: 1200px) {
     .box-course-content h3 {
-        font-size: clamp(12px,calc(24/1920*100rem),calc(24/1920*100rem));
+        font-size: clamp(14px,calc(24/1920*100rem),calc(24/1920*100rem));
     }
 }
 
@@ -5413,7 +5413,7 @@ input[type='radio'] {
     --tw-text-opacity: 1;
     margin-bottom: calc(12/1920*100rem);
     color: rgb(0 0 0 / var(--tw-text-opacity));
-    font-size: clamp(12px,calc(32/1920*100rem),calc(32/1920*100rem));
+    font-size: clamp(14px,calc(32/1920*100rem),calc(32/1920*100rem));
 }
 
 .contact-item .title {
@@ -5427,7 +5427,7 @@ input[type='radio'] {
 
 @media (min-width: 1200px) {
     .contact-item .title {
-        font-size: clamp(12px,calc(16/1920*100rem),calc(16/1920*100rem));
+        font-size: clamp(14px,calc(16/1920*100rem),calc(16/1920*100rem));
     }
 }
 
@@ -5452,7 +5452,7 @@ input[type='radio'] {
 
 @media (min-width: 1200px) {
     .contact-item .content {
-        font-size: clamp(12px,calc(16/1920*100rem),calc(16/1920*100rem));
+        font-size: clamp(14px,calc(16/1920*100rem),calc(16/1920*100rem));
     }
 }
 
@@ -5496,13 +5496,13 @@ input[type='radio'] {
 .contact-form .txt {
     --tw-text-opacity: 1;
     color: rgb(9 9 9 / var(--tw-text-opacity));
-    font-size: clamp(12px,calc(16/1920*100rem),calc(16/1920*100rem));
+    font-size: clamp(14px,calc(16/1920*100rem),calc(16/1920*100rem));
 }
 
     .contact-form .txt * {
         --tw-text-opacity: 1;
         color: rgb(9 9 9 / var(--tw-text-opacity));
-        font-size: clamp(12px,calc(16/1920*100rem),calc(16/1920*100rem));
+        font-size: clamp(14px,calc(16/1920*100rem),calc(16/1920*100rem));
     }
 
     .contact-form .txt span {
@@ -5536,7 +5536,7 @@ input[type='radio'] {
     --tw-text-opacity: 1;
     color: rgb(82 82 82 / var(--tw-text-opacity));
     font-weight: 400;
-    font-size: clamp(12px,calc(16/1920*100rem),calc(16/1920*100rem));
+    font-size: clamp(14px,calc(16/1920*100rem),calc(16/1920*100rem));
 }
 
 .contact-form .wrap-form .form-group textarea {
@@ -5572,7 +5572,7 @@ input[type='radio'] {
         transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter, -webkit-backdrop-filter;
         transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
         color: rgb(255 255 255 / var(--tw-text-opacity));
-        font-size: clamp(12px,calc(16/1920*100rem),calc(16/1920*100rem));
+        font-size: clamp(14px,calc(16/1920*100rem),calc(16/1920*100rem));
         line-height: 1;
     }
 
@@ -5665,11 +5665,11 @@ input[type='radio'] {
 }
 
     .nav-list .btn-solid {
-        font-size: clamp(12px,calc(14/1920*100rem),calc(14/1920*100rem));
+        font-size: clamp(14px,calc(14/1920*100rem),calc(14/1920*100rem));
     }
 
         .nav-list .btn-solid i, .nav-list .btn-solid em {
-            font-size: clamp(12px,calc(20/1920*100rem),calc(20/1920*100rem));
+            font-size: clamp(14px,calc(20/1920*100rem),calc(20/1920*100rem));
         }
 
     .nav-list li {
@@ -5902,11 +5902,11 @@ input[type='radio'] {
     }
 
     .home-courses-item .caption {
-        font-size: clamp(12px, calc(12 / 1920 * 100rem), calc(12 / 1920 * 100rem));
+        font-size: clamp(14px, calc(12 / 1920 * 100rem), calc(12 / 1920 * 100rem));
     }
 
         .home-courses-item .caption .post-desc, .home-courses-item .caption .post-desc .list-unstyled b {
-            font-size: clamp(12px, calc(12 / 1920 * 100rem), calc(12 / 1920 * 100rem));
+            font-size: clamp(14px, calc(12 / 1920 * 100rem), calc(12 / 1920 * 100rem));
         }
 
             .home-courses-item .caption .post-desc .list-unstyled {
@@ -5917,7 +5917,7 @@ input[type='radio'] {
 @media (min-width: 1200px) {
     .home-courses-item .caption {
         padding: calc(20/1920*100rem);
-        font-size: clamp(12px, calc(12 / 1920 * 100rem), calc(12 / 1920 * 100rem));
+        font-size: clamp(14px, calc(12 / 1920 * 100rem), calc(12 / 1920 * 100rem));
     }
 }
 
@@ -6049,7 +6049,7 @@ input[type='radio'] {
 
 @media (min-width: 1200px) {
     .story-item .sub-name {
-        font-size: clamp(12px,calc(14/1920*100rem),calc(14/1920*100rem));
+        font-size: clamp(14px,calc(14/1920*100rem),calc(14/1920*100rem));
     }
 }
 
@@ -6250,7 +6250,7 @@ input[type='radio'] {
 
 @media (min-width: 1200px) {
     .unit-link-list a {
-        font-size: clamp(12px,calc(20/1920*100rem),calc(20/1920*100rem));
+        font-size: clamp(14px,calc(20/1920*100rem),calc(20/1920*100rem));
     }
 }
 
@@ -6293,7 +6293,7 @@ input[type='radio'] {
     padding-left: calc(16 / 1920 * 100rem);
     height: calc(44 / 1920 * 100rem);
     font-weight: 500;
-    font-size: clamp(12px, calc(16 / 1920 * 100rem), calc(16 / 1920 * 100rem));
+    font-size: clamp(14px, calc(16 / 1920 * 100rem), calc(16 / 1920 * 100rem));
     border: solid 1px rgb(164 16 52 / var(--tw-bg-opacity));
 }
 
@@ -6477,7 +6477,7 @@ header .contact-list {
 
 @media (min-width: 1200px) {
     header .contact-list a {
-        font-size: clamp(12px,calc(14/1920*100rem),calc(14/1920*100rem));
+        font-size: clamp(14px,calc(14/1920*100rem),calc(14/1920*100rem));
     }
 }
 
@@ -6549,7 +6549,7 @@ header .language-list {
 
 @media (min-width: 1200px) {
     header .language-list a {
-        font-size: clamp(12px,calc(14/1920*100rem),calc(14/1920*100rem));
+        font-size: clamp(14px,calc(14/1920*100rem),calc(14/1920*100rem));
     }
 }
 
@@ -6598,7 +6598,7 @@ header .button-search {
     width: calc(68/1920*100rem);
     height: calc(44/1920*100rem);
     color: rgb(255 255 255 / var(--tw-text-opacity));
-    font-size: clamp(12px,calc(20/1920*100rem),calc(20/1920*100rem));
+    font-size: clamp(14px,calc(20/1920*100rem),calc(20/1920*100rem));
 }
 
     header .button-search:hover {
@@ -6636,7 +6636,7 @@ header .menu-top > li > a {
 
 @media (min-width: 1200px) {
     header .menu-top > li > a {
-        font-size: clamp(12px,calc(14/1920*100rem),calc(14/1920*100rem));
+        font-size: clamp(14px,calc(14/1920*100rem),calc(14/1920*100rem));
     }
 }
 
@@ -6705,7 +6705,7 @@ header .menu-top .dropdown-menu {
 
 @media (min-width: 1200px) {
     header .menu-top .dropdown-menu a {
-        font-size: clamp(12px,calc(16/1920*100rem),calc(16/1920*100rem));
+        font-size: clamp(14px,calc(16/1920*100rem),calc(16/1920*100rem));
     }
 }
 
@@ -6840,7 +6840,7 @@ header .mega-list {
 
 @media (min-width: 1200px) {
     header .mega-list > li > a {
-        font-size: clamp(12px,calc(16/1920*100rem),calc(16/1920*100rem));
+        font-size: clamp(14px,calc(16/1920*100rem),calc(16/1920*100rem));
     }
 }
 
@@ -6866,7 +6866,7 @@ header .children-menu > li > a {
 
 @media (min-width: 1200px) {
     header .children-menu > li > a {
-        font-size: clamp(12px,calc(14/1920*100rem),calc(14/1920*100rem));
+        font-size: clamp(14px,calc(14/1920*100rem),calc(14/1920*100rem));
     }
 }
 
@@ -7126,7 +7126,7 @@ header .children-menu > li > a:hover {
 
 @media (min-width: 1200px) {
     .mobile-wrap .menu-top .dropdown-menu a {
-        font-size: clamp(12px,calc(14/1920*100rem),calc(14/1920*100rem));
+        font-size: clamp(14px,calc(14/1920*100rem),calc(14/1920*100rem));
     }
 }
 
@@ -7162,7 +7162,7 @@ header .children-menu > li > a:hover {
 
 @media (min-width: 1200px) {
     .mobile-wrap .contact-list a {
-        font-size: clamp(12px,calc(16/1920*100rem),calc(16/1920*100rem));
+        font-size: clamp(14px,calc(16/1920*100rem),calc(16/1920*100rem));
     }
 }
 
@@ -7319,7 +7319,7 @@ header .children-menu > li > a:hover {
 
 @media (min-width: 1200px) {
     .faq-list .toggle-item .number {
-        font-size: clamp(12px,calc(18/1920*100rem),calc(18/1920*100rem));
+        font-size: clamp(14px,calc(18/1920*100rem),calc(18/1920*100rem));
     }
 }
 
@@ -7356,12 +7356,12 @@ header .children-menu > li > a:hover {
 
 .faq-list .toggle-item .txt > span {
     font-weight: 700;
-    font-size: clamp(12px,calc(18/1920*100rem),calc(18/1920*100rem));
+    font-size: clamp(14px,calc(18/1920*100rem),calc(18/1920*100rem));
 }
 
     .faq-list .toggle-item .txt > span * {
         font-weight: 700;
-        font-size: clamp(12px,calc(18/1920*100rem),calc(18/1920*100rem));
+        font-size: clamp(14px,calc(18/1920*100rem),calc(18/1920*100rem));
     }
 
 .faq-list .toggle-item .txt em {
@@ -7394,7 +7394,7 @@ header .children-menu > li > a:hover {
     padding-top: calc(12/1920*100rem);
     color: rgb(9 9 9 / var(--tw-text-opacity));
     font-weight: 400;
-    font-size: clamp(12px,calc(16/1920*100rem),calc(16/1920*100rem));
+    font-size: clamp(14px,calc(16/1920*100rem),calc(16/1920*100rem));
 }
 
 @media (min-width: 1024px) {
@@ -7407,7 +7407,7 @@ header .children-menu > li > a:hover {
     --tw-text-opacity: 1;
     color: rgb(9 9 9 / var(--tw-text-opacity));
     font-weight: 400;
-    font-size: clamp(12px,calc(16/1920*100rem),calc(16/1920*100rem));
+    font-size: clamp(14px,calc(16/1920*100rem),calc(16/1920*100rem));
 }
 
 .toggle-item .article p {
@@ -7526,7 +7526,7 @@ header .children-menu > li > a:hover {
 
 @media (min-width: 1200px) {
     .event-item .event-title {
-        font-size: clamp(12px,calc(18/1920*100rem),calc(18/1920*100rem));
+        font-size: clamp(14px,calc(18/1920*100rem),calc(18/1920*100rem));
     }
 }
 
@@ -7545,7 +7545,7 @@ header .children-menu > li > a:hover {
 
 @media (min-width: 1200px) {
     .event-item .brief {
-        font-size: clamp(12px,calc(16/1920*100rem),calc(16/1920*100rem));
+        font-size: clamp(14px,calc(16/1920*100rem),calc(16/1920*100rem));
     }
 }
 
@@ -7588,7 +7588,7 @@ header .children-menu > li > a:hover {
 
     @media (min-width: 1200px) {
         .event-item.is-big .event-title {
-            font-size: clamp(12px,calc(24/1920*100rem),calc(24/1920*100rem));
+            font-size: clamp(14px,calc(24/1920*100rem),calc(24/1920*100rem));
         }
     }
 }
@@ -7688,7 +7688,7 @@ header .children-menu > li > a:hover {
 
 @media (min-width: 1200px) {
     .box-new-notification .notification-item .news-title {
-        font-size: clamp(12px,calc(14/1920*100rem),calc(14/1920*100rem));
+        font-size: clamp(14px,calc(14/1920*100rem),calc(14/1920*100rem));
     }
 }
 
@@ -7792,7 +7792,7 @@ header .children-menu > li > a:hover {
 
 @media (min-width: 1200px) {
     .hub-life-item .title {
-        font-size: clamp(12px,calc(20/1920*100rem),calc(20/1920*100rem));
+        font-size: clamp(14px,calc(20/1920*100rem),calc(20/1920*100rem));
     }
 }
 
@@ -7832,7 +7832,7 @@ header .children-menu > li > a:hover {
     content: var(--tw-content);
     color: rgb(255 255 255 / var(--tw-text-opacity));
     font-weight: 400;
-    font-size: clamp(12px,calc(24/1920*100rem),calc(24/1920*100rem));
+    font-size: clamp(14px,calc(24/1920*100rem),calc(24/1920*100rem));
     font-family: "Font Awesome 6 Pro";
 }
 
@@ -7861,7 +7861,7 @@ header .children-menu > li > a:hover {
 
 @media (min-width: 1200px) {
     .hub-life-item.is-video .title {
-        font-size: clamp(12px,calc(18/1920*100rem),calc(18/1920*100rem));
+        font-size: clamp(14px,calc(18/1920*100rem),calc(18/1920*100rem));
     }
 }
 
@@ -7950,7 +7950,7 @@ header .children-menu > li > a:hover {
 
 @media (min-width: 1200px) {
     .status {
-        font-size: clamp(12px,calc(14/1920*100rem),calc(14/1920*100rem));
+        font-size: clamp(14px,calc(14/1920*100rem),calc(14/1920*100rem));
     }
 }
 
@@ -7996,7 +7996,7 @@ header .children-menu > li > a:hover {
     padding-bottom: calc(4/1920*100rem);
     padding-left: calc(12/1920*100rem);
     color: rgb(255 255 255 / var(--tw-text-opacity));
-    font-size: clamp(12px,calc(14/1920*100rem),calc(14/1920*100rem));
+    font-size: clamp(14px,calc(14/1920*100rem),calc(14/1920*100rem));
 }
 
 .news-detail-section .full-content {
@@ -8105,7 +8105,7 @@ header .children-menu > li > a:hover {
 
 @media (min-width: 1200px) {
     .news-item-big .txt span {
-        font-size: clamp(12px,calc(20/1920*100rem),calc(20/1920*100rem));
+        font-size: clamp(14px,calc(20/1920*100rem),calc(20/1920*100rem));
     }
 }
 
@@ -8229,7 +8229,7 @@ header .children-menu > li > a:hover {
         .news-list-section .news-item:nth-child(2) .news-title,
         .news-list-section .news-item:nth-child(3) .news-title,
         .news-list-section .news-item:nth-child(4) .news-title {
-            font-size: clamp(12px,calc(20/1920*100rem),calc(20/1920*100rem));
+            font-size: clamp(14px,calc(20/1920*100rem),calc(20/1920*100rem));
         }
     }
 }
@@ -8312,7 +8312,7 @@ header .children-menu > li > a:hover {
 
 @media (min-width: 1200px) {
     .news-date {
-        font-size: clamp(12px,calc(14/1920*100rem),calc(14/1920*100rem));
+        font-size: clamp(14px,calc(14/1920*100rem),calc(14/1920*100rem));
     }
 }
 
@@ -8387,7 +8387,7 @@ header .children-menu > li > a:hover {
 
 @media (min-width: 1200px) {
     .card-item .card-title {
-        font-size: clamp(12px,calc(16/1920*100rem),calc(16/1920*100rem));
+        font-size: clamp(14px,calc(16/1920*100rem),calc(16/1920*100rem));
     }
 }
 
@@ -8558,7 +8558,7 @@ header .children-menu > li > a:hover {
 
 @media (min-width: 1200px) {
     .notification-item .day {
-        font-size: clamp(12px,calc(24/1920*100rem),calc(24/1920*100rem));
+        font-size: clamp(14px,calc(24/1920*100rem),calc(24/1920*100rem));
     }
 }
 
@@ -8570,7 +8570,7 @@ header .children-menu > li > a:hover {
 
 @media (min-width: 1200px) {
     .notification-item .month-year {
-        font-size: clamp(12px,calc(14/1920*100rem),calc(14/1920*100rem));
+        font-size: clamp(14px,calc(14/1920*100rem),calc(14/1920*100rem));
     }
 }
 
@@ -8604,7 +8604,7 @@ header .children-menu > li > a:hover {
 
 @media (min-width: 1200px) {
     .notification-item .news-title {
-        font-size: clamp(12px,calc(16/1920*100rem),calc(16/1920*100rem));
+        font-size: clamp(14px,calc(16/1920*100rem),calc(16/1920*100rem));
     }
 }
 
@@ -8697,7 +8697,7 @@ header .children-menu > li > a:hover {
 
 @media (min-width: 1200px) {
     .student-item .title {
-        font-size: clamp(12px,calc(18/1920*100rem),calc(18/1920*100rem));
+        font-size: clamp(14px,calc(18/1920*100rem),calc(18/1920*100rem));
     }
 }
 
@@ -8747,7 +8747,7 @@ header .children-menu > li > a:hover {
 
 @media (min-width: 1200px) {
     .footer-title {
-        font-size: clamp(12px,calc(18/1920*100rem),calc(18/1920*100rem));
+        font-size: clamp(14px,calc(18/1920*100rem),calc(18/1920*100rem));
     }
 }
 
@@ -8778,7 +8778,7 @@ header .children-menu > li > a:hover {
 
 @media (min-width: 1200px) {
     .footer-menu a {
-        font-size: clamp(12px,calc(16/1920*100rem),calc(16/1920*100rem));
+        font-size: clamp(14px,calc(16/1920*100rem),calc(16/1920*100rem));
     }
 }
 
@@ -8804,7 +8804,7 @@ header .children-menu > li > a:hover {
     width: calc(24/1920*100rem);
     height: calc(24/1920*100rem);
     color: currentColor;
-    font-size: clamp(12px,calc(16/1920*100rem),calc(16/1920*100rem));
+    font-size: clamp(14px,calc(16/1920*100rem),calc(16/1920*100rem));
 }
 
 .footer-info .content {
@@ -8818,7 +8818,7 @@ header .children-menu > li > a:hover {
 
 @media (min-width: 1200px) {
     .footer-info .content {
-        font-size: clamp(12px,calc(14/1920*100rem),calc(14/1920*100rem));
+        font-size: clamp(14px,calc(14/1920*100rem),calc(14/1920*100rem));
     }
 }
 
@@ -8832,7 +8832,7 @@ header .children-menu > li > a:hover {
 
 @media (min-width: 1200px) {
     .footer-info .content p {
-        font-size: clamp(12px,calc(14/1920*100rem),calc(14/1920*100rem));
+        font-size: clamp(14px,calc(14/1920*100rem),calc(14/1920*100rem));
     }
 }
 
@@ -9044,7 +9044,7 @@ footer {
 
 @media (min-width: 1200px) {
     .pkbm-academic-item .title {
-        font-size: clamp(12px,calc(24/1920*100rem),calc(24/1920*100rem));
+        font-size: clamp(14px,calc(24/1920*100rem),calc(24/1920*100rem));
     }
 }
 
@@ -9063,7 +9063,7 @@ footer {
 
 @media (min-width: 1200px) {
     .pkbm-academic-item .brief {
-        font-size: clamp(12px,calc(16/1920*100rem),calc(16/1920*100rem));
+        font-size: clamp(14px,calc(16/1920*100rem),calc(16/1920*100rem));
     }
 }
 
@@ -9098,7 +9098,7 @@ footer {
 
 @media (min-width: 1200px) {
     .accordion-item .accordion-title {
-        font-size: clamp(12px,calc(24/1920*100rem),calc(24/1920*100rem));
+        font-size: clamp(14px,calc(24/1920*100rem),calc(24/1920*100rem));
     }
 }
 
@@ -9139,7 +9139,7 @@ footer {
     transition-property: all;
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
     color: rgb(124 124 124 / var(--tw-text-opacity));
-    font-size: clamp(12px,calc(18/1920*100rem),calc(18/1920*100rem));
+    font-size: clamp(14px,calc(18/1920*100rem),calc(18/1920*100rem));
 }
 
 .accordion-item .accordion-content {
@@ -9156,7 +9156,7 @@ footer {
     padding-bottom: calc(16/1920*100rem);
     color: rgb(255 255 255 / var(--tw-text-opacity));
     font-weight: 700;
-    font-size: clamp(12px,calc(20/1920*100rem),calc(20/1920*100rem));
+    font-size: clamp(14px,calc(20/1920*100rem),calc(20/1920*100rem));
 }
 
     .accordion-item .accordion-list.is-list-2 > .accordion-item > .accordion-title .icon {
@@ -9191,7 +9191,7 @@ footer {
     .accordion-item .accordion-item .accordion-title {
         padding-right: calc(32/1920*100rem);
         padding-left: calc(32/1920*100rem);
-        font-size: clamp(12px,calc(20/1920*100rem),calc(20/1920*100rem));
+        font-size: clamp(14px,calc(20/1920*100rem),calc(20/1920*100rem));
     }
 }
 
@@ -9238,7 +9238,7 @@ footer {
 
 @media (min-width: 1200px) {
     .accordion-item .full-content .box-slogan {
-        font-size: clamp(12px,calc(18/1920*100rem),calc(18/1920*100rem));
+        font-size: clamp(14px,calc(18/1920*100rem),calc(18/1920*100rem));
     }
 }
 
@@ -9330,7 +9330,7 @@ footer {
 
 @media (min-width: 1200px) {
     .profile-item .name {
-        font-size: clamp(12px,calc(20/1920*100rem),calc(20/1920*100rem));
+        font-size: clamp(14px,calc(20/1920*100rem),calc(20/1920*100rem));
     }
 }
 
@@ -9344,7 +9344,7 @@ footer {
 
 @media (min-width: 1200px) {
     .profile-item .sub-name {
-        font-size: clamp(12px,calc(14/1920*100rem),calc(14/1920*100rem));
+        font-size: clamp(14px,calc(14/1920*100rem),calc(14/1920*100rem));
     }
 }
 
