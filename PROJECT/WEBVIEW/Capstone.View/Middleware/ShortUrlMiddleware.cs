@@ -47,7 +47,7 @@ public class ShortUrlMiddleware
             }
             catch (Exception ex)
             {
-                _logger.LogWarning(ex, "ShortUrl DB lookup failed for '{Slug}', skipping.", slug);
+                _logger.LogWarning(ex, "ShortUrl DB lookup failed for '{FullSlug}', skipping.", slug);
                 cached = MissSentinel;
             }
 
@@ -59,10 +59,10 @@ public class ShortUrlMiddleware
             _ = Task.Run(async () =>
             {
                 try   { await repo.IncrementClickAsync(slug); }
-                catch (Exception ex) { _logger.LogWarning(ex, "ShortUrl increment failed for '{Slug}'.", slug); }
+                catch (Exception ex) { _logger.LogWarning(ex, "ShortUrl increment failed for '{FullSlug}'.", slug); }
             });
 
-            _logger.LogInformation("ShortUrl redirect: /{Slug} -> {RealUrl}", slug, cached);
+            _logger.LogInformation("ShortUrl redirect: /{FullSlug} -> {RealUrl}", slug, cached);
             context.Response.Redirect(cached, permanent: true);
             return;
         }

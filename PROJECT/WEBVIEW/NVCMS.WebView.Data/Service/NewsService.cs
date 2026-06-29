@@ -30,12 +30,11 @@ public class NewsService : INewsService
         return list;
     }
 
-    public async Task<PaginatedList<NewsItemViewModel>> GetByCategorySlugAsync(
-        string categorySlug, int portalId, int page, int pageSize)
+    public async Task<PaginatedList<NewsItemViewModel>> GetByCategoryFullSlugAsync(
+        string categoryFullSlug, int portalId, int page, int pageSize)
     {
         var categories = await GetAllCatsCachedAsync(portalId);
-        var category   = categories.FirstOrDefault(c =>
-            (!string.IsNullOrEmpty(c.Slug) ? c.Slug : SlugHelper.ToSlug(c.CategoryName)) == categorySlug);
+        var category   = categories.FirstOrDefault(c => c.FullSlug == categoryFullSlug);
         if (category is null) return new PaginatedList<NewsItemViewModel>([], 0, page, pageSize);
         var paged = await _repo.GetByCategoryAsync(category.CategoryID, portalId, page, pageSize);
         var vms   = paged.Items.Select(n => MapToItem(n, category)).ToList();
@@ -76,9 +75,7 @@ public class NewsService : INewsService
             PublishedDate   = news.PublishedDate,
             CategoryId      = news.CategoryId,
             CategoryName    = category?.CategoryName ?? string.Empty,
-            CategorySlug    = !string.IsNullOrEmpty(category?.Slug)
-                ? category.Slug
-                : SlugHelper.ToSlug(category?.CategoryName ?? string.Empty),
+            CategorySlug    = category?.FullSlug ?? string.Empty,
             Slug            = !string.IsNullOrEmpty(news.MetaUrl) ? news.MetaUrl : SlugHelper.ToSlug(news.Title),
             Tags            = news.Tags,
             RelatedNews     = related.Select(r => MapToItem(r, category)).ToList(),
@@ -113,7 +110,7 @@ public class NewsService : INewsService
             CategoryID   = c.CategoryID,
             ParentId     = c.ParentId,
             CategoryName = c.CategoryName,
-            Slug         = !string.IsNullOrEmpty(c.Slug) ? c.Slug : SlugHelper.ToSlug(c.CategoryName),
+            Slug         = c.FullSlug,
             Description  = c.Description,
             NewsCount    = counts.TryGetValue(c.CategoryID, out var cnt) ? cnt : 0,
         }).ToList();
@@ -170,7 +167,7 @@ public class NewsService : INewsService
         {
             allCats.TryGetValue(n.CategoryId, out var cat);
             var parentSlug = cat?.ParentId > 0 && allCats.TryGetValue(cat.ParentId, out var parent)
-                ? (!string.IsNullOrEmpty(parent.Slug) ? parent.Slug : SlugHelper.ToSlug(parent.CategoryName))
+                ? parent.FullSlug
                 : null;
             var vm = MapToItem(n, cat);
             vm.CategoryParentSlug = parentSlug;
@@ -191,23 +188,22 @@ public class NewsService : INewsService
             CategoryID   = cat.CategoryID,
             ParentId     = cat.ParentId,
             CategoryName = cat.CategoryName,
-            Slug         = !string.IsNullOrEmpty(cat.Slug) ? cat.Slug : SlugHelper.ToSlug(cat.CategoryName),
+            Slug         = cat.FullSlug,
             Description  = cat.Description
         };
         _cache.Set(cacheKey, vm, CacheKeys.TtlCategories);
         return vm;
     }
 
-    public async Task<CategoryViewModel?> GetCategoryBySlugAsync(string slug, int portalId)
+    public async Task<CategoryViewModel?> GetCategoryByFullSlugAsync(string fullSlug, int portalId)
     {
-        var cacheKey = CacheKeys.CategoryBySlug(portalId, slug);
+        var cacheKey = CacheKeys.CategoryBySlug(portalId, fullSlug);
         if (_cache.TryGetValue(cacheKey, out CategoryViewModel? cached) && cached is not null) return cached;
-        var cat = await _repo.GetCategoryBySlugAsync(slug, portalId);
+        var cat = await _repo.GetCategoryByFullSlugAsync(fullSlug, portalId);
         if (cat is null)
         {
             var all = await GetAllCatsCachedAsync(portalId);
-            cat = all.FirstOrDefault(c =>
-                SlugHelper.ToSlug(c.CategoryName).Equals(slug, StringComparison.OrdinalIgnoreCase));
+            cat = all.FirstOrDefault(c => c.FullSlug == fullSlug);
         }
         if (cat is null) return null;
         var vm = new CategoryViewModel
@@ -215,7 +211,7 @@ public class NewsService : INewsService
             CategoryID   = cat.CategoryID,
             ParentId     = cat.ParentId,
             CategoryName = cat.CategoryName,
-            Slug         = !string.IsNullOrEmpty(cat.Slug) ? cat.Slug : SlugHelper.ToSlug(cat.CategoryName),
+            Slug         = cat.FullSlug,
             Description  = cat.Description
         };
         _cache.Set(cacheKey, vm, CacheKeys.TtlCategories);
@@ -266,7 +262,7 @@ public class NewsService : INewsService
         Tags          = n.Tags,
         PublishedDate = n.PublishedDate,
         Slug          = !string.IsNullOrEmpty(n.MetaUrl) ? n.MetaUrl : SlugHelper.ToSlug(n.Title),
-        CategorySlug  = !string.IsNullOrEmpty(cat?.Slug) ? cat.Slug : SlugHelper.ToSlug(cat?.CategoryName ?? string.Empty),
+        CategorySlug  = cat?.FullSlug ?? string.Empty,
         CategoryName  = cat?.CategoryName ?? string.Empty
     };
 
@@ -300,7 +296,7 @@ public class NewsService : INewsService
                 CategoryID   = c.CategoryID,
                 ParentId     = c.ParentId,
                 CategoryName = c.CategoryName,
-                Slug         = SlugHelper.ToSlug(c.CategoryName),
+                Slug         = c.FullSlug,
                 Description  = c.Description,
                 Children     = BuildTree(all, c.CategoryID)
             })];

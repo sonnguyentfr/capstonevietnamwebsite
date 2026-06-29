@@ -4,9 +4,9 @@ namespace NVCMS.WebView.Data.Common;
 
 public static class NewsUrlBuilder
 {
-    public static string BuildNewsUrl(string categorySlug, string newsMetaUrl, int newsId)
+    public static string BuildNewsUrl(string categoryFullSlug, string newsMetaUrl, int newsId)
     {
-        var catPath = categorySlug.Trim('/');
+        var catPath = categoryFullSlug.Trim('/');
         return $"/{catPath}/{newsMetaUrl}-{newsId}";
     }
     
@@ -23,13 +23,12 @@ public static class NewsUrlBuilder
     public static string BuildNewsUrl(NewsModel news, NewsCategoryModel category)
     {
         var metaUrl = !string.IsNullOrEmpty(news.MetaUrl) ? news.MetaUrl : SlugHelper.ToSlug(news.Title);
-        var catSlug = !string.IsNullOrEmpty(category.Slug) ? category.Slug : SlugHelper.ToSlug(category.CategoryName);
-        return BuildNewsUrl(catSlug, metaUrl, news.NewId);
+        return BuildNewsUrl(category.FullSlug, metaUrl, news.NewId);
     }
     
-    public static string BuildFullNewsUrl(string scheme, string host, string categorySlug, string newsMetaUrl, int newsId)
+    public static string BuildFullNewsUrl(string scheme, string host, string categoryFullSlug, string newsMetaUrl, int newsId)
     {
-        return $"{scheme}://{host}{BuildNewsUrl(categorySlug, newsMetaUrl, newsId)}";
+        return $"{scheme}://{host}{BuildNewsUrl(categoryFullSlug, newsMetaUrl, newsId)}";
     }
     
     public static string BuildFullNewsUrl(string scheme, string host, ViewModels.NewsItemViewModel item)

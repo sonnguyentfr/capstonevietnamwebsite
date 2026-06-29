@@ -5,8 +5,8 @@ namespace NVCMS.WebView.Data.Contracts.Service;
 
 public interface INewsService
 {
-    Task<PaginatedList<NewsItemViewModel>> GetByCategorySlugAsync(
-        string categorySlug, int portalId, int page, int pageSize);
+    Task<PaginatedList<NewsItemViewModel>> GetByCategoryFullSlugAsync(
+        string categoryFullSlug, int portalId, int page, int pageSize);
 
     Task<PaginatedList<NewsItemViewModel>> GetByCategoryIdAsync(
         int categoryId, int portalId, int page, int pageSize);
@@ -22,7 +22,7 @@ public interface INewsService
     Task<Models.NewsModel?> GetByIdAsync(int newId, int portalId);
     Task<IEnumerable<CategoryViewModel>> GetMenuCategoriesAsync(int portalId);
     Task<CategoryViewModel?> GetCategoryByIdAsync(int categoryId);
-    Task<CategoryViewModel?> GetCategoryBySlugAsync(string slug, int portalId);
+    Task<CategoryViewModel?> GetCategoryByFullSlugAsync(string fullSlug, int portalId);
 
     // NewsBySchool
     Task<IEnumerable<NewsItemViewModel>> GetNewsBySchoolAsync(int schoolId);

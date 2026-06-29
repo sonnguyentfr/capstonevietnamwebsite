@@ -13,4 +13,5 @@ public class NewsCategoryModel
     public int      TabID        { get; set; }
     public int      TabIdDetail  { get; set; }
     public string?  Slug         { get; set; }
+    public string   FullSlug     { get; set; } = string.Empty;
 }

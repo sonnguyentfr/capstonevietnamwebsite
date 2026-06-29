@@ -36,12 +36,7 @@ public class NewsUrlService : INewsUrlService
         var category = await _repo.GetCategoryByIdAsync(categoryId);
         if (category is null) return null;
         
-        // CategorySlug already contains full hierarchy - use it directly
-        var slug = !string.IsNullOrEmpty(category.Slug) 
-            ? category.Slug 
-            : Common.SlugHelper.ToSlug(category.CategoryName);
-        
-        return "/" + slug;
+        return "/" + category.FullSlug;
     }
 
     public bool IsCanonical(string requestUrl, string canonicalUrl)

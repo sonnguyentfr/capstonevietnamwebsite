@@ -13,6 +13,6 @@ public class NewsItemViewModel
     public string   Slug               { get; set; } = string.Empty;
     public string   CategorySlug       { get; set; } = string.Empty;
     public string   CategoryName       { get; set; } = string.Empty;
-    /// <summary>Slug của category cha (dùng để build section URL chính xác)</summary>
+    /// <summary>FullSlug của category cha (dùng để build section URL chính xác)</summary>
     public string?  CategoryParentSlug { get; set; }
 }

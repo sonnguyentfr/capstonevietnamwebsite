@@ -10,7 +10,7 @@
     var parentId = category?.ParentId ?? 0;
     ViewData["Title"] = catName;
 
-    var baseUrl = Context.Request.Path.Value ?? $"/tin-tuc/danh-muc/{catSlug}-{catId}";
+    var baseUrl = "/" + catSlug;
     var rest    = Model.Items.Skip(0).ToList();
 
     // ── Cấu hình hero theo category ──────────────────────────────────────
@@ -74,7 +74,6 @@
 
     var (heroGradient, heroIcon, heroBadge, heroBgImage) = HeroConfig(catId, parentId);
 
-    // Tìm parent name cho breadcrumb
     var allCats = ViewData["Categories"] as IEnumerable<CategoryViewModel>;
     var parentCat = allCats?.FirstOrDefault(c => c.CategoryID == parentId);
     var parentName = parentCat?.CategoryName;
@@ -90,7 +89,7 @@
             <i class="fa-solid fa-chevron-right"></i>
             @if (!string.IsNullOrEmpty(parentName))
             {
-                <a href="/">@parentName</a>
+                <a href="/@parentSlug">@parentName</a>
                 <i class="fa-solid fa-chevron-right"></i>
             }
             <span>@catName</span>
@@ -128,11 +127,6 @@
                 <div class="news-list mt-8">
                     @foreach (var item in rest)
                     {
-                        // detailCatSlug != null  → dùng /section/catSlug/slug-id  (cam-nang-va-tin-tuc)
-                        // sectionKey != null     → dùng /section/slug-id          (cam-nang-su-kien-du-hoc, v.v.)
-                        // else                   → fallback canonical URL
-                        var helper = Context.RequestServices.GetRequiredService<Capstone.View.Helpers.NewsUrlHelper>();
-                        // Use CategorySlug directly - no parent traversal
                         var itemUrl = NVCMS.WebView.Data.Common.NewsUrlBuilder.BuildNewsUrl(item);
                         <div class="news-item">
                             <div class="image img-cover">
