@@ -131,12 +131,35 @@ app.MapControllerRoute(name: "su-kien-past-paged", pattern: "su-kien/past-paged"
 app.MapControllerRoute(name: "su-kien-detail", pattern: "su-kien/{slug}-{id:int}", defaults: new { controller = "SuKien", action = "Detail" });
 app.MapControllerRoute(name: "su-kien", pattern: "su-kien", defaults: new { controller = "SuKien", action = "Index" });
 
-// Các dịch vụ Capstone
-app.MapControllerRoute(name: "dich-vu-index", pattern: "gioi-thieu/cac-dich-vu-capstone", defaults: new { controller = "DichVu", action = "Index" });
-app.MapControllerRoute(name: "tu-van-dinh-cu", pattern: "tu-van-dinh-cu", defaults: new { controller = "DichVu", action = "TuVanDinhCu" });
-app.MapControllerRoute(name: "tu-van-du-hoc-cac-nuoc", pattern: "gioi-thieu/cac-dich-vu-capstone/tu-van-du-hoc-cac-nuoc", defaults: new { controller = "DichVu", action = "TuVanDuHocCacNuoc" });
-app.MapControllerRoute(name: "tu-van-du-hoc-truong-top", pattern: "gioi-thieu/cac-dich-vu-capstone/tu-van-du-hoc-truong-top", defaults: new { controller = "DichVu", action = "TuVanDuHocTruongTop" });
-app.MapControllerRoute(name: "tu-van-du-hoc-cao-hoc", pattern: "gioi-thieu/cac-dich-vu-capstone/tu-van-du-hoc-cao-hoc", defaults: new { controller = "DichVu", action = "TuVanDuHocCaoHoc" });
+// Các dịch vụ Capstone – canonical: /dich-vu/*
+app.MapControllerRoute(name: "dich-vu-index",            pattern: "dich-vu",                                      defaults: new { controller = "DichVu", action = "Index" });
+app.MapControllerRoute(name: "tu-van-du-hoc-cac-nuoc",   pattern: "dich-vu/tu-van-du-hoc-cac-nuoc",               defaults: new { controller = "DichVu", action = "TuVanDuHocCacNuoc" });
+app.MapControllerRoute(name: "tu-van-du-hoc-truong-top", pattern: "dich-vu/tu-van-du-hoc-truong-top",             defaults: new { controller = "DichVu", action = "TuVanDuHocTruongTop" });
+app.MapControllerRoute(name: "tu-van-du-hoc-cao-hoc",    pattern: "dich-vu/tu-van-du-hoc-cao-hoc",                defaults: new { controller = "DichVu", action = "TuVanDuHocCaoHoc" });
+app.MapControllerRoute(name: "tu-van-nganh-nghe",        pattern: "dich-vu/tu-van-nganh-nghe",                    defaults: new { controller = "DichVu", action = "TuVanNganhNghe" });
+app.MapControllerRoute(name: "tu-van-visa",              pattern: "dich-vu/tu-van-visa-du-hoc-tham-than",          defaults: new { controller = "DichVu", action = "TuVanVisa" });
+app.MapControllerRoute(name: "chuyen-tien-du-hoc",       pattern: "dich-vu/dich-vu-chuyen-tien-du-hoc",           defaults: new { controller = "DichVu", action = "ChuyenTienDuHoc" });
+app.MapControllerRoute(name: "tim-nha",                  pattern: "dich-vu/dich-vu-tim-nha",                      defaults: new { controller = "DichVu", action = "TimNha" });
+app.MapControllerRoute(name: "tu-van-dinh-cu-sub",       pattern: "tu-van-dinh-cu/{pageSlug}",                    defaults: new { controller = "DichVu", action = "TuVanDinhCuSubPage" });
+app.MapControllerRoute(name: "tu-van-dinh-cu",           pattern: "tu-van-dinh-cu",                               defaults: new { controller = "DichVu", action = "TuVanDinhCu" });
+
+// 301 redirects: old paths → /dich-vu/*
+app.MapGet("gioi-thieu/cac-dich-vu-capstone",                                       (HttpContext ctx) => Results.Redirect("/dich-vu",                              permanent: true));
+app.MapGet("gioi-thieu/cac-dich-vu-capstone/tu-van-du-hoc-cac-nuoc",                (HttpContext ctx) => Results.Redirect("/dich-vu/tu-van-du-hoc-cac-nuoc",      permanent: true));
+app.MapGet("gioi-thieu/cac-dich-vu-capstone/tu-van-du-hoc-truong-top",              (HttpContext ctx) => Results.Redirect("/dich-vu/tu-van-du-hoc-truong-top",    permanent: true));
+app.MapGet("gioi-thieu/cac-dich-vu-capstone/tu-van-du-hoc-cao-hoc",                 (HttpContext ctx) => Results.Redirect("/dich-vu/tu-van-du-hoc-cao-hoc",       permanent: true));
+app.MapGet("gioi-thieu/cac-dich-vu-capstone/tu-van-nganh-nghe",                     (HttpContext ctx) => Results.Redirect("/dich-vu/tu-van-nganh-nghe",           permanent: true));
+app.MapGet("gioi-thieu/cac-dich-vu-capstone/tu-van-visa-du-hoc-tham-than",          (HttpContext ctx) => Results.Redirect("/dich-vu/tu-van-visa-du-hoc-tham-than",permanent: true));
+app.MapGet("gioi-thieu/cac-dich-vu-capstone/dich-vu-chuyen-tien-du-hoc",            (HttpContext ctx) => Results.Redirect("/dich-vu/dich-vu-chuyen-tien-du-hoc", permanent: true));
+app.MapGet("gioi-thieu/cac-dich-vu-capstone/dich-vu-tim-nha",                       (HttpContext ctx) => Results.Redirect("/dich-vu/dich-vu-tim-nha",             permanent: true));
+app.MapGet("cac-dich-vu-capstone",                                                   (HttpContext ctx) => Results.Redirect("/dich-vu",                              permanent: true));
+app.MapGet("cac-dich-vu-capstone/tu-van-du-hoc-cac-nuoc",                           (HttpContext ctx) => Results.Redirect("/dich-vu/tu-van-du-hoc-cac-nuoc",      permanent: true));
+app.MapGet("cac-dich-vu-capstone/tu-van-du-hoc-truong-top",                         (HttpContext ctx) => Results.Redirect("/dich-vu/tu-van-du-hoc-truong-top",    permanent: true));
+app.MapGet("cac-dich-vu-capstone/tu-van-du-hoc-cao-hoc",                            (HttpContext ctx) => Results.Redirect("/dich-vu/tu-van-du-hoc-cao-hoc",       permanent: true));
+app.MapGet("cac-dich-vu-capstone/tu-van-nganh-nghe",                                (HttpContext ctx) => Results.Redirect("/dich-vu/tu-van-nganh-nghe",           permanent: true));
+app.MapGet("cac-dich-vu-capstone/tu-van-visa-du-hoc-tham-than",                     (HttpContext ctx) => Results.Redirect("/dich-vu/tu-van-visa-du-hoc-tham-than",permanent: true));
+app.MapGet("cac-dich-vu-capstone/dich-vu-chuyen-tien-du-hoc",                       (HttpContext ctx) => Results.Redirect("/dich-vu/dich-vu-chuyen-tien-du-hoc", permanent: true));
+app.MapGet("cac-dich-vu-capstone/dich-vu-tim-nha",                                  (HttpContext ctx) => Results.Redirect("/dich-vu/dich-vu-tim-nha",             permanent: true));
 
 // Trường đối tác
 app.MapControllerRoute(name: "truong-search-json", pattern: "truong-doi-tac/search-json", defaults: new { controller = "Truong", action = "SearchJson" });
@@ -150,10 +173,16 @@ app.MapControllerRoute(name: "tim-nganh-hoc", pattern: "tim-nganh-hoc", defaults
 app.MapControllerRoute(name: "thong-tin-du-hoc-danh-sach-truong",
     pattern: "thong-tin-du-hoc/{countrySlug}/danh-sach-truong",
     defaults: new { controller = "ThongTinDuHoc", action = "DanhSachTruong" });
-app.MapControllerRoute(name: "tu-van-nganh-nghe", pattern: "gioi-thieu/cac-dich-vu-capstone/tu-van-nganh-nghe", defaults: new { controller = "DichVu", action = "TuVanNganhNghe" });
-app.MapControllerRoute(name: "tu-van-visa", pattern: "gioi-thieu/cac-dich-vu-capstone/tu-van-visa-du-hoc-tham-than", defaults: new { controller = "DichVu", action = "TuVanVisa" });
-app.MapControllerRoute(name: "chuyen-tien-du-hoc", pattern: "gioi-thieu/cac-dich-vu-capstone/dich-vu-chuyen-tien-du-hoc", defaults: new { controller = "DichVu", action = "ChuyenTienDuHoc" });
-app.MapControllerRoute(name: "tim-nha", pattern: "gioi-thieu/cac-dich-vu-capstone/dich-vu-tim-nha", defaults: new { controller = "DichVu", action = "TimNha" });
+
+// Thông tin du học – sub-page giới thiệu
+app.MapControllerRoute(name: "thong-tin-du-hoc-sub-page",
+    pattern: "thong-tin-du-hoc/{countrySlug}/{pageSlug}",
+    defaults: new { controller = "ThongTinDuHoc", action = "SubPage" });
+
+// Thông tin du học – country landing page
+app.MapControllerRoute(name: "thong-tin-du-hoc-country",
+    pattern: "thong-tin-du-hoc/{countrySlug}",
+    defaults: new { controller = "ThongTinDuHoc", action = "CountryPage" });
 
 // Tin tức – core routes
 app.MapControllerRoute(

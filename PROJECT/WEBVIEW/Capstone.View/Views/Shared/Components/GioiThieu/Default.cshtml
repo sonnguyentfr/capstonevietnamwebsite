@@ -3,36 +3,81 @@
 {
     var currentPath = Context.Request.Path.Value?.TrimEnd('/') ?? string.Empty;
 
-    <div class="page-gioi-thieu">
-        <div class="container section-large">
+    // Icon mapping theo URL cuối
+    static string NavIcon(string url)
+    {
+        var seg = url.TrimEnd('/');
+        var last = seg.LastIndexOf('/') >= 0 ? seg[(seg.LastIndexOf('/') + 1)..] : seg;
+        return last switch
+        {
+        "tu-van-du-hoc-cac-nuoc"         => "fa-solid fa-globe",
+        "tu-van-du-hoc-truong-top"        => "fa-solid fa-trophy",
+        "tu-van-du-hoc-cao-hoc"           => "fa-solid fa-graduation-cap",
+        "tu-van-nganh-nghe"               => "fa-solid fa-briefcase",
+        "tu-van-visa-du-hoc-tham-than"    => "fa-solid fa-passport",
+        "dich-vu-chuyen-tien-du-hoc"      => "fa-solid fa-money-bill-transfer",
+        "dich-vu-tim-nha"                 => "fa-solid fa-house",
+        // thong-tin-du-hoc
+        "du-hoc-my"                       => "fa-solid fa-flag-usa",
+        "du-hoc-anh"                      => "fa-solid fa-crown",
+        "du-hoc-canada"                   => "fa-solid fa-leaf",
+        "du-hoc-uc"                       => "fa-solid fa-sun",
+        "du-hoc-ireland"                  => "fa-solid fa-clover",
+        "du-hoc-thuy-si"                  => "fa-solid fa-mountain",
+        "he-thong-giao-duc"               => "fa-solid fa-school",
+        "visa"                            => "fa-solid fa-passport",
+        "tin-tuc-du-hoc-my"               => "fa-solid fa-newspaper",
+        "tin-tuc-du-hoc-anh"              => "fa-solid fa-newspaper",
+        "tin-tuc-du-hoc-canada"           => "fa-solid fa-newspaper",
+        "tin-tuc-du-hoc-uc"               => "fa-solid fa-newspaper",
+        "tin-tuc-du-hoc-ireland"          => "fa-solid fa-newspaper",
+        "tin-tuc-du-hoc-thuy-si"          => "fa-solid fa-newspaper",
+        "danh-sach-truong"                => "fa-solid fa-building-columns",
+        // tu-van-dinh-cu
+        "dinh-cu-my-eb5"                  => "fa-solid fa-star",
+        "dinh-cu-my-eb3"                  => "fa-solid fa-circle-dot",
+        "dinh-cu-canada"                  => "fa-solid fa-leaf",
+        "dinh-cu-uc"                      => "fa-solid fa-sun",
+        _                                 => "fa-solid fa-circle-chevron-right",
+        };
+    }
 
-            @* Menu ngang - nhom tung thanh phan *@
+    <div class="page-gioi-thieu">
+        <div class="container section-large pgt-layout">
+
+            @* ── Vertical icon sidebar ── *@
             @if (Model.SidebarMenu.Count > 0)
             {
-                <nav class="gt-hnav">
-                    <ul class="gt-hnav-list">
+                <aside class="pgt-sidenav" id="pgtSidenav" aria-label="Navigation">
+                    <ul class="pgt-nav-list">
                         @foreach (var item in Model.SidebarMenu)
                         {
-                            var isActive = currentPath == item.Url.TrimEnd('/');
+                            var isActive    = currentPath == item.Url.TrimEnd('/');
                             var hasChildren = item.Children.Count > 0;
                             var isGroupActive = isActive || item.Children.Any(c => currentPath == c.Url.TrimEnd('/'));
+                            var icon        = NavIcon(item.Url);
 
-                            <li class="gt-hnav-item @(hasChildren ? "gt-hnav-dropdown" : "") @(isGroupActive ? "active" : "")">
-                                <a href="@item.Url" class="gt-hnav-link @(isGroupActive ? "active" : "")">
-                                    @item.Title
+                            <li class="pgt-nav-item @(hasChildren ? "pgt-has-sub" : "") @(isGroupActive ? "active" : "")">
+                                <a href="@item.Url" class="pgt-nav-link @(isGroupActive ? "active" : "")">
+                                    <span class="pgt-nav-icon"><i class="@icon"></i></span>
+                                    <span class="pgt-nav-text">@item.Title</span>
                                     @if (hasChildren)
                                     {
-                                        <span class="gt-hnav-arrow">&#9660;</span>
+                                        <span class="pgt-nav-arrow"><i class="fa-solid fa-chevron-down"></i></span>
                                     }
                                 </a>
                                 @if (hasChildren)
                                 {
-                                    <ul class="gt-hnav-sub">
+                                    <ul class="pgt-nav-sub">
                                         @foreach (var child in item.Children)
                                         {
                                             var isChildActive = currentPath == child.Url.TrimEnd('/');
+                                            var childIcon = NavIcon(child.Url);
                                             <li class="@(isChildActive ? "active" : "")">
-                                                <a href="@child.Url">@child.Title</a>
+                                                <a href="@child.Url">
+                                                    <span class="pgt-nav-icon"><i class="@childIcon"></i></span>
+                                                    <span class="pgt-nav-text">@child.Title</span>
+                                                </a>
                                             </li>
                                         }
                                     </ul>
@@ -40,11 +85,11 @@
                             </li>
                         }
                     </ul>
-                </nav>
+                </aside>
             }
 
-            @* Noi dung full width *@
-            <div class="gt-body">
+            @* ── Main content ── *@
+            <div class="pgt-content">
                 <div class="post">
                     <div class="section-title text-center">
                         <h2>@Model.TrangDanhMuc</h2>

@@ -1,33 +1,62 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using NVCMS.WebView.Data.Contracts.Service;
 
 namespace Capstone.View.Controllers;
 
 public class DichVuController : Controller
 {
-    // /capstone-vietnam/cac-dich-vu-capstone
+    private readonly IGioiThieuService _gioiThieuService;
+    private readonly int               _portalId;
+
+    // slug → GioiThieu page id
+    private static readonly Dictionary<string, int> PageIdMap =
+        new(StringComparer.OrdinalIgnoreCase)
+        {
+            { "",                  417 }, // /tu-van-dinh-cu
+            { "dinh-cu-my-eb5",   444 },
+            { "dinh-cu-my-eb3",   445 },
+            { "dinh-cu-canada",   446 },
+            { "dinh-cu-uc",       447 },
+        };
+
+    public DichVuController(IGioiThieuService gioiThieuService, IConfiguration config)
+    {
+        _gioiThieuService = gioiThieuService;
+        _portalId         = config.GetValue<int>("SiteSettings:PortalId");
+    }
+
+    // /dich-vu
     public IActionResult Index() => View();
 
     // /tu-van-dinh-cu
-    public IActionResult TuVanDinhCu() => View();
+    public async Task<IActionResult> TuVanDinhCu()
+        => await RenderPage("", "/tu-van-dinh-cu");
 
-    // /capstone-vietnam/cac-dich-vu-capstone/tu-van-du-hoc-cac-nuoc
+    // /tu-van-dinh-cu/{pageSlug}
+    public async Task<IActionResult> TuVanDinhCuSubPage(string pageSlug)
+        => await RenderPage(pageSlug, $"/tu-van-dinh-cu/{pageSlug}");
+
+    // /dich-vu/*
     public IActionResult TuVanDuHocCacNuoc() => View();
-
-    // /capstone-vietnam/cac-dich-vu-capstone/tu-van-du-hoc-truong-top
     public IActionResult TuVanDuHocTruongTop() => View();
-
-    // /capstone-vietnam/cac-dich-vu-capstone/tu-van-du-hoc-cao-hoc
     public IActionResult TuVanDuHocCaoHoc() => View();
-
-    // /capstone-vietnam/cac-dich-vu-capstone/tu-van-nganh-nghe
     public IActionResult TuVanNganhNghe() => View();
-
-    // /capstone-vietnam/cac-dich-vu-capstone/tu-van-visa-du-hoc-tham-than
     public IActionResult TuVanVisa() => View();
-
-    // /capstone-vietnam/cac-dich-vu-capstone/dich-vu-chuyen-tien-du-hoc
     public IActionResult ChuyenTienDuHoc() => View();
-
-    // /capstone-vietnam/cac-dich-vu-capstone/dich-vu-tim-nha
     public IActionResult TimNha() => View();
+
+    private async Task<IActionResult> RenderPage(string key, string canonicalPath)
+    {
+        if (!PageIdMap.TryGetValue(key, out var pageId))
+            return NotFound();
+
+        var vm = await _gioiThieuService.GetByIdAsync(pageId, _portalId);
+        if (vm is null) return NotFound();
+
+        ViewData["Title"]        = vm.TrangDanhMuc;
+        ViewData["CanonicalUrl"] = $"{Request.Scheme}://{Request.Host}{canonicalPath}";
+        ViewData["MenuGroupUrl"] = "/dich-vu";
+
+        return View("~/Views/ThongTinDuHoc/GioiThieuPage.cshtml", vm);
+    }
 }

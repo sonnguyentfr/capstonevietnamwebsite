@@ -1,0 +1,13 @@
+@model NVCMS.WebView.Data.ViewModels.GioiThieuViewModel
+@{
+    ViewData["Title"] = Model.TrangDanhMuc;
+    var menuGroupUrl  = ViewData["MenuGroupUrl"] as string ?? "/thong-tin-du-hoc";
+    var canonicalUrl  = ViewData["CanonicalUrl"] as string ?? string.Empty;
+}
+
+@if (!string.IsNullOrEmpty(canonicalUrl))
+{
+    <link rel="canonical" href="@canonicalUrl" />
+}
+
+@await Component.InvokeAsync("GioiThieu", new { id = Model.Id, menuGroupUrl })
