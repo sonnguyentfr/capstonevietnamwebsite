@@ -54,7 +54,7 @@ public class ShortUrlMiddleware
             _cache.Set(cacheKey, cached, cached == MissSentinel ? MissTtl : HitTtl);
         }
 
-        if (cached is not null && cached != MissSentinel)
+        if (!string.IsNullOrWhiteSpace(cached) && cached != MissSentinel)
         {
             _ = Task.Run(async () =>
             {
