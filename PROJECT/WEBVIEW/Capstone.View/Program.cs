@@ -45,7 +45,7 @@ builder.Services.AddHttpClient("ApiClient", client =>
 {
     client.BaseAddress = new Uri(builder.Configuration["ApiBaseUrl"] ?? "http://localhost/");
 });
-
+builder.Services.AddMemoryCache();
 var app = builder.Build();
 
 // ── Response Compression — must be first ─────────────────────────────────────
@@ -126,10 +126,10 @@ app.UseAuthorization();
 app.MapControllerRoute(name: "gioi-thieu-ve-capstone", pattern: "gioi-thieu/ve-capstone", defaults: new { controller = "GioiThieu", action = "VeCapstone" });
 app.MapControllerRoute(name: "gioi-thieu", pattern: "gioi-thieu", defaults: new { controller = "GioiThieu", action = "Index" });
 app.MapControllerRoute(name: "quy-trinh-tu-van", pattern: "gioi-thieu/quy-trinh-tu-van", defaults: new { controller = "GioiThieu", action = "QuyTrinhTuVan" });
-
-app.MapControllerRoute(name: "su-kien-past-paged", pattern: "su-kien/past-paged", defaults: new { controller = "SuKien", action = "PastPaged" });
-app.MapControllerRoute(name: "su-kien-detail", pattern: "su-kien/{slug}-{id:int}", defaults: new { controller = "SuKien", action = "Detail" });
-app.MapControllerRoute(name: "su-kien", pattern: "su-kien", defaults: new { controller = "SuKien", action = "Index" });
+// Sự kiện
+app.MapControllerRoute(name: "su-kien-past-paged", pattern: "su-kien/past-paged",     defaults: new { controller = "SuKien", action = "PastPaged" });
+app.MapControllerRoute(name: "su-kien-detail",     pattern: "su-kien/{slug}-{id:int}", defaults: new { controller = "SuKien", action = "Detail" });
+app.MapControllerRoute(name: "su-kien-index",      pattern: "su-kien",                 defaults: new { controller = "SuKien", action = "Index" });
 
 // Các dịch vụ Capstone – canonical: /dich-vu/*
 app.MapControllerRoute(name: "dich-vu-index",            pattern: "dich-vu",                                      defaults: new { controller = "DichVu", action = "Index" });
@@ -160,6 +160,8 @@ app.MapGet("cac-dich-vu-capstone/tu-van-nganh-nghe",                            
 app.MapGet("cac-dich-vu-capstone/tu-van-visa-du-hoc-tham-than",                     (HttpContext ctx) => Results.Redirect("/dich-vu/tu-van-visa-du-hoc-tham-than",permanent: true));
 app.MapGet("cac-dich-vu-capstone/dich-vu-chuyen-tien-du-hoc",                       (HttpContext ctx) => Results.Redirect("/dich-vu/dich-vu-chuyen-tien-du-hoc", permanent: true));
 app.MapGet("cac-dich-vu-capstone/dich-vu-tim-nha",                                  (HttpContext ctx) => Results.Redirect("/dich-vu/dich-vu-tim-nha",             permanent: true));
+
+
 
 // Trường đối tác
 app.MapControllerRoute(name: "truong-search-json", pattern: "truong-doi-tac/search-json", defaults: new { controller = "Truong", action = "SearchJson" });
