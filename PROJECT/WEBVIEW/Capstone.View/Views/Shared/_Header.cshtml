@@ -59,11 +59,54 @@
 <div class="mobile-wrap">
     <div class="navbar-nav-list"></div>
 </div>
-<div class="search-wrap">
-    <div class="container">
-        <form class="searchbox" action="/tim-kiem" method="get">
-            <input type="text" name="q" placeholder="Tim kiem...">
-            <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+<div class="search-wrap" id="searchOverlay" role="dialog" aria-modal="true" aria-label="Tìm kiếm">
+    <div class="search-overlay-bg"></div>
+    <div class="search-overlay-inner">
+        <button class="search-close" id="searchClose" type="button" aria-label="Đóng tìm kiếm">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+        <p class="search-hint">Nhập từ khóa để tìm kiếm</p>
+        <form class="searchbox" action="/tim-kiem" method="get" autocomplete="off">
+            <div class="searchbox-field">
+                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                <input type="text" name="q" placeholder="Tìm kiếm..." autofocus spellcheck="false">
+                <button type="submit" class="search-btn">Tìm kiếm</button>
+            </div>
         </form>
+        <div class="search-suggestions">
+            <span class="search-suggestion-label">Gợi ý:</span>
+            <a href="/tim-kiem?q=du+hoc" class="search-tag">Du học</a>
+            <a href="/tim-kiem?q=hoc+bong" class="search-tag">Học bổng</a>
+            <a href="/tim-kiem?q=tu+van" class="search-tag">Tư vấn</a>
+            <a href="/tim-kiem?q=visa" class="search-tag">Visa</a>
+        </div>
     </div>
 </div>
+<script>
+    (function () {
+        var overlay = document.getElementById('searchOverlay');
+        var closeBtn = document.getElementById('searchClose');
+        var openBtn = document.querySelector('.button-search');
+        var input = overlay ? overlay.querySelector('input[name="q"]') : null;
+
+        function openSearch() {
+            overlay.classList.add('is-open');
+            document.body.style.overflow = 'hidden';
+            setTimeout(function () { if (input) input.focus(); }, 320);
+        }
+        function closeSearch() {
+            overlay.classList.remove('is-open');
+            document.body.style.overflow = '';
+        }
+
+        if (openBtn) openBtn.addEventListener('click', openSearch);
+        if (closeBtn) closeBtn.addEventListener('click', closeSearch);
+
+        if (overlay) {
+            overlay.querySelector('.search-overlay-bg').addEventListener('click', closeSearch);
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape') closeSearch();
+            });
+        }
+    })();
+</script>

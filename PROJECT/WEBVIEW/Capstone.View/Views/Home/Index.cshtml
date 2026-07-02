@@ -48,7 +48,7 @@
             </p>
         </div>
         <div class="button justify-center mt-8" data-aos="fade-up" data-aos-delay="250">
-            <a class="btn-solid active" href="/truong-doi-tac" target="_blank"><span>Trường nổi bật</span><i class="fa-regular fa-plus"></i></a>
+            <a class="btn-solid active" href="/truong-doi-tac" target="_blank"><span>Tất cả</span><i class="fa-regular fa-plus"></i></a>
             <a class="btn-solid" href="/truong-doi-tac/my" target="_blank"><span>Mỹ</span><i class="fa-regular fa-plus"></i></a>
             <a class="btn-solid" href="/truong-doi-tac/canada" target="_blank"><span>Canada</span><i class="fa-regular fa-plus"></i></a>
             <a class="btn-solid" href="/truong-doi-tac/uc" target="_blank"><span>Úc</span><i class="fa-regular fa-plus"></i></a>
@@ -79,9 +79,6 @@
     </div>
     <div class="container mt-8" data-aos="fade-up" data-aos-delay="100">
         @await Component.InvokeAsync("TruongSwiper", new { loaiList = new[] { "BF" }, pageSize = 30 })
-        <div class="button justify-center mt-8" data-aos="fade-up" data-aos-delay="150">
-            <a class="btn-solid" href="/truong-doi-tac?loai=BF"><span>Xem tất cả trường trung học đối tác</span><i class="fa-solid fa-plus"></i></a>
-        </div>
     </div>
 </section>
 <!-- Cong cu tim truong -->
@@ -248,7 +245,7 @@
                         <h1 class="university-name"><span class="highlight">R</span>eaching <span class="highlight">N</span>ew <span class="highlight">H</span>eights</h1>
                         <h2>Công ty TNHH Capstone Việt Nam</h2>
                     </div>
-                    <div class="button"><a class="btn-solid btn-white uppercase" href="#"><span>VỀ CAPSTONE VIETNAM</span><i class="fa-light fa-plus"></i></a></div>
+                    <div class="button"><a class="btn-solid btn-white uppercase" href="/gioi-thieu"><span>VỀ CAPSTONE VIETNAM</span><i class="fa-light fa-plus"></i></a></div>
                 </div>
             </div>
             <div class="col mt-8 lg:w-7/12 xl:w-1/2">
@@ -308,9 +305,9 @@
         <div class="news-list mt-8" id="tin-tuc-list">
             @await Component.InvokeAsync("NewsFeatured", new { count = 7, bigCount = 3 })
         </div>
-        <div class="button justify-center mt-8">
+        @* <div class="button justify-center mt-8">
             <a class="btn-solid" href="/cam-nang-su-kien-du-hoc-67"><span>Xem tất cả</span><i class="fa-solid fa-plus"></i></a>
-        </div>
+        </div> *@
     </div>
 </section>
 
@@ -336,7 +333,7 @@
 
 
 <!-- Cam nhan khach hang -->
-<section class="home-story section-large bg-neutral-50 overflow-hidden">
+@* <section class="home-story section-large bg-neutral-50 overflow-hidden">
     <div class="container">
         <h2 class="site-title text-center" data-aos="fade-up" data-aos-delay="100">Cảm Nhận Của Khách Hàng</h2>
         <div class="swiper-relative one-slider no-loop mt-8 equal-height" data-aos="fade-up" data-aos-delay="200">
@@ -348,5 +345,5 @@
             <div class="swiper-pagination is-abs"></div>
         </div>
     </div>
-</section>
+</section> *@
 @await Component.InvokeAsync("TuVanDangKy")

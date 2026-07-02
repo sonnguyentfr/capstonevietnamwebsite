@@ -34,6 +34,40 @@
     ]
   },
   {
+    "title": "Dịch vụ Capstone",
+    "url": "/dich-vu",
+    "children": [
+      {
+        "title": "Tư vấn du học các nước",
+        "url": "/dich-vu/tu-van-du-hoc-cac-nuoc"
+      },
+      {
+        "title": "Du học trường TOP – Elite Scholars",
+        "url": "/dich-vu/tu-van-du-hoc-truong-top"
+      },
+      {
+        "title": "Cao học – Bespoke",
+        "url": "/dich-vu/tu-van-du-hoc-cao-hoc"
+      },
+      {
+        "title": "Career Coach – Tư vấn ngành nghề",
+        "url": "/dich-vu/tu-van-nganh-nghe"
+      },
+      {
+        "title": "Tư vấn Visa du học / thăm thân",
+        "url": "/dich-vu/tu-van-visa-du-hoc-tham-than"
+      },
+      {
+        "title": "Dịch vụ chuyển tiền du học",
+        "url": "/dich-vu/dich-vu-chuyen-tien-du-hoc"
+      },
+      {
+        "title": "Dịch vụ tìm nhà",
+        "url": "/dich-vu/dich-vu-tim-nha"
+      }
+    ]
+  },
+  {
     "title": "Du học theo nước",
     "url": "/thong-tin-du-hoc",
     "children": [
@@ -299,40 +333,7 @@
       }
     ]
   },
-  {
-    "title": "Dịch vụ Capstone",
-    "url": "/gioi-thieu/cac-dich-vu-capstone",
-    "children": [
-      {
-        "title": "Tư vấn du học các nước",
-        "url": "/gioi-thieu/cac-dich-vu-capstone/tu-van-du-hoc-cac-nuoc"
-      },
-      {
-        "title": "Du học trường TOP – Elite Scholars",
-        "url": "/gioi-thieu/cac-dich-vu-capstone/tu-van-du-hoc-truong-top"
-      },
-      {
-        "title": "Cao học – Bespoke",
-        "url": "/gioi-thieu/cac-dich-vu-capstone/tu-van-du-hoc-cao-hoc"
-      },
-      {
-        "title": "Career Coach – Tư vấn ngành nghề",
-        "url": "/gioi-thieu/cac-dich-vu-capstone/tu-van-nganh-nghe"
-      },
-      {
-        "title": "Tư vấn Visa du học / thăm thân",
-        "url": "/gioi-thieu/cac-dich-vu-capstone/tu-van-visa-du-hoc-tham-than"
-      },
-      {
-        "title": "Dịch vụ chuyển tiền du học",
-        "url": "/gioi-thieu/cac-dich-vu-capstone/dich-vu-chuyen-tien-du-hoc"
-      },
-      {
-        "title": "Dịch vụ tìm nhà",
-        "url": "/gioi-thieu/cac-dich-vu-capstone/dich-vu-tim-nha"
-      }
-    ]
-  },
+
   {
     "title": "Sự kiện",
     "url": "/su-kien",

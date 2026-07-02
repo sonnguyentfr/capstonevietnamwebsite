@@ -7222,7 +7222,7 @@ header .children-menu > li > a:hover {
             display: flex;
             position: absolute;
             top: 50%;
-            right: 0 /* 0px */;
+            right: 12px /* 0px */;
             justify-content: center;
             align-items: center;
             transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
@@ -7230,7 +7230,7 @@ header .children-menu > li > a:hover {
             transition-property: all;
             transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
             cursor: pointer;
-            width: calc(44/1920*100rem);
+            width: 106px;
             height: calc(44/1920*100rem);
             color: rgb(41 41 41 / var(--tw-text-opacity));
         }

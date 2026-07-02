@@ -30,7 +30,7 @@ public class EventsRepository : IEventsRepository
             SELECT *
             FROM   NV_Events_Cat
             WHERE  Isactive = 1
-              AND  is_show_website = 1
+            AND  is_show_website = 1
             ORDER BY Ordernumber, FromDate";
 
         await using var conn = CreateConn();
