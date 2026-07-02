@@ -147,8 +147,10 @@ builder.Services.AddHangfireServer(options =>
 
 // Register Jobs as transient (Hangfire activator tự resolve qua DI)
 builder.Services.AddTransient<CampaignBatchJob>();
-//ZNS refresh token
+// ZNS refresh token
 builder.Services.AddTransient<ZnsRefreshTokenJob>();
+// Event registration confirmation emails (enqueued by Capstone.View)
+builder.Services.AddTransient<EventRegistrationEmailJob>();
 
 // Add CORS if needed
 builder.Services.AddCors(options =>

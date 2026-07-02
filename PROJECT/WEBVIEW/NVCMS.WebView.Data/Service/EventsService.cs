@@ -185,6 +185,8 @@ public class EventsService : IEventsService
             TabID           = c.TabID,
             Ordernumber     = c.Ordernumber,
             Is_show_website = c.Is_show_website,
+            Sendcode        = c.Sendcode,
+            ContentMail     = c.ContentMail,
             Schools         = catSchools,
             Orgs            = catOrgs,
             Events          = events

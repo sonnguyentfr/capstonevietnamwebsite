@@ -27,6 +27,11 @@ public class EventsCatViewModel
     public bool Is_show_website { get; set; }
     public int PortalId { get; set; }
 
+    /// <summary>Gửi mã QR/barcode kèm email xác nhận (map từ NV_Events_Cat.Sendcode).</summary>
+    public bool? Sendcode { get; set; }
+    /// <summary>Nội dung ghi chú quan trọng gửi kèm email (map từ NV_Events_Cat.ContentMail).</summary>
+    public string? ContentMail { get; set; }
+
     public IEnumerable<EventsViewModel> Events { get; set; } = [];
 
     /// <summary>Danh sách trường tham gia toàn sự kiện (parse từ FairSchool)</summary>

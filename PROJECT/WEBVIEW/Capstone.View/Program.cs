@@ -46,6 +46,7 @@ builder.Services.AddHttpClient("ApiClient", client =>
     client.BaseAddress = new Uri(builder.Configuration["ApiBaseUrl"] ?? "http://localhost/");
 });
 builder.Services.AddMemoryCache();
+
 var app = builder.Build();
 
 // ── Response Compression — must be first ─────────────────────────────────────
@@ -122,6 +123,10 @@ app.UseMiddleware<ShortUrlMiddleware>();
 
 app.UseRouting();
 app.UseAuthorization();
+
+// ── Event Registration route ──────────────────────────────────────────────────
+app.MapControllerRoute(name: "event-registration", pattern: "dang-ky-su-kien",
+    defaults: new { controller = "EventRegistration", action = "Index" });
 
 app.MapControllerRoute(name: "gioi-thieu-ve-capstone", pattern: "gioi-thieu/ve-capstone", defaults: new { controller = "GioiThieu", action = "VeCapstone" });
 app.MapControllerRoute(name: "gioi-thieu", pattern: "gioi-thieu", defaults: new { controller = "GioiThieu", action = "Index" });

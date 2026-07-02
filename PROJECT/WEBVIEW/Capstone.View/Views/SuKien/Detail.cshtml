@@ -3,9 +3,13 @@
 
 @{
     ViewData["Title"] = Model.CatName;
-    var isUpcoming    = Model.EndDate.HasValue && Model.EndDate.Value >= DateTime.Now;
+    var now = DateTime.Now;
+    var isUpcoming = Model.EndDate.HasValue && Model.EndDate.Value >= now;
     var hasCatSchools = Model.Schools != null && Model.Schools.Any();
-    var hasCatOrgs    = Model.Orgs    != null && Model.Orgs.Any();
+    var hasCatOrgs = Model.Orgs != null && Model.Orgs.Any();
+    // Registration open: today >= FromDate AND today <= EndDate
+    var isRegOpen = (!Model.FromDate.HasValue || now >= Model.FromDate.Value.Date)
+                     && (!Model.EndDate.HasValue || now <= Model.EndDate.Value);
 }
 
 @* ===== HERO ===== *@
@@ -32,10 +36,20 @@
             @if (Model.FromDate.HasValue || Model.EndDate.HasValue)
             {
                 <div class="event-detail-meta" data-aos="fade-up" data-aos-delay="150">
-                    <span><i class="fa-solid fa-clock"></i>
-                        @if (Model.FromDate.HasValue) { @Model.FromDate.Value.ToString("HH:mm, dd/MM/yyyy") }
-                        @if (Model.FromDate.HasValue && Model.EndDate.HasValue) { <text> — </text> }
-                        @if (Model.EndDate.HasValue) { @Model.EndDate.Value.ToString("HH:mm, dd/MM/yyyy") }
+                    <span>
+                        <i class="fa-solid fa-clock"></i>
+                        @if (Model.FromDate.HasValue)
+                        {
+                            @Model.FromDate.Value.ToString("HH:mm, dd/MM/yyyy")
+                        }
+                        @if (Model.FromDate.HasValue && Model.EndDate.HasValue)
+                        {
+                            <text> — </text>
+                        }
+                        @if (Model.EndDate.HasValue)
+                        {
+                            @Model.EndDate.Value.ToString("HH:mm, dd/MM/yyyy")
+                        }
                     </span>
                 </div>
             }
@@ -308,7 +322,7 @@
                             @foreach (var (ev, idx) in Model.Events.Select((e, i) => (e, i)))
                             {
                                 var hasEvSchools = ev.Schools != null && ev.Schools.Any();
-                                var hasEvOrgs    = ev.Orgs    != null && ev.Orgs.Any();
+                                var hasEvOrgs = ev.Orgs != null && ev.Orgs.Any();
                                 <div class="elc-card" data-aos="fade-up" data-aos-delay="@(idx * 60)">
 
                                     @* ── HEADER: số thứ tự + địa điểm ── *@
@@ -325,9 +339,18 @@
                                             {
                                                 <p class="elc-time">
                                                     <i class="fa-solid fa-clock"></i>
-                                                    @if (ev.Fromdatetime.HasValue) { @ev.Fromdatetime.Value.ToString("HH:mm, dd/MM/yyyy") }
-                                                    @if (ev.Fromdatetime.HasValue && ev.Enddatetime.HasValue) { <text> – </text> }
-                                                    @if (ev.Enddatetime.HasValue) { @ev.Enddatetime.Value.ToString("HH:mm, dd/MM/yyyy") }
+                                                    @if (ev.Fromdatetime.HasValue)
+                                                    {
+                                                        @ev.Fromdatetime.Value.ToString("HH:mm, dd/MM/yyyy")
+                                                    }
+                                                    @if (ev.Fromdatetime.HasValue && ev.Enddatetime.HasValue)
+                                                    {
+                                                        <text> – </text>
+                                                    }
+                                                    @if (ev.Enddatetime.HasValue)
+                                                    {
+                                                        @ev.Enddatetime.Value.ToString("HH:mm, dd/MM/yyyy")
+                                                    }
                                                 </p>
                                             }
                                         </div>
@@ -454,13 +477,25 @@
                                         </div>
                                     }
 
+                                    @* ── ĐĂNG KÝ button per location ── *@
+                                    @if (isRegOpen)
+                                    {
+                                        <div class="elc-card-footer">
+                                            <a class="btn-solid btn-sm"
+                                                   href="/dang-ky-su-kien?eventCatId=@Model.Id&eventId=@ev.Id">
+                                                <i class="fa-solid fa-calendar-check"></i>
+                                                <span>Đăng ký địa điểm này</span>
+                                            </a>
+                                        </div>
+                                    }
+
                                 </div>
                             }
                         </div>
                     </div>
                 }
 
-                @* ===== FAIR INFO PHU (Dien gia, v.v.) ===== *@
+                @* ===== FAIR INFO PHU===*@
                 @if (!string.IsNullOrEmpty(Model.FairDiengia))
                 {
                     <div class="event-fair-info mt-10" data-aos="fade-up">
@@ -471,126 +506,135 @@
             </div>
 
             @* ===== SIDEBAR ===== *@
-            <aside class="event-detail-sidebar">
+                <aside class="event-detail-sidebar">
 
-                @* Dang ky *@
-                @if (isUpcoming && !string.IsNullOrEmpty(Model.Link_pr))
-                {
-                    <div class="sidebar-box sidebar-register" data-aos="fade-left">
-                        <h3 class="sidebar-box-title"><i class="fa-solid fa-calendar-check"></i> Đăng ký tham dự</h3>
-                        <p class="mt-2">Đừng bỏ lỡ cơ hội gặp gỡ chuyên gia tư vấn và đại diện các trường quốc tế.</p>
-                        <a class="btn-solid w-full mt-4" href="@Model.Link_pr" target="_blank">
-                            <span>Đăng ký ngay</span><i class="fa-solid fa-arrow-right"></i>
-                        </a>
-                    </div>
-                }
-
-                @* Thoi gian *@
-                @if (Model.FromDate.HasValue || Model.EndDate.HasValue)
-                {
-                    <div class="sidebar-box" data-aos="fade-left" data-aos-delay="100">
-                        <h3 class="sidebar-box-title"><i class="fa-solid fa-calendar-days"></i> Thời gian</h3>
-                        <ul class="sidebar-meta-list mt-3">
-                            @if (Model.FromDate.HasValue)
+                    @* Dang ky *@
+                    @if (isUpcoming)
+                    {
+                        <div class="sidebar-box sidebar-register" data-aos="fade-left">
+                            <h3 class="sidebar-box-title"><i class="fa-solid fa-calendar-check"></i> Đăng ký tham dự</h3>
+                            <p class="mt-2">Đừng bỏ lỡ cơ hội gặp gỡ chuyên gia tư vấn và đại diện các trường quốc tế.</p>
+                            @if (isRegOpen && Model.Events.Any())
                             {
-                                <li>
-                                    <span class="meta-label">Bắt đầu</span>
-                                    <span class="meta-value">@Model.FromDate.Value.ToString("HH:mm, dd/MM/yyyy")</span>
-                                </li>
+                                <a class="btn-solid w-full mt-4" href="/dang-ky-su-kien?eventCatId=@Model.Id">
+                                    <span>Đăng ký ngay</span><i class="fa-solid fa-arrow-right"></i>
+                                </a>
                             }
-                            @if (Model.EndDate.HasValue)
+                            @if (!string.IsNullOrEmpty(Model.Link_pr))
                             {
-                                <li>
-                                    <span class="meta-label">Kết thúc</span>
-                                    <span class="meta-value">@Model.EndDate.Value.ToString("HH:mm, dd/MM/yyyy")</span>
-                                </li>
-                            }
-                        </ul>
-                    </div>
-                }
-
-                @* So truong tham gia (summary) *@
-                @if (hasCatSchools)
-                {
-                    <div class="sidebar-box sidebar-schools-summary" data-aos="fade-left" data-aos-delay="120">
-                        <h3 class="sidebar-box-title">
-                            <i class="fa-solid fa-graduation-cap"></i> Trường tham gia
-                        </h3>
-                        <p class="sidebar-schools-count mt-2">
-                            <span class="count-number">@Model.Schools.Count()</span> trường quốc tế
-                        </p>
-                        <div class="sidebar-schools-logos mt-3">
-                            @foreach (var s in Model.Schools.Take(8))
-                            {
-                                @if (!string.IsNullOrEmpty(s.LogoUrl))
-                                {
-                                    <a href="@s.DetailUrl" title="@s.NameofSchool">
-                                        <img src="@(s.LogoUrl)?width=60&height=36&mode=pad"
-                                             alt="@s.NameofSchool" loading="lazy" />
-                                    </a>
-                                }
+                                <a class="btn-outline w-full mt-3" href="@Model.Link_pr" target="_blank">
+                                    <span>Đăng ký ngoài</span><i class="fa-solid fa-external-link-alt"></i>
+                                </a>
                             }
                         </div>
-                        @if (Model.Schools.Count() > 8)
-                        {
-                            <p class="sidebar-schools-more mt-2">+@(Model.Schools.Count() - 8) trường khác</p>
-                        }
-                    </div>
-                }
+                    }
 
-                @* Lien he *@
-                @if (!string.IsNullOrEmpty(Model.Email))
-                {
-                    <div class="sidebar-box" data-aos="fade-left" data-aos-delay="150">
-                        <h3 class="sidebar-box-title"><i class="fa-solid fa-envelope"></i> Liên hệ</h3>
-                        <a href="mailto:@Model.Email" class="sidebar-email mt-3">@Model.Email</a>
-                    </div>
-                }
+                    @* Thoi gian *@
+                    @if (Model.FromDate.HasValue || Model.EndDate.HasValue)
+                    {
+                        <div class="sidebar-box" data-aos="fade-left" data-aos-delay="100">
+                            <h3 class="sidebar-box-title"><i class="fa-solid fa-calendar-days"></i> Thời gian</h3>
+                            <ul class="sidebar-meta-list mt-3">
+                                @if (Model.FromDate.HasValue)
+                                {
+                                    <li>
+                                        <span class="meta-label">Bắt đầu</span>
+                                        <span class="meta-value">@Model.FromDate.Value.ToString("HH:mm, dd/MM/yyyy")</span>
+                                    </li>
+                                }
+                                @if (Model.EndDate.HasValue)
+                                {
+                                    <li>
+                                        <span class="meta-label">Kết thúc</span>
+                                        <span class="meta-value">@Model.EndDate.Value.ToString("HH:mm, dd/MM/yyyy")</span>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                    }
 
-                @* Quay lai *@
-                <div class="sidebar-box sidebar-back" data-aos="fade-left" data-aos-delay="200">
-                    <a class="btn-outline w-full" href="/su-kien">
-                        <i class="fa-solid fa-arrow-left"></i><span>Tất cả sự kiện</span>
-                    </a>
-                </div>
-            </aside>
+                    @* So truong tham gia (summary) *@
+                    @if (hasCatSchools)
+                    {
+                        <div class="sidebar-box sidebar-schools-summary" data-aos="fade-left" data-aos-delay="120">
+                            <h3 class="sidebar-box-title">
+                                <i class="fa-solid fa-graduation-cap"></i> Trường tham gia
+                            </h3>
+                            <p class="sidebar-schools-count mt-2">
+                                <span class="count-number">@Model.Schools.Count()</span> trường quốc tế
+                            </p>
+                            <div class="sidebar-schools-logos mt-3">
+                                @foreach (var s in Model.Schools.Take(8))
+                                {
+                                    @if (!string.IsNullOrEmpty(s.LogoUrl))
+                                    {
+                                        <a href="@s.DetailUrl" title="@s.NameofSchool">
+                                            <img src="@(s.LogoUrl)?width=60&height=36&mode=pad"
+                                                 alt="@s.NameofSchool" loading="lazy" />
+                                        </a>
+                                    }
+                                }
+                            </div>
+                            @if (Model.Schools.Count() > 8)
+                            {
+                                <p class="sidebar-schools-more mt-2">+@(Model.Schools.Count() - 8) trường khác</p>
+                            }
+                        </div>
+                    }
+
+                    @* Lien he *@
+                    @if (!string.IsNullOrEmpty(Model.Email))
+                    {
+                        <div class="sidebar-box" data-aos="fade-left" data-aos-delay="150">
+                            <h3 class="sidebar-box-title"><i class="fa-solid fa-envelope"></i> Liên hệ</h3>
+                            <a href="mailto:@Model.Email" class="sidebar-email mt-3">@Model.Email</a>
+                        </div>
+                    }
+
+                    @* Quay lai *@
+                    <div class="sidebar-box sidebar-back" data-aos="fade-left" data-aos-delay="200">
+                        <a class="btn-outline w-full" href="/su-kien">
+                            <i class="fa-solid fa-arrow-left"></i><span>Tất cả sự kiện</span>
+                        </a>
+                    </div>
+                </aside>
+            </div>
         </div>
-    </div>
-</section>
+    </section>
 
-@section Scripts {
-    @{
-        var _evtUrl = ViewData["CanonicalUrl"] as string;
-        var _siteSettings = await SiteHelper.GetSettingsAsync(SiteOptions.Value.PortalId);
+    @section Scripts {
+        @{
+            var _evtUrl = ViewData["CanonicalUrl"] as string;
+            var _siteSettings = await SiteHelper.GetSettingsAsync(SiteOptions.Value.PortalId);
+        }
+        @Html.Raw(SeoSchemaHelper.Event(
+            name: Model.CatName ?? string.Empty,
+            startDate: Model.FromDate,
+            endDate: Model.EndDate,
+            description: Model.Desception,
+            url: _evtUrl,
+            imageUrl: Model.AvatarUrl,
+            organizerName: _siteSettings.General.SiteName,
+            organizerUrl: _siteSettings.General.SiteWeb
+        ))
+        <script>
+            (function () {
+                const navs   = document.querySelectorAll('.evt-venue-tab-btn');
+                const panels = document.querySelectorAll('.evt-venue-tab-panel');
+                if (!navs.length) return;
+
+                navs.forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const target = btn.dataset.target;
+
+                        navs.forEach(b => { b.classList.remove('active'); b.setAttribute('aria-selected','false'); });
+                        panels.forEach(p => p.classList.remove('active'));
+
+                        btn.classList.add('active');
+                        btn.setAttribute('aria-selected', 'true');
+                        document.getElementById(target)?.classList.add('active');
+                    });
+                });
+            })();
+        </script>
     }
-    @Html.Raw(SeoSchemaHelper.Event(
-        name:          Model.CatName ?? string.Empty,
-        startDate:     Model.FromDate,
-        endDate:       Model.EndDate,
-        description:   Model.Desception,
-        url:           _evtUrl,
-        imageUrl:      Model.AvatarUrl,
-        organizerName: _siteSettings.General.SiteName,
-        organizerUrl:  _siteSettings.General.SiteWeb
-    ))
-    <script>
-    (function () {
-        const navs   = document.querySelectorAll('.evt-venue-tab-btn');
-        const panels = document.querySelectorAll('.evt-venue-tab-panel');
-        if (!navs.length) return;
-
-        navs.forEach(btn => {
-            btn.addEventListener('click', () => {
-                const target = btn.dataset.target;
-
-                navs.forEach(b => { b.classList.remove('active'); b.setAttribute('aria-selected','false'); });
-                panels.forEach(p => p.classList.remove('active'));
-
-                btn.classList.add('active');
-                btn.setAttribute('aria-selected', 'true');
-                document.getElementById(target)?.classList.add('active');
-            });
-        });
-    })();
-    </script>
-}

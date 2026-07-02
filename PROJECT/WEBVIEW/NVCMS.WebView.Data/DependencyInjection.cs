@@ -69,6 +69,14 @@ public static class DependencyInjection
                 rewriter));
         services.AddSingleton<IMenuService>(_ => new MenuService(webRootPath));
 
+        // Event Registration
+        services.AddScoped<IEventRegistrationRepository>(_ =>
+            new EventRegistrationRepository(crmConnectionString));
+        services.AddScoped<IEventRegistrationService>(sp =>
+            new EventRegistrationService(
+                sp.GetRequiredService<IEventRegistrationRepository>(),
+                sp.GetRequiredService<IEventsRepository>()));
+
         // SiteSettings — Singleton, backed by WebView_GetSiteSettings SP, cached per portalId
         services.AddMemoryCache();
         services.AddSingleton<ISiteSettingsHelper>(sp =>
