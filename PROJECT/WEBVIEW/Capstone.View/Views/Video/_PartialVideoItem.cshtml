@@ -1,0 +1,22 @@
+@using NVCMS.WebView.Data.ViewModels
+@model IEnumerable<VideoItemVM>
+
+@foreach (var item in Model)
+{
+    var thumb = string.IsNullOrEmpty(item.ImagePath) ? "/static/images/no-photo.png" : item.ImagePath;
+    <article class="vl-card" data-video-id="@item.VideoId" data-aos="fade-up">
+        <div class="vl-card__thumb-wrap">
+            <img src="@thumb" alt="@item.Title" class="vl-card__thumb" loading="lazy" />
+            <div class="vl-card__overlay">
+                <span class="vl-play-btn"><i class="fa-solid fa-play"></i></span>
+            </div>
+        </div>
+        <div class="vl-card__body">
+            <h3 class="vl-card__title">@item.Title</h3>
+            @if (!string.IsNullOrEmpty(item.Summary))
+            {
+                <p class="vl-card__summary">@item.Summary</p>
+            }
+        </div>
+    </article>
+}

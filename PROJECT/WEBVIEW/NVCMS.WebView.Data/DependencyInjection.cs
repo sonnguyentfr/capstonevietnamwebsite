@@ -32,6 +32,7 @@ public static class DependencyInjection
         services.AddScoped<IGioiThieuRepository>(_ => new GioiThieuRepository(connectionString));
         services.AddScoped<IShortyUrlRepository>(_ => new ShortyUrlRepository(connectionString));
         services.AddScoped<IFairGuideRepository>(_ => new FairGuideRepository(connectionString));
+        services.AddScoped<IVideoRepository>(_ => new VideoRepository(connectionString));
 
         // Repository - CRMConnection
         services.AddScoped<IEventsRepository>(_ => new EventsRepository(crmConnectionString));
@@ -59,6 +60,8 @@ public static class DependencyInjection
             new GioiThieuService(sp.GetRequiredService<IGioiThieuRepository>(), rewriter));
         services.AddScoped<IFairGuideService>(sp =>
             new FairGuideService(sp.GetRequiredService<IFairGuideRepository>(), rewriter));
+        services.AddScoped<IVideoService>(sp =>
+            new VideoService(sp.GetRequiredService<IVideoRepository>(), rewriter));
         services.AddScoped<IEventsService>(sp =>
             new EventsService(
                 sp.GetRequiredService<IEventsRepository>(),

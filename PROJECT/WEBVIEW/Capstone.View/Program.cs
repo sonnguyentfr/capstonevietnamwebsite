@@ -151,6 +151,11 @@ app.MapControllerRoute(name: "quy-trinh-tu-van", pattern: "gioi-thieu/quy-trinh-
 // FairGuide
 app.MapControllerRoute(name: "fairguide-detail", pattern: "gioi-thieu/fairguide/{slug}-{id:int}", defaults: new { controller = "FairGuide", action = "Detail" });
 app.MapControllerRoute(name: "fairguide-index",  pattern: "gioi-thieu/fairguide",                 defaults: new { controller = "FairGuide", action = "Index" });
+
+// Video Library
+app.MapControllerRoute(name: "video-load-more", pattern: "gioi-thieu/thu-vien-anh-video/load-more", defaults: new { controller = "Video", action = "LoadMore" });
+app.MapControllerRoute(name: "video-detail",    pattern: "gioi-thieu/thu-vien-anh-video/detail/{id:int}", defaults: new { controller = "Video", action = "Detail" });
+app.MapControllerRoute(name: "video-index",     pattern: "gioi-thieu/thu-vien-anh-video",          defaults: new { controller = "Video", action = "Index" });
 // Sự kiện
 app.MapControllerRoute(name: "su-kien-past-paged", pattern: "su-kien/past-paged",     defaults: new { controller = "SuKien", action = "PastPaged" });
 app.MapControllerRoute(name: "su-kien-detail",     pattern: "su-kien/{slug}-{id:int}", defaults: new { controller = "SuKien", action = "Detail" });

@@ -1,0 +1,309 @@
+@using NVCMS.WebView.Data.ViewModels
+@model IEnumerable<VideoItemVM>
+
+@{
+    ViewData["Title"] = "Thư viện ảnh & Video";
+}
+
+<section class="page-hero page-hero--video">
+    <div class="container">
+        <nav class="breadcrumb" aria-label="breadcrumb">
+            <a href="/">Trang chủ</a>
+            <i class="fa-solid fa-chevron-right"></i>
+            <a href="/gioi-thieu">Giới thiệu</a>
+            <i class="fa-solid fa-chevron-right"></i>
+            <span>Thư viện ảnh &amp; Video</span>
+        </nav>
+        <h1 class="page-hero__title" data-aos="fade-up">Thư viện ảnh &amp; Video</h1>
+    </div>
+</section>
+
+<section class="vl-list-section">
+    <div class="container">
+
+        @if (!Model.Any())
+        {
+            <div class="no-data-section">
+                <i class="fa-regular fa-video"></i>
+                <p>Chưa có video nào.</p>
+            </div>
+        }
+        else
+        {
+            <div class="vl-grid" id="vl-grid">
+                @await Html.PartialAsync("_PartialVideoItem", Model)
+            </div>
+        }
+
+        <div id="vl-sentinel" style="height:1px; margin-top:4px;"></div>
+
+        <div class="vl-loading" id="vl-loading" style="display:none;">
+            <div class="vl-skeleton-grid">
+                <div class="vl-skeleton-card"><div class="vl-skeleton-thumb shimmer"></div><div class="vl-skeleton-line shimmer"></div><div class="vl-skeleton-line vl-skeleton-line--short shimmer"></div></div>
+                <div class="vl-skeleton-card"><div class="vl-skeleton-thumb shimmer"></div><div class="vl-skeleton-line shimmer"></div><div class="vl-skeleton-line vl-skeleton-line--short shimmer"></div></div>
+                <div class="vl-skeleton-card"><div class="vl-skeleton-thumb shimmer"></div><div class="vl-skeleton-line shimmer"></div><div class="vl-skeleton-line vl-skeleton-line--short shimmer"></div></div>
+                <div class="vl-skeleton-card"><div class="vl-skeleton-thumb shimmer"></div><div class="vl-skeleton-line shimmer"></div><div class="vl-skeleton-line vl-skeleton-line--short shimmer"></div></div>
+            </div>
+        </div>
+
+        <div class="vl-end-msg" id="vl-end-msg" style="display:none;">
+            <i class="fa-solid fa-circle-check"></i> Đã hiển thị tất cả video
+        </div>
+
+    </div>
+</section>
+
+@section Styles {
+<link rel="stylesheet" href="/static/css/jquery.fancybox.min.css" />
+<style>
+/* ── Hero ── */
+.page-hero--video { padding: 40px 0 30px; background: #f7f8fa; }
+
+/* ── Section ── */
+.vl-list-section { padding: 40px 0 60px; }
+
+/* ── Grid: same pattern as FairGuide ── */
+.vl-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+    gap: 24px;
+}
+
+/* ── Card ── */
+.vl-card {
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,.06);
+    background: #fff;
+    cursor: pointer;
+    transition: box-shadow .2s, transform .2s;
+}
+.vl-card:hover {
+    box-shadow: 0 6px 20px rgba(0,0,0,.13);
+    transform: translateY(-4px);
+}
+
+/* ── Thumbnail ── */
+.vl-card__thumb-wrap {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    background: #e5e7eb;
+    display: block;
+}
+.vl-card__thumb {
+    width: 100%; height: 100%;
+    object-fit: cover; display: block;
+    transition: transform .3s;
+}
+.vl-card:hover .vl-card__thumb { transform: scale(1.04); }
+
+/* ── Overlay + play ── */
+.vl-card__overlay {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(0,0,0,.22);
+    transition: background .2s;
+}
+.vl-card:hover .vl-card__overlay { background: rgba(0,0,0,.38); }
+.vl-play-btn {
+    width: 48px; height: 48px; border-radius: 50%;
+    background: rgba(255,255,255,.9);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem; color: #d4232a;
+    transition: transform .18s, background .18s;
+    pointer-events: none;
+}
+.vl-card:hover .vl-play-btn { transform: scale(1.12); background: #fff; }
+
+/* ── Card body ── */
+.vl-card__body { padding: 14px 16px 18px; }
+.vl-card__title {
+    font-size: 1rem; font-weight: 600;
+    margin: 0 0 6px; line-height: 1.4; color: #111;
+    display: -webkit-box; -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical; overflow: hidden;
+}
+.vl-card__summary {
+    font-size: .82rem; color: #6b7280; margin: 0; line-height: 1.5;
+    display: -webkit-box; -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical; overflow: hidden;
+}
+
+/* ── Skeleton loader ── */
+.vl-loading { padding: 20px 0; }
+.vl-skeleton-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 24px;
+}
+.vl-skeleton-card { display: flex; flex-direction: column; gap: 10px; }
+.vl-skeleton-thumb { width: 100%; aspect-ratio: 16/9; border-radius: 10px; }
+.vl-skeleton-line  { height: 14px; border-radius: 6px; width: 88%; }
+.vl-skeleton-line--short { width: 55%; }
+.shimmer {
+    background: linear-gradient(90deg, #e5e7eb 25%, #f3f4f6 50%, #e5e7eb 75%);
+    background-size: 200% 100%;
+    animation: vl-shimmer 1.4s infinite linear;
+}
+@@keyframes vl-shimmer { to { background-position: -200% 0; } }
+
+/* ── End message ── */
+.vl-end-msg {
+    display: flex; align-items: center; justify-content: center; gap: 7px;
+    padding: 28px 0 8px; font-size: .88rem; color: #9ca3af;
+}
+.vl-end-msg .fa-circle-check { color: #22c55e; }
+
+/* ── Fancybox modal ── */
+.vl-modal {
+    background: #0000004d;
+    border-radius: 0px;
+    overflow: hidden;
+    width: 80%;
+    max-width: 100%;padding: 30px !important;
+}
+.vl-modal__video-wrap {
+    position: relative; padding-bottom: 56.25%; height: 0;
+    background: #000; overflow: hidden;
+}
+.vl-modal__video-wrap iframe,
+.vl-modal__video-wrap video {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%; border: none;
+}
+.vl-modal__body { padding: 20px 24px 24px;background:#fff; }
+.vl-modal__title {
+    font-size: 1.1rem; font-weight: 700;
+    margin: 0 0 8px; color: #111; line-height: 1.35;
+}
+.vl-modal__summary {
+    font-size: .88rem; color: #555;
+    margin: 0 0 12px; line-height: 1.6;
+}
+.vl-modal__content {
+    font-size: .88rem; color: #374151; line-height: 1.7;
+    max-height: 320px; overflow-y: auto;
+}
+.vl-modal__content img { max-width: 100%; height: auto; }
+</style>
+}
+
+@section Scripts {
+<script src="/static/js/jquery.fancybox.min.js"></script>
+<script>
+(function ($) {
+    'use strict';
+
+    var LOAD_URL   = '/gioi-thieu/thu-vien-anh-video/load-more';
+    var DETAIL_URL = '/gioi-thieu/thu-vien-anh-video/detail/';
+    var page       = 2;
+    var loading    = false;
+    var exhausted  = false;
+
+    var $grid    = $('#vl-grid');
+    var $loadBox = $('#vl-loading');
+    var $endMsg  = $('#vl-end-msg');
+    var sentinel = document.getElementById('vl-sentinel');
+
+    /* ── Infinite scroll ── */
+    var io = new IntersectionObserver(function (entries) {
+        if (!entries[0].isIntersecting || loading || exhausted) return;
+        fetchMore();
+    }, { rootMargin: '400px' });
+    if (sentinel) io.observe(sentinel);
+
+    function fetchMore() {
+        loading = true;
+        $loadBox.show();
+        $.get(LOAD_URL, { page: page })
+            .done(function (html) {
+                $loadBox.hide();
+                var trimmed = $.trim(html);
+                if (!trimmed) {
+                    markExhausted(); return;
+                }
+                var $cards = $(trimmed).filter('.vl-card');
+                if ($cards.length === 0) {
+                    markExhausted(); return;
+                }
+                $grid.append($cards);
+                bindCards($cards);
+                page++;
+                loading = false;
+            })
+            .fail(function () {
+                $loadBox.hide();
+                loading = false;
+            });
+    }
+
+    function markExhausted() {
+        exhausted = true;
+        $endMsg.show();
+        if (sentinel) io.unobserve(sentinel);
+    }
+
+    /* ── Open modal ── */
+    function bindCards($cards) {
+        $cards.on('click', function () {
+            openModal($(this).data('video-id'));
+        });
+    }
+
+    function openModal(id) {
+        $.getJSON(DETAIL_URL + id, function (vm) {
+            var $modal = $('<div class="vl-modal">');
+
+            /* Video block */
+            if (vm.videoPath) {
+                var $videoWrap = $('<div class="vl-modal__video-wrap">');
+                if (vm.typeVideo === 2) {
+                    /* YouTube */
+                    var src = 'https://www.youtube.com/embed/' + vm.videoPath +
+                        '?autoplay=1&rel=0&modestbranding=1&playsinline=1';
+                    $videoWrap.append(
+                        $('<iframe frameborder="0" allowfullscreen>')
+                            .attr('src', src)
+                            .attr('allow', 'autoplay; fullscreen; picture-in-picture')
+                    );
+                } else {
+                    /* Local video */
+                    $videoWrap.append(
+                        $('<video controls autoplay playsinline>')
+                            .attr('src', vm.videoPath)
+                    );
+                }
+                $modal.append($videoWrap);
+            }
+
+            /* Text block */
+            var $body = $('<div class="vl-modal__body">');
+            if (vm.title)   $body.append($('<p class="vl-modal__title">').text(vm.title));
+            if (vm.summary) $body.append($('<p class="vl-modal__summary">').html(vm.summary));
+            /* content is HTML — use .html() not .text() */
+            if (vm.content) $body.append($('<div class="vl-modal__content">').html(vm.content));
+            $modal.append($body);
+
+            $.fancybox.open({
+                src  : $modal[0],
+                type : 'html',
+                opts : {
+                    touch    : false,
+                    toolbar  : true,
+                    smallBtn : true,
+                    afterClose: function () {
+                        $modal.find('iframe').attr('src', '');
+                        $modal.find('video').each(function () { this.pause(); this.src = ''; });
+                    }
+                }
+            });
+        });
+    }
+
+    /* ── Bind initial batch ── */
+    bindCards($grid.find('.vl-card'));
+
+}(jQuery));
+</script>
+}
