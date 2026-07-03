@@ -7,6 +7,7 @@ using NVCMS.WebView.Data.Service;
 using NVCMS.WebView.Data.SiteSettings;
 using NVCMS.WebView.Data.ViewModels;
 using Microsoft.Extensions.Caching.Memory;
+using NVCMS.WebView.Data.Models;
 
 namespace NVCMS.WebView.Data;
 
@@ -30,6 +31,7 @@ public static class DependencyInjection
         services.AddScoped<IBannerRepository>(_ => new BannerRepository(connectionString));
         services.AddScoped<IGioiThieuRepository>(_ => new GioiThieuRepository(connectionString));
         services.AddScoped<IShortyUrlRepository>(_ => new ShortyUrlRepository(connectionString));
+        services.AddScoped<IFairGuideRepository>(_ => new FairGuideRepository(connectionString));
 
         // Repository - CRMConnection
         services.AddScoped<IEventsRepository>(_ => new EventsRepository(crmConnectionString));
@@ -55,6 +57,8 @@ public static class DependencyInjection
                 sp.GetRequiredService<IMemoryCache>()));
         services.AddScoped<IGioiThieuService>(sp =>
             new GioiThieuService(sp.GetRequiredService<IGioiThieuRepository>(), rewriter));
+        services.AddScoped<IFairGuideService>(sp =>
+            new FairGuideService(sp.GetRequiredService<IFairGuideRepository>(), rewriter));
         services.AddScoped<IEventsService>(sp =>
             new EventsService(
                 sp.GetRequiredService<IEventsRepository>(),

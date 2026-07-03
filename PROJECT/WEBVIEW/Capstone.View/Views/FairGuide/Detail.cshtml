@@ -1,0 +1,294 @@
+﻿@using NVCMS.WebView.Data.ViewModels
+@model FairGuideDetailVM
+
+@{
+    ViewData["Title"] = Model.Title;
+    bool hasPdfs     = Model.Media.Count > 0;
+    bool hasMultiple = Model.Media.Count > 1;
+}
+
+<div class="fg-page">
+
+    <div class="fg-page-header">
+        <div class="container">
+            <nav class="breadcrumb fg-breadcrumb">
+                <a href="/">Trang chủ</a>
+                <i class="fa-solid fa-chevron-right"></i>
+                <a href="/gioi-thieu">Giới thiẹu</a>
+                <i class="fa-solid fa-chevron-right"></i>
+                <a href="/gioi-thieu/fairguide">FairGuide</a>
+                <i class="fa-solid fa-chevron-right"></i>
+                <span>@Model.Title</span>
+            </nav>
+            <h1 class="fg-page-title">@Model.Title</h1>
+            @if (!string.IsNullOrEmpty(Model.Descreption))
+            {
+                <p class="fg-page-desc">@Html.Raw(Model.Descreption)</p>
+            }
+        </div>
+    </div>
+
+    @if (!string.IsNullOrEmpty(Model.Noidung))
+    {
+        <div class="fg-noidung">
+            <div class="container">
+                <div class="cms-content">@Html.Raw(Model.Noidung)</div>
+            </div>
+        </div>
+    }
+
+    @if (hasPdfs)
+    {
+        <section class="fg-viewer-section">
+            <div class="container">
+
+                @if (hasMultiple)
+                {
+                    <div class="fg-doc-tabs">
+                        @for (int i = 0; i < Model.Media.Count; i++)
+                        {
+                            <button class="fg-doc-tab @(i == 0 ? "is-active" : "")"
+                                    data-idx="@i" type="button">
+                                <i class="fa-regular fa-file-pdf"></i>
+                                @Model.Media[i].Title
+                            </button>
+                        }
+                    </div>
+                }
+
+                @for (int i = 0; i < Model.Media.Count; i++)
+                {
+                    var pdf = Model.Media[i];
+                    <div class="fg-doc @(i == 0 ? "is-active" : "")"
+                         id="fg-doc-@i"
+                         data-url="@pdf.MediaUrl">
+
+                        <div class="fg-shell">
+
+                            <aside class="fg-sidebar" aria-label="Danh sÃ¡ch trang">
+                                <div class="fg-thumb-scroll" id="fg-thumbs-@i"></div>
+                            </aside>
+
+                            <div class="fg-main">
+
+                                <div class="fg-toolbar">
+                                    <div class="fg-tb-group">
+                                        <button class="fg-tb-btn js-zoom-out" data-idx="@i" title="Thu nhá»" type="button">
+                                            <i class="fa-solid fa-magnifying-glass-minus"></i>
+                                        </button>
+                                        <button class="fg-tb-btn js-zoom-in" data-idx="@i" title="PhÃ³ng to" type="button">
+                                            <i class="fa-solid fa-magnifying-glass-plus"></i>
+                                        </button>
+                                    </div>
+                                    <div class="fg-tb-pageinfo" id="fg-pageinfo-@i">
+                                        <span class="fg-pg-cur" id="fg-cur-@i">1</span>
+                                        <span class="fg-pg-sep">/</span>
+                                        <span class="fg-pg-tot" id="fg-tot-@i">â€”</span>
+                                    </div>
+                                    <div class="fg-tb-group">
+                                        <button class="fg-tb-btn js-fullscreen" data-idx="@i" title="ToÃ n mÃ n hÃ¬nh" type="button">
+                                            <i class="fa-solid fa-expand"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="fg-stage" id="fg-stage-@i">
+                                    <button class="fg-nav fg-nav--prev" id="fg-prev-@i" type="button" title="Trang trÆ°á»›c">
+                                        <i class="fa-solid fa-chevron-left"></i>
+                                    </button>
+                                    <div class="fg-canvas-wrap" id="fg-cwrap-@i">
+                                        <canvas id="fg-canvas-@i" class="fg-canvas"></canvas>
+                                        <div class="fg-spinner-wrap" id="fg-spinner-@i">
+                                            <div class="fg-spinner"></div>
+                                        </div>
+                                        <iframe id="fg-iframe-@i"
+                                                class="fg-iframe fg-hidden"
+                                                title="@pdf.Title"></iframe>
+                                    </div>
+                                    <button class="fg-nav fg-nav--next" id="fg-next-@i" type="button" title="Trang sau">
+                                        <i class="fa-solid fa-chevron-right"></i>
+                                    </button>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                }
+
+            </div>
+        </section>
+    }
+
+</div>
+
+@section Styles {
+<style>
+.fg-page { background: #f7f8fa; }
+
+.fg-page-header {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    padding: 36px 0 32px;
+    color: #fff;
+}
+.fg-breadcrumb {
+    display: flex; align-items: center; gap: 6px;
+    font-size: .82rem; opacity: .7; margin-bottom: 14px; flex-wrap: wrap;
+}
+.fg-breadcrumb a { color: inherit; text-decoration: none; }
+.fg-breadcrumb a:hover { opacity: 1; text-decoration: underline; }
+.fg-breadcrumb .fa-chevron-right { font-size: .6rem; }
+.fg-page-title { font-size: 1.95rem; font-weight: 700; line-height: 1.25; margin: 0 0 10px; }
+.fg-page-desc  { font-size: .98rem; opacity: .78; margin: 0; line-height: 1.7; }
+
+.fg-noidung { padding: 32px 0; }
+
+.fg-viewer-section { padding: 0 0 64px; }
+
+.fg-doc-tabs { display: flex; gap: 6px; flex-wrap: wrap; padding: 24px 0 0; }
+.fg-doc-tab {
+    display: flex; align-items: center; gap: 7px;
+    padding: 9px 18px; border: 2px solid #d1d5db;
+    border-radius: 8px; background: #fff; cursor: pointer;
+    font-size: .87rem; font-weight: 500; color: #444;
+    transition: all .18s;
+}
+.fg-doc-tab:hover  { border-color: #d4232a; color: #d4232a; }
+.fg-doc-tab.is-active { background: #d4232a; border-color: #d4232a; color: #fff; }
+
+.fg-doc { display: none; margin-top: 16px; }
+.fg-doc.is-active { display: block; height:1000px}
+
+.fg-shell {
+    display: flex;
+    background: #111827;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,.35);
+    min-height: 620px;
+}
+
+.fg-sidebar {
+    width: 124px; flex-shrink: 0;
+    background: #0d1321;
+    overflow-y: auto; overflow-x: hidden;
+    padding: 12px 8px;
+    scrollbar-width: thin;
+    scrollbar-color: #374151 transparent;
+    height: 1000px;
+}
+.fg-sidebar::-webkit-scrollbar { width: 4px; }
+.fg-sidebar::-webkit-scrollbar-thumb { background: #374151; border-radius: 3px; }
+.fg-thumb-scroll { display: flex; flex-direction: column; gap: 8px; }
+.fg-thumb-item {
+    position: relative; cursor: pointer;
+    border: 2px solid transparent; border-radius: 4px;
+    overflow: hidden; transition: border-color .15s, transform .15s;
+    background: #1f2937;
+}
+.fg-thumb-item:hover   { border-color: #6b7280; transform: scale(1.04); }
+.fg-thumb-item.is-active { border-color: #d4232a; }
+.fg-thumb-item canvas  { display: block; width: 100%; height: auto; }
+.fg-thumb-num {
+    position: absolute; bottom: 3px; right: 5px;
+    font-size: 9px; color: #d1d5db; line-height: 1;
+    text-shadow: 0 1px 2px rgba(0,0,0,.9);
+}
+
+.fg-main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+
+.fg-toolbar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 16px; background: #1f2937; gap: 8px; flex-wrap: wrap;
+    border-bottom: 1px solid #374151;
+}
+.fg-tb-group { display: flex; gap: 4px; }
+.fg-tb-btn {
+    width: 34px; height: 34px;
+    display: flex; align-items: center; justify-content: center;
+    background: #374151; border: none; border-radius: 7px;
+    color: #d1d5db; cursor: pointer; font-size: .88rem;
+    transition: background .15s, transform .15s;
+}
+.fg-tb-btn:hover { background: #4b5563; color: #fff; transform: scale(1.12); }
+.fg-tb-pageinfo {
+    display: flex; align-items: center; gap: 5px;
+    font-size: .87rem; color: #9ca3af; font-weight: 500;
+}
+.fg-pg-cur  { color: #fff; font-size: 1rem; font-weight: 700; }
+.fg-pg-sep, .fg-pg-tot { color: #6b7280; }
+
+.fg-stage {
+    flex: 1; display: flex; align-items: center; justify-content: center;
+    position: relative; padding: 24px 56px;
+    background: #111827; overflow: auto;
+}
+
+.fg-nav {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    width: 44px; height: 44px; border-radius: 50%;
+    background: rgba(255,255,255,.1); border: 2px solid rgba(255,255,255,.18);
+    color: #fff; font-size: 1rem; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background .18s, transform .18s; z-index: 10;
+    backdrop-filter: blur(6px);
+}
+.fg-nav:hover    { background: #d4232a; border-color: #d4232a; transform: translateY(-50%) scale(1.12); }
+.fg-nav:disabled { opacity: .25; cursor: default; pointer-events: none; }
+.fg-nav--prev    { left: 8px; }
+.fg-nav--next    { right: 8px; }
+
+.fg-canvas-wrap {
+    position: relative; display: flex;
+    align-items: center; justify-content: center;
+    max-width: 100%;
+}
+.fg-canvas {
+    display: block; max-width: 100%;
+    border-radius: 4px;
+    box-shadow: 0 8px 40px rgba(0,0,0,.65);
+    opacity: 0; transition: opacity .28s ease;
+}
+.fg-canvas.is-visible { opacity: 1; }
+
+.fg-iframe {
+    width: 100%; min-height: 72vh;
+    border: none; border-radius: 4px; display: block;
+}
+
+.fg-spinner-wrap {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    pointer-events: none;
+}
+.fg-spinner {
+    width: 38px; height: 38px;
+    border: 3px solid rgba(255,255,255,.12);
+    border-top-color: #d4232a;
+    border-radius: 50%;
+    animation: fg-spin .75s linear infinite;
+}
+@@keyframes fg-spin { to { transform: rotate(360deg); } }
+
+.fg-hidden { display: none !important; }
+
+@@media (max-width: 767px) {
+    .fg-sidebar { display: none; }
+    .fg-page-title { font-size: 1.45rem; }
+    .fg-shell { border-radius: 10px; min-height: 420px; }
+    .fg-stage { padding: 12px 48px; }
+    .fg-nav   { width: 36px; height: 36px; font-size: .82rem; }
+}
+@@media (max-width: 480px) {
+    .fg-doc-tab { font-size: .78rem; padding: 7px 12px; }
+    .fg-stage   { padding: 10px 42px; }
+    .fg-doc.is-active {height:auto;}
+}
+</style>
+}
+
+@section Scripts {
+<script src="/static/js/pdf.min.js"
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="/static/js/pdcustome.js"
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+}

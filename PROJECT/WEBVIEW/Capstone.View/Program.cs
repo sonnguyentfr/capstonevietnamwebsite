@@ -46,9 +46,25 @@ builder.Services.AddHttpClient("ApiClient", client =>
     client.BaseAddress = new Uri(builder.Configuration["ApiBaseUrl"] ?? "http://localhost/");
 });
 builder.Services.AddMemoryCache();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowWebsite", policy =>
+    {
+        policy.WithOrigins(
+                "https://localhost:7208",
+                "https://capstonevietnam.com",
+                "https://v3.capstonevietnam.com",
+                "https://www.v3.capstonevietnam.com",
+                "https://capstonevietnam-fileserver.nvcms.net")
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+
+
 
 var app = builder.Build();
-
+app.UseCors("AllowWebsite");
 // ── Response Compression — must be first ─────────────────────────────────────
 app.UseResponseCompression();
 
@@ -131,6 +147,10 @@ app.MapControllerRoute(name: "event-registration", pattern: "dang-ky-su-kien",
 app.MapControllerRoute(name: "gioi-thieu-ve-capstone", pattern: "gioi-thieu/ve-capstone", defaults: new { controller = "GioiThieu", action = "VeCapstone" });
 app.MapControllerRoute(name: "gioi-thieu", pattern: "gioi-thieu", defaults: new { controller = "GioiThieu", action = "Index" });
 app.MapControllerRoute(name: "quy-trinh-tu-van", pattern: "gioi-thieu/quy-trinh-tu-van", defaults: new { controller = "GioiThieu", action = "QuyTrinhTuVan" });
+
+// FairGuide
+app.MapControllerRoute(name: "fairguide-detail", pattern: "gioi-thieu/fairguide/{slug}-{id:int}", defaults: new { controller = "FairGuide", action = "Detail" });
+app.MapControllerRoute(name: "fairguide-index",  pattern: "gioi-thieu/fairguide",                 defaults: new { controller = "FairGuide", action = "Index" });
 // Sự kiện
 app.MapControllerRoute(name: "su-kien-past-paged", pattern: "su-kien/past-paged",     defaults: new { controller = "SuKien", action = "PastPaged" });
 app.MapControllerRoute(name: "su-kien-detail",     pattern: "su-kien/{slug}-{id:int}", defaults: new { controller = "SuKien", action = "Detail" });

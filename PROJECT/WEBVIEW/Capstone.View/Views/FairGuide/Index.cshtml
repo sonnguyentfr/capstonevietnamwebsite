@@ -1,0 +1,97 @@
+@using NVCMS.WebView.Data.ViewModels
+@model IEnumerable<FairGuideItemVM>
+
+@{
+    ViewData["Title"] = "FairGuide";
+}
+
+<section class="page-hero page-hero--fairguide">
+    <div class="container">
+        <nav class="breadcrumb" aria-label="breadcrumb">
+            <a href="/">Trang chủ</a>
+            <i class="fa-solid fa-chevron-right"></i>
+            <a href="/gioi-thieu">Giới thiệu</a>
+            <i class="fa-solid fa-chevron-right"></i>
+            <span>FairGuide</span>
+        </nav>
+        <h1 class="page-hero__title" data-aos="fade-up">FairGuide</h1>
+    </div>
+</section>
+
+<section class="fg-list-section">
+    <div class="container">
+        @if (!Model.Any())
+        {
+            <div class="no-data-section">
+                <i class="fa-regular fa-file-lines"></i>
+                <p>Chưa có tài liệu nào.</p>
+            </div>
+        }
+        else
+        {
+            <div class="fg-grid">
+                @foreach (var item in Model)
+                {
+                    var url = $"/gioi-thieu/fairguide/{item.Slug}-{item.Id}";
+                    <article class="fg-card" data-aos="fade-up">
+                        <a href="@url" class="fg-card__img-wrap">
+                            @if (!string.IsNullOrEmpty(item.Avatar))
+                            {
+                                <img src="@item.Avatar" alt="@item.Title" loading="lazy" />
+                            }
+                            else
+                            {
+                                <img src="/static/images/no-photo.png" alt="@item.Title" loading="lazy" />
+                            }
+                        </a>
+                        <div class="fg-card__body">
+                            <h2 class="fg-card__title"><a href="@url">@item.Title</a></h2>
+                        </div>
+                    </article>
+                }
+            </div>
+        }
+    </div>
+</section>
+
+@section Styles {
+    <style>
+        .page-hero--fairguide { padding: 40px 0 30px; background: #f7f8fa; }
+        .fg-list-section { padding: 40px 0 60px; }
+        .fg-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+            gap: 24px;
+        }
+        .fg-card {
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,.06);
+            background: #fff;
+            transition: box-shadow .2s;
+        }
+        .fg-card:hover { box-shadow: 0 6px 20px rgba(0,0,0,.12); }
+        .fg-card__img-wrap {
+            display: block;
+            aspect-ratio: 5/6;
+            overflow: hidden;
+        }
+        .fg-card__img-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform .3s;
+        }
+        .fg-card:hover .fg-card__img-wrap img { transform: scale(1.04); }
+        .fg-card__body { padding: 14px 16px 18px; }
+        .fg-card__title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin: 0;
+            line-height: 1.4;
+        }
+        .fg-card__title a { color: inherit; text-decoration: none; }
+        .fg-card__title a:hover { color: var(--color-primary, #d4232a); }
+    </style>
+}
