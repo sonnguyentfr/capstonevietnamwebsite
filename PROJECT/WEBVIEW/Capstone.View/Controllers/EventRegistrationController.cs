@@ -12,8 +12,11 @@ namespace Capstone.View.Controllers;
 
 public class EventRegistrationController : Controller
 {
+    private const int VietnamLocationId = 82;
+
     private readonly IEventRegistrationService _service;
     private readonly IEventsService            _events;
+    private readonly ILocationService          _locations;
     private readonly ISiteSettingsHelper       _siteSettings;
     private readonly IHttpClientFactory        _httpFactory;
     private readonly IOptions<SiteSettings>    _siteOptions;
@@ -22,6 +25,7 @@ public class EventRegistrationController : Controller
     public EventRegistrationController(
         IEventRegistrationService service,
         IEventsService            events,
+        ILocationService          locations,
         ISiteSettingsHelper       siteSettings,
         IHttpClientFactory        httpFactory,
         IOptions<SiteSettings>    siteOptions,
@@ -29,6 +33,7 @@ public class EventRegistrationController : Controller
     {
         _service      = service;
         _events       = events;
+        _locations    = locations;
         _siteSettings = siteSettings;
         _httpFactory  = httpFactory;
         _siteOptions  = siteOptions;
@@ -45,8 +50,7 @@ public class EventRegistrationController : Controller
 
         // Only allow registration during active window
         var now = DateTime.Now;
-        bool isOpen = (!cat.FromDate.HasValue || now >= cat.FromDate.Value.Date)
-                   && (!cat.EndDate.HasValue  || now <= cat.EndDate.Value);
+        bool isOpen = (!cat.EndDate.HasValue  || now <= cat.EndDate.Value);
         if (!isOpen)
         {
             ViewData["Title"] = "Đăng ký đã đóng";
@@ -58,11 +62,14 @@ public class EventRegistrationController : Controller
                          ?? cat.Events.FirstOrDefault()
                          ?? new EventsViewModel();
 
+        var provinces = await _locations.GetProvincesAsync(VietnamLocationId);
+
         var vm = new EventRegistrationPageViewModel
         {
             Cat               = cat,
             Event             = selectedEvent,
             PreselectedEventId = eventId,
+            Provinces         = provinces,
             Input = new EventRegistrationInputViewModel
             {
                 EventCatId = eventCatId,
@@ -71,6 +78,10 @@ public class EventRegistrationController : Controller
         };
 
         ViewData["Title"] = $"Đăng ký tham dự - {cat.CatName}";
+
+        var site = await _siteSettings.GetSettingsAsync(_siteOptions.Value.PortalId);
+        ViewBag.RecaptchaSiteKey = site.Google.CaptchaKey ?? string.Empty;
+
         return View(vm);
     }
 
@@ -82,15 +93,26 @@ public class EventRegistrationController : Controller
     {
         var portalId = _siteOptions.Value.PortalId;
 
+        // ── reCAPTCHA v3 verification ─────────────────────────────────────────
+        var recaptchaToken = Request.Form["g-recaptcha-response"].ToString();
+        if (!await VerifyRecaptchaAsync(recaptchaToken, portalId))
+        {
+            ModelState.AddModelError(string.Empty, "Xác thực reCAPTCHA thất bại. Vui lòng thử lại.");
+        }
+
         if (!ModelState.IsValid)
         {
             var cat = await _events.GetCatWithEventsAsync(input.EventCatId, portalId);
             var ev  = cat?.Events.FirstOrDefault(e => e.Id == input.EventId) ?? new EventsViewModel();
+            var site2 = await _siteSettings.GetSettingsAsync(portalId);
+            var provinces = await _locations.GetProvincesAsync(VietnamLocationId);
+            ViewBag.RecaptchaSiteKey = site2.Google.CaptchaKey ?? string.Empty;
             return View(new EventRegistrationPageViewModel
             {
                 Cat               = cat ?? new EventsCatViewModel(),
                 Event             = ev,
                 PreselectedEventId = input.EventId,
+                Provinces         = provinces,
                 Input             = input,
             });
         }
@@ -184,8 +206,8 @@ public class EventRegistrationController : Controller
                 studentCode,
                 studentName      = input.HoVaTen.Trim(),
                 studentPhone     = PhoneHelper.Normalize(input.SoDienThoai),
-                studentEmail     = input.Email     ?? string.Empty,
-                studentAddress   = input.DiaChi    ?? string.Empty,
+                studentEmail     = input.Email        ?? string.Empty,
+                studentAddress   = input.TinhThanh    ?? string.Empty,
                 eventCatId       = input.EventCatId,
                 eventId          = input.EventId,
                 eventName        = cat.CatName ?? string.Empty,
@@ -217,6 +239,36 @@ public class EventRegistrationController : Controller
             _logger.LogError(ex,
                 "EnqueueEmailFailure: StudentId={StudentId} EventCatId={EventCatId}",
                 studentId, input.EventCatId);
+        }
+    }
+
+    // ── reCAPTCHA v3 verification ─────────────────────────────────────────────
+
+    private async Task<bool> VerifyRecaptchaAsync(string token, int portalId)
+    {
+        if (string.IsNullOrWhiteSpace(token)) return false;
+        try
+        {
+            var site   = await _siteSettings.GetSettingsAsync(portalId);
+            var secret = site.Google.CaptchaSecret;
+            if (string.IsNullOrWhiteSpace(secret)) return true; // not configured → skip
+
+            var client   = _httpFactory.CreateClient();
+            var response = await client.PostAsync(
+                $"https://www.google.com/recaptcha/api/siteverify?secret={Uri.EscapeDataString(secret)}&response={Uri.EscapeDataString(token)}",
+                null);
+            if (!response.IsSuccessStatusCode) return false;
+
+            var json = await response.Content.ReadAsStringAsync();
+            using var doc = System.Text.Json.JsonDocument.Parse(json);
+            var success = doc.RootElement.TryGetProperty("success", out var s) && s.GetBoolean();
+            var score   = doc.RootElement.TryGetProperty("score",   out var sc) ? sc.GetDouble() : 0.5;
+            return success && score >= 0.5;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "RecaptchaVerifyError");
+            return true; // fail-open to avoid blocking legit users on API errors
         }
     }
 }

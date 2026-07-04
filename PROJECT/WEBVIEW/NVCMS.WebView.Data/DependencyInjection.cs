@@ -1,13 +1,15 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using NVCMS.WebView.Data.Common;
 using NVCMS.WebView.Data.Contracts.Repository;
 using NVCMS.WebView.Data.Contracts.Service;
+using NVCMS.WebView.Data.Data;
+using NVCMS.WebView.Data.Models;
 using NVCMS.WebView.Data.Repository;
 using NVCMS.WebView.Data.Service;
 using NVCMS.WebView.Data.SiteSettings;
 using NVCMS.WebView.Data.ViewModels;
-using Microsoft.Extensions.Caching.Memory;
-using NVCMS.WebView.Data.Models;
 
 namespace NVCMS.WebView.Data;
 
@@ -88,6 +90,14 @@ public static class DependencyInjection
         services.AddMemoryCache();
         services.AddSingleton<ISiteSettingsHelper>(sp =>
             new SiteSettingsHelper(connectionString, sp.GetRequiredService<IMemoryCache>()));
+
+        // Location (Cap_Location table via CRMConnection + EF Core + MemoryCache)
+        services.AddDbContextFactory<LocationDbContext>(opts =>
+            opts.UseSqlServer(crmConnectionString));
+        services.AddScoped<ILocationService>(sp =>
+            new LocationService(
+                sp.GetRequiredService<IDbContextFactory<LocationDbContext>>(),
+                sp.GetRequiredService<IMemoryCache>()));
 
         return services;
     }

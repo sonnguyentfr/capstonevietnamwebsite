@@ -8,8 +8,7 @@
     var hasCatSchools = Model.Schools != null && Model.Schools.Any();
     var hasCatOrgs = Model.Orgs != null && Model.Orgs.Any();
     // Registration open: today >= FromDate AND today <= EndDate
-    var isRegOpen = (!Model.FromDate.HasValue || now >= Model.FromDate.Value.Date)
-                     && (!Model.EndDate.HasValue || now <= Model.EndDate.Value);
+    var isRegOpen = (!Model.EndDate.HasValue || now <= Model.EndDate.Value);
 }
 
 @* ===== HERO ===== *@

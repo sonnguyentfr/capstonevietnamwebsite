@@ -3,274 +3,728 @@
 
 @{
     ViewData["Title"] = $"Đăng ký tham dự - {Model.Cat.CatName}";
+    var recaptchaKey = (ViewBag.RecaptchaSiteKey as string) ?? string.Empty;
+}
+
+@section Styles {
+    <link rel="stylesheet" href="/static/css/event-registration.css">
 }
 
 @* ===== HERO ===== *@
-<section class="page-hero bg-primary-950">
-    <div class="container">
-        <div class="breadcrumb" data-aos="fade-up">
+<section class="er-hero">
+    <div class="er-hero__overlay"></div>
+    <div class="er-hero__pattern"></div>
+    <div class="container er-hero__inner">
+        <div class="breadcrumb er-hero__breadcrumb" data-aos="fade-up">
             <a href="/">Trang chủ</a>
             <i class="fa-solid fa-chevron-right"></i>
-            <a href="/su-kien">Sự kiện</a>
-            <i class="fa-solid fa-chevron-right"></i>
-            <a href="/su-kien/@NVCMS.WebView.Data.Common.SlugHelper.ToSlug(Model.Cat.CatName)-@Model.Cat.Id">@Model.Cat.CatName</a>
-            <i class="fa-solid fa-chevron-right"></i>
-            <span>Đăng ký tham dự</span>
+            <span>@Model.Cat.CatName</span>
         </div>
-        <h1 class="page-hero-title" data-aos="fade-up" data-aos-delay="100">Đăng ký tham dự</h1>
-        <p class="page-hero-desc" data-aos="fade-up" data-aos-delay="150">@Model.Cat.CatName</p>
+        <div class="er-hero__body" data-aos="fade-up" data-aos-delay="80">
+            <div class="er-hero__badge">
+                <i class="fa-solid fa-pen-to-square"></i>
+                <span>Đăng ký tham dự</span>
+            </div>
+            <h1 class="er-hero__title">@Model.Cat.CatName</h1>
+            @if (Model.Cat.FromDate.HasValue || Model.Cat.EndDate.HasValue)
+            {
+                <div class="er-hero__dates">
+                    <i class="fa-regular fa-calendar"></i>
+                    @if (Model.Cat.FromDate.HasValue)
+                    { <span>@Model.Cat.FromDate.Value.ToString("dd/MM/yyyy")</span> }
+                    @if (Model.Cat.FromDate.HasValue && Model.Cat.EndDate.HasValue)
+                    { <text>–</text> }
+                    @if (Model.Cat.EndDate.HasValue)
+                    { <span>@Model.Cat.EndDate.Value.ToString("dd/MM/yyyy")</span> }
+                </div>
+            }
+        </div>
     </div>
 </section>
 
-@* ===== FORM ===== *@
-<section class="event-reg-section section-large">
+@* ===== MAIN ===== *@
+<section class="er-section section-large">
     <div class="container">
-        <div class="event-reg-layout">
+        <div class="er-layout">
 
-            @* ── FORM COL ── *@
-            <div class="event-reg-main" data-aos="fade-up">
+            @* ── FORM COLUMN ── *@
+            <div class="er-main" data-aos="fade-up">
 
-                @if (TempData["RegWarning"] is string warn)
+                @if (TempData["RegWarning"] is string regWarn)
                 {
-                    <div class="alert alert-warning mb-6">
-                        <i class="fa-solid fa-circle-exclamation"></i> @warn
+                    <div class="er-alert er-alert--warning">
+                        <i class="fa-solid fa-triangle-exclamation"></i> @regWarn
                     </div>
                 }
-                @if (TempData["RegError"] is string err)
+                @if (TempData["RegError"] is string regErr)
                 {
-                    <div class="alert alert-danger mb-6">
-                        <i class="fa-solid fa-xmark-circle"></i> @err
+                    <div class="er-alert er-alert--danger">
+                        <i class="fa-solid fa-circle-xmark"></i> @regErr
                     </div>
                 }
 
                 <form asp-controller="EventRegistration" asp-action="Index"
-                      method="post" id="event-reg-form" novalidate>
+                      method="post" id="er-form" novalidate autocomplete="off">
                     @Html.AntiForgeryToken()
-
                     <input type="hidden" asp-for="Input.EventCatId" />
 
-                    @* ── Location picker ── *@
-                    <div class="form-group mb-5">
-                        <label class="form-label">
-                            <i class="fa-solid fa-location-dot"></i> Địa điểm tham dự
-                            <span class="text-danger">*</span>
-                        </label>
-                        <select asp-for="Input.EventId" class="form-control" id="event-location-select">
-                            @foreach (var ev in Model.Cat.Events)
-                            {
-                                var label = ev.Diadiem ?? ev.Title;
-                                if (ev.Fromdatetime.HasValue)
-                                    label += $" – {ev.Fromdatetime.Value:dd/MM/yyyy HH:mm}";
-                                <option value="@ev.Id" selected="@(ev.Id == Model.PreselectedEventId || (Model.PreselectedEventId == 0 && ev.Id == Model.Cat.Events.First().Id) ? "selected" : null)">
-                                    @label
-                                </option>
-                            }
-                        </select>
+                    @* Validation summary — shown by JS *@
+                    <div id="er-val-summary" class="er-alert er-alert--danger" style="display:none" role="alert">
+                        <i class="fa-solid fa-circle-xmark"></i>
+                        <div id="er-val-summary-body"></div>
                     </div>
 
-                    @* ── Student info ── *@
-                    <div id="student-fields">
-                        <div class="form-row grid grid-cols-1 gap-4 mb-4" id="student-info-notice" style="display:none;">
-                            <div class="alert alert-info">
-                                <i class="fa-solid fa-circle-check"></i>
-                                Chúng tôi đã tìm thấy thông tin của bạn. Vui lòng kiểm tra lại.
+                    @* ─────────────────────────────────────
+                       BLOCK 1 - Thong tin su kien
+                    ───────────────────────────────────── *@
+                    <div class="er-card">
+                        <div class="er-card-head">
+                            <span class="er-card-icon"><i class="fa-solid fa-calendar-star"></i></span>
+                            <h2 class="er-card-title">Thông tin sự kiện</h2>
+                        </div>
+
+                        <div class="er-field">
+                            <label class="er-label" for="event-location-select">
+                                Bạn sẽ tham dự tại / Join our event at
+                                <span class="er-required">*</span>
+                            </label>
+                            <div class="er-select-wrap">
+                                <select name="Input.EventId" id="event-location-select"
+                                        class="er-control er-select"
+                                        required data-label="Địa điểm tham dự">
+                                    @if (!Model.Cat.Events.Any())
+                                    {
+                                        <option value="">-- Chưa có địa điểm --</option>
+                                    }
+                                    @foreach (var ev in Model.Cat.Events)
+                                    {
+                                        var evLabel = ev.Diadiem ?? ev.Title ?? string.Empty;
+                                        if (ev.Fromdatetime.HasValue)
+                                            evLabel += $" – {ev.Fromdatetime.Value:dd/MM/yyyy HH:mm}";
+                                        var isSelected = (Model.PreselectedEventId > 0)
+                                            ? (ev.Id == Model.PreselectedEventId)
+                                            : (ev.Id == Model.Cat.Events.First().Id);
+                                        if (isSelected)
+                                        {
+                                            <option value="@ev.Id" selected>@evLabel</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@ev.Id">@evLabel</option>
+                                        }
+                                    }
+                                </select>
+                                <i class="fa-solid fa-chevron-down er-select-arrow"></i>
+                            </div>
+                            <span id="er-err-eventid" class="er-error" style="display:none"></span>
+                        </div>
+
+                        <div class="er-field">
+                            <label class="er-label">Bạn là / You are <span class="er-required">*</span></label>
+                            <div class="er-radio-group" id="banla-group" data-label="Bạn là">
+                                <label class="er-radio-item">
+                                    <input type="radio" asp-for="Input.BanLa" value="Học sinh / Student"
+                                           class="er-val-radio" data-group="BanLa" />
+                                    <span class="er-radio-box"></span>
+                                    <span class="er-radio-label">
+                                        <i class="fa-solid fa-graduation-cap"></i> Học sinh / Student
+                                    </span>
+                                </label>
+                                <label class="er-radio-item">
+                                    <input type="radio" asp-for="Input.BanLa" value="Phụ huynh / Parent"
+                                           class="er-val-radio" data-group="BanLa" />
+                                    <span class="er-radio-box"></span>
+                                    <span class="er-radio-label">
+                                        <i class="fa-solid fa-people-roof"></i> Phụ huynh / Parent
+                                    </span>
+                                </label>
+                            </div>
+                            <span id="er-err-banla" class="er-error" style="display:none"></span>
+                        </div>
+                    </div>
+
+                    @* ─────────────────────────────────────
+                       BLOCK 2 - Thong tin nguoi di hoc
+                    ───────────────────────────────────── *@
+                    <div class="er-card" id="student-fields">
+                        <div class="er-card-head">
+                            <span class="er-card-icon"><i class="fa-solid fa-user-graduate"></i></span>
+                            <h2 class="er-card-title">Thông tin người đi học / Student information</h2>
+                        </div>
+
+                        <div id="found-notice" class="er-found-notice" style="display:none">
+                            <i class="fa-solid fa-circle-check"></i>
+                            Chúng tôi đã tìm thấy thông tin của bạn. Vui lòng kiểm tra lại trước khi gửi.
+                        </div>
+
+                        <div class="er-field">
+                            <label class="er-label" for="inp-email">Email</label>
+                            <input asp-for="Input.Email" id="inp-email" type="email"
+                                   class="er-control" placeholder="Địa chỉ email"
+                                   autocomplete="email"
+                                   data-label="Email" />
+                            <p class="er-hint">
+                                <i class="fa-regular fa-circle-info"></i>
+                                Bạn vui lòng cung cấp email đang sử dụng thường xuyên để tránh bỏ lỡ thông tin.
+                            </p>
+                            <span asp-validation-for="Input.Email" class="er-error" id="er-err-email"></span>
+                        </div>
+
+                        <div class="er-field">
+                            <label class="er-label" for="inp-phone">
+                                Điện thoại / Mobile number <span class="er-required">*</span>
+                            </label>
+                            <input asp-for="Input.SoDienThoai" id="inp-phone" type="tel"
+                                   class="er-control" placeholder="Điện thoại / Mobile number"
+                                   autocomplete="tel"
+                                   required data-label="Số điện thoại" />
+                            <p class="er-hint">
+                                <i class="fa-regular fa-circle-info"></i>
+                                Lịch sự kiện sẽ gửi thông qua điện thoại, bạn hãy điền đúng để chúng tôi giúp bạn nhớ lịch nhé!
+                            </p>
+                            <span asp-validation-for="Input.SoDienThoai" class="er-error" id="er-err-phone"></span>
+                        </div>
+
+                        <div class="er-row-2">
+                            <div class="er-field">
+                                <label class="er-label" for="inp-hotendem">
+                                    Họ và đệm / Family and Middle name <span class="er-required">*</span>
+                                </label>
+                                <input asp-for="Input.Hotendem" id="inp-hotendem" type="text"
+                                       class="er-control" placeholder="Họ và đệm (Family and Middle name)"
+                                       autocomplete="family-name"
+                                       required data-label="Họ và đệm" />
+                                <span asp-validation-for="Input.Hotendem" class="er-error" id="er-err-hotendem"></span>
+                            </div>
+                            <div class="er-field">
+                                <label class="er-label" for="inp-ten">
+                                    Tên / First name <span class="er-required">*</span>
+                                </label>
+                                <input asp-for="Input.Ten" id="inp-ten" type="text"
+                                       class="er-control" placeholder="Tên (First name)"
+                                       autocomplete="given-name"
+                                       required data-label="Tên" />
+                                <span asp-validation-for="Input.Ten" class="er-error" id="er-err-ten"></span>
                             </div>
                         </div>
 
-                        <div class="form-group mb-4">
-                            <label class="form-label">
-                                <i class="fa-solid fa-phone"></i> Số điện thoại
-                                <span class="text-danger">*</span>
-                            </label>
-                            <input asp-for="Input.SoDienThoai"
-                                   id="inp-phone"
-                                   class="form-control"
-                                   placeholder="Ví dụ: 0912345678"
-                                   autocomplete="tel" />
-                            <span asp-validation-for="Input.SoDienThoai" class="field-validation-error"></span>
+                        <div class="er-field">
+                            <label class="er-label">Giới tính / Gender</label>
+                            <div class="er-radio-group">
+                                <label class="er-radio-item">
+                                    <input type="radio" asp-for="Input.GioiTinh" value="Nam" />
+                                    <span class="er-radio-box"></span>
+                                    <span class="er-radio-label"><i class="fa-solid fa-mars"></i> Nam / Male</span>
+                                </label>
+                                <label class="er-radio-item">
+                                    <input type="radio" asp-for="Input.GioiTinh" value="Nữ" />
+                                    <span class="er-radio-box"></span>
+                                    <span class="er-radio-label"><i class="fa-solid fa-venus"></i> Nữ / Female</span>
+                                </label>
+                                <label class="er-radio-item">
+                                    <input type="radio" asp-for="Input.GioiTinh" value="Khác" />
+                                    <span class="er-radio-box"></span>
+                                    <span class="er-radio-label">Khác / Other</span>
+                                </label>
+                            </div>
                         </div>
 
-                        <div class="form-group mb-4">
-                            <label class="form-label">
-                                <i class="fa-solid fa-envelope"></i> Email
-                            </label>
-                            <input asp-for="Input.Email"
-                                   id="inp-email"
-                                   class="form-control"
-                                   placeholder="email@example.com"
-                                   autocomplete="email" />
-                            <span asp-validation-for="Input.Email" class="field-validation-error"></span>
+                        <div class="er-field">
+                            <label class="er-label">Ngày sinh / Date of birth</label>
+                            <div class="er-dob-row">
+                                <div class="er-select-wrap">
+                                    <select asp-for="Input.NgaySinhNgay" class="er-control er-select" id="dob-day">
+                                        <option value="">ngày</option>
+                                        @for (int dobD = 1; dobD <= 31; dobD++)
+                                        {
+                                            <option value="@dobD">@dobD</option>
+                                        }
+                                    </select>
+                                    <i class="fa-solid fa-chevron-down er-select-arrow"></i>
+                                </div>
+                                <div class="er-select-wrap">
+                                    <select asp-for="Input.NgaySinhThang" class="er-control er-select" id="dob-month">
+                                        <option value="">tháng</option>
+                                        @for (int dobM = 1; dobM <= 12; dobM++)
+                                        {
+                                            <option value="@dobM">Tháng @dobM</option>
+                                        }
+                                    </select>
+                                    <i class="fa-solid fa-chevron-down er-select-arrow"></i>
+                                </div>
+                                <div class="er-select-wrap">
+                                    <select asp-for="Input.NgaySinhNam" class="er-control er-select" id="dob-year">
+                                        <option value="">năm</option>
+                                        @for (int dobY = DateTime.Now.Year - 3; dobY >= 1960; dobY--)
+                                        {
+                                            <option value="@dobY">@dobY</option>
+                                        }
+                                    </select>
+                                    <i class="fa-solid fa-chevron-down er-select-arrow"></i>
+                                </div>
+                            </div>
                         </div>
 
-                        <div class="form-group mb-4">
-                            <label class="form-label">
-                                <i class="fa-solid fa-user"></i> Họ và tên
-                                <span class="text-danger">*</span>
-                            </label>
-                            <input asp-for="Input.HoVaTen"
-                                   id="inp-name"
-                                   class="form-control"
-                                   placeholder="Nguyễn Văn A"
-                                   autocomplete="name" />
-                            <span asp-validation-for="Input.HoVaTen" class="field-validation-error"></span>
-                        </div>
-
-                        <div class="form-group mb-5">
-                            <label class="form-label">
-                                <i class="fa-solid fa-house"></i> Địa chỉ
-                            </label>
-                            <input asp-for="Input.DiaChi"
-                                   id="inp-address"
-                                   class="form-control"
-                                   placeholder="Số nhà, đường, quận/huyện, tỉnh/thành" />
+                        <div class="er-field">
+                            <label class="er-label" for="inp-tinh">Tỉnh / Province</label>
+                            @* Hidden real input bound to model *@
+                            <input asp-for="Input.TinhThanh" id="inp-tinh" type="hidden" />
+                            @* Searchable province picker *@
+                            <div class="er-province-picker" id="province-picker">
+                                <div class="er-province-display" id="province-display" tabindex="0"
+                                     aria-haspopup="listbox" aria-expanded="false" role="combobox"
+                                     aria-controls="province-listbox" aria-label="Tỉnh / Province">
+                                    <span id="province-display-text" class="er-province-display-text">-- Chọn tỉnh/thành --</span>
+                                    <i class="fa-solid fa-chevron-down er-province-arrow" id="province-arrow"></i>
+                                </div>
+                                <div class="er-province-dropdown" id="province-dropdown" role="listbox" id="province-listbox" style="display:none">
+                                    <div class="er-province-search-wrap">
+                                        <i class="fa-solid fa-magnifying-glass"></i>
+                                        <input type="text" id="province-search" class="er-province-search"
+                                               placeholder="Tìm tỉnh/thành..." autocomplete="off" />
+                                    </div>
+                                    <ul class="er-province-list" id="province-list">
+                                        <li class="er-province-opt" data-value="" role="option">-- Chọn tỉnh/thành --</li>
+                                        @foreach (var tinh in Model.Provinces)
+                                        {
+                                            <li class="er-province-opt" data-value="@tinh.Name" role="option">@tinh.Name</li>
+                                        }
+                                    </ul>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="form-group mb-6">
-                        <label class="form-check-label">
-                            <input asp-for="Input.DongYDieuKhoan" type="checkbox" class="form-check-input" />
-                            Tôi đồng ý với các <a href="#" target="_blank">điều khoản bảo mật</a>
-                            của Capstone Vietnam. <span class="text-danger">*</span>
+                    @* ─────────────────────────────────────
+                       BLOCK 3 - Thong tin can tu van
+                    ───────────────────────────────────── *@
+                    <div class="er-card">
+                        <div class="er-card-head">
+                            <span class="er-card-icon"><i class="fa-solid fa-comments-question"></i></span>
+                            <h2 class="er-card-title">Thông tin cần tư vấn</h2>
+                        </div>
+
+                        <div class="er-field">
+                            <label class="er-label" for="inp-tuvan">Tư vấn</label>
+                            <textarea asp-for="Input.TuVan" id="inp-tuvan" rows="3"
+                                      class="er-control er-textarea"
+                                      placeholder="Nội dung bạn muốn được tư vấn..."></textarea>
+                        </div>
+
+                        <div class="er-field">
+                            <label class="er-checkbox-item">
+                                <input asp-for="Input.QuanTamDinhCuMy" type="checkbox" class="er-checkbox" />
+                                <span class="er-checkbox-box"><i class="fa-solid fa-check"></i></span>
+                                <span class="er-checkbox-label">
+                                    Bạn có quan tâm <strong>Định cư Mỹ</strong>?
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+
+                    @* ─────────────────────────────────────
+                       Terms + Submit
+                    ───────────────────────────────────── *@
+                    <div class="er-card er-card--terms">
+                        <label class="er-checkbox-item">
+                            <input asp-for="Input.DongYDieuKhoan" id="inp-terms" type="checkbox" class="er-checkbox"
+                                   data-label="Điều khoản bảo mật" />
+                            <span class="er-checkbox-box"><i class="fa-solid fa-check"></i></span>
+                            <span class="er-checkbox-label">
+                                Tôi đồng ý với các <a href="#" target="_blank" class="er-link">điều khoản bảo mật</a>
+                                của Capstone Vietnam. <span class="er-required">*</span>
+                            </span>
                         </label>
-                        <span asp-validation-for="Input.DongYDieuKhoan" class="field-validation-error d-block mt-1"></span>
-                    </div>
+                        <span asp-validation-for="Input.DongYDieuKhoan" class="er-error d-block mt-1" id="er-err-terms"></span>
 
-                    <div class="frm-btn">
-                        <button type="submit" class="btn-solid">
-                            <span>Đăng ký ngay</span>
-                            <i class="fa-solid fa-arrow-right"></i>
+                        @if (!string.IsNullOrEmpty(recaptchaKey))
+                        {
+                            <div class="er-recaptcha-note">
+                                <i class="fa-brands fa-google"></i>
+                                Trang này được bảo vệ bởi reCAPTCHA
+                            </div>
+                        }
+
+                        <button type="submit" class="er-submit-btn" id="er-submit">
+                            <span class="er-submit-text">Đăng ký ngay</span>
+                            <span class="er-submit-spinner" aria-hidden="true"></span>
+                            <i class="fa-solid fa-arrow-right er-submit-icon"></i>
                         </button>
                     </div>
+
                 </form>
             </div>
 
             @* ── SIDEBAR ── *@
-            <aside class="event-reg-sidebar" data-aos="fade-left">
-                <div class="sidebar-box">
-                    <h3 class="sidebar-box-title">
-                        <i class="fa-solid fa-calendar-days"></i> Thông tin sự kiện
-                    </h3>
-                    <ul class="sidebar-meta-list mt-4">
-                        @if (Model.Cat.FromDate.HasValue)
-                        {
-                            <li>
-                                <span class="meta-label">Từ ngày</span>
-                                <span class="meta-value">@Model.Cat.FromDate.Value.ToString("dd/MM/yyyy")</span>
-                            </li>
-                        }
-                        @if (Model.Cat.EndDate.HasValue)
-                        {
-                            <li>
-                                <span class="meta-label">Đến ngày</span>
-                                <span class="meta-value">@Model.Cat.EndDate.Value.ToString("dd/MM/yyyy")</span>
-                            </li>
-                        }
-                    </ul>
-                </div>
+            <aside class="er-sidebar" data-aos="fade-left">
 
-                @* Selected location preview *@
-                <div class="sidebar-box mt-4" id="sidebar-location-info">
-                    <h3 class="sidebar-box-title">
-                        <i class="fa-solid fa-location-dot"></i> Địa điểm đã chọn
-                    </h3>
-                    <p id="sidebar-location-name" class="mt-2 font-semibold">
-                        @(Model.Event.Diadiem ?? Model.Event.Title)
-                    </p>
-                    @if (Model.Event.Fromdatetime.HasValue)
+                <div class="er-sidebar-box er-sidebar-box--primary">
+                    <div class="er-sidebar-box-head">
+                        <i class="fa-solid fa-calendar-days"></i>
+                        <h3>Thông tin sự kiện</h3>
+                    </div>
+                    <p class="er-sidebar-event-name">@Model.Cat.CatName</p>
+                    @if (Model.Cat.FromDate.HasValue || Model.Cat.EndDate.HasValue)
                     {
-                        <p id="sidebar-location-time" class="text-sm text-gray-500 mt-1">
-                            <i class="fa-solid fa-clock"></i>
-                            @Model.Event.Fromdatetime.Value.ToString("HH:mm, dd/MM/yyyy")
-                        </p>
+                        <ul class="er-sidebar-meta">
+                            @if (Model.Cat.FromDate.HasValue)
+                            {
+                                <li>
+                                    <i class="fa-regular fa-calendar"></i>
+                                    <span>Từ @Model.Cat.FromDate.Value.ToString("dd/MM/yyyy")</span>
+                                </li>
+                            }
+                            @if (Model.Cat.EndDate.HasValue)
+                            {
+                                <li>
+                                    <i class="fa-regular fa-calendar-check"></i>
+                                    <span>Đến @Model.Cat.EndDate.Value.ToString("dd/MM/yyyy")</span>
+                                </li>
+                            }
+                        </ul>
                     }
                 </div>
 
-                <div class="sidebar-box mt-4">
-                    <a class="btn-outline w-full"
-                           href="/su-kien/@NVCMS.WebView.Data.Common.SlugHelper.ToSlug(Model.Cat.CatName)-@Model.Cat.Id">
-                        <i class="fa-solid fa-arrow-left"></i>
-                        <span>Quay lại sự kiện</span>
-                    </a>
+                <div class="er-sidebar-box er-sidebar-tips">
+                    <div class="er-sidebar-box-head">
+                        <i class="fa-solid fa-lightbulb"></i>
+                        <h3>Lưu ý</h3>
+                    </div>
+                    <ul class="er-tips-list">
+                        <li><i class="fa-solid fa-check"></i> Đăng ký miễn phí, không mất phí tham dự.</li>
+                        <li><i class="fa-solid fa-check"></i> Mang theo CCCD hoặc thẻ học sinh khi đến.</li>
+                        <li><i class="fa-solid fa-check"></i> Thông tin xác nhận sẽ được gửi qua email.</li>
+                    </ul>
                 </div>
-            </aside>
 
+                <a class="er-back-link"
+                   href="/su-kien/@NVCMS.WebView.Data.Common.SlugHelper.ToSlug(Model.Cat.CatName)-@Model.Cat.Id">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    <span>Quay lại sự kiện</span>
+                </a>
+
+            </aside>
         </div>
     </div>
 </section>
 
 @section Scripts {
+    @if (!string.IsNullOrEmpty(recaptchaKey))
+    {
+        <script src="https://www.google.com/recaptcha/api.js?render=@recaptchaKey"></script>
+    }
     <script>
-        (function () {
-            // ── Location picker → update sidebar ─────────────────────────────────────
-            var locationData = {
-                @foreach (var ev in Model.Cat.Events)
-                {
-                        var diadiem = (ev.Diadiem ?? ev.Title ?? "").Replace("'", "\\'");
-                        var time = ev.Fromdatetime.HasValue
-                                ? ev.Fromdatetime.Value.ToString("HH:mm, dd/MM/yyyy")
-                                : "";
-                        @:@ev.Id: { name: '@diadiem', time: '@time' },
-                }
-            };
+    (function () {
+        // ── Student autofill ──────────────────────────────────────────────────
+        var phoneInp    = document.getElementById('inp-phone');
+        var emailInp    = document.getElementById('inp-email');
+        var hotendemInp = document.getElementById('inp-hotendem');
+        var tenInp      = document.getElementById('inp-ten');
+        var foundNotice = document.getElementById('found-notice');
+        var lookupTimer = null;
+        var autoFilled  = false;
 
-            var sel   = document.getElementById('event-location-select');
-            var lname = document.getElementById('sidebar-location-name');
-            var ltime = document.getElementById('sidebar-location-time');
-
-            function updateSidebar() {
-                var d = locationData[sel.value];
-                if (!d) return;
-                if (lname) lname.textContent = d.name;
-                if (ltime) ltime.textContent = d.time ? '🕐 ' + d.time : '';
-            }
-            if (sel) sel.addEventListener('change', updateSidebar);
-
-            // ── Real-time student lookup ──────────────────────────────────────────────
-            var phoneInp   = document.getElementById('inp-phone');
-            var emailInp   = document.getElementById('inp-email');
-            var nameInp    = document.getElementById('inp-name');
-            var addrInp    = document.getElementById('inp-address');
-            var noticeRow  = document.getElementById('student-info-notice');
-            var lockedFields = [nameInp, addrInp];
-            var lookupTimer = null;
-
-            function lockFields(lock) {
-                lockedFields.forEach(function (f) {
-                    if (!f) return;
-                    f.readOnly = lock;
-                    f.style.background = lock ? '#f9f9f9' : '';
-                });
-                if (noticeRow) noticeRow.style.display = lock ? '' : 'none';
-            }
-
-            function doLookup() {
-                var phone = (phoneInp ? phoneInp.value : '').trim();
-                var email = (emailInp ? emailInp.value : '').trim();
-                if (!phone && !email) return;
-
-                fetch('/EventRegistration/CheckStudent?phone=' + encodeURIComponent(phone) +
-                      '&email=' + encodeURIComponent(email))
-                    .then(function (r) { return r.json(); })
-                    .then(function (d) {
-                        if (!d.found) { lockFields(false); return; }
-                        if (nameInp)  nameInp.value  = d.fullName  || '';
-                        if (addrInp)  addrInp.value  = d.diaChi    || '';
-                        if (phoneInp && !phoneInp.value) phoneInp.value = d.phone || '';
-                        if (emailInp && !emailInp.value) emailInp.value = d.email || '';
-                        lockFields(true);
-                    })
-                    .catch(function () { /* silent */ });
-            }
-
-            function scheduleLookup() {
-                clearTimeout(lookupTimer);
-                lookupTimer = setTimeout(doLookup, 600);
-            }
-
-            [phoneInp, emailInp].forEach(function (el) {
-                if (el) el.addEventListener('blur', doLookup);
-                if (el) el.addEventListener('input', scheduleLookup);
+        function setProvince(val) {
+            var hiddenInp = document.getElementById('inp-tinh');
+            var displayTxt = document.getElementById('province-display-text');
+            if (hiddenInp) hiddenInp.value = val;
+            if (displayTxt) displayTxt.textContent = val || '-- Chọn tỉnh/thành --';
+            // sync highlight in list
+            document.querySelectorAll('.er-province-opt').forEach(function (li) {
+                li.classList.toggle('er-province-opt--selected', li.getAttribute('data-value') === val);
             });
+        }
+
+        function autofillFromResult(d) {
+            if (!d.found) {
+                if (autoFilled) {
+                    autoFilled = false;
+                    [hotendemInp, tenInp].forEach(function (f) {
+                        if (!f) return;
+                        f.readOnly = false;
+                        f.classList.remove('er-control--autofill');
+                    });
+                    if (foundNotice) foundNotice.style.display = 'none';
+                }
+                return;
+            }
+            autoFilled = true;
+            if (hotendemInp && !hotendemInp.value) hotendemInp.value = d.hotendem || '';
+            if (tenInp      && !tenInp.value)      tenInp.value      = d.ten      || '';
+            if (emailInp    && !emailInp.value)    emailInp.value    = d.email    || '';
+            var hiddenTinh = document.getElementById('inp-tinh');
+            if (hiddenTinh && !hiddenTinh.value && d.diaChi) setProvince(d.diaChi);
+            [hotendemInp, tenInp].forEach(function (f) {
+                if (!f) return;
+                f.readOnly = true;
+                f.classList.add('er-control--autofill');
+            });
+            if (foundNotice) foundNotice.style.display = '';
+        }
+
+        function doLookup() {
+            var phone = (phoneInp ? phoneInp.value : '').trim();
+            var email = (emailInp ? emailInp.value : '').trim();
+            if (!phone && !email) return;
+            fetch('/EventRegistration/CheckStudent?phone=' + encodeURIComponent(phone) +
+                  '&email=' + encodeURIComponent(email))
+                .then(function (r) { return r.json(); })
+                .then(autofillFromResult)
+                .catch(function () {});
+        }
+
+        function schedule() { clearTimeout(lookupTimer); lookupTimer = setTimeout(doLookup, 700); }
+        [phoneInp, emailInp].forEach(function (el) {
+            if (!el) return;
+            el.addEventListener('blur', doLookup);
+            el.addEventListener('input', schedule);
+        });
+
+        // ── Province searchable picker ────────────────────────────────────────
+        (function () {
+            var picker    = document.getElementById('province-picker');
+            var display   = document.getElementById('province-display');
+            var displayTx = document.getElementById('province-display-text');
+            var dropdown  = document.getElementById('province-dropdown');
+            var arrow     = document.getElementById('province-arrow');
+            var searchInp = document.getElementById('province-search');
+            var list      = document.getElementById('province-list');
+            var hiddenInp = document.getElementById('inp-tinh');
+            if (!picker) return;
+
+            function openDropdown() {
+                dropdown.style.display = '';
+                display.setAttribute('aria-expanded', 'true');
+                arrow.style.transform = 'rotate(180deg)';
+                searchInp.value = '';
+                filterList('');
+                searchInp.focus();
+            }
+
+            function closeDropdown() {
+                dropdown.style.display = 'none';
+                display.setAttribute('aria-expanded', 'false');
+                arrow.style.transform = '';
+            }
+
+            function filterList(q) {
+                var lq = q.toLowerCase();
+                list.querySelectorAll('.er-province-opt').forEach(function (li) {
+                    var v = (li.textContent || '').toLowerCase();
+                    li.style.display = (!q || v.indexOf(lq) !== -1) ? '' : 'none';
+                });
+            }
+
+            display.addEventListener('click', function () {
+                dropdown.style.display === 'none' ? openDropdown() : closeDropdown();
+            });
+            display.addEventListener('keydown', function (e) {
+                if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openDropdown(); }
+                if (e.key === 'Escape') closeDropdown();
+            });
+            searchInp.addEventListener('input', function () { filterList(this.value); });
+            searchInp.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeDropdown(); });
+
+            list.addEventListener('click', function (e) {
+                var li = e.target.closest('.er-province-opt');
+                if (!li || li.style.display === 'none') return;
+                var val = li.getAttribute('data-value') || '';
+                hiddenInp.value     = val;
+                displayTx.textContent = val || '-- Chọn tỉnh/thành --';
+                list.querySelectorAll('.er-province-opt').forEach(function (opt) {
+                    opt.classList.toggle('er-province-opt--selected', opt === li);
+                });
+                closeDropdown();
+                display.focus();
+            });
+
+            document.addEventListener('click', function (e) {
+                if (!picker.contains(e.target)) closeDropdown();
+            });
+
+            // Pre-select if model has value (POST redisplay)
+            var preVal = hiddenInp ? hiddenInp.value : '';
+            if (preVal) {
+                displayTx.textContent = preVal;
+                list.querySelectorAll('.er-province-opt').forEach(function (li) {
+                    li.classList.toggle('er-province-opt--selected', li.getAttribute('data-value') === preVal);
+                });
+            }
         })();
+
+        // ── Client-side validation ────────────────────────────────────────────
+        var erForm      = document.getElementById('er-form');
+        var erSubmit    = document.getElementById('er-submit');
+        var valSummary  = document.getElementById('er-val-summary');
+        var valBody     = document.getElementById('er-val-summary-body');
+
+        function showFieldError(spanId, msg) {
+            var el = document.getElementById(spanId);
+            if (!el) return;
+            el.textContent = msg;
+            el.style.display = msg ? '' : 'none';
+        }
+
+        function setInvalid(input, invalid) {
+            if (!input) return;
+            if (invalid) input.classList.add('er-control--invalid');
+            else         input.classList.remove('er-control--invalid');
+        }
+
+        function isValidEmail(v) {
+            return /^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/.test(v);
+        }
+
+        function isValidPhone(v) {
+            return /^(0|\+84)[0-9]{8,10}$/.test(v.replace(/\s/g, ''));
+        }
+
+        function validateForm() {
+            var errors = [];
+
+            // EventId — always has value from select; just confirm it's > 0
+            var evVal = sel ? parseInt(sel.value, 10) : 0;
+            if (!evVal || evVal <= 0) {
+                errors.push('Vui lòng chọn địa điểm tham dự.');
+                showFieldError('er-err-eventid', 'Vui lòng chọn địa điểm tham dự.');
+                setInvalid(sel, true);
+            } else {
+                showFieldError('er-err-eventid', '');
+                setInvalid(sel, false);
+            }
+
+            // BanLa — radio group
+            var banlaChecked = document.querySelector('input[name="Input.BanLa"]:checked');
+            if (!banlaChecked) {
+                errors.push('Vui lòng chọn Bạn là (Học sinh / Phụ huynh).');
+                showFieldError('er-err-banla', 'Vui lòng chọn bạn là Học sinh hay Phụ huynh.');
+            } else {
+                showFieldError('er-err-banla', '');
+            }
+
+            // Phone
+            var phoneVal = phoneInp ? phoneInp.value.trim() : '';
+            if (!phoneVal) {
+                errors.push('Vui lòng nhập số điện thoại.');
+                showFieldError('er-err-phone', 'Vui lòng nhập số điện thoại.');
+                setInvalid(phoneInp, true);
+            } else if (!isValidPhone(phoneVal)) {
+                errors.push('Số điện thoại không hợp lệ.');
+                showFieldError('er-err-phone', 'Số điện thoại không hợp lệ (VD: 0912345678).');
+                setInvalid(phoneInp, true);
+            } else {
+                showFieldError('er-err-phone', '');
+                setInvalid(phoneInp, false);
+            }
+
+            // Email (optional but validate format if entered)
+            var emailVal = emailInp ? emailInp.value.trim() : '';
+            if (emailVal && !isValidEmail(emailVal)) {
+                errors.push('Địa chỉ email không hợp lệ.');
+                showFieldError('er-err-email', 'Địa chỉ email không hợp lệ.');
+                setInvalid(emailInp, true);
+            } else {
+                showFieldError('er-err-email', '');
+                setInvalid(emailInp, false);
+            }
+
+            // Hotendem
+            var hoVal = hotendemInp ? hotendemInp.value.trim() : '';
+            if (!hoVal) {
+                errors.push('Vui lòng nhập họ và đệm.');
+                showFieldError('er-err-hotendem', 'Vui lòng nhập họ và đệm.');
+                setInvalid(hotendemInp, true);
+            } else {
+                showFieldError('er-err-hotendem', '');
+                setInvalid(hotendemInp, false);
+            }
+
+            // Ten
+            var tenVal = tenInp ? tenInp.value.trim() : '';
+            if (!tenVal) {
+                errors.push('Vui lòng nhập tên.');
+                showFieldError('er-err-ten', 'Vui lòng nhập tên.');
+                setInvalid(tenInp, true);
+            } else {
+                showFieldError('er-err-ten', '');
+                setInvalid(tenInp, false);
+            }
+
+            // Terms
+            var termsChk = document.getElementById('inp-terms');
+            if (!termsChk || !termsChk.checked) {
+                errors.push('Bạn phải đồng ý với điều khoản bảo mật.');
+                showFieldError('er-err-terms', 'Bạn phải đồng ý với điều khoản bảo mật.');
+            } else {
+                showFieldError('er-err-terms', '');
+            }
+
+            // Show/hide summary
+            if (errors.length > 0) {
+                var html = '<ul style="margin:0;padding-left:1.1rem">';
+                errors.forEach(function (e) { html += '<li>' + e + '</li>'; });
+                html += '</ul>';
+                valBody.innerHTML = html;
+                valSummary.style.display = '';
+                valSummary.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                return false;
+            }
+            valSummary.style.display = 'none';
+            return true;
+        }
+
+        // Live clear on input
+        [phoneInp, emailInp, hotendemInp, tenInp].forEach(function (el) {
+            if (!el) return;
+            el.addEventListener('input', function () {
+                setInvalid(el, false);
+                var errId = { 'inp-phone': 'er-err-phone', 'inp-email': 'er-err-email',
+                              'inp-hotendem': 'er-err-hotendem', 'inp-ten': 'er-err-ten' }[el.id];
+                if (errId) showFieldError(errId, '');
+            });
+        });
+
+        // ── Submit with validation + reCAPTCHA ────────────────────────────────
+        @if (!string.IsNullOrEmpty(recaptchaKey))
+        {
+            <text>
+        var RECAPTCHA_KEY = '@recaptchaKey';
+        if (erForm) {
+            erForm.addEventListener('submit', function (e) {
+                e.preventDefault();
+                if (!validateForm()) return;
+                erSubmit.disabled = true;
+                erSubmit.classList.add('er-submit-btn--loading');
+                grecaptcha.ready(function () {
+                    grecaptcha.execute(RECAPTCHA_KEY, { action: 'event_register' }).then(function (token) {
+                        var inp   = document.createElement('input');
+                        inp.type  = 'hidden';
+                        inp.name  = 'g-recaptcha-response';
+                        inp.value = token;
+                        erForm.appendChild(inp);
+                        erForm.submit();
+                    });
+                });
+            });
+        }
+            </text>
+        }
+        else
+        {
+            <text>
+        if (erForm) {
+            erForm.addEventListener('submit', function (e) {
+                e.preventDefault();
+                if (!validateForm()) return;
+                if (erSubmit) {
+                    erSubmit.disabled = true;
+                    erSubmit.classList.add('er-submit-btn--loading');
+                }
+                erForm.submit();
+            });
+        }
+            </text>
+        }
+    })();
     </script>
 }

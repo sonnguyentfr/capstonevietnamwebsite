@@ -35,6 +35,8 @@ public class EventRegistrationService : IEventRegistrationService
             Found       = true,
             StudentId   = student.Id,
             StudentCode = student.Code ?? string.Empty,
+            Hotendem    = student.Hotendem ?? string.Empty,
+            Ten         = student.Ten      ?? string.Empty,
             FullName    = student.FullName,
             Phone       = student.Sodienthoai ?? string.Empty,
             Email       = student.Email       ?? string.Empty,
@@ -65,24 +67,17 @@ public class EventRegistrationService : IEventRegistrationService
         if (cat.EndDate.HasValue && now > cat.EndDate.Value)
             return (false, false, "Sự kiện đã kết thúc đăng ký.", 0, string.Empty);
 
-        // ── Split name into Hotendem + Ten ────────────────────────────────────
-        var nameParts = input.HoVaTen.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries);
-        string ten      = nameParts.Length > 0 ? nameParts[^1]  : string.Empty;
-        string hotendem = nameParts.Length > 1
-            ? string.Join(" ", nameParts[..^1])
-            : string.Empty;
-
         // ── Lookup existing student ───────────────────────────────────────────
         var existing = await _repo.FindStudentAsync(normalizedPhone, input.Email?.Trim());
 
         var student = existing ?? new StudentInfoModel
         {
             Id          = 0,
-            Hotendem    = hotendem,
-            Ten         = ten,
+            Hotendem    = input.Hotendem.Trim(),
+            Ten         = input.Ten.Trim(),
             Sodienthoai = normalizedPhone,
             Email       = input.Email?.Trim(),
-            Diachi      = input.DiaChi?.Trim(),
+            Diachi      = input.TinhThanh?.Trim(),
         };
 
         // ── Atomic register ───────────────────────────────────────────────────

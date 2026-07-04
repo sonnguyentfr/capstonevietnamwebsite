@@ -4,7 +4,7 @@
 @{
     ViewData["Title"] = Model.MetaTitle ?? Model.Title;
     var pageUrl = ViewData["CanonicalUrl"]?.ToString() ?? string.Empty;
-    var encodedUrl   = Uri.EscapeDataString(pageUrl);
+    var encodedUrl = Uri.EscapeDataString(pageUrl);
     var encodedTitle = Uri.EscapeDataString(Model.Title);
 }
 
@@ -55,18 +55,18 @@
                 <div class="nd-share" id="nd-share-bar">
                     <span class="nd-share__label">Chia sẻ</span>
                     <a class="nd-share__btn nd-share__fb"
-                       href="https://www.facebook.com/sharer/sharer.php?u=@encodedUrl"
-                       target="_blank" rel="noopener" title="Chia sẻ Facebook">
+                           href="https://www.facebook.com/sharer/sharer.php?u=@encodedUrl"
+                           target="_blank" rel="noopener" title="Chia sẻ Facebook">
                         <i class="fa-brands fa-facebook-f"></i>
                     </a>
                     <a class="nd-share__btn nd-share__tw"
-                       href="https://twitter.com/intent/tweet?url=@encodedUrl&text=@encodedTitle"
-                       target="_blank" rel="noopener" title="Chia sẻ Twitter / X">
+                           href="https://twitter.com/intent/tweet?url=@encodedUrl&text=@encodedTitle"
+                           target="_blank" rel="noopener" title="Chia sẻ Twitter / X">
                         <i class="fa-brands fa-x-twitter"></i>
                     </a>
                     <a class="nd-share__btn nd-share__li"
-                       href="https://www.linkedin.com/sharing/share-offsite/?url=@encodedUrl"
-                       target="_blank" rel="noopener" title="Chia sẻ LinkedIn">
+                           href="https://www.linkedin.com/sharing/share-offsite/?url=@encodedUrl"
+                           target="_blank" rel="noopener" title="Chia sẻ LinkedIn">
                         <i class="fa-brands fa-linkedin-in"></i>
                     </a>
                     <button class="nd-share__btn nd-share__copy" onclick="ndCopyLink()" title="Sao chép liên kết">
@@ -149,9 +149,191 @@
                 </article>
             </div>
 
-            @* ── CỘT PHẢI: sidebar 8 tin ── *@
+            @* ── CỘT PHẢI: sidebar ── *@
             <aside class="nd-sidebar" id="nd-sidebar">
                 <div class="nd-sidebar__sticky">
+
+                    @* ───────────── SỰ KIỆN SẮP DIỄN RA ───────────── *@
+                    @if (Model.UpcomingEvents.Any())
+                    {
+                        <div class="nd-ev-section">
+
+                            <div class="nd-ev-section__header">
+                                <i class="fa-solid fa-calendar-days"></i>
+                                <span>Sự kiện sắp diễn ra</span>
+                            </div>
+
+                            <div class="nd-ev-cards">
+
+                                @foreach (var cat in Model.UpcomingEvents)
+                                {
+                                    <div class="nd-ev-card">
+
+                                        <!-- Banner -->
+                                        <div class="nd-ev-card__banner">
+
+                                            @if (!string.IsNullOrWhiteSpace(cat.AvatarUrl))
+                                            {
+                                                <img cdn-src="@cat.AvatarUrl" cdn-w="480" cdn-h="270"
+                                                     alt="@cat.CatName" loading="lazy" />
+                                            }
+                                            else
+                                            {
+                                                <div class="nd-ev-card__banner-placeholder">
+                                                    <i class="fa-solid fa-calendar-days"></i>
+                                                </div>
+                                            }
+
+                                            <div class="nd-ev-card__overlay">
+
+                                                <div class="nd-ev-card__banner-content">
+
+                                                    <h3 class="nd-ev-card__title">
+                                                        @cat.CatName
+                                                    </h3>
+
+                                                    @if (cat.FromDate.HasValue || cat.EndDate.HasValue)
+                                                    {
+                                                        <div class="nd-ev-card__event-date">
+
+                                                            <i class="fa-regular fa-calendar"></i>
+
+                                                            @(cat.FromDate?.ToString("dd/MM/yyyy"))
+
+                                                            @if (cat.FromDate.HasValue && cat.EndDate.HasValue)
+                                                            {
+                                                                <text> - </text>
+                                                            }
+
+                                                            @(cat.EndDate?.ToString("dd/MM/yyyy"))
+
+                                                        </div>
+                                                    }
+
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                        <!-- Danh sách địa điểm -->
+                                        @if (cat.Events.Any())
+                                        {
+                                            <div class="nd-ev-card__locs">
+
+                                                @foreach (var ev in cat.Events)
+                                                {
+                                                    <div class="nd-ev-card__loc-row">
+
+                                                        <div class="nd-ev-card__loc-info">
+
+                                                            <div class="nd-ev-card__loc-addr">
+                                                                <i class="fa-solid fa-location-dot"></i>
+
+                                                                <span>
+                                                                    @(ev.Diadiem ?? ev.Title)
+                                                                </span>
+                                                            </div>
+
+                                                            @if (ev.Fromdatetime.HasValue || ev.Enddatetime.HasValue)
+                                                            {
+                                                                <div class="nd-ev-card__loc-dates">
+
+                                                                    <i class="fa-regular fa-clock"></i>
+
+                                                                    @if (ev.Fromdatetime.HasValue)
+                                                                    {
+                                                                        @ev.Fromdatetime.Value.ToString("HH:mm dd/MM/yyyy")
+                                                                    }
+
+                                                                    @if (ev.Fromdatetime.HasValue && ev.Enddatetime.HasValue)
+                                                                    {
+                                                                        <text> - </text>
+                                                                    }
+
+                                                                    @if (ev.Enddatetime.HasValue)
+                                                                    {
+                                                                        @ev.Enddatetime.Value.ToString("HH:mm dd/MM/yyyy")
+                                                                    }
+
+                                                                </div>
+                                                            }
+                                                            else if (cat.FromDate.HasValue || cat.EndDate.HasValue)
+                                                            {
+                                                                <div class="nd-ev-card__loc-dates">
+
+                                                                    <i class="fa-regular fa-clock"></i>
+
+                                                                    @(cat.FromDate?.ToString("dd/MM/yyyy"))
+
+                                                                    @if (cat.FromDate.HasValue && cat.EndDate.HasValue)
+                                                                    {
+                                                                        <text> - </text>
+                                                                    }
+
+                                                                    @(cat.EndDate?.ToString("dd/MM/yyyy"))
+
+                                                                </div>
+                                                            }
+
+                                                            <div class="nd-ev-card__actions">
+
+                                                                <a class="nd-ev-card__reg-btn"
+                                                                       href="/dang-ky-su-kien?eventCatId=@cat.Id&eventId=@ev.Id">
+
+                                                                    <i class="fa-solid fa-arrow-right"></i>
+
+                                                                    Đăng ký
+
+                                                                </a>
+
+                                                            </div>
+
+                                                        </div>
+
+                                                    </div>
+                                                }
+
+                                            </div>
+                                        }
+
+                                        <div class="nd-ev-card__footer">
+
+                                            <a class="nd-ev-card__reg-general"
+                                                   href="/dang-ky-su-kien?eventCatId=@cat.Id">
+
+                                                <i class="fa-solid fa-pen-to-square"></i>
+
+                                                ĐĂNG KÝ CHUNG
+
+                                            </a>
+
+                                        </div>
+
+                                    </div>
+                                }
+
+                            </div>
+
+                            <div class="nd-ev-reminder">
+
+                                <i class="fa-regular fa-bell"></i>
+
+                                <div class="nd-ev-reminder__text">
+
+                                    <strong>Đừng bỏ lỡ!</strong>
+
+                                    <span>
+                                        Đăng ký ngay để nhận thông tin mới nhất về các sự kiện.
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+                    }
+                    
                     <div class="nd-sidebar__block">
                         <h4 class="nd-sidebar__heading nd-sidebar__heading--mobile-fixed">
                             <i class="fa-solid fa-newspaper"></i> Tin cùng chuyên mục
@@ -197,139 +379,139 @@
 </div>
 
 @section Scripts {
-<script type="application/ld+json">
-{
-    "@@context": "https://schema.org",
-    "@@type": "NewsArticle",
-    "headline": "@Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.MetaTitle ?? Model.Title).Trim('"'))",
-    "description": "@Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.MetaDescription ?? string.Empty).Trim('"'))",
-    "image": "@(Model.MetaImage ?? Model.ImagePath ?? string.Empty)",
-    "datePublished": "@Model.PublishedDate.ToString("yyyy-MM-ddTHH:mm:ssZ")",
-    "author": { "@@type": "Person", "name": "@(Model.Tacgia ?? "Capstone Vietnam")" },
-    "publisher": {
+    <script type="application/ld+json">
+        {
+        "@@context": "https://schema.org",
+        "@@type": "NewsArticle",
+        "headline": "@Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.MetaTitle ?? Model.Title).Trim('"'))",
+        "description": "@Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.MetaDescription ?? string.Empty).Trim('"'))",
+        "image": "@(Model.MetaImage ?? Model.ImagePath ?? string.Empty)",
+        "datePublished": "@Model.PublishedDate.ToString("yyyy-MM-ddTHH:mm:ssZ")",
+        "author": { "@@type": "Person", "name": "@(Model.Tacgia ?? "Capstone Vietnam")" },
+        "publisher": {
         "@@type": "Organization",
         "name": "Capstone Vietnam",
         "logo": { "@@type": "ImageObject", "url": "" }
-    },
-    "mainEntityOfPage": { "@@type": "WebPage", "@@id": "@pageUrl" }
-}
-</script>
-<script>
-// ── Copy link ──────────────────────────────────────────────
-function ndCopyLink() {
-    navigator.clipboard.writeText(window.location.href).then(function () {
-        var icon = document.getElementById('nd-copy-icon');
-        icon.className = 'fa-solid fa-check';
-        setTimeout(function () { icon.className = 'fa-solid fa-link'; }, 2000);
-    });
-}
-
-// ── Table of Contents ─────────────────────────────────────
-(function () {
-    var content = document.getElementById('nd-content');
-    if (!content) return;
-
-    var headings = content.querySelectorAll('h1,h2,h3');
-    if (headings.length < 2) return;
-
-    // Build TOC tree
-    function buildNav(headings, containerId) {
-        var nav = document.getElementById(containerId);
-        if (!nav) return;
-        var ul = document.createElement('ul');
-        var stack = [{ level: 0, ul: ul }];
-
-        headings.forEach(function (h, i) {
-            var level = parseInt(h.tagName[1]);
-            var id = 'nd-h-' + i;
-            h.id = id;
-
-            // Add anchor icon inside heading
-            var anchor = document.createElement('a');
-            anchor.className = 'nd-heading-anchor';
-            anchor.href = '#' + id;
-            anchor.innerHTML = '<i class="fa-solid fa-hashtag"></i>';
-            h.style.position = 'relative';
-            h.appendChild(anchor);
-
-            // Pop stack to correct level
-            while (stack.length > 1 && stack[stack.length - 1].level >= level)
-                stack.pop();
-
-            var li = document.createElement('li');
-            li.className = 'nd-toc__item nd-toc__item--h' + level;
-
-            var a = document.createElement('a');
-            a.href = '#' + id;
-            a.textContent = h.textContent.replace(/\s*#\s*$/, '').trim();
-            a.addEventListener('click', function (e) {
-                e.preventDefault();
-                h.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                history.pushState(null, '', '#' + id);
+        },
+        "mainEntityOfPage": { "@@type": "WebPage", "@@id": "@pageUrl" }
+        }
+    </script>
+    <script>
+        // ── Copy link ──────────────────────────────────────────────
+        function ndCopyLink() {
+            navigator.clipboard.writeText(window.location.href).then(function () {
+                var icon = document.getElementById('nd-copy-icon');
+                icon.className = 'fa-solid fa-check';
+                setTimeout(function () { icon.className = 'fa-solid fa-link'; }, 2000);
             });
-            li.appendChild(a);
+        }
 
-            // If deeper level, create nested ul
-            if (level > stack[stack.length - 1].level) {
-                var nested = document.createElement('ul');
-                stack[stack.length - 1].ul.lastElementChild
-                    ? stack[stack.length - 1].ul.lastElementChild.appendChild(nested)
-                    : stack[stack.length - 1].ul.appendChild(nested);
-                stack.push({ level: level, ul: nested });
+        // ── Table of Contents ─────────────────────────────────────
+        (function () {
+            var content = document.getElementById('nd-content');
+            if (!content) return;
+
+            var headings = content.querySelectorAll('h1,h2,h3');
+            if (headings.length < 2) return;
+
+            // Build TOC tree
+            function buildNav(headings, containerId) {
+                var nav = document.getElementById(containerId);
+                if (!nav) return;
+                var ul = document.createElement('ul');
+                var stack = [{ level: 0, ul: ul }];
+
+                headings.forEach(function (h, i) {
+                    var level = parseInt(h.tagName[1]);
+                    var id = 'nd-h-' + i;
+                    h.id = id;
+
+                    // Add anchor icon inside heading
+                    var anchor = document.createElement('a');
+                    anchor.className = 'nd-heading-anchor';
+                    anchor.href = '#' + id;
+                    anchor.innerHTML = '<i class="fa-solid fa-hashtag"></i>';
+                    h.style.position = 'relative';
+                    h.appendChild(anchor);
+
+                    // Pop stack to correct level
+                    while (stack.length > 1 && stack[stack.length - 1].level >= level)
+                        stack.pop();
+
+                    var li = document.createElement('li');
+                    li.className = 'nd-toc__item nd-toc__item--h' + level;
+
+                    var a = document.createElement('a');
+                    a.href = '#' + id;
+                    a.textContent = h.textContent.replace(/\s*#\s*$/, '').trim();
+                    a.addEventListener('click', function (e) {
+                        e.preventDefault();
+                        h.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        history.pushState(null, '', '#' + id);
+                    });
+                    li.appendChild(a);
+
+                    // If deeper level, create nested ul
+                    if (level > stack[stack.length - 1].level) {
+                        var nested = document.createElement('ul');
+                        stack[stack.length - 1].ul.lastElementChild
+                            ? stack[stack.length - 1].ul.lastElementChild.appendChild(nested)
+                            : stack[stack.length - 1].ul.appendChild(nested);
+                        stack.push({ level: level, ul: nested });
+                    }
+
+                    stack[stack.length - 1].ul.appendChild(li);
+                });
+
+                nav.appendChild(ul);
             }
 
-            stack[stack.length - 1].ul.appendChild(li);
-        });
+            buildNav(headings, 'nd-toc-nav');
+            buildNav(headings, 'nd-toc-float-nav');
 
-        nav.appendChild(ul);
-    }
+            document.getElementById('nd-toc').style.display = '';
+            document.getElementById('nd-toc-float').style.display = '';
 
-    buildNav(headings, 'nd-toc-nav');
-    buildNav(headings, 'nd-toc-float-nav');
+            // ── Active heading on scroll ──────────────────────────
+            var tocLinks     = document.querySelectorAll('#nd-toc-nav a, #nd-toc-float-nav a');
+            var headingIds   = Array.from(headings).map(function (h) { return h.id; });
 
-    document.getElementById('nd-toc').style.display = '';
-    document.getElementById('nd-toc-float').style.display = '';
+            var observer = new IntersectionObserver(function (entries) {
+                entries.forEach(function (entry) {
+                    if (!entry.isIntersecting) return;
+                    tocLinks.forEach(function (a) {
+                        a.classList.toggle('active', a.getAttribute('href') === '#' + entry.target.id);
+                    });
+                });
+            }, { rootMargin: '-10% 0px -80% 0px' });
 
-    // ── Active heading on scroll ──────────────────────────
-    var tocLinks     = document.querySelectorAll('#nd-toc-nav a, #nd-toc-float-nav a');
-    var headingIds   = Array.from(headings).map(function (h) { return h.id; });
+            headings.forEach(function (h) { observer.observe(h); });
+        })();
 
-    var observer = new IntersectionObserver(function (entries) {
-        entries.forEach(function (entry) {
-            if (!entry.isIntersecting) return;
-            tocLinks.forEach(function (a) {
-                a.classList.toggle('active', a.getAttribute('href') === '#' + entry.target.id);
-            });
-        });
-    }, { rootMargin: '-10% 0px -80% 0px' });
+        // ── TOC collapse ──────────────────────────────────────────
+        function ndTocToggle(btn) {
+            var nav = document.getElementById('nd-toc-nav');
+            var icon = btn.querySelector('i');
+            var collapsed = nav.style.display === 'none';
+            nav.style.display = collapsed ? '' : 'none';
+            icon.className = collapsed ? 'fa-solid fa-chevron-up' : 'fa-solid fa-chevron-down';
+        }
 
-    headings.forEach(function (h) { observer.observe(h); });
-})();
+        // ── TOC float toggle ──────────────────────────────────────
+        function ndTocFloatToggle() {
+            var panel = document.getElementById('nd-toc-float-panel');
+            panel.classList.toggle('is-open');
+        }
 
-// ── TOC collapse ──────────────────────────────────────────
-function ndTocToggle(btn) {
-    var nav = document.getElementById('nd-toc-nav');
-    var icon = btn.querySelector('i');
-    var collapsed = nav.style.display === 'none';
-    nav.style.display = collapsed ? '' : 'none';
-    icon.className = collapsed ? 'fa-solid fa-chevron-up' : 'fa-solid fa-chevron-down';
-}
-
-// ── TOC float toggle ──────────────────────────────────────
-function ndTocFloatToggle() {
-    var panel = document.getElementById('nd-toc-float-panel');
-    panel.classList.toggle('is-open');
-}
-
-// ── Sticky share bar ──────────────────────────────────────
-(function () {
-    var share = document.getElementById('nd-share-bar');
-    if (!share) return;
-    var origin = share.getBoundingClientRect().top + window.scrollY;
-    window.addEventListener('scroll', function () {
-        share.classList.toggle('nd-share--sticky', window.scrollY > origin);
-    }, { passive: true });
-})();
-</script>
+        // ── Sticky share bar ──────────────────────────────────────
+        (function () {
+            var share = document.getElementById('nd-share-bar');
+            if (!share) return;
+            var origin = share.getBoundingClientRect().top + window.scrollY;
+            window.addEventListener('scroll', function () {
+                share.classList.toggle('nd-share--sticky', window.scrollY > origin);
+            }, { passive: true });
+        })();
+    </script>
 }
 

@@ -139,8 +139,8 @@ public class SiteSettingsHelper : ISiteSettingsHelper
             },
             Google   = new GoogleInfo
             {
-                CaptchaKey    = Get("settingPagesiteCaptchaKey"),
-                CaptchaSecret = Get("settingPagesiteCaptchaSecret"),
+                CaptchaKey    = Get("settingPageGooogleCapcha"),
+                CaptchaSecret = Get("settingPageGooogleCapchaSecret"),
             },
             Cdn      = new CdnInfo
             {

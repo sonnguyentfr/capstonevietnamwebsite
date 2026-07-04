@@ -46,6 +46,10 @@ public static class CacheKeys
     public static string DoiNguList(int portalId, int categoryId, int count)
         => $"doingu:list:{portalId}:{categoryId}:{count}";
 
+    // ── Location ──────────────────────────────────────────────────────────────
+    public static string Provinces(int parentId)
+        => $"loc:provinces:{parentId}";
+
     // ── TTLs (read-only constants) ────────────────────────────────────────────
     public static readonly TimeSpan TtlCategories  = TimeSpan.FromHours(6);
     public static readonly TimeSpan TtlHomepage    = TimeSpan.FromMinutes(30);

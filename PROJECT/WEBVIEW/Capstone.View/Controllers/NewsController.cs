@@ -8,12 +8,14 @@ public class NewsController : Controller
 {
     private readonly INewsService _news;
     private readonly INewsUrlService _urlService;
+    private readonly IEventsService _events;
     private readonly int _portalId;
 
-    public NewsController(INewsService news, INewsUrlService urlService, IConfiguration config)
+    public NewsController(INewsService news, INewsUrlService urlService, IEventsService events, IConfiguration config)
     {
         _news       = news;
         _urlService = urlService;
+        _events     = events;
         _portalId   = config.GetValue<int>("SiteSettings:PortalId");
     }
 
@@ -41,6 +43,14 @@ public class NewsController : Controller
         ViewData["MetaDescription"] = vm.MetaDescription ?? vm.Summary;
         ViewData["MetaImage"]       = vm.MetaImage ?? vm.ImagePath;
         ViewData["CanonicalUrl"]    = NewsUrlBuilder.BuildFullNewsUrl(Request.Scheme, Request.Host.Value, vm);
+
+        var activeCats = await _events.GetActiveCatsWithEventsAsync(50);
+        vm.UpcomingEvents = activeCats
+            .Where(c => c.Is_show_website)
+            .OrderBy(c => c.Events.Any() ? c.Events.Min(e => e.Fromdatetime ?? DateTime.MaxValue)
+                                         : (c.FromDate ?? DateTime.MaxValue))
+            .Take(5)
+            .ToList();
 
         return View(vm);
     }
@@ -73,6 +83,14 @@ public class NewsController : Controller
             ViewData["MetaDescription"] = vm.MetaDescription ?? vm.Summary;
             ViewData["MetaImage"]       = vm.MetaImage ?? vm.ImagePath;
             ViewData["CanonicalUrl"]    = canonicalUrl;
+
+            var activeCats2 = await _events.GetActiveCatsWithEventsAsync(50);
+            vm.UpcomingEvents = activeCats2
+                .Where(c => c.Is_show_website)
+                .OrderBy(c => c.Events.Any() ? c.Events.Min(e => e.Fromdatetime ?? DateTime.MaxValue)
+                                             : (c.FromDate ?? DateTime.MaxValue))
+                .Take(5)
+                .ToList();
 
             return View("Detail", vm);
         }
