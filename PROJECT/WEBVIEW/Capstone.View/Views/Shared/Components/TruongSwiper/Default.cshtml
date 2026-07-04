@@ -25,7 +25,9 @@
                     <div class="swiper-slide">
                         <a href="@t.DetailUrl" class="school-card school-card--slide">
                             <div class="school-card__cover">
-                                <img cdn-src="@t.CoverUrl" alt="@t.NameofSchool" loading="lazy" />
+                                @* <img cdn-src="@t.CoverUrl" alt="@t.NameofSchool" loading="lazy" /> *@
+                                <img cdn-src="@t.CoverUrl" cdn-w="270" cdn-h="180"
+                                     alt="@t.NameofSchool" loading="lazy" />
                                 @if (t.IsPartner)
                                 {
                                     <span class="school-card__badge">Đối tác</span>
@@ -33,7 +35,9 @@
                             </div>
                             <div class="school-card__body">
                                 <div class="school-card__logo-wrap">
-                                    <img cdn-src="@t.LogoUrl" alt="logo @t.NameofSchool" loading="lazy" />
+                                    @* <img cdn-src="@t.LogoUrl" alt="logo @t.NameofSchool" loading="lazy" /> *@
+                                    <img cdn-src="@t.LogoUrl" cdn-w="60" cdn-h="60"
+                                         alt="@t.NameofSchool" loading="lazy" />
                                 </div>
                                 <h4 class="school-card__name">@t.NameofSchool</h4>
                                 <div class="school-card__meta">

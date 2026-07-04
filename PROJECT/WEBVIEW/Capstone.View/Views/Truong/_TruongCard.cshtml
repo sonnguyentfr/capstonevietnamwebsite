@@ -2,7 +2,12 @@
 
 <div class="school-card">
     <a href="@Model.DetailUrl" class="school-card__cover img-cover">
-        <img cdn-src="@Model.CoverUrl" alt="@Model.NameofSchool" loading="lazy" />
+        @* <img cdn-src="@Model.CoverUrl" alt="@Model.NameofSchool" loading="lazy" /> *@
+        <img cdn-src="@(Model.CoverUrl ?? "/static/images/no-photo.png")"
+             cdn-w="490"
+             cdn-h="320"
+             alt="@Model.NameofSchool"
+             loading="lazy" />
         @if (Model.IsPartner)
         {
             <span class="school-card__badge">Đối tác</span>
@@ -10,7 +15,12 @@
     </a>
     <div class="school-card__body">
         <div class="school-card__logo">
-            <img cdn-src="@Model.LogoUrl" alt="Logo @Model.NameofSchool" loading="lazy" />
+            @* <img cdn-src="@Model.LogoUrl" alt="Logo @Model.NameofSchool" loading="lazy" /> *@
+            <img cdn-src="@(Model.LogoUrl ?? "/static/images/no-photo.png")"
+                 cdn-w="490"
+                 cdn-h="320"
+                 alt="@Model.NameofSchool"
+                 loading="lazy" />
         </div>
         <h3 class="school-card__name">
             <a href="@Model.DetailUrl">@Model.NameofSchool</a>

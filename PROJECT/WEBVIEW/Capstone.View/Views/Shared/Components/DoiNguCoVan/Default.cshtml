@@ -17,7 +17,9 @@
             <a href="@url">
                 @if (!string.IsNullOrEmpty(item.ImagePath))
                 {
-                    <img src="@item.ImagePath" alt="@item.Title" loading="lazy" />
+                    @* <img src="@item.ImagePath" alt="@item.Title" loading="lazy" /> *@
+                    <img cdn-src="@item.ImagePath" cdn-w="490" cdn-h="320"
+                         alt="@item.Title" loading="lazy" />
                 }
                 else
                 {
