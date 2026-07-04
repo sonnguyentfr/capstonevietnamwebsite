@@ -1,12 +1,12 @@
 {
   "runtimeTarget": {
-    "name": ".NETCoreApp,Version=v10.0/win-x86",
+    "name": ".NETCoreApp,Version=v10.0/win-x64",
     "signature": ""
   },
   "compilationOptions": {},
   "targets": {
     ".NETCoreApp,Version=v10.0": {},
-    ".NETCoreApp,Version=v10.0/win-x86": {
+    ".NETCoreApp,Version=v10.0/win-x64": {
       "Capstone.View/1.0.0": {
         "dependencies": {
           "NVCMS.WebView.Data": "1.0.0"
@@ -126,7 +126,7 @@
       },
       "Microsoft.Data.SqlClient.SNI.runtime/6.0.2": {
         "native": {
-          "runtimes/win-x86/native/Microsoft.Data.SqlClient.SNI.dll": {
+          "runtimes/win-x64/native/Microsoft.Data.SqlClient.SNI.dll": {
             "fileVersion": "6.2.0.0"
           }
         }
