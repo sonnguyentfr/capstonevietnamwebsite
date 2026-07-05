@@ -45,7 +45,7 @@ public class EventRegistrationController : Controller
     [HttpGet]
     public async Task<IActionResult> Index(int eventCatId, int eventId = 0)
     {
-        var cat = await _events.GetCatWithEventsAsync(eventCatId, _siteOptions.Value.PortalId);
+        var cat = await _events.GetCatWithEventsAsync(eventCatId, 50);
         if (cat is null) return NotFound();
 
         // Only allow registration during active window

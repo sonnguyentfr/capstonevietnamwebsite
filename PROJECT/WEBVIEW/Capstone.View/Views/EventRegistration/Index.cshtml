@@ -18,6 +18,8 @@
         <div class="breadcrumb er-hero__breadcrumb" data-aos="fade-up">
             <a href="/">Trang chủ</a>
             <i class="fa-solid fa-chevron-right"></i>
+            <a href="/su-kien">Sự kiện - Triển lãm</a>
+            <i class="fa-solid fa-chevron-right"></i>
             <span>@Model.Cat.CatName</span>
         </div>
         <div class="er-hero__body" data-aos="fade-up" data-aos-delay="80">
@@ -31,11 +33,17 @@
                 <div class="er-hero__dates">
                     <i class="fa-regular fa-calendar"></i>
                     @if (Model.Cat.FromDate.HasValue)
-                    { <span>@Model.Cat.FromDate.Value.ToString("dd/MM/yyyy")</span> }
+                    {
+                        <span>@Model.Cat.FromDate.Value.ToString("dd/MM/yyyy")</span>
+                    }
                     @if (Model.Cat.FromDate.HasValue && Model.Cat.EndDate.HasValue)
-                    { <text>–</text> }
+                    {
+                        <text>–</text>
+                    }
                     @if (Model.Cat.EndDate.HasValue)
-                    { <span>@Model.Cat.EndDate.Value.ToString("dd/MM/yyyy")</span> }
+                    {
+                        <span>@Model.Cat.EndDate.Value.ToString("dd/MM/yyyy")</span>
+                    }
                 </div>
             }
         </div>
@@ -156,33 +164,49 @@
                             <i class="fa-solid fa-circle-check"></i>
                             Chúng tôi đã tìm thấy thông tin của bạn. Vui lòng kiểm tra lại trước khi gửi.
                         </div>
-
+                        <div id="found-notice-av" class="er-found-notice" style="display:none">
+                            <i class="fa-solid fa-circle-check"></i>
+                            Thông Email của quý vị hợp lệ!.
+                        </div>
                         <div class="er-field">
                             <label class="er-label" for="inp-email">Email</label>
-                            <input asp-for="Input.Email" id="inp-email" type="email"
-                                   class="er-control" placeholder="Địa chỉ email"
-                                   autocomplete="email"
-                                   data-label="Email" />
+                            <div class="er-input-wrap">
+                                <input asp-for="Input.Email" id="inp-email" type="email"
+                                       class="er-control" placeholder="Địa chỉ email"
+                                       autocomplete="email"
+                                       data-label="Email" />
+                                <span id="email-loading" class="er-loading" style="display:none">
+                                    <i class="fa-solid fa-spinner fa-spin"></i>
+                                </span>
+                            </div>
                             <p class="er-hint">
                                 <i class="fa-regular fa-circle-info"></i>
                                 Bạn vui lòng cung cấp email đang sử dụng thường xuyên để tránh bỏ lỡ thông tin.
                             </p>
-                            <span asp-validation-for="Input.Email" class="er-error" id="er-err-email"></span>
+                            <span asp-validation-for="Input.Email" class="er-error" id="er-err-email" style="display:none"></span>
+
+                            
+                                
                         </div>
 
                         <div class="er-field">
                             <label class="er-label" for="inp-phone">
                                 Điện thoại / Mobile number <span class="er-required">*</span>
                             </label>
-                            <input asp-for="Input.SoDienThoai" id="inp-phone" type="tel"
-                                   class="er-control" placeholder="Điện thoại / Mobile number"
-                                   autocomplete="tel"
-                                   required data-label="Số điện thoại" />
-                            <p class="er-hint">
-                                <i class="fa-regular fa-circle-info"></i>
-                                Lịch sự kiện sẽ gửi thông qua điện thoại, bạn hãy điền đúng để chúng tôi giúp bạn nhớ lịch nhé!
-                            </p>
-                            <span asp-validation-for="Input.SoDienThoai" class="er-error" id="er-err-phone"></span>
+                            <div class="er-input-wrap">
+                                <input asp-for="Input.SoDienThoai" id="inp-phone" type="tel"
+                                       class="er-control" placeholder="Điện thoại / Mobile number"
+                                       autocomplete="tel"
+                                       required data-label="Số điện thoại" />
+                                <p class="er-hint">
+                                    <i class="fa-regular fa-circle-info"></i>
+                                    Lịch sự kiện sẽ gửi thông qua điện thoại, bạn hãy điền đúng để chúng tôi giúp bạn nhớ lịch nhé!
+                                </p>
+                                <span asp-validation-for="Input.SoDienThoai" class="er-error" id="er-err-phone" style="display:none"></span>
+                                <span id="phone-loading" class="er-loading" style="display:none">
+                                    <i class="fa-solid fa-spinner fa-spin"></i>
+                                </span>
+                            </div>
                         </div>
 
                         <div class="er-row-2">
@@ -194,7 +218,7 @@
                                        class="er-control" placeholder="Họ và đệm (Family and Middle name)"
                                        autocomplete="family-name"
                                        required data-label="Họ và đệm" />
-                                <span asp-validation-for="Input.Hotendem" class="er-error" id="er-err-hotendem"></span>
+                                <span asp-validation-for="Input.Hotendem" class="er-error" id="er-err-hotendem" style="display:none"></span>
                             </div>
                             <div class="er-field">
                                 <label class="er-label" for="inp-ten">
@@ -204,7 +228,7 @@
                                        class="er-control" placeholder="Tên (First name)"
                                        autocomplete="given-name"
                                        required data-label="Tên" />
-                                <span asp-validation-for="Input.Ten" class="er-error" id="er-err-ten"></span>
+                                <span asp-validation-for="Input.Ten" class="er-error" id="er-err-ten" style="display:none"></span>
                             </div>
                         </div>
 
@@ -335,7 +359,7 @@
                                 của Capstone Vietnam. <span class="er-required">*</span>
                             </span>
                         </label>
-                        <span asp-validation-for="Input.DongYDieuKhoan" class="er-error d-block mt-1" id="er-err-terms"></span>
+                        <span asp-validation-for="Input.DongYDieuKhoan" class="er-error d-block mt-1" id="er-err-terms" style="display:none"></span>
 
                         @if (!string.IsNullOrEmpty(recaptchaKey))
                         {
@@ -398,7 +422,7 @@
                 </div>
 
                 <a class="er-back-link"
-                   href="/su-kien/@NVCMS.WebView.Data.Common.SlugHelper.ToSlug(Model.Cat.CatName)-@Model.Cat.Id">
+                       href="/su-kien/@NVCMS.WebView.Data.Common.SlugHelper.ToSlug(Model.Cat.CatName)-@Model.Cat.Id">
                     <i class="fa-solid fa-arrow-left"></i>
                     <span>Quay lại sự kiện</span>
                 </a>
@@ -414,142 +438,182 @@
         <script src="https://www.google.com/recaptcha/api.js?render=@recaptchaKey"></script>
     }
     <script>
-    (function () {
+        (function () {
         // ── Student autofill ──────────────────────────────────────────────────
         var phoneInp    = document.getElementById('inp-phone');
         var emailInp    = document.getElementById('inp-email');
         var hotendemInp = document.getElementById('inp-hotendem');
         var tenInp      = document.getElementById('inp-ten');
         var foundNotice = document.getElementById('found-notice');
+        var emailLoading = document.getElementById("email-loading");
+        var phoneLoading = document.getElementById("phone-loading");
         var lookupTimer = null;
         var autoFilled  = false;
+        function showLookupLoading(show){
 
+        emailLoading.style.display = show ? "block" : "none";
+        phoneLoading.style.display = show ? "block" : "none";
+        }
         function setProvince(val) {
-            var hiddenInp = document.getElementById('inp-tinh');
-            var displayTxt = document.getElementById('province-display-text');
-            if (hiddenInp) hiddenInp.value = val;
-            if (displayTxt) displayTxt.textContent = val || '-- Chọn tỉnh/thành --';
-            // sync highlight in list
-            document.querySelectorAll('.er-province-opt').forEach(function (li) {
-                li.classList.toggle('er-province-opt--selected', li.getAttribute('data-value') === val);
-            });
+        var hiddenInp = document.getElementById('inp-tinh');
+        var displayTxt = document.getElementById('province-display-text');
+        if (hiddenInp) hiddenInp.value = val;
+        if (displayTxt) displayTxt.textContent = val || '-- Chọn tỉnh/thành --';
+        // sync highlight in list
+        document.querySelectorAll('.er-province-opt').forEach(function (li) {
+        li.classList.toggle('er-province-opt--selected', li.getAttribute('data-value') === val);
+        });
         }
 
         function autofillFromResult(d) {
-            if (!d.found) {
-                if (autoFilled) {
-                    autoFilled = false;
-                    [hotendemInp, tenInp].forEach(function (f) {
-                        if (!f) return;
-                        f.readOnly = false;
-                        f.classList.remove('er-control--autofill');
-                    });
-                    if (foundNotice) foundNotice.style.display = 'none';
-                }
-                return;
-            }
-            autoFilled = true;
-            if (hotendemInp && !hotendemInp.value) hotendemInp.value = d.hotendem || '';
-            if (tenInp      && !tenInp.value)      tenInp.value      = d.ten      || '';
-            if (emailInp    && !emailInp.value)    emailInp.value    = d.email    || '';
-            var hiddenTinh = document.getElementById('inp-tinh');
-            if (hiddenTinh && !hiddenTinh.value && d.diaChi) setProvince(d.diaChi);
-            [hotendemInp, tenInp].forEach(function (f) {
-                if (!f) return;
-                f.readOnly = true;
-                f.classList.add('er-control--autofill');
-            });
-            if (foundNotice) foundNotice.style.display = '';
+        if (!d.found) {
+        if (autoFilled) {
+        autoFilled = false;
+        [hotendemInp, tenInp].forEach(function (f) {
+        if (!f) return;
+        f.readOnly = false;
+        f.classList.remove('er-control--autofill');
+        });
+        if (foundNotice) foundNotice.style.display = 'none';
+        }
+        return;
+        }
+        autoFilled = true;
+        if (hotendemInp && !hotendemInp.value) hotendemInp.value = d.hotendem || '';
+        if (tenInp      && !tenInp.value)      tenInp.value      = d.ten      || '';
+        if (emailInp    && !emailInp.value)    emailInp.value    = d.email    || '';
+        var hiddenTinh = document.getElementById('inp-tinh');
+        if (hiddenTinh && !hiddenTinh.value && d.diaChi) setProvince(d.diaChi);
+        [hotendemInp, tenInp].forEach(function (f) {
+        if (!f) return;
+        f.readOnly = true;
+        f.classList.add('er-control--autofill');
+        });
+        if (foundNotice) foundNotice.style.display = '';
         }
 
+        var lastLookupKey = "";
+
         function doLookup() {
-            var phone = (phoneInp ? phoneInp.value : '').trim();
-            var email = (emailInp ? emailInp.value : '').trim();
-            if (!phone && !email) return;
-            fetch('/EventRegistration/CheckStudent?phone=' + encodeURIComponent(phone) +
-                  '&email=' + encodeURIComponent(email))
-                .then(function (r) { return r.json(); })
-                .then(autofillFromResult)
-                .catch(function () {});
+
+        var phone = phoneInp ? phoneInp.value.trim() : "";
+        var email = emailInp ? emailInp.value.trim() : "";
+
+        // Không có dữ liệu thì thôi
+        if (!phone && !email)
+        return;
+
+        // Chỉ kiểm tra khi email đúng định dạng (nếu có nhập)
+        if (email && !isValidEmail(email))
+        return;
+
+        // Chỉ kiểm tra khi SĐT đúng định dạng (nếu có nhập)
+        if (phone && !isValidPhone(phone))
+        return;
+
+        // Không gọi lại nếu dữ liệu không đổi
+        var key = phone + "|" + email;
+
+        if (key === lastLookupKey)
+        return;
+
+        lastLookupKey = key;
+
+        fetch("/EventRegistration/CheckStudent?phone=" + encodeURIComponent(phone) +
+        "&email=" + encodeURIComponent(email))
+        .then(function (r) {
+        if (!r.ok) throw new Error();
+        return r.json();
+        })
+        .then(autofillFromResult)
+        .catch(function () { });
         }
+
+        // Chỉ lookup khi rời khỏi ô nhập
+        [phoneInp, emailInp].forEach(function (el) {
+
+        if (!el) return;
+
+        el.addEventListener("blur", doLookup);
+        });
 
         function schedule() { clearTimeout(lookupTimer); lookupTimer = setTimeout(doLookup, 700); }
         [phoneInp, emailInp].forEach(function (el) {
-            if (!el) return;
-            el.addEventListener('blur', doLookup);
-            el.addEventListener('input', schedule);
+        if (!el) return;
+        el.addEventListener('blur', doLookup);
+        el.addEventListener('input', schedule);
         });
 
         // ── Province searchable picker ────────────────────────────────────────
         (function () {
-            var picker    = document.getElementById('province-picker');
-            var display   = document.getElementById('province-display');
-            var displayTx = document.getElementById('province-display-text');
-            var dropdown  = document.getElementById('province-dropdown');
-            var arrow     = document.getElementById('province-arrow');
-            var searchInp = document.getElementById('province-search');
-            var list      = document.getElementById('province-list');
-            var hiddenInp = document.getElementById('inp-tinh');
-            if (!picker) return;
+        var picker    = document.getElementById('province-picker');
+        var display   = document.getElementById('province-display');
+        var displayTx = document.getElementById('province-display-text');
+        var dropdown  = document.getElementById('province-dropdown');
+        var arrow     = document.getElementById('province-arrow');
+        var searchInp = document.getElementById('province-search');
+        var list      = document.getElementById('province-list');
+        var hiddenInp = document.getElementById('inp-tinh');
+        if (!picker) return;
 
-            function openDropdown() {
-                dropdown.style.display = '';
-                display.setAttribute('aria-expanded', 'true');
-                arrow.style.transform = 'rotate(180deg)';
-                searchInp.value = '';
-                filterList('');
-                searchInp.focus();
-            }
+        function openDropdown() {
+        dropdown.style.display = '';
+        display.setAttribute('aria-expanded', 'true');
+        arrow.style.transform = 'rotate(180deg)';
+        searchInp.value = '';
+        filterList('');
+        searchInp.focus();
+        }
 
-            function closeDropdown() {
-                dropdown.style.display = 'none';
-                display.setAttribute('aria-expanded', 'false');
-                arrow.style.transform = '';
-            }
+        function closeDropdown() {
+        dropdown.style.display = 'none';
+        display.setAttribute('aria-expanded', 'false');
+        arrow.style.transform = '';
+        }
 
-            function filterList(q) {
-                var lq = q.toLowerCase();
-                list.querySelectorAll('.er-province-opt').forEach(function (li) {
-                    var v = (li.textContent || '').toLowerCase();
-                    li.style.display = (!q || v.indexOf(lq) !== -1) ? '' : 'none';
-                });
-            }
+        function filterList(q) {
+        var lq = q.toLowerCase();
+        list.querySelectorAll('.er-province-opt').forEach(function (li) {
+        var v = (li.textContent || '').toLowerCase();
+        li.style.display = (!q || v.indexOf(lq) !== -1) ? '' : 'none';
+        });
+        }
 
-            display.addEventListener('click', function () {
-                dropdown.style.display === 'none' ? openDropdown() : closeDropdown();
-            });
-            display.addEventListener('keydown', function (e) {
-                if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openDropdown(); }
-                if (e.key === 'Escape') closeDropdown();
-            });
-            searchInp.addEventListener('input', function () { filterList(this.value); });
-            searchInp.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeDropdown(); });
+        display.addEventListener('click', function () {
+        dropdown.style.display === 'none' ? openDropdown() : closeDropdown();
+        });
+        display.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openDropdown(); }
+        if (e.key === 'Escape') closeDropdown();
+        });
+        searchInp.addEventListener('input', function () { filterList(this.value); });
+        searchInp.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeDropdown(); });
 
-            list.addEventListener('click', function (e) {
-                var li = e.target.closest('.er-province-opt');
-                if (!li || li.style.display === 'none') return;
-                var val = li.getAttribute('data-value') || '';
-                hiddenInp.value     = val;
-                displayTx.textContent = val || '-- Chọn tỉnh/thành --';
-                list.querySelectorAll('.er-province-opt').forEach(function (opt) {
-                    opt.classList.toggle('er-province-opt--selected', opt === li);
-                });
-                closeDropdown();
-                display.focus();
-            });
+        list.addEventListener('click', function (e) {
+        var li = e.target.closest('.er-province-opt');
+        if (!li || li.style.display === 'none') return;
+        var val = li.getAttribute('data-value') || '';
+        hiddenInp.value     = val;
+        displayTx.textContent = val || '-- Chọn tỉnh/thành --';
+        list.querySelectorAll('.er-province-opt').forEach(function (opt) {
+        opt.classList.toggle('er-province-opt--selected', opt === li);
+        });
+        closeDropdown();
+        display.focus();
+        });
 
-            document.addEventListener('click', function (e) {
-                if (!picker.contains(e.target)) closeDropdown();
-            });
+        document.addEventListener('click', function (e) {
+        if (!picker.contains(e.target)) closeDropdown();
+        });
 
-            // Pre-select if model has value (POST redisplay)
-            var preVal = hiddenInp ? hiddenInp.value : '';
-            if (preVal) {
-                displayTx.textContent = preVal;
-                list.querySelectorAll('.er-province-opt').forEach(function (li) {
-                    li.classList.toggle('er-province-opt--selected', li.getAttribute('data-value') === preVal);
-                });
-            }
+        // Pre-select if model has value (POST redisplay)
+        var preVal = hiddenInp ? hiddenInp.value : '';
+        if (preVal) {
+        displayTx.textContent = preVal;
+        list.querySelectorAll('.er-province-opt').forEach(function (li) {
+        li.classList.toggle('er-province-opt--selected', li.getAttribute('data-value') === preVal);
+        });
+        }
         })();
 
         // ── Client-side validation ────────────────────────────────────────────
@@ -559,172 +623,243 @@
         var valBody     = document.getElementById('er-val-summary-body');
 
         function showFieldError(spanId, msg) {
-            var el = document.getElementById(spanId);
-            if (!el) return;
-            el.textContent = msg;
-            el.style.display = msg ? '' : 'none';
+        var el = document.getElementById(spanId);
+        if (!el) return;
+        el.textContent = msg;
+        el.style.display = msg ? '' : 'none';
         }
 
         function setInvalid(input, invalid) {
-            if (!input) return;
-            if (invalid) input.classList.add('er-control--invalid');
-            else         input.classList.remove('er-control--invalid');
+        if (!input) return;
+        if (invalid) input.classList.add('er-control--invalid');
+        else         input.classList.remove('er-control--invalid');
         }
 
         function isValidEmail(v) {
-            return /^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/.test(v);
+        return /^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/.test(v);
         }
 
         function isValidPhone(v) {
-            return /^(0|\+84)[0-9]{8,10}$/.test(v.replace(/\s/g, ''));
+        return /^(0|\+84)[0-9]{8,10}$/.test(v.replace(/\s/g, ''));
+        }
+        function focusField(el) {
+        if (!el) return;
+
+        el.scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+        });
+
+        setTimeout(function () {
+        el.focus();
+
+        if (el.classList.contains("er-select")) {
+        el.click();
+        }
+        }, 300);
         }
 
+        //hàm chung
+        var errors = [];
+        var firstInvalid = null;
+
+        function check(control) {
+
+        var input = control.input;
+        var value = "";
+        var valid = true;
+
+        switch (control.type) {
+
+        case "radio":
+
+        input = document.querySelector('input[name="' + control.name + '"]');
+        valid = document.querySelector('input[name="' + control.name + '"]:checked') != null;
+        break;
+
+        case "checkbox":
+
+        valid = input.checked;
+        break;
+
+        default:
+
+        value = (input.value || "").trim();
+
+        if (input.tagName === "SELECT")
+        valid = value !== "" && value !== "0";
+        else
+        valid = value !== "";
+
+        if (!valid)
+        break;
+
+        if (control.validator && !control.validator(value)) {
+
+        if (!firstInvalid)
+        firstInvalid = input;
+
+        errors.push(control.invalidMessage);
+
+        showFieldError(control.errorId, control.invalidMessage);
+
+        setInvalid(input, true);
+
+        return false;
+        }
+
+        break;
+        }
+
+        if (!valid) {
+
+        if (!firstInvalid)
+        firstInvalid = input;
+
+        errors.push(control.message);
+
+        showFieldError(control.errorId, control.message);
+
+        if (input)
+        setInvalid(input, true);
+
+        return false;
+        }
+
+        showFieldError(control.errorId, "");
+
+        if (input)
+        setInvalid(input, false);
+
+        return true;
+        }
+
+        
         function validateForm() {
-            var errors = [];
 
-            // EventId — always has value from select; just confirm it's > 0
-            var evVal = sel ? parseInt(sel.value, 10) : 0;
-            if (!evVal || evVal <= 0) {
-                errors.push('Vui lòng chọn địa điểm tham dự.');
-                showFieldError('er-err-eventid', 'Vui lòng chọn địa điểm tham dự.');
-                setInvalid(sel, true);
-            } else {
-                showFieldError('er-err-eventid', '');
-                setInvalid(sel, false);
-            }
+        errors = [];
+        firstInvalid = null;
 
-            // BanLa — radio group
-            var banlaChecked = document.querySelector('input[name="Input.BanLa"]:checked');
-            if (!banlaChecked) {
-                errors.push('Vui lòng chọn Bạn là (Học sinh / Phụ huynh).');
-                showFieldError('er-err-banla', 'Vui lòng chọn bạn là Học sinh hay Phụ huynh.');
-            } else {
-                showFieldError('er-err-banla', '');
-            }
+        check({
+        input: document.getElementById("event-location-select"),
+        errorId: "er-err-eventid",
+        message: "Vui lòng chọn địa điểm."
+        });
 
-            // Phone
-            var phoneVal = phoneInp ? phoneInp.value.trim() : '';
-            if (!phoneVal) {
-                errors.push('Vui lòng nhập số điện thoại.');
-                showFieldError('er-err-phone', 'Vui lòng nhập số điện thoại.');
-                setInvalid(phoneInp, true);
-            } else if (!isValidPhone(phoneVal)) {
-                errors.push('Số điện thoại không hợp lệ.');
-                showFieldError('er-err-phone', 'Số điện thoại không hợp lệ (VD: 0912345678).');
-                setInvalid(phoneInp, true);
-            } else {
-                showFieldError('er-err-phone', '');
-                setInvalid(phoneInp, false);
-            }
+        check({
+        type: "radio",
+        name: "Input.BanLa",
+        errorId: "er-err-banla",
+        message: "Vui lòng chọn vai trò."
+        });
 
-            // Email (optional but validate format if entered)
-            var emailVal = emailInp ? emailInp.value.trim() : '';
-            if (emailVal && !isValidEmail(emailVal)) {
-                errors.push('Địa chỉ email không hợp lệ.');
-                showFieldError('er-err-email', 'Địa chỉ email không hợp lệ.');
-                setInvalid(emailInp, true);
-            } else {
-                showFieldError('er-err-email', '');
-                setInvalid(emailInp, false);
-            }
+        check({
+        input: emailInp,
+        errorId: "er-err-email",
+        message: "Vui lòng nhập email.",
+        validator: isValidEmail,
+        invalidMessage: "Email không đúng định dạng."
+        });
 
-            // Hotendem
-            var hoVal = hotendemInp ? hotendemInp.value.trim() : '';
-            if (!hoVal) {
-                errors.push('Vui lòng nhập họ và đệm.');
-                showFieldError('er-err-hotendem', 'Vui lòng nhập họ và đệm.');
-                setInvalid(hotendemInp, true);
-            } else {
-                showFieldError('er-err-hotendem', '');
-                setInvalid(hotendemInp, false);
-            }
+        check({
+        input: phoneInp,
+        errorId: "er-err-phone",
+        message: "Vui lòng nhập số điện thoại.",
+        validator: isValidPhone,
+        invalidMessage: "Số điện thoại không hợp lệ."
+        });
 
-            // Ten
-            var tenVal = tenInp ? tenInp.value.trim() : '';
-            if (!tenVal) {
-                errors.push('Vui lòng nhập tên.');
-                showFieldError('er-err-ten', 'Vui lòng nhập tên.');
-                setInvalid(tenInp, true);
-            } else {
-                showFieldError('er-err-ten', '');
-                setInvalid(tenInp, false);
-            }
+        check({
+        input: hotendemInp,
+        errorId: "er-err-hotendem",
+        message: "Vui lòng nhập họ và đệm."
+        });
 
-            // Terms
-            var termsChk = document.getElementById('inp-terms');
-            if (!termsChk || !termsChk.checked) {
-                errors.push('Bạn phải đồng ý với điều khoản bảo mật.');
-                showFieldError('er-err-terms', 'Bạn phải đồng ý với điều khoản bảo mật.');
-            } else {
-                showFieldError('er-err-terms', '');
-            }
+        check({
+        input: tenInp,
+        errorId: "er-err-ten",
+        message: "Vui lòng nhập tên."
+        });
 
-            // Show/hide summary
-            if (errors.length > 0) {
-                var html = '<ul style="margin:0;padding-left:1.1rem">';
-                errors.forEach(function (e) { html += '<li>' + e + '</li>'; });
-                html += '</ul>';
-                valBody.innerHTML = html;
-                valSummary.style.display = '';
-                valSummary.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                return false;
-            }
-            valSummary.style.display = 'none';
-            return true;
+        check({
+        type: "checkbox",
+        input: document.getElementById("inp-terms"),
+        errorId: "er-err-terms",
+        message: "Bạn phải đồng ý điều khoản bảo mật."
+        });
+
+        if (errors.length) {
+
+        valBody.innerHTML =
+        "<ul><li>" +
+        errors.join("</li><li>") +
+        "</li></ul>";
+
+        valSummary.style.display = "";
+
+        focusField(firstInvalid);
+
+        return false;
         }
+
+        valSummary.style.display = "none";
+
+        return true;
+        }
+
 
         // Live clear on input
         [phoneInp, emailInp, hotendemInp, tenInp].forEach(function (el) {
-            if (!el) return;
-            el.addEventListener('input', function () {
-                setInvalid(el, false);
-                var errId = { 'inp-phone': 'er-err-phone', 'inp-email': 'er-err-email',
-                              'inp-hotendem': 'er-err-hotendem', 'inp-ten': 'er-err-ten' }[el.id];
-                if (errId) showFieldError(errId, '');
-            });
+        if (!el) return;
+        el.addEventListener('input', function () {
+        setInvalid(el, false);
+        var errId = { 'inp-phone': 'er-err-phone', 'inp-email': 'er-err-email',
+        'inp-hotendem': 'er-err-hotendem', 'inp-ten': 'er-err-ten' }[el.id];
+        if (errId) showFieldError(errId, '');
+        });
         });
 
         // ── Submit with validation + reCAPTCHA ────────────────────────────────
         @if (!string.IsNullOrEmpty(recaptchaKey))
         {
             <text>
-        var RECAPTCHA_KEY = '@recaptchaKey';
-        if (erForm) {
-            erForm.addEventListener('submit', function (e) {
+                var RECAPTCHA_KEY = '@recaptchaKey';
+                if (erForm) {
+                erForm.addEventListener('submit', function (e) {
                 e.preventDefault();
                 if (!validateForm()) return;
                 erSubmit.disabled = true;
                 erSubmit.classList.add('er-submit-btn--loading');
                 grecaptcha.ready(function () {
-                    grecaptcha.execute(RECAPTCHA_KEY, { action: 'event_register' }).then(function (token) {
-                        var inp   = document.createElement('input');
-                        inp.type  = 'hidden';
-                        inp.name  = 'g-recaptcha-response';
-                        inp.value = token;
-                        erForm.appendChild(inp);
-                        erForm.submit();
-                    });
+                grecaptcha.execute(RECAPTCHA_KEY, { action: 'event_register' }).then(function (token) {
+                var inp   = document.createElement('input');
+                inp.type  = 'hidden';
+                inp.name  = 'g-recaptcha-response';
+                inp.value = token;
+                erForm.appendChild(inp);
+                erForm.submit();
                 });
-            });
-        }
+                });
+                });
+                }
             </text>
         }
         else
         {
             <text>
-        if (erForm) {
-            erForm.addEventListener('submit', function (e) {
+                if (erForm) {
+                erForm.addEventListener('submit', function (e) {
                 e.preventDefault();
                 if (!validateForm()) return;
                 if (erSubmit) {
-                    erSubmit.disabled = true;
-                    erSubmit.classList.add('er-submit-btn--loading');
+                erSubmit.disabled = true;
+                erSubmit.classList.add('er-submit-btn--loading');
                 }
                 erForm.submit();
-            });
-        }
+                });
+                }
             </text>
         }
-    })();
+        })();
     </script>
 }

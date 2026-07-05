@@ -226,9 +226,15 @@
 
 .er-error {
     display: block;
-    font-size: .78rem;
-    color: #dc2626;
+    font-size: .9rem;
+    color: #fff;
     margin-top: .3rem;
+    background: #ff0000;
+    width: 300px;
+    border-radius: 10px;
+    padding: 3px 10px 2px 10px;
+    border: solid 1px #ffffff;
+    box-shadow: 0px 0px 4px 2px #f2ff0061;
 }
 
 /* ── Select wrapper ──────────────────────────────────────── */
@@ -623,4 +629,16 @@
 }
 @media (max-width: 480px) {
     .er-province-list { max-height: 180px; }
+}
+.er-input-wrap {
+    position: relative;
+}
+
+.er-loading {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #1b74e4;
+    font-size: 14px;
 }
