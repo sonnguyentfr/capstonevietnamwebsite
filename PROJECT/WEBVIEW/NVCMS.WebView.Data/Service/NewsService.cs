@@ -262,7 +262,12 @@ public class NewsService : INewsService
         Tags          = n.Tags,
         PublishedDate = n.PublishedDate,
         Slug          = !string.IsNullOrEmpty(n.MetaUrl) ? n.MetaUrl : SlugHelper.ToSlug(n.Title),
-        CategorySlug  = cat?.FullSlug ?? string.Empty,
+        CategorySlug  = cat?.CategoryID switch
+        {
+            202 => "tu-van-dinh-cu",
+            196 => "tu-van-dau-tu",
+            _   => cat?.FullSlug ?? string.Empty
+        },
         CategoryName  = cat?.CategoryName ?? string.Empty
     };
 

@@ -218,6 +218,16 @@ app.MapControllerRoute(name: "thong-tin-du-hoc-country",
 
 // Tin tức – core routes
 app.MapControllerRoute(
+    name: "news-dinh-cu-detail",
+    pattern: "tu-van-dinh-cu/{slug}-{id:int}",
+    defaults: new { controller = "News", action = "DetailDinhCu" });
+
+app.MapControllerRoute(
+    name: "news-dau-tu-detail",
+    pattern: "tu-van-dau-tu/{slug}-{id:int}",
+    defaults: new { controller = "News", action = "DetailDauTu" });
+
+app.MapControllerRoute(
     name: "news-all",
     pattern: "tin-tuc",
     defaults: new { controller = "News", action = "All" });

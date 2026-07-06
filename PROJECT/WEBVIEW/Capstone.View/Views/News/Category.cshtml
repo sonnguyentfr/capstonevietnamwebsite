@@ -10,7 +10,7 @@
     var parentId = category?.ParentId ?? 0;
     ViewData["Title"] = catName;
 
-    var baseUrl = "/" + catSlug;
+    var baseUrl = ViewData["BaseUrl"] as string ?? ("/" + catSlug);
     var rest    = Model.Items.Skip(0).ToList();
 
     // ── Cấu hình hero theo category ──────────────────────────────────────
@@ -61,9 +61,10 @@
         191 => ("135deg,#374151 0%,#4b5563 100%", "fa-solid fa-chart-line",       "Du học ngành Thương Mại",  "/static/images/hero/hero-business.jpg"),
         192 => ("135deg,#1d4ed8 0%,#60a5fa 100%", "fa-solid fa-laptop-code",      "Du học ngành CNTT",        "/static/images/hero/hero-tech.jpg"),
         // Định cư & Đầu tư (194) + con
-        194 => ("135deg,#374151 0%,#1e3a5f 100%", "fa-solid fa-house-flag",       "Định cư & Đầu tư",         "/static/images/hero/hero-immigration.jpg"),
-        195 => ("135deg,#374151 0%,#1e3a5f 100%", "fa-solid fa-passport",         "Tư vấn Định Cư",           "/static/images/hero/hero-immigration.jpg"),
-        196 => ("135deg,#065f46 0%,#10b981 100%", "fa-solid fa-money-bill-trend-up","Tư vấn Đầu Tư",          "/static/images/hero/hero-invest.jpg"),
+        194 => ("135deg,#374151 0%,#1e3a5f 100%", "fa-solid fa-house-flag",        "Định cư & Đầu tư",         "/static/images/hero/hero-immigration.jpg"),
+        195 => ("135deg,#374151 0%,#1e3a5f 100%", "fa-solid fa-passport",          "Tư vấn Định Cư",           "/static/images/hero/hero-immigration.jpg"),
+        196 => ("135deg,#065f46 0%,#10b981 100%", "fa-solid fa-money-bill-trend-up","Tin tức Đầu Tư",           "/static/images/hero/hero-invest.jpg"),
+        202 => ("135deg,#374151 0%,#1e3a5f 100%", "fa-solid fa-newspaper",         "Tin tức Định Cư",          "/static/images/hero/hero-immigration.jpg"),
         // Capstone Vietnam (197) + con
         197 => ("135deg,#1e3a5f 0%,#2563eb 100%", "fa-solid fa-building",         "Capstone Vietnam",         "/static/images/hero/hero-capstone.jpg"),
         198 => ("135deg,#1e3a5f 0%,#2563eb 100%", "fa-solid fa-people-group",     "Đội ngũ",                  "/static/images/hero/hero-team.jpg"),

@@ -55,7 +55,7 @@ public class DichVuController : Controller
 
         ViewData["Title"]        = vm.TrangDanhMuc;
         ViewData["CanonicalUrl"] = $"{Request.Scheme}://{Request.Host}{canonicalPath}";
-        ViewData["MenuGroupUrl"] = "/dich-vu";
+        ViewData["MenuGroupUrl"] = "/tu-van-dinh-cu";
 
         return View("~/Views/ThongTinDuHoc/GioiThieuPage.cshtml", vm);
     }

@@ -33,9 +33,12 @@ public class NewsUrlService : INewsUrlService
 
     public async Task<string?> BuildCategoryPath(int categoryId)
     {
+        // Custom canonical prefixes
+        if (categoryId == 202) return "/tu-van-dinh-cu";
+        if (categoryId == 196) return "/tu-van-dau-tu";
+
         var category = await _repo.GetCategoryByIdAsync(categoryId);
         if (category is null) return null;
-        
         return "/" + category.FullSlug;
     }
 

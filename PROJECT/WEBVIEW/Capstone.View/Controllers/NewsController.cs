@@ -28,6 +28,71 @@ public class NewsController : Controller
         return View(paged);
     }
 
+    // GET /tu-van-dinh-cu/tin-tuc-dinh-cu?page=1
+    public async Task<IActionResult> TinTucDinhCu(int page = 1, int pageSize = 27)
+        => await CategoryById(202, page, pageSize, "/tu-van-dinh-cu/tin-tuc-dinh-cu");
+
+    // GET /tu-van-dinh-cu/tin-tuc-dau-tu?page=1
+    public async Task<IActionResult> TinTucDauTu(int page = 1, int pageSize = 27)
+        => await CategoryById(196, page, pageSize, "/tu-van-dinh-cu/tin-tuc-dau-tu");
+
+    private async Task<IActionResult> CategoryById(int categoryId, int page, int pageSize, string canonicalPath)
+    {
+        var cat = await _news.GetCategoryByIdAsync(categoryId);
+        if (cat is null) return NotFound();
+
+        var paged = await _news.GetByCategoryIdAsync(categoryId, _portalId, page, pageSize);
+
+        ViewData["Title"]           = cat.CategoryName;
+        ViewData["MetaDescription"] = cat.Description ?? cat.CategoryName;
+        ViewData["CanonicalUrl"]    = $"{Request.Scheme}://{Request.Host}{canonicalPath}";
+        ViewData["BaseUrl"]         = canonicalPath;
+        ViewData["Category"]        = cat;
+        ViewData["Categories"]      = await _news.GetCategoriesWithCountAsync(_portalId);
+
+        return View("Category", paged);
+    }
+
+    // GET /tu-van-dinh-cu/{slug}-{id:int}
+    public async Task<IActionResult> DetailDinhCu(int id, string? slug)
+        => await DetailByCategory(id, slug, 202, "tu-van-dinh-cu", "news-dinh-cu-detail");
+
+    // GET /tu-van-dau-tu/{slug}-{id:int}
+    public async Task<IActionResult> DetailDauTu(int id, string? slug)
+        => await DetailByCategory(id, slug, 196, "tu-van-dau-tu", "news-dau-tu-detail");
+
+    private async Task<IActionResult> DetailByCategory(
+        int id, string? slug, int expectedCategoryId, string categoryPath, string routeName)
+    {
+        var vm = await _news.GetDetailAsync(id, _portalId);
+        if (vm is null) return NotFound();
+
+        // Canonical slug redirect
+        if (!string.Equals(slug, vm.Slug, StringComparison.OrdinalIgnoreCase))
+            return RedirectToRoutePermanent(routeName, new { slug = vm.Slug, id });
+
+        // Ensure news belongs to expected category
+        if (vm.CategoryId != expectedCategoryId) return NotFound();
+
+        ViewData["Title"]           = vm.MetaTitle ?? vm.Title;
+        ViewData["MetaDescription"] = vm.MetaDescription ?? vm.Summary;
+        ViewData["MetaImage"]       = vm.MetaImage ?? vm.ImagePath;
+        ViewData["CanonicalUrl"]    = $"{Request.Scheme}://{Request.Host}/{categoryPath}/{vm.Slug}-{id}";
+
+        // Override CategorySlug so breadcrumb/related links use canonical path
+        vm.CategorySlug = categoryPath;
+
+        var activeCats = await _events.GetActiveCatsWithEventsAsync(50);
+        vm.UpcomingEvents = activeCats
+            .Where(c => c.Is_show_website)
+            .OrderBy(c => c.Events.Any() ? c.Events.Min(e => e.Fromdatetime ?? DateTime.MaxValue)
+                                         : (c.FromDate ?? DateTime.MaxValue))
+            .Take(5)
+            .ToList();
+
+        return View("Detail", vm);
+    }
+
     // GET /tin-tuc/{slug}-{id:int}
     public async Task<IActionResult> Detail(int id, string? slug)
     {
