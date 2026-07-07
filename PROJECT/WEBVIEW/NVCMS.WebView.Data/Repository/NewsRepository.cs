@@ -160,4 +160,29 @@ public class NewsRepository : INewsRepository
             new { SchoolId = schoolId },
             commandType: CommandType.StoredProcedure);
     }
+
+    public async Task<PaginatedList<NewsModel>> GetByTagAsync(
+    string tag,
+    int portalId,
+    int page,
+    int pageSize)
+    {
+        await using var conn = CreateConn();
+
+        using var multi = await conn.QueryMultipleAsync(
+            "WebView_NewsByTag",
+            new
+            {
+                PortalId = portalId,
+                Tag = tag.Trim(),
+                Page = page,
+                PageSize = pageSize
+            },
+            commandType: CommandType.StoredProcedure);
+
+        var total = await multi.ReadFirstAsync<int>();
+        var items = await multi.ReadAsync<NewsModel>();
+
+        return new PaginatedList<NewsModel>(items, total, page, pageSize);
+    }
 }

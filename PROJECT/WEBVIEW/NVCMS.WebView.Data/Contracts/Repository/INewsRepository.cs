@@ -20,4 +20,7 @@ public interface INewsRepository
     // NewsBySchool
     Task<IEnumerable<TruongModel>> GetSchoolsByNewsAsync(int newId);
     Task<IEnumerable<NewsModel>>   GetNewsBySchoolAsync(int schoolId);
+
+    // ByTag
+    Task<PaginatedList<NewsModel>> GetByTagAsync(string tag, int portalId, int page, int pageSize);
 }

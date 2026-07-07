@@ -26,4 +26,7 @@ public interface INewsService
 
     // NewsBySchool
     Task<IEnumerable<NewsItemViewModel>> GetNewsBySchoolAsync(int schoolId);
+
+    // ByTag
+    Task<PaginatedList<NewsItemViewModel>> GetByTagAsync(string tag, int portalId, int page, int pageSize);
 }

@@ -1,0 +1,154 @@
+@{
+    var query    = ViewData["Query"]    as string ?? string.Empty;
+    var googleCx = ViewData["GoogleCx"] as string ?? string.Empty;
+    ViewData["Title"] = string.IsNullOrEmpty(query) ? "Tìm kiếm" : $"Kết quả tìm kiếm: {query}";
+}
+
+<section class="search-hero">
+    <div class="container">
+        <nav class="breadcrumb" aria-label="breadcrumb">
+            <a href="/">Trang chủ</a>
+            <i class="fa-solid fa-chevron-right"></i>
+            <span>Tìm kiếm</span>
+        </nav>
+        <h1 class="search-hero__title" data-aos="fade-up">
+            <i class="fa-solid fa-magnifying-glass"></i> Tìm kiếm
+        </h1>
+    </div>
+</section>
+
+<section class="search-section">
+    <div class="container">
+
+        @* ── Search box ── *@
+        <form class="search-form" action="/tim-kiem" method="get" role="search">
+            <div class="search-form__wrap">
+                <input
+                    id="search-input"
+                    class="search-form__input"
+                    type="search"
+                    name="q"
+                    value="@query"
+                    placeholder="Nhập từ khoá tìm kiếm…"
+                    autocomplete="off"
+                    aria-label="Tìm kiếm"
+                    autofocus />
+                <button class="search-form__btn" type="submit" aria-label="Tìm">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+            </div>
+        </form>
+
+        @* ── Google CSE results ── *@
+        <div class="search-results" id="search-results">
+            @if (!string.IsNullOrEmpty(googleCx))
+            {
+                <div class="gcse-searchresults-only"
+                     data-queryParameterName="q"
+                     data-defaultToImageSearch="false"
+                     data-enableImageSearch="false">
+                </div>
+            }
+            else
+            {
+                <p class="search-empty">Chưa cấu hình tìm kiếm.</p>
+            }
+        </div>
+
+    </div>
+</section>
+
+@section Styles {
+<style>
+/* ── Hero ── */
+.search-hero {
+    padding: 40px 0 28px;
+    background: linear-gradient(135deg, #1e3a5f 0%, #2563eb 100%);
+    color: #fff;
+}
+.search-hero .breadcrumb { color: rgba(255,255,255,.75); }
+.search-hero .breadcrumb a { color: rgba(255,255,255,.85); }
+.search-hero .breadcrumb a:hover { color: #fff; }
+.search-hero .breadcrumb i { margin: 0 6px; font-size: .7rem; }
+.search-hero__title {
+    margin: 14px 0 0;
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-weight: 700;
+    letter-spacing: -.5px;
+}
+
+/* ── Section ── */
+.search-section { padding: 36px 0 60px; }
+
+/* ── Form ── */
+.search-form { max-width: 680px; margin: 0 auto 36px; }
+.search-form__wrap {
+    display: flex;
+    border: 2px solid #2563eb;
+    border-radius: 50px;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 2px 12px rgba(37,99,235,.12);
+}
+.search-form__input {
+    flex: 1;
+    border: none; outline: none;
+    padding: 13px 20px;
+    font-size: 1rem; color: #111;
+    background: transparent;
+}
+.search-form__input::placeholder { color: #9ca3af; }
+.search-form__btn {
+    background: #2563eb; color: #fff;
+    border: none; padding: 0 22px;
+    font-size: 1rem; cursor: pointer;
+    transition: background .18s;
+}
+.search-form__btn:hover { background: #1d4ed8; }
+
+/* ── Google CSE overrides ── */
+.search-results { max-width: 860px; margin: 0 auto; }
+.gsc-control-cse { padding: 0 !important; border: none !important; background: transparent !important; }
+.gsc-search-box, .gsc-search-box-tools { display: none !important; }
+.gsc-result-info { color: #6b7280; font-size: .85rem; margin-bottom: 8px; }
+.gs-title, .gs-title * { color: #2563eb !important; }
+.gs-snippet { color: #374151 !important; }
+.gsc-cursor-box { text-align: center; margin-top: 20px; }
+.gsc-cursor-page {
+    display: inline-block; padding: 6px 12px;
+    border: 1px solid #e5e7eb; border-radius: 6px;
+    color: #374151; margin: 2px; cursor: pointer;
+    transition: background .15s;
+}
+.gsc-cursor-page:hover, .gsc-cursor-current-page {
+    background: #2563eb; color: #fff; border-color: #2563eb;
+}
+
+/* ── Empty state ── */
+.search-empty {
+    text-align: center; color: #9ca3af;
+    font-size: .95rem; padding: 40px 0;
+}
+</style>
+}
+
+@section Scripts {
+@if (!string.IsNullOrEmpty(googleCx))
+{
+<script>
+    // Tell Google CSE to use our <input name="q"> value as the initial query
+    window.__gcse = {
+        parserLoaded: function () {},
+        callback: function () {
+            var q = new URLSearchParams(window.location.search).get('q');
+            if (q) {
+                // Trigger programmatic search after CSE renders
+                google.search.cse.element.getElement('searchresults-only0')
+                    ?.execute(q);
+            }
+        }
+    };
+</script>
+<script async src="https://cse.google.com/cse.js?cx=@googleCx"></script>
+}
+}

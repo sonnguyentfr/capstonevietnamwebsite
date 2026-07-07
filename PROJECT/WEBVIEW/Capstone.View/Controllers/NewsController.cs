@@ -19,9 +19,41 @@ public class NewsController : Controller
         _portalId   = config.GetValue<int>("SiteSettings:PortalId");
     }
 
+    // GET /tin-tuc?tag=...&page=1
+    public async Task<IActionResult> Tag(string tag, int page = 1, int pageSize = 20)
+    {
+        if (string.IsNullOrWhiteSpace(tag)) return RedirectToAction(nameof(All));
+
+        var paged = await _news.GetByTagAsync(tag.Trim(), _portalId, page, pageSize);
+
+        var activeCats = await _events.GetActiveCatsWithEventsAsync(50);
+        var upcomingEvents = activeCats
+            .Where(c => c.Is_show_website)
+            .OrderBy(c => c.Events.Any() ? c.Events.Min(e => e.Fromdatetime ?? DateTime.MaxValue)
+                                         : (c.FromDate ?? DateTime.MaxValue))
+            .Take(5)
+            .ToList();
+
+        ViewData["Title"]        = $"#{tag}";
+        ViewData["Tag"]          = tag;
+        ViewData["CanonicalUrl"] = $"{Request.Scheme}://{Request.Host}/tin-tuc/tag?tag={Uri.EscapeDataString(tag)}";
+        ViewData["UpcomingEvents"] = upcomingEvents;
+
+        return View(paged);
+    }
+
     // GET /tin-tuc?page=1  (tất cả tin tức, phân trang)
+    // GET /tin-tuc?tag=...  → 301 redirect sang /tin-tuc/tag?tag=...
     public async Task<IActionResult> All(int page = 1, int pageSize = 27)
     {
+        var tag = Request.Query["tag"].ToString();
+        if (!string.IsNullOrWhiteSpace(tag))
+        {
+            var qs = page > 1
+                ? $"/tin-tuc/tag?tag={Uri.EscapeDataString(tag)}&page={page}"
+                : $"/tin-tuc/tag?tag={Uri.EscapeDataString(tag)}";
+            return RedirectPermanent(qs);
+        }
         var paged = await _news.GetAllPagedAsync(_portalId, page, pageSize);
         ViewData["Title"]        = "Tất cả tin tức";
         ViewData["CanonicalUrl"] = $"{Request.Scheme}://{Request.Host}/tin-tuc";

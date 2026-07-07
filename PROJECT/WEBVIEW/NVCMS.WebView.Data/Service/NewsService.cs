@@ -229,6 +229,19 @@ public class NewsService : INewsService
         });
     }
 
+    public async Task<PaginatedList<NewsItemViewModel>> GetByTagAsync(
+        string tag, int portalId, int page, int pageSize)
+    {
+        var paged  = await _repo.GetByTagAsync(tag, portalId, page, pageSize);
+        var catMap = (await GetAllCatsCachedAsync(portalId)).ToDictionary(c => c.CategoryID);
+        var vms = paged.Items.Select(n =>
+        {
+            catMap.TryGetValue(n.CategoryId, out var cat);
+            return MapToItem(n, cat);
+        }).ToList();
+        return new PaginatedList<NewsItemViewModel>(vms, paged.TotalCount, page, pageSize);
+    }
+
     public void InvalidateNewsCache(int newId, int portalId)
     {
         _cache.Remove(CacheKeys.NewsDetail(newId, portalId));

@@ -228,6 +228,11 @@ app.MapControllerRoute(
     defaults: new { controller = "News", action = "DetailDauTu" });
 
 app.MapControllerRoute(
+    name: "news-tag",
+    pattern: "tin-tuc/tag",
+    defaults: new { controller = "News", action = "Tag" });
+
+app.MapControllerRoute(
     name: "news-all",
     pattern: "tin-tuc",
     defaults: new { controller = "News", action = "All" });
@@ -236,6 +241,12 @@ app.MapControllerRoute(
     name: "news-detail",
     pattern: "tin-tuc/{slug}-{id:int}",
     defaults: new { controller = "News", action = "Detail" });
+
+// Tìm kiếm
+app.MapControllerRoute(
+    name: "search",
+    pattern: "tim-kiem",
+    defaults: new { controller = "Search", action = "Index" });
 
 // ================= DEFAULT (phải đặt trước catch-all) =================
 app.MapControllerRoute(
