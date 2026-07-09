@@ -6,10 +6,48 @@
     var pageUrl = ViewData["CanonicalUrl"]?.ToString() ?? string.Empty;
     var encodedUrl = Uri.EscapeDataString(pageUrl);
     var encodedTitle = Uri.EscapeDataString(Model.Title);
+    var isDoiNgu = (Model.CategorySlug ?? string.Empty).StartsWith("gioi-thieu/doi-ngu", StringComparison.OrdinalIgnoreCase);
+}
+
+@section Styles {
+    @if (isDoiNgu)
+    {
+        <link rel="stylesheet" href="/static/css/event-registration.css">
+    }
 }
 
 @* ── COVER ── *@
-@if (!string.IsNullOrEmpty(Model.ImagePath))
+@if (isDoiNgu)
+{
+    <section class="er-hero">
+        <div class="er-hero__overlay"></div>
+        <div class="er-hero__pattern"></div>
+        <div class="container er-hero__inner">
+            <div class="breadcrumb er-hero__breadcrumb" data-aos="fade-up">
+                <a href="/">Trang chủ</a>
+                <i class="fa-solid fa-chevron-right"></i>
+                <a href="/gioi-thieu/doi-ngu">Đội ngũ</a>
+                <i class="fa-solid fa-chevron-right"></i>
+                <span>@Model.CategoryName</span>
+            </div>
+            <div class="er-hero__body" data-aos="fade-up" data-aos-delay="80">
+                <div class="er-hero__badge">
+                    <i class="fa-solid fa-user-tie"></i>
+                    <span>@Model.CategoryName</span>
+                </div>
+                <h1 class="er-hero__title">@Model.Title</h1>
+                @if (!string.IsNullOrEmpty(Model.Tacgia))
+                {
+                    <div class="er-hero__dates">
+                        <i class="fa-solid fa-pen-nib"></i>
+                        <span>@Model.Tacgia</span>
+                    </div>
+                }
+            </div>
+        </div>
+    </section>
+}
+else if (!string.IsNullOrEmpty(Model.ImagePath))
 {
     <div class="nd-cover">
         <img src="@Model.ImagePath" alt="@Model.Title" loading="eager" />
@@ -21,11 +59,14 @@
     <div class="container">
 
         @* ── BREADCRUMB ── *@
-        <nav class="breadcrumb nd-breadcrumb" aria-label="breadcrumb">
-            <a href="/">Trang chủ</a>
-            <i class="fa-solid fa-chevron-right"></i>
-            <a href="/">@Model.CategoryName</a>
-        </nav>
+        @if (!isDoiNgu)
+        {
+            <nav class="breadcrumb nd-breadcrumb" aria-label="breadcrumb">
+                <a href="/">Trang chủ</a>
+                <i class="fa-solid fa-chevron-right"></i>
+                <a href="/">@Model.CategoryName</a>
+            </nav>
+        }
 
         @* ── HEADER ── *@
         <header class="nd-header">
