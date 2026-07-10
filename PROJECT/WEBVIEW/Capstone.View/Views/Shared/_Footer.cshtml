@@ -34,6 +34,10 @@
                                 {
                                     <p><i class="bx bx-home"></i>&nbsp;&nbsp;@branch.Address</p>
                                 }
+                                @if (!string.IsNullOrEmpty(branch.Thoigianlamviec))
+                                {
+                                    <p><i class="bx bxs-time-five"></i>&nbsp;&nbsp;@Html.Raw(@branch.Thoigianlamviec)</p>
+                                }
                                 @if (!string.IsNullOrEmpty(branch.Phone))
                                 {
                                     <p><i class="bx bx-phone"></i>&nbsp;&nbsp;Hotline: <a href="tel:@branch.Phone.Replace(" ", "")">@branch.Phone</a></p>
@@ -50,8 +54,8 @@
             <div class="footer-block">
                 <h4 class="footer-title">Thông tin chung</h4>
                 <ul class="footer-menu">
-                    <li><a href="#">Tin tức - Sự kiện</a></li>
-                    <li><a href="#">Thư viện Văn bản - Biểu mẫu</a></li>
+                    <li><a href="/cam-nang-su-kien-du-hoc/tin-tuc-chung">Tin tức - Sự kiện</a></li>
+                    <li><a href="/truong-doi-tac">Trường đối tác</a></li>
                     <li><a href="#">Góp ý - Liên hệ</a></li>
                 </ul>
             </div>

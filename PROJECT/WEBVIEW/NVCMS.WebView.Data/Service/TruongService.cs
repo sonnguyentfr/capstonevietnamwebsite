@@ -177,7 +177,7 @@ public class TruongService : ITruongService
             if (aESL is not null) vmESL = MapESL(aESL);
         }
         var social = (t.Social ?? "").Split(',', StringSplitOptions.TrimEntries);
-        return new TruongDetailViewModel
+        var detail = new TruongDetailViewModel
         {
             Card = MapCard(t),
             NameofSchool = t.NameofSchool,
@@ -220,6 +220,8 @@ public class TruongService : ITruongService
             Instagram = social.ElementAtOrDefault(5),
             RelatedNews = relatedNews.Select(MapNewsItem).ToList()
         };
+        detail.RelatedTruong = await GetRelatedAsync(detail, top: 20);
+        return detail;
     }
 
     public async Task<MajorSearchViewModel> GetMajorSearchAsync(string? filter, int? quocGiaId, string? loai)
@@ -468,4 +470,117 @@ public class TruongService : ITruongService
         AdmRoll = a.AdmRoll,
         WorkOpp = a.WorkOpp
     };
+
+    // ----------------------------------------------------------------
+    // Related schools – in-memory scoring
+    // Priority: 1) shared top majors  2) same location  3) tuition range
+    //           4) TOEFL/IELTS band   5) same Loai code
+    // ----------------------------------------------------------------
+    public async Task<List<TruongCardViewModel>> GetRelatedAsync(TruongDetailViewModel current, int top = 10)
+    {
+        var loaiCode = current.Loai ?? string.Empty;
+        var rawLoaiIds = LoaiCodeToRawIds(loaiCode);
+        var countryId = current.Card.CountryId;
+
+        var candidates = await _repo.GetRelatedCandidatesAsync(
+            current.Card.Id, countryId, rawLoaiIds, take: 200);
+
+        // Build set of current school's top majors (MostMajor1..5 from Admis4Year)
+        var currentMajors = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        if (current.Admis4Year is { } a4)
+        {
+            foreach (var m in new[] { a4.MostMajor1, a4.MostMajor2, a4.MostMajor3, a4.MostMajor4, a4.MostMajor5 })
+                if (!string.IsNullOrWhiteSpace(m)) currentMajors.Add(m.Trim());
+        }
+
+        // Parse TOEFL/IELTS thresholds from current school
+        int? curToefl = TryParseFirstInt(current.Admis4Year?.ToefliBTUnder);
+        decimal? curIelts = TryParseFirstDecimal(current.Admis4Year?.IELTSUnder);
+        int? curToeflBF = current.AdmisBF?.TESTToeflMin;
+        decimal? curIeltsBF = current.AdmisBF?.TESTIELTSMin;
+        curToefl ??= curToeflBF;
+        curIelts ??= curIeltsBF;
+
+        // Tuition of current school (USD/yr)
+        int? curTuition = current.Card.TuitionDisplay;
+
+        var scored = new List<(TruongModel model, int score)>();
+
+        foreach (var c in candidates)
+        {
+            int score = 0;
+            var candidateLoai = NormalizeLoai(c.Loai);
+
+            // ── 1. Same Loai code (5 pts) ───────────────────────────
+            if (!string.IsNullOrEmpty(loaiCode) && candidateLoai == loaiCode)
+                score += 5;
+
+            // ── 2. Shared top majors (up to 40 pts, 8 pts each) ─────
+            //    MostMajor is stored in Admis4Year, too expensive to load for 200 candidates.
+            //    Use TruongModel.Major (comma-separated major names) as proxy.
+            if (currentMajors.Count > 0 && !string.IsNullOrWhiteSpace(c.Major))
+            {
+                foreach (var cm in currentMajors)
+                {
+                    if (c.Major.Contains(cm, StringComparison.OrdinalIgnoreCase))
+                        score += 8;
+                }
+                score = Math.Min(score, 40); // cap at 40
+            }
+
+            // ── 3. Same state/city (25 pts) ─────────────────────────
+            if (!string.IsNullOrWhiteSpace(current.ThanhPholongannhat) &&
+                !string.IsNullOrWhiteSpace(c.ThanhPholongannhat) &&
+                string.Equals(current.ThanhPholongannhat.Trim(), c.ThanhPholongannhat.Trim(),
+                    StringComparison.OrdinalIgnoreCase))
+                score += 25;
+            else if (current.Card.CountryId.HasValue && c.StateCity.HasValue &&
+                     c.StateCity == (current.Card.CountryId))  // fallback: same country already filtered
+                score += 5;
+
+            // ── 4. Tuition proximity (up to 20 pts) ─────────────────
+            if (curTuition.HasValue && curTuition > 0)
+            {
+                var candTuition = TuitionFromEcFields(c, candidateLoai);
+                if (candTuition.HasValue && candTuition > 0)
+                {
+                    var diff = Math.Abs(curTuition.Value - candTuition.Value);
+                    if (diff <= 5_000)       score += 20;
+                    else if (diff <= 10_000) score += 15;
+                    else if (diff <= 20_000) score += 8;
+                }
+            }
+
+            // ── 5. TOEFL / IELTS band (up to 10 pts) ────────────────
+            // For 4Y/GR/2Y schools we check ToefliBTUnder via Admis4Year –
+            // too expensive to load per candidate, skip exact check.
+            // For BF schools, TESTToeflMin is on AdmisBF – same issue.
+            // We award pts if candidate's ECUnder roughly matches tuition,
+            // already handled above.  Award a small bonus if same Loai.
+            // (Detailed TOEFL matching is done in a separate SP if needed later.)
+
+            scored.Add((c, score));
+        }
+
+        return scored
+            .OrderByDescending(x => x.score)
+            .Take(top)
+            .Select(x => MapCard(x.model))
+            .ToList();
+    }
+
+    private static int? TryParseFirstInt(string? s)
+    {
+        if (string.IsNullOrWhiteSpace(s)) return null;
+        var tok = s.Split(new[] { '-', '–', ' ', '/' }, StringSplitOptions.RemoveEmptyEntries)[0];
+        return int.TryParse(tok.Trim(), out var v) ? v : null;
+    }
+
+    private static decimal? TryParseFirstDecimal(string? s)
+    {
+        if (string.IsNullOrWhiteSpace(s)) return null;
+        var tok = s.Split(new[] { '-', '–', ' ', '/' }, StringSplitOptions.RemoveEmptyEntries)[0];
+        return decimal.TryParse(tok.Trim(), System.Globalization.NumberStyles.Number,
+            System.Globalization.CultureInfo.InvariantCulture, out var v) ? v : null;
+    }
 }

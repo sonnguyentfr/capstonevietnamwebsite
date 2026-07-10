@@ -94,6 +94,8 @@ Public Class nvcmsBL
     Public Shared settingPagesitediachi2 = "settingPagesitediachi2"
     Public Shared settingPagesiteemail = "settingPagesiteemail"
     Public Shared settingPagesiteemail1 = "settingPagesiteemail1"
+    Public Shared settingPagethoigianlamviec1 = "settingPagethoigianlamviec1"
+    Public Shared settingPagethoigianlamviec2 = "settingPagethoigianlamviec2"
     Public Shared settingPagesiteemail2 = "settingPagesiteemail2"
     Public Shared settingPagesitedienthoai = "settingPagesitedienthoai"
     Public Shared settingPagesitedienthoai1 = "settingPagesitedienthoai1"

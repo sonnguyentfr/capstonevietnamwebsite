@@ -83,21 +83,23 @@ public class SiteSettingsHelper : ISiteSettingsHelper
         var branches = new List<BranchInfo>();
         for (int i = 0; i <= 5; i++)
         {
-            var s       = i == 0 ? "" : i.ToString();
-            var name    = Get("settingPagesitechinhnhanh" + s);
-            var address = Get("settingPagesitediachi"     + s);
-            var email   = Get("settingPagesiteemail"      + s);
-            var phone   = Get("settingPagesitedienthoai"  + s);
+            var s = i == 0 ? "" : i.ToString();
+            var name = Get("settingPagesitechinhnhanh" + s);
+            var address = Get("settingPagesitediachi" + s);
+            var email = Get("settingPagesiteemail" + s);
+            var phone = Get("settingPagesitedienthoai" + s);
+            var thoigianlamviec = Get("settingPagethoigianlamviec" + s);
 
             if (!string.IsNullOrEmpty(name) || !string.IsNullOrEmpty(address)
                 || !string.IsNullOrEmpty(email) || !string.IsNullOrEmpty(phone))
             {
                 branches.Add(new BranchInfo
                 {
-                    Name    = name,
+                    Name = name,
                     Address = address,
-                    Email   = email,
-                    Phone   = phone,
+                    Email = email,
+                    Phone = phone,
+                    Thoigianlamviec = thoigianlamviec,
                 });
             }
         }
@@ -105,54 +107,54 @@ public class SiteSettingsHelper : ISiteSettingsHelper
         return new WebSiteSettings
         {
             PortalId = portalId,
-            General  = new GeneralInfo
+            General = new GeneralInfo
             {
-                SiteName    = Get("settingPagesitename"),
-                SiteWeb     = Get("settingPagesiteweb"),
+                SiteName = Get("settingPagesitename"),
+                SiteWeb = Get("settingPagesiteweb"),
                 SiteAddress = Get("settingPagesitediachi"),
-                SiteEmail   = Get("settingPagesiteemail"),
-                SitePhone   = Get("settingPagesitedienthoai"),
+                SiteEmail = Get("settingPagesiteemail"),
+                SitePhone = Get("settingPagesitedienthoai"),
                 SiteSummary = Get("settingPagesitesummary"),
-                SiteTag     = Get("settingPagesitetag"),
+                SiteTag = Get("settingPagesitetag"),
             },
-            Social   = new SocialInfo
+            Social = new SocialInfo
             {
-                Facebook  = Get("settingPagesiteFacebook"),
-                Youtube   = Get("settingPagesiteYoutube"),
-                LinkedIn  = Get("settingPagesiteLinkedin"),
+                Facebook = Get("settingPagesiteFacebook"),
+                Youtube = Get("settingPagesiteYoutube"),
+                LinkedIn = Get("settingPagesiteLinkedin"),
                 Instagram = Get("settingPagesiteInstagram"),
-                Zalo      = Get("settingPagesiteZalo"),
-                Twitter   = Get("settingPagesiteTwitter"),
-                Whatsapp  = Get("settingPagesiteWhatsapp"),
-                Skype     = Get("settingPagesiteSkype"),
+                Zalo = Get("settingPagesiteZalo"),
+                Twitter = Get("settingPagesiteTwitter"),
+                Whatsapp = Get("settingPagesiteWhatsapp"),
+                Skype = Get("settingPagesiteSkype"),
             },
-            Chat     = new ChatInfo
+            Chat = new ChatInfo
             {
-                ZaloId         = Get("settingPagesiteZaloId"),
+                ZaloId = Get("settingPagesiteZaloId"),
                 FacebookChatId = Get("settingPagesiteFacebookChatId"),
-                LiveChatId     = Get("settingPagesiteLiveChatId"),
+                LiveChatId = Get("settingPagesiteLiveChatId"),
             },
-            Mail     = new MailInfo
+            Mail = new MailInfo
             {
                 EnableMail = GetBool("settingPagesiteNhanMail"),
-                MailList   = Get("settingPagesiteMailList"),
+                MailList = Get("settingPagesiteMailList"),
             },
-            Google   = new GoogleInfo
+            Google = new GoogleInfo
             {
-                CaptchaKey    = Get("settingPageGooogleCapcha"),
+                CaptchaKey = Get("settingPageGooogleCapcha"),
                 CaptchaSecret = Get("settingPageGooogleCapchaSecret"),
             },
-            Cdn      = new CdnInfo
+            Cdn = new CdnInfo
             {
-                Cdn        = Get("settingPagesiteCdn"),
+                Cdn = Get("settingPagesiteCdn"),
                 FileServer = Get("settingPagesiteFileServer"),
             },
-            Logo     = new LogoInfo
+            Logo = new LogoInfo
             {
                 HeaderLogo = Get("settingPagesiteLogo"),
                 FooterLogo = Get("settingPagesiteLogoFooter"),
             },
-            Code     = new CodeInfo
+            Code = new CodeInfo
             {
                 HeaderCode = Get("settingPagesiteHeaderCode"),
                 FooterCode = Get("settingPagesiteFooterCode"),
@@ -181,21 +183,23 @@ public class SiteSettingsHelper : ISiteSettingsHelper
         var branches = new List<BranchInfo>();
         for (int i = 0; i <= 5; i++)
         {
-            var s       = i == 0 ? "" : i.ToString();
-            var name    = Get("settingPagesitechinhnhanh" + s);
-            var address = Get("settingPagesitediachi"     + s);
-            var email   = Get("settingPagesiteemail"      + s);
-            var phone   = Get("settingPagesitedienthoai"  + s);
+            var s = i == 0 ? "" : i.ToString();
+            var name = Get("settingPagesitechinhnhanh" + s);
+            var address = Get("settingPagesitediachi" + s);
+            var email = Get("settingPagesiteemail" + s);
+            var phone = Get("settingPagesitedienthoai" + s);
+            var thoigianlamviec = Get("settingPagethoigianlamviec" + s);
 
             if (!string.IsNullOrEmpty(name) || !string.IsNullOrEmpty(address)
                 || !string.IsNullOrEmpty(email) || !string.IsNullOrEmpty(phone))
             {
                 branches.Add(new BranchInfo
                 {
-                    Name    = name,
+                    Name = name,
                     Address = address,
-                    Email   = email,
-                    Phone   = phone,
+                    Email = email,
+                    Phone = phone,
+                    Thoigianlamviec = thoigianlamviec
                 });
             }
         }
@@ -223,21 +227,23 @@ public class SiteSettingsHelper : ISiteSettingsHelper
         var branches = new List<BranchInfo>();
         for (int i = 0; i <= 2; i++)
         {
-            var s       = i == 0 ? "" : i.ToString();
-            var name    = Get("settingPagesitechinhnhanh" + s);
-            var address = Get("settingPagesitediachi"     + s);
-            var email   = Get("settingPagesiteemail"      + s);
-            var phone   = Get("settingPagesitedienthoai"  + s);
+            var s = i == 0 ? "" : i.ToString();
+            var name = Get("settingPagesitechinhnhanh" + s);
+            var address = Get("settingPagesitediachi" + s);
+            var email = Get("settingPagesiteemail" + s);
+            var phone = Get("settingPagesitedienthoai" + s);
+            var thoigianlamviec = Get("settingPagethoigianlamviec" + s);
 
             if (!string.IsNullOrEmpty(name) || !string.IsNullOrEmpty(address)
                 || !string.IsNullOrEmpty(email) || !string.IsNullOrEmpty(phone))
             {
                 branches.Add(new BranchInfo
                 {
-                    Name    = name,
+                    Name = name,
                     Address = address,
-                    Email   = email,
-                    Phone   = phone,
+                    Email = email,
+                    Phone = phone,
+                    Thoigianlamviec = thoigianlamviec
                 });
             }
         }
@@ -247,14 +253,14 @@ public class SiteSettingsHelper : ISiteSettingsHelper
             Branches = branches.AsReadOnly(),
             Social = new SocialInfo
             {
-                Facebook  = Get("settingPagesiteFacebook"),
-                Youtube   = Get("settingPagesiteYoutube"),
-                LinkedIn  = Get("settingPagesiteLinkedin"),
+                Facebook = Get("settingPagesiteFacebook"),
+                Youtube = Get("settingPagesiteYoutube"),
+                LinkedIn = Get("settingPagesiteLinkedin"),
                 Instagram = Get("settingPagesiteInstagram"),
-                Zalo      = Get("settingPagesiteZalo"),
-                Twitter   = Get("settingPagesiteTwitter"),
-                Whatsapp  = Get("settingPagesiteWhatsapp"),
-                Skype     = Get("settingPagesiteSkype"),
+                Zalo = Get("settingPagesiteZalo"),
+                Twitter = Get("settingPagesiteTwitter"),
+                Whatsapp = Get("settingPagesiteWhatsapp"),
+                Skype = Get("settingPagesiteSkype"),
             },
             SitePhone = Get("settingPagesitedienthoai"),
             SiteEmail = Get("settingPagesiteemail"),

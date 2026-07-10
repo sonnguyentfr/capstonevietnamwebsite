@@ -119,6 +119,21 @@
                     <div class="row g-3 align-center">
                         <div class="col-lg-4">
                             <div class="form-group">
+                                <label class="form-label">Thời gian làm việc</label>
+                                <span class="form-note">Thông tin Thời gian làm việc</span>
+                            </div>
+                        </div>
+                        <div class="col-lg-8">
+                            <div class="form-group">
+                                <div class="form-control-wrap">
+                                    <input type="text" class="form-control" id="sitedthoigianlamviec1" runat="server" placeholder="Thứ 2 đến thứ 6: Sáng 9:00 - 12:00 / Chiều 13:00 - 18:00">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row g-3 align-center">
+                        <div class="col-lg-4">
+                            <div class="form-group">
                                 <label class="form-label">Địa chỉ Email</label>
                                 <span class="form-note">Thông tin Email liên hệ</span>
                             </div>
@@ -173,6 +188,21 @@
                             <div class="form-group">
                                 <div class="form-control-wrap">
                                     <input type="text" class="form-control" id="sitediachi2" runat="server" placeholder=" 22 Trần Quý Khoách, P. Tân Định">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row g-3 align-center">
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-label">Thời gian làm việc</label>
+                                <span class="form-note">Thông tin Thời gian làm việc</span>
+                            </div>
+                        </div>
+                        <div class="col-lg-8">
+                            <div class="form-group">
+                                <div class="form-control-wrap">
+                                    <input type="text" class="form-control" id="sitedthoigianlamviec2" runat="server" placeholder="Thứ 2 đến thứ 6: Sáng 9:00 - 12:00 / Chiều 13:00 - 18:00">
                                 </div>
                             </div>
                         </div>

@@ -233,4 +233,35 @@ public class TruongRepository : ITruongRepository
             CountryNames.TryGetValue(r.Id, out var n) ? n : $"Quốc gia {r.Id}",
             r.TruongCount));
     }
+
+    // ----------------------------------------------------------------
+    // Inline SQL: lấy ~200 ứng viên "trường liên quan" để scoring in-memory
+    // ----------------------------------------------------------------
+    public async Task<IEnumerable<TruongModel>> GetRelatedCandidatesAsync(
+        int excludeId, int? countryId, IEnumerable<string> rawLoaiIds, int take = 200)
+    {
+        var loaiList = rawLoaiIds.ToList();
+        await using var conn = CreateConn();
+
+        var conditions = new List<string> { "Id != @ExcludeId", "Status = 1" };
+        var p = new DynamicParameters();
+        p.Add("ExcludeId", excludeId);
+
+        if (countryId.HasValue)
+        {
+            conditions.Add("Country = @CountryId");
+            p.Add("CountryId", countryId.Value);
+        }
+
+        if (loaiList.Count > 0)
+        {
+            var inParams = string.Join(",", loaiList.Select((_, i) => $"@L{i}"));
+            conditions.Add($"Loai IN ({inParams})");
+            for (int i = 0; i < loaiList.Count; i++)
+                p.Add($"L{i}", loaiList[i]);
+        }
+
+        var sql = $"SELECT TOP {take} * FROM Cap_Truong WHERE {string.Join(" AND ", conditions)} ORDER BY NEWID()";
+        return await conn.QueryAsync<TruongModel>(sql, p);
+    }
 }

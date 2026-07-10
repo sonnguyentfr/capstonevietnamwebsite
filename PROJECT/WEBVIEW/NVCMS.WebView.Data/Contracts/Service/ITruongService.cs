@@ -16,4 +16,5 @@ public interface ITruongService
     /// loaiList: ví dụ ["4Y","2Y"] hoặc ["BF"]
     /// </summary>
     Task<IEnumerable<TruongCardViewModel>> GetHomeSwiperAsync(IEnumerable<string> loaiList, int pageSize = 12);
+    Task<List<TruongCardViewModel>> GetRelatedAsync(TruongDetailViewModel current, int top = 10);
 }

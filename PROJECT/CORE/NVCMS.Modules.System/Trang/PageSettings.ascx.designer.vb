@@ -77,6 +77,15 @@ Partial Public Class PageSettings
     Protected WithEvents sitediachi1 As Global.System.Web.UI.HtmlControls.HtmlInputText
 
     '''<summary>
+    '''sitedthoigianlamviec1 control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents sitedthoigianlamviec1 As Global.System.Web.UI.HtmlControls.HtmlInputText
+
+    '''<summary>
     '''siteemail1 control.
     '''</summary>
     '''<remarks>
@@ -111,6 +120,15 @@ Partial Public Class PageSettings
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents sitediachi2 As Global.System.Web.UI.HtmlControls.HtmlInputText
+
+    '''<summary>
+    '''sitedthoigianlamviec2 control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents sitedthoigianlamviec2 As Global.System.Web.UI.HtmlControls.HtmlInputText
 
     '''<summary>
     '''siteemail2 control.

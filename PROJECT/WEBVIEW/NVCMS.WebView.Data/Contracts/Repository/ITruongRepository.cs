@@ -17,4 +17,5 @@ public interface ITruongRepository
     Task<IEnumerable<TruongMajorModel>> GetAllMajorsAsync();
     Task<IEnumerable<TruongMajorModel>> GetMajorsWithCountAsync(int? quocGiaId, string? loai);
     Task<IEnumerable<(int Id, string Ten, int Count)>> GetCountriesWithCountAsync(bool? isPartner = null);
+    Task<IEnumerable<TruongModel>> GetRelatedCandidatesAsync(int excludeId, int? countryId, IEnumerable<string> rawLoaiIds, int take = 200);
 }

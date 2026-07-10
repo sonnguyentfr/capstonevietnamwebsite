@@ -700,6 +700,60 @@
     </div>
 </div>
 
+@* ── TRƯỜNG LIÊN QUAN ── *@
+@if (Model.RelatedTruong.Any())
+{
+    <section class="truong-related section-large">
+        <div class="container">
+            <h2 class="truong-related__title">
+                <i class="fa-solid fa-school-circle-check"></i> Trường tương tự
+            </h2>
+            <div class="truong-related__grid">
+                @foreach (var r in Model.RelatedTruong)
+                {
+                    <a href="@r.DetailUrl" class="truong-related__card">
+                        <div class="truong-related__card-logo">
+                            @if (!string.IsNullOrEmpty(r.LogoUrl))
+                            {
+                                <img src="@r.LogoUrl" alt="@r.NameofSchool" loading="lazy" />
+                            }
+                            else
+                            {
+                                <span class="truong-related__card-logo-placeholder">
+                                    <i class="fa-solid fa-school"></i>
+                                </span>
+                            }
+                        </div>
+                        <div class="truong-related__card-body">
+                            <p class="truong-related__card-name">@r.NameofSchool</p>
+                            <div class="truong-related__card-meta">
+                                @if (!string.IsNullOrEmpty(r.CountryName))
+                                {
+                                    <span><i class="fa-solid fa-location-dot"></i> @r.CountryName@(string.IsNullOrEmpty(r.StateName) ? "" : $", {r.StateName}")</span>
+                                }
+                                @if (!string.IsNullOrEmpty(r.SchoolTypeLabelVN))
+                                {
+                                    <span><i class="fa-solid fa-graduation-cap"></i> @r.SchoolTypeLabelVN</span>
+                                }
+                                @if (r.TuitionDisplay.HasValue && r.TuitionDisplay > 0)
+                                {
+                                    <span><i class="fa-solid fa-dollar-sign"></i> @r.TuitionDisplay.Value.ToString("N0") USD/năm</span>
+                                }
+                            </div>
+                        </div>
+                        @if (r.IsPartner)
+                        {
+                            <span class="truong-related__card-partner">
+                                <i class="fa-solid fa-handshake"></i>
+                            </span>
+                        }
+                    </a>
+                }
+            </div>
+        </div>
+    </section>
+}
+
 @section Scripts {
     @Html.Raw(SeoSchemaHelper.CollegeOrUniversity(
         name: Model.NameofSchool ?? string.Empty,

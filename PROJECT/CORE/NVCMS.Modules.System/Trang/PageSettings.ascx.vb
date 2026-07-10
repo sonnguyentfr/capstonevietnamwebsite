@@ -89,10 +89,12 @@ Public Class PageSettings
                 tenchinhnhanh1.Value = PortalController.GetPortalSetting(nvcmsBL.settingPagesitechinhnhanh1, iPortalId, Null.NullString)
                 sitediachi1.Value = PortalController.GetPortalSetting(nvcmsBL.settingPagesitediachi1, iPortalId, Null.NullString)
                 siteemail1.Value = PortalController.GetPortalSetting(nvcmsBL.settingPagesiteemail1, iPortalId, Null.NullString)
+                sitedthoigianlamviec1.Value = PortalController.GetPortalSetting(nvcmsBL.settingPagethoigianlamviec1, iPortalId, Null.NullString)
                 sitedienthoai1.Value = PortalController.GetPortalSetting(nvcmsBL.settingPagesitedienthoai1, iPortalId, Null.NullString)
 
                 tenchinhnhanh2.Value = PortalController.GetPortalSetting(nvcmsBL.settingPagesitechinhnhanh2, iPortalId, Null.NullString)
                 sitediachi2.Value = PortalController.GetPortalSetting(nvcmsBL.settingPagesitediachi2, iPortalId, Null.NullString)
+                sitedthoigianlamviec2.Value = PortalController.GetPortalSetting(nvcmsBL.settingPagethoigianlamviec2, iPortalId, Null.NullString)
                 siteemail2.Value = PortalController.GetPortalSetting(nvcmsBL.settingPagesiteemail2, iPortalId, Null.NullString)
                 sitedienthoai2.Value = PortalController.GetPortalSetting(nvcmsBL.settingPagesitedienthoai2, iPortalId, Null.NullString)
 
@@ -170,11 +172,13 @@ Public Class PageSettings
 
             PortalController.UpdatePortalSetting(iPortalId, nvcmsBL.settingPagesitechinhnhanh1, tenchinhnhanh1.Value, True)
             PortalController.UpdatePortalSetting(iPortalId, nvcmsBL.settingPagesitediachi1, sitediachi1.Value, True)
+            PortalController.UpdatePortalSetting(iPortalId, nvcmsBL.settingPagethoigianlamviec1, sitedthoigianlamviec1.Value, True)
             PortalController.UpdatePortalSetting(iPortalId, nvcmsBL.settingPagesiteemail1, siteemail1.Value, True)
             PortalController.UpdatePortalSetting(iPortalId, nvcmsBL.settingPagesitedienthoai1, sitedienthoai1.Value, True)
 
             PortalController.UpdatePortalSetting(iPortalId, nvcmsBL.settingPagesitechinhnhanh2, tenchinhnhanh2.Value, True)
             PortalController.UpdatePortalSetting(iPortalId, nvcmsBL.settingPagesitediachi2, sitediachi2.Value, True)
+            PortalController.UpdatePortalSetting(iPortalId, nvcmsBL.settingPagethoigianlamviec2, sitedthoigianlamviec2.Value, True)
             PortalController.UpdatePortalSetting(iPortalId, nvcmsBL.settingPagesiteemail2, siteemail2.Value, True)
             PortalController.UpdatePortalSetting(iPortalId, nvcmsBL.settingPagesitedienthoai2, sitedienthoai2.Value, True)
             'Mail
@@ -231,7 +235,7 @@ Public Class PageSettings
                 Me.filelogofooter.PostedFile.SaveAs(PhotoAbPath & "/" & strFileNamefooter)
                 strFileNamePathfooter = GetMediaPath(PhotoVirPath, Me.filelogofooter.PostedFile.FileName)
             Else
-                strFileNamePathfooter = hpflinkimage.Value
+                strFileNamePathfooter = hpflinkimagefooter.Value
             End If
             PortalController.UpdatePortalSetting(iPortalId, nvcmsBL.settingPagesiteLogofooter, strFileNamePathfooter, True)
             '----------------------

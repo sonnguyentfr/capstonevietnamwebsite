@@ -85,4 +85,5 @@ public class BranchInfo
     public string Address { get; init; } = string.Empty;
     public string Email   { get; init; } = string.Empty;
     public string Phone   { get; init; } = string.Empty;
+    public string Thoigianlamviec   { get; init; } = string.Empty;
 }

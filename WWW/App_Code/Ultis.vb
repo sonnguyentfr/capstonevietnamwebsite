@@ -1268,7 +1268,7 @@ Public Class Ultis
     Public Shared Function FormatLockByUser(portalid As Integer, ByVal newsid As Integer, userid As Integer) As Boolean
         Dim ctlNews As New NV_NewsController
         Dim objNews As NV_NewsInfo = ctlNews.GetByID(newsid)
-        If objNews.IsEdited AndAlso objNews.EditedUser = userid Then
+        If objNews.IsEdited Then
             Return True
         Else
             Return False

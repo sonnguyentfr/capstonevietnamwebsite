@@ -110,6 +110,7 @@ public class TruongDetailViewModel
     public TruongAdmisBFViewModel? AdmisBF { get; set; }
     public TruongAdmisESLViewModel? AdmisESL { get; set; }
     public List<NewsItemViewModel> RelatedNews { get; set; } = [];
+    public List<TruongCardViewModel> RelatedTruong { get; set; } = [];
 }
 
 /// <summary>
