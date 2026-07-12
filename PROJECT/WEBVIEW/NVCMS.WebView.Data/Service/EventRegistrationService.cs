@@ -3,19 +3,19 @@ using NVCMS.WebView.Data.Contracts.Repository;
 using NVCMS.WebView.Data.Contracts.Service;
 using NVCMS.WebView.Data.Models;
 using NVCMS.WebView.Data.ViewModels;
-
+using Capstone.View.Helpers;
 namespace NVCMS.WebView.Data.Service;
 
 public class EventRegistrationService : IEventRegistrationService
 {
     private readonly IEventRegistrationRepository _repo;
-    private readonly IEventsRepository            _eventsRepo;
+    private readonly IEventsRepository _eventsRepo;
 
     public EventRegistrationService(
         IEventRegistrationRepository repo,
-        IEventsRepository            eventsRepo)
+        IEventsRepository eventsRepo)
     {
-        _repo       = repo;
+        _repo = repo;
         _eventsRepo = eventsRepo;
     }
 
@@ -25,28 +25,34 @@ public class EventRegistrationService : IEventRegistrationService
 
         var student = await _repo.FindStudentAsync(
             string.IsNullOrWhiteSpace(normalized) ? null : normalized,
-            string.IsNullOrWhiteSpace(email)      ? null : email?.Trim());
+            string.IsNullOrWhiteSpace(email) ? null : email?.Trim());
 
         if (student is null)
             return new CheckStudentResult { Found = false };
 
         return new CheckStudentResult
         {
-            Found       = true,
-            StudentId   = student.Id,
+            Found = true,
+            StudentId = student.Id,
             StudentCode = student.Code ?? string.Empty,
-            Hotendem    = student.Hotendem ?? string.Empty,
-            Ten         = student.Ten      ?? string.Empty,
-            FullName    = student.FullName,
-            Phone       = student.Sodienthoai ?? string.Empty,
-            Email       = student.Email       ?? string.Empty,
-            DiaChi      = student.Diachi      ?? string.Empty,
+            Hotendem = student.Hotendem ?? string.Empty,
+            Ten = student.Ten ?? string.Empty,
+            FullName = student.FullName,
+            Phone = student.Sodienthoai ?? string.Empty,
+            Email = student.Email ?? string.Empty,
+            DiaChi = student.Diachi ?? string.Empty,
         };
     }
 
     public async Task<(bool Success, bool IsDuplicate, string Message, int StudentId, string StudentCode)>
         RegisterAsync(EventRegistrationInputViewModel input, int portalId, CancellationToken ct = default)
     {
+
+
+        input.Hotendem = InputCleaner.Name(input.Hotendem);
+        input.Ten = InputCleaner.Name(input.Ten);
+        input.TinhThanh = InputCleaner.Text(input.TinhThanh);
+        input.Email = InputCleaner.Email(input.Email);
         // ── Validate phone ────────────────────────────────────────────────────
         var normalizedPhone = PhoneHelper.Normalize(input.SoDienThoai);
         if (!PhoneHelper.IsValid(normalizedPhone))
@@ -62,8 +68,8 @@ public class EventRegistrationService : IEventRegistrationService
             return (false, false, "Sự kiện không tồn tại.", 0, string.Empty);
 
         var now = DateTime.Now;
-        if (cat.FromDate.HasValue && now < cat.FromDate.Value.Date)
-            return (false, false, "Sự kiện chưa mở đăng ký.", 0, string.Empty);
+        //if (cat.FromDate.HasValue && now < cat.FromDate.Value.Date)
+        //    return (false, false, "Sự kiện chưa mở đăng ký.", 0, string.Empty);
         if (cat.EndDate.HasValue && now > cat.EndDate.Value)
             return (false, false, "Sự kiện đã kết thúc đăng ký.", 0, string.Empty);
 
@@ -72,12 +78,12 @@ public class EventRegistrationService : IEventRegistrationService
 
         var student = existing ?? new StudentInfoModel
         {
-            Id          = 0,
-            Hotendem    = input.Hotendem.Trim(),
-            Ten         = input.Ten.Trim(),
+            Id = 0,
+            Hotendem = input.Hotendem.Trim(),
+            Ten = input.Ten.Trim(),
             Sodienthoai = normalizedPhone,
-            Email       = input.Email?.Trim(),
-            Diachi      = input.TinhThanh?.Trim(),
+            Email = input.Email?.Trim(),
+            Diachi = input.TinhThanh?.Trim(),
         };
 
         // ── Atomic register ───────────────────────────────────────────────────

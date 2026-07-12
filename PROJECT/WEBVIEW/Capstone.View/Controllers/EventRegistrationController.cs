@@ -15,29 +15,34 @@ public class EventRegistrationController : Controller
     private const int VietnamLocationId = 82;
 
     private readonly IEventRegistrationService _service;
-    private readonly IEventsService            _events;
-    private readonly ILocationService          _locations;
-    private readonly ISiteSettingsHelper       _siteSettings;
-    private readonly IHttpClientFactory        _httpFactory;
-    private readonly IOptions<SiteSettings>    _siteOptions;
+    private readonly IEventsService _events;
+    private readonly ILocationService _locations;
+    private readonly ISiteSettingsHelper _siteSettings;
+    private readonly IHttpClientFactory _httpFactory;
+    private readonly IOptions<SiteSettings> _siteOptions;
     private readonly ILogger<EventRegistrationController> _logger;
+    private readonly string _googlerecaptchav3_sitekey;
+    private readonly string _googlerecaptchav3_secretkey;
 
     public EventRegistrationController(
         IEventRegistrationService service,
-        IEventsService            events,
-        ILocationService          locations,
-        ISiteSettingsHelper       siteSettings,
-        IHttpClientFactory        httpFactory,
-        IOptions<SiteSettings>    siteOptions,
+        IEventsService events,
+        ILocationService locations,
+        ISiteSettingsHelper siteSettings,
+        IHttpClientFactory httpFactory,
+        IOptions<SiteSettings> siteOptions,
+        IConfiguration config,
         ILogger<EventRegistrationController> logger)
     {
-        _service      = service;
-        _events       = events;
-        _locations    = locations;
+        _service = service;
+        _events = events;
+        _locations = locations;
         _siteSettings = siteSettings;
-        _httpFactory  = httpFactory;
-        _siteOptions  = siteOptions;
-        _logger       = logger;
+        _httpFactory = httpFactory;
+        _siteOptions = siteOptions;
+        _logger = logger;
+        _googlerecaptchav3_sitekey = config["Google:recaptchav3_sitekey"] ?? string.Empty;
+        _googlerecaptchav3_secretkey = config["Google:recaptchav3_secretkey"] ?? string.Empty;
     }
 
     // ── GET /dang-ky-su-kien?eventCatId=x&eventId=y ──────────────────────────
@@ -50,7 +55,7 @@ public class EventRegistrationController : Controller
 
         // Only allow registration during active window
         var now = DateTime.Now;
-        bool isOpen = (!cat.EndDate.HasValue  || now <= cat.EndDate.Value);
+        bool isOpen = (!cat.EndDate.HasValue || now <= cat.EndDate.Value);
         if (!isOpen)
         {
             ViewData["Title"] = "Đăng ký đã đóng";
@@ -66,21 +71,22 @@ public class EventRegistrationController : Controller
 
         var vm = new EventRegistrationPageViewModel
         {
-            Cat               = cat,
-            Event             = selectedEvent,
+            Cat = cat,
+            Event = selectedEvent,
             PreselectedEventId = eventId,
-            Provinces         = provinces,
+            Provinces = provinces,
             Input = new EventRegistrationInputViewModel
             {
                 EventCatId = eventCatId,
-                EventId    = selectedEvent.Id,
+                EventId = selectedEvent.Id,
             }
         };
 
         ViewData["Title"] = $"Đăng ký tham dự - {cat.CatName}";
 
         var site = await _siteSettings.GetSettingsAsync(_siteOptions.Value.PortalId);
-        ViewBag.RecaptchaSiteKey = site.Google.CaptchaKey ?? string.Empty;
+        //ViewBag.RecaptchaSiteKey = site.Google.CaptchaKey ?? string.Empty;
+        ViewBag.RecaptchaSiteKey = _googlerecaptchav3_sitekey ?? string.Empty;
 
         return View(vm);
     }
@@ -103,17 +109,19 @@ public class EventRegistrationController : Controller
         if (!ModelState.IsValid)
         {
             var cat = await _events.GetCatWithEventsAsync(input.EventCatId, portalId);
-            var ev  = cat?.Events.FirstOrDefault(e => e.Id == input.EventId) ?? new EventsViewModel();
+            var ev = cat?.Events.FirstOrDefault(e => e.Id == input.EventId) ?? new EventsViewModel();
             var site2 = await _siteSettings.GetSettingsAsync(portalId);
             var provinces = await _locations.GetProvincesAsync(VietnamLocationId);
-            ViewBag.RecaptchaSiteKey = site2.Google.CaptchaKey ?? string.Empty;
+            //ViewBag.RecaptchaSiteKey = site2.Google.CaptchaKey ?? string.Empty;
+            ViewBag.RecaptchaSiteKey = _googlerecaptchav3_sitekey ?? string.Empty;
+
             return View(new EventRegistrationPageViewModel
             {
-                Cat               = cat ?? new EventsCatViewModel(),
-                Event             = ev,
+                Cat = cat ?? new EventsCatViewModel(),
+                Event = ev,
                 PreselectedEventId = input.EventId,
-                Provinces         = provinces,
-                Input             = input,
+                Provinces = provinces,
+                Input = input,
             });
         }
 
@@ -169,15 +177,15 @@ public class EventRegistrationController : Controller
 
     private async Task EnqueueEmailAsync(
         EventRegistrationInputViewModel input,
-        int      portalId,
-        int      studentId,
-        string   studentCode,
+        int portalId,
+        int studentId,
+        string studentCode,
         DateTime registeredAt)
     {
         try
         {
-            var cat  = await _events.GetCatWithEventsAsync(input.EventCatId, portalId);
-            var ev   = cat?.Events.FirstOrDefault(e => e.Id == input.EventId);
+            var cat = await _events.GetCatWithEventsAsync(input.EventCatId, portalId);
+            var ev = cat?.Events.FirstOrDefault(e => e.Id == input.EventId);
             var site = await _siteSettings.GetSettingsAsync(portalId);
 
             if (cat is null || ev is null) return;
@@ -204,28 +212,28 @@ public class EventRegistrationController : Controller
             {
                 studentId,
                 studentCode,
-                studentName      = input.HoVaTen.Trim(),
-                studentPhone     = PhoneHelper.Normalize(input.SoDienThoai),
-                studentEmail     = input.Email        ?? string.Empty,
-                studentAddress   = input.TinhThanh    ?? string.Empty,
-                eventCatId       = input.EventCatId,
-                eventId          = input.EventId,
-                eventName        = cat.CatName ?? string.Empty,
-                eventLocation    = ev.Diadiem  ?? string.Empty,
+                studentName = input.HoVaTen.Trim(),
+                studentPhone = PhoneHelper.Normalize(input.SoDienThoai),
+                studentEmail = input.Email ?? string.Empty,
+                studentAddress = input.TinhThanh ?? string.Empty,
+                eventCatId = input.EventCatId,
+                eventId = input.EventId,
+                eventName = cat.CatName ?? string.Empty,
+                eventLocation = ev.Diadiem ?? string.Empty,
                 eventDate,
                 eventTime,
                 registrationTime = registeredAt.ToString("HH:mm dd/MM/yyyy"),
-                sendCode         = cat.Sendcode == true,
-                importantNotes   = cat.ContentMail,
-                companyLogoUrl   = site.Logo.HeaderLogo,
-                siteUrl          = site.General.SiteWeb,
-                siteName         = site.General.SiteName,
+                sendCode = cat.Sendcode == true,
+                importantNotes = cat.ContentMail,
+                companyLogoUrl = site.Logo.HeaderLogo,
+                siteUrl = site.General.SiteWeb,
+                siteName = site.General.SiteName,
                 adminEmails,
             };
 
-            var json     = JsonSerializer.Serialize(payload);
-            var content  = new StringContent(json, Encoding.UTF8, "application/json");
-            var client   = _httpFactory.CreateClient("ApiClient");
+            var json = JsonSerializer.Serialize(payload);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+            var client = _httpFactory.CreateClient("ApiClient");
             var response = await client.PostAsync("api/EventRegistrationEmail/enqueue", content);
 
             if (!response.IsSuccessStatusCode)
@@ -249,20 +257,31 @@ public class EventRegistrationController : Controller
         if (string.IsNullOrWhiteSpace(token)) return false;
         try
         {
-            var site   = await _siteSettings.GetSettingsAsync(portalId);
-            var secret = site.Google.CaptchaSecret;
-            if (string.IsNullOrWhiteSpace(secret)) return true; // not configured → skip
+            var site = await _siteSettings.GetSettingsAsync(portalId);
+            //var secret = site.Google.CaptchaSecret;
+            if (string.IsNullOrWhiteSpace(_googlerecaptchav3_secretkey)) return true; // not configured → skip
 
-            var client   = _httpFactory.CreateClient();
+            var client = _httpFactory.CreateClient();
+            //var response = await client.PostAsync(
+            //    $"https://www.google.com/recaptcha/api/siteverify?secret={Uri.EscapeDataString(_googlerecaptchav3_secretkey)}&response={Uri.EscapeDataString(token)}",
+            //    null);
+
+            var content = new FormUrlEncodedContent(new[]
+                {
+                    new KeyValuePair<string, string>("secret", _googlerecaptchav3_secretkey),
+                    new KeyValuePair<string, string>("response", token)
+                });
+
             var response = await client.PostAsync(
-                $"https://www.google.com/recaptcha/api/siteverify?secret={Uri.EscapeDataString(secret)}&response={Uri.EscapeDataString(token)}",
-                null);
+                "https://www.google.com/recaptcha/api/siteverify",
+                content);
+
             if (!response.IsSuccessStatusCode) return false;
 
             var json = await response.Content.ReadAsStringAsync();
             using var doc = System.Text.Json.JsonDocument.Parse(json);
             var success = doc.RootElement.TryGetProperty("success", out var s) && s.GetBoolean();
-            var score   = doc.RootElement.TryGetProperty("score",   out var sc) ? sc.GetDouble() : 0.5;
+            var score = doc.RootElement.TryGetProperty("score", out var sc) ? sc.GetDouble() : 0.5;
             return success && score >= 0.5;
         }
         catch (Exception ex)

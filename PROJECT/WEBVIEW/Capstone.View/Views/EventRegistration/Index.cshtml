@@ -236,20 +236,16 @@
                             <label class="er-label">Giới tính / Gender</label>
                             <div class="er-radio-group">
                                 <label class="er-radio-item">
-                                    <input type="radio" asp-for="Input.GioiTinh" value="Nam" />
+                                    <input type="radio" asp-for="Input.GioiTinh" value="1" />
                                     <span class="er-radio-box"></span>
                                     <span class="er-radio-label"><i class="fa-solid fa-mars"></i> Nam / Male</span>
                                 </label>
                                 <label class="er-radio-item">
-                                    <input type="radio" asp-for="Input.GioiTinh" value="Nữ" />
+                                    <input type="radio" asp-for="Input.GioiTinh" value="0" />
                                     <span class="er-radio-box"></span>
                                     <span class="er-radio-label"><i class="fa-solid fa-venus"></i> Nữ / Female</span>
                                 </label>
-                                <label class="er-radio-item">
-                                    <input type="radio" asp-for="Input.GioiTinh" value="Khác" />
-                                    <span class="er-radio-box"></span>
-                                    <span class="er-radio-label">Khác / Other</span>
-                                </label>
+                                
                             </div>
                         </div>
 
@@ -444,106 +440,48 @@
         var emailInp    = document.getElementById('inp-email');
         var hotendemInp = document.getElementById('inp-hotendem');
         var tenInp      = document.getElementById('inp-ten');
-        var foundNotice = document.getElementById('found-notice');
-        var foundNoticeAvai = document.getElementById('found-notice-avai');
-        var emailLoading = document.getElementById("email-loading");
-        var phoneLoading = document.getElementById("phone-loading");
-        var lookupTimer = null;
-        var autoFilled  = false;
-        function showLookupLoading(show){
 
-        emailLoading.style.display = show ? "block" : "none";
-        phoneLoading.style.display = show ? "block" : "none";
-        }
-        function setProvince(val) {
-        var hiddenInp = document.getElementById('inp-tinh');
-        var displayTxt = document.getElementById('province-display-text');
-        if (hiddenInp) hiddenInp.value = val;
-        if (displayTxt) displayTxt.textContent = val || '-- Chọn tỉnh/thành --';
-        // sync highlight in list
-        document.querySelectorAll('.er-province-opt').forEach(function (li) {
-        li.classList.toggle('er-province-opt--selected', li.getAttribute('data-value') === val);
-        });
-        }
+        //Nhập email xong kiểm tra luôn
+        emailInp.addEventListener('blur', function () {
 
-        function autofillFromResult(d) {
-        if (!d.found) {
-        if (autoFilled) {
-        autoFilled = false;
-        [hotendemInp, tenInp].forEach(function (f) {
-        if (!f) return;
-        f.readOnly = false;
-        f.classList.remove('er-control--autofill');
-        });
-        if (foundNotice) foundNotice.style.display = 'none';
-        }
+        var email = (this.value || '').trim();
+
+        if (!email) {
+        showFieldError('er-err-email', 'Vui lòng nhập email.');
+        setInvalid(this, true);
         return;
         }
-        autoFilled = true;
-        if (hotendemInp && !hotendemInp.value) hotendemInp.value = d.hotendem || '';
-        if (tenInp      && !tenInp.value)      tenInp.value      = d.ten      || '';
-        if (emailInp    && !emailInp.value)    emailInp.value    = d.email    || '';
-        var hiddenTinh = document.getElementById('inp-tinh');
-        if (hiddenTinh && !hiddenTinh.value && d.diaChi) setProvince(d.diaChi);
-        [hotendemInp, tenInp].forEach(function (f) {
-        if (!f) return;
-        f.readOnly = true;
-        f.classList.add('er-control--autofill');
-        });
-        if (foundNotice) foundNotice.style.display = '';
+
+        if (!isValidEmail(email)) {
+        showFieldError('er-err-email', 'Email không đúng định dạng.');
+        setInvalid(this, true);
+        return;
         }
 
-        var lastLookupKey = "";
+        showFieldError('er-err-email', '');
+        setInvalid(this, false);
+        });
+        //Nhập sđt xong kiểm tra luôn
+        phoneInp.addEventListener('blur', function () {
 
-        function doLookup() {
+        var phone = (this.value || '').trim();
 
-        var phone = phoneInp ? phoneInp.value.trim() : "";
-        var email = emailInp ? emailInp.value.trim() : "";
-
-        // Không có dữ liệu thì thôi
-        if (!phone && !email)
+        if (!phone) {
+        showFieldError('er-err-phone', 'Vui lòng nhập số điện thoại.');
+        setInvalid(this, true);
         return;
-
-        // Chỉ kiểm tra khi email đúng định dạng (nếu có nhập)
-        if (email && !isValidEmail(email))
-        return;
-
-        // Chỉ kiểm tra khi SĐT đúng định dạng (nếu có nhập)
-        if (phone && !isValidPhone(phone))
-        return;
-
-        // Không gọi lại nếu dữ liệu không đổi
-        var key = phone + "|" + email;
-
-        if (key === lastLookupKey)
-        return;
-
-        lastLookupKey = key;
-
-        fetch("/EventRegistration/CheckStudent?phone=" + encodeURIComponent(phone) +
-        "&email=" + encodeURIComponent(email))
-        .then(function (r) {
-        if (!r.ok) throw new Error();
-        return r.json();
-        })
-        .then(autofillFromResult)
-        .catch(function () { });
         }
 
-        // Chỉ lookup khi rời khỏi ô nhập
-        [phoneInp, emailInp].forEach(function (el) {
-
-        if (!el) return;
-
-        el.addEventListener("blur", doLookup);
+        if (!isValidPhone(phone)) {
+        showFieldError('er-err-phone', 'Số điện thoại không hợp lệ.');
+        setInvalid(this, true);
+        return;
+        }
+        phoneInp.value = normalizePhone(phone);
+        showFieldError('er-err-phone', '');
+        setInvalid(this, false);
         });
-
-        function schedule() { clearTimeout(lookupTimer); lookupTimer = setTimeout(doLookup, 700); }
-        [phoneInp, emailInp].forEach(function (el) {
-        if (!el) return;
-        el.addEventListener('blur', doLookup);
-        el.addEventListener('input', schedule);
-        });
+        
 
         // ── Province searchable picker ────────────────────────────────────────
         (function () {
@@ -636,13 +574,7 @@
         else         input.classList.remove('er-control--invalid');
         }
 
-        function isValidEmail(v) {
-        return /^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/.test(v);
-        }
-
-        function isValidPhone(v) {
-        return /^(0|\+84)[0-9]{8,10}$/.test(v.replace(/\s/g, ''));
-        }
+        
         function focusField(el) {
         if (!el) return;
 

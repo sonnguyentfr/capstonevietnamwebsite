@@ -3051,3 +3051,112 @@ body {
         width: 100%;
     }
 }
+
+/* ============================================================
+   TRƯỜNG LIÊN QUAN  –  /truong-doi-tac/{slug}-{id}
+   ============================================================ */
+.truong-related {
+    background: #f8fafc;
+    border-top: 1px solid #e5eaf1;
+}
+.truong-related__title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #1e3a5f;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+}
+.truong-related__title i { color: #2563eb; }
+
+.truong-related__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1rem;
+}
+
+.truong-related__card {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: .85rem;
+    background: #fff;
+    border: 1px solid #e5eaf1;
+    border-radius: 10px;
+    padding: .85rem 1rem;
+    text-decoration: none;
+    color: inherit;
+    transition: box-shadow .18s, border-color .18s, transform .18s;
+}
+.truong-related__card:hover {
+    box-shadow: 0 4px 18px rgba(37,99,235,.12);
+    border-color: #93c5fd;
+    transform: translateY(-2px);
+}
+
+.truong-related__card-logo {
+    flex-shrink: 0;
+    width: 52px;
+    height: 52px;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #f1f5f9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.truong-related__card-logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+.truong-related__card-logo-placeholder {
+    font-size: 1.4rem;
+    color: #94a3b8;
+}
+
+.truong-related__card-body {
+    flex: 1;
+    min-width: 0;
+}
+.truong-related__card-name {
+    font-size: .88rem;
+    font-weight: 700;
+    color: #1e3a5f;
+    line-height: 1.3;
+    margin: 0 0 .35rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+.truong-related__card-meta {
+    display: flex;
+    flex-direction: column;
+    gap: .18rem;
+}
+.truong-related__card-meta span {
+    font-size: .73rem;
+    color: #64748b;
+    display: flex;
+    align-items: center;
+    gap: .3rem;
+}
+.truong-related__card-meta i { color: #2563eb; font-size: .68rem; }
+
+.truong-related__card-partner {
+    position: absolute;
+    top: .5rem;
+    right: .6rem;
+    font-size: .7rem;
+    color: #16a34a;
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    border-radius: 999px;
+    padding: .15rem .4rem;
+}
+
+@media (max-width: 600px) {
+    .truong-related__grid { grid-template-columns: 1fr; }
+}
