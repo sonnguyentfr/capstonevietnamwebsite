@@ -1,40 +1,255 @@
 @{
     ViewData["Title"] = "Đăng ký thành công";
+    var msg = TempData["RegSuccess"] as string;
+    var catName = TempData["RegCatName"] as string;
 }
 
-<section class="page-hero bg-primary-950">
-    <div class="container">
-        <h1 class="page-hero-title" data-aos="fade-up">Đăng ký thành công</h1>
+@section Styles {
+    <link rel="stylesheet" href="/static/css/event-registration.css">
+    <style>
+        /* ── Success page overrides ── */
+        .ers-hero {
+            position: relative;
+            min-height: 220px;
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+            background: linear-gradient(135deg, #064e3b 0%, #065f46 50%, #059669 100%);
+        }
+        .ers-hero__overlay {
+            position: absolute; inset: 0;
+            background:
+                radial-gradient(ellipse 70% 60% at 90% 50%, rgba(52,211,153,.18) 0%, transparent 70%),
+                radial-gradient(ellipse 40% 80% at 10% 80%, rgba(6,78,59,.35) 0%, transparent 60%);
+            z-index: 0;
+        }
+        .ers-hero__pattern {
+            position: absolute; inset: 0; z-index: 0; opacity: .07;
+            background-image:
+                repeating-linear-gradient(45deg,  #fff 0px,#fff 1px,transparent 1px,transparent 28px),
+                repeating-linear-gradient(-45deg, #fff 0px,#fff 1px,transparent 1px,transparent 28px);
+        }
+        .ers-hero__inner {
+            position: relative; z-index: 1; padding: 2.5rem 0; width: 100%;
+            display: flex; flex-direction: column; align-items: center; text-align: center; gap: .7rem;
+        }
+        .ers-hero__icon {
+            width: 80px; height: 80px; border-radius: 50%;
+            background: rgba(255,255,255,.15);
+            border: 3px solid rgba(255,255,255,.4);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 2.2rem; color: #fff;
+            animation: ers-pop .5s cubic-bezier(.34,1.56,.64,1) both;
+        }
+        @@keyframes ers-pop {
+            from { transform: scale(0); opacity: 0; }
+            to   { transform: scale(1); opacity: 1; }
+        }
+        .ers-hero__title {
+            font-size: clamp(1.5rem, 4vw, 2.2rem);
+            font-weight: 800; color: #fff; margin: 0;
+            text-shadow: 0 2px 16px rgba(0,0,0,.2);
+        }
+        .ers-hero__sub {
+            font-size: .95rem; color: rgba(255,255,255,.85); margin: 0;
+        }
+
+        /* ── Main card ── */
+        .ers-wrap {
+            background: #f0fdf4; min-height: 60vh; padding: 3rem 0 4rem;
+        }
+        .ers-card {
+            max-width: 680px; margin: 0 auto;
+            background: #fff; border-radius: 16px;
+            box-shadow: 0 8px 40px rgba(5,150,105,.12);
+            border: 1px solid #d1fae5;
+            overflow: hidden;
+        }
+        .ers-card__top {
+            background: linear-gradient(135deg,#ecfdf5,#d1fae5);
+            padding: 2rem 2rem 1.5rem;
+            display: flex; flex-direction: column; align-items: center;
+            text-align: center; gap: .5rem;
+            border-bottom: 1px solid #a7f3d0;
+        }
+        .ers-card__check {
+            width: 72px; height: 72px; border-radius: 50%;
+            background: #059669;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 2rem; color: #fff;
+            box-shadow: 0 4px 20px rgba(5,150,105,.35);
+            animation: ers-pop .5s .1s cubic-bezier(.34,1.56,.64,1) both;
+        }
+        .ers-card__headline {
+            font-size: 1.3rem; font-weight: 800; color: #065f46; margin: 0;
+        }
+        .ers-card__msg {
+            font-size: .9rem; color: #374151; margin: 0; line-height: 1.6;
+        }
+
+        /* ── Steps ── */
+        .ers-card__body { padding: 1.75rem 2rem; }
+        .ers-steps-title {
+            font-size: .78rem; font-weight: 700; text-transform: uppercase;
+            letter-spacing: .07em; color: #6b7280; margin: 0 0 1rem;
+        }
+        .ers-steps { list-style: none; padding: 0; margin: 0 0 1.75rem; display: flex; flex-direction: column; gap: .75rem; }
+        .ers-steps li {
+            display: flex; align-items: flex-start; gap: .85rem;
+            padding: .75rem 1rem; border-radius: 10px;
+            background: #f8fafc; border: 1px solid #e5eaf1;
+        }
+        .ers-steps__num {
+            flex-shrink: 0; width: 28px; height: 28px; border-radius: 50%;
+            background: #059669; color: #fff;
+            font-size: .75rem; font-weight: 700;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .ers-steps__text { font-size: .88rem; color: #374151; line-height: 1.5; }
+        .ers-steps__text strong { color: #065f46; }
+
+        /* ── Info box ── */
+        .ers-info {
+            display: flex; align-items: flex-start; gap: .75rem;
+            background: #eff6ff; border: 1px solid #bfdbfe;
+            border-radius: 10px; padding: .9rem 1rem; margin-bottom: 1.75rem;
+            font-size: .85rem; color: #1e40af; line-height: 1.5;
+        }
+        .ers-info i { font-size: 1rem; margin-top: .05rem; flex-shrink: 0; }
+
+        /* ── Actions ── */
+        .ers-actions { display: flex; gap: .75rem; flex-wrap: wrap; }
+        .ers-btn {
+            display: inline-flex; align-items: center; gap: .5rem;
+            padding: .7rem 1.4rem; border-radius: 8px;
+            font-size: .88rem; font-weight: 700; text-decoration: none;
+            transition: all .18s;
+        }
+        .ers-btn--primary {
+            background: #059669; color: #fff;
+            box-shadow: 0 2px 10px rgba(5,150,105,.3);
+        }
+        .ers-btn--primary:hover { background: #047857; color: #fff; transform: translateY(-1px); }
+        .ers-btn--outline {
+            background: #fff; color: #374151;
+            border: 1.5px solid #d1d5db;
+        }
+        .ers-btn--outline:hover { border-color: #059669; color: #059669; }
+
+        /* ── Confetti dots (pure CSS) ── */
+        .ers-confetti { position: relative; }
+        .ers-confetti::before, .ers-confetti::after {
+            content: '';
+            position: absolute; top: -6px;
+            width: 6px; height: 6px; border-radius: 50%;
+            animation: ers-confetti-fall 1.2s ease-in forwards;
+        }
+        .ers-confetti::before { left: 20%; background: #fbbf24; animation-delay: .2s; }
+        .ers-confetti::after  { right: 20%; background: #f472b6; animation-delay: .4s; }
+        @@keyframes ers-confetti-fall {
+            from { transform: translateY(0) rotate(0deg); opacity: 1; }
+            to   { transform: translateY(60px) rotate(180deg); opacity: 0; }
+        }
+
+        @@media (max-width: 600px) {
+            .ers-hero { min-height: 170px; }
+            .ers-card__top, .ers-card__body { padding: 1.5rem 1.25rem; }
+            .ers-actions { flex-direction: column; }
+            .ers-btn { justify-content: center; }
+        }
+    </style>
+}
+
+@* ── HERO ── *@
+<section class="ers-hero">
+    <div class="ers-hero__overlay"></div>
+    <div class="ers-hero__pattern"></div>
+    <div class="container ers-hero__inner" data-aos="fade-up">
+        <div class="ers-hero__icon">
+            <i class="fa-solid fa-calendar-check"></i>
+        </div>
+        <h1 class="ers-hero__title">Đăng ký tham dự thành công!</h1>
+        <p class="ers-hero__sub">Capstone Vietnam cảm ơn bạn đã đăng ký</p>
     </div>
 </section>
 
-<section class="section-large">
+@* ── MAIN ── *@
+<div class="ers-wrap">
     <div class="container">
-        <div class="event-reg-success" data-aos="fade-up">
-            <div class="success-icon">
-                <i class="fa-solid fa-circle-check"></i>
+        <div class="ers-card ers-confetti" data-aos="fade-up" data-aos-delay="80">
+
+            @* Top confirmation *@
+            <div class="ers-card__top">
+                <div class="ers-card__check">
+                    <i class="fa-solid fa-check"></i>
+                </div>
+                <h2 class="ers-card__headline">
+                    🎉 Chúc mừng! Bạn đã đăng ký thành công
+                </h2>
+                @if (!string.IsNullOrWhiteSpace(msg))
+                {
+                    <p class="ers-card__msg">@msg</p>
+                }
+                else
+                {
+                    <p class="ers-card__msg">
+                        Thông tin đăng ký của bạn đã được ghi nhận.<br>
+                        <strong>Email xác nhận sẽ được gửi trong vài phút tới.</strong>
+                    </p>
+                }
             </div>
-            <h2 class="success-title">Chúc mừng bạn đã đăng ký thành công!</h2>
-            @if (TempData["RegSuccess"] is string msg)
-            {
-                <p class="success-message">@msg</p>
-            }
-            else
-            {
-                <p class="success-message">
-                    Đăng ký thành công. Email xác nhận sẽ được gửi trong ít phút.
-                </p>
-            }
-            <div class="success-actions mt-8">
-                <a href="/su-kien" class="btn-solid">
-                    <span>Xem sự kiện khác</span>
-                    <i class="fa-solid fa-arrow-right"></i>
-                </a>
-                <a href="/" class="btn-outline ml-4">
-                    <i class="fa-solid fa-house"></i>
-                    <span>Trang chủ</span>
-                </a>
+
+            @* Body *@
+            <div class="ers-card__body">
+
+                @* Next steps *@
+                <p class="ers-steps-title">Các bước tiếp theo</p>
+                <ul class="ers-steps">
+                    <li>
+                        <span class="ers-steps__num">1</span>
+                        <span class="ers-steps__text">
+                            <strong>Kiểm tra hộp thư</strong> — Email xác nhận kèm thông tin chi tiết sự kiện sẽ được gửi đến địa chỉ bạn đã cung cấp.
+                        </span>
+                    </li>
+                    <li>
+                        <span class="ers-steps__num">2</span>
+                        <span class="ers-steps__text">
+                            <strong>Lưu lịch</strong> — Đánh dấu ngày và địa điểm tổ chức để không bỏ lỡ sự kiện.
+                        </span>
+                    </li>
+                    <li>
+                        <span class="ers-steps__num">3</span>
+                        <span class="ers-steps__text">
+                            <strong>Đến đúng giờ</strong> — Mang theo email xác nhận (bản in hoặc trên điện thoại) khi tham dự.
+                        </span>
+                    </li>
+                </ul>
+
+                @* Info note *@
+                <div class="ers-info">
+                    <i class="fa-solid fa-circle-info"></i>
+                    <span>
+                        Nếu bạn không nhận được email sau <strong>15 phút</strong>, vui lòng kiểm tra thư mục <strong>Spam / Junk</strong> hoặc liên hệ Capstone Vietnam để được hỗ trợ.
+                    </span>
+                </div>
+
+                @* Action buttons *@
+                <div class="ers-actions">
+                    <a href="/su-kien" class="ers-btn ers-btn--primary">
+                        <i class="fa-solid fa-calendar-days"></i>
+                        Xem sự kiện khác
+                    </a>
+                    <a href="/dang-ky-tu-van" class="ers-btn ers-btn--outline">
+                        <i class="fa-solid fa-comments"></i>
+                        Đăng ký tư vấn
+                    </a>
+                    <a href="/" class="ers-btn ers-btn--outline">
+                        <i class="fa-solid fa-house"></i>
+                        Trang chủ
+                    </a>
+                </div>
+
             </div>
         </div>
     </div>
-</section>
+</div>

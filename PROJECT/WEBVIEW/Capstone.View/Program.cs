@@ -102,9 +102,9 @@ app.Use(async (context, next) =>
         "Referrer-Policy",
         "strict-origin-when-cross-origin");
 
-    context.Response.Headers.Append(
-        "Content-Security-Policy",
-        "default-src 'self'; script-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none';");
+    //context.Response.Headers.Append(
+    //    "Content-Security-Policy",
+    //    "default-src 'self'; script-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none';");
     await next();
 });
 
