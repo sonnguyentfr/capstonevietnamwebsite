@@ -4,19 +4,24 @@ using NVCMS.WebView.Data.Contracts.Service;
 using NVCMS.WebView.Data.Models;
 using NVCMS.WebView.Data.ViewModels;
 using Capstone.View.Helpers;
+using Dapper;
+using Microsoft.Data.SqlClient;
 namespace NVCMS.WebView.Data.Service;
 
 public class EventRegistrationService : IEventRegistrationService
 {
     private readonly IEventRegistrationRepository _repo;
     private readonly IEventsRepository _eventsRepo;
+    private readonly string _connectionString;
 
     public EventRegistrationService(
         IEventRegistrationRepository repo,
-        IEventsRepository eventsRepo)
+        IEventsRepository eventsRepo,
+        string connectionString)
     {
         _repo = repo;
         _eventsRepo = eventsRepo;
+        _connectionString = connectionString;
     }
 
     public async Task<CheckStudentResult> CheckStudentAsync(string? phone, string? email)
@@ -78,23 +83,52 @@ public class EventRegistrationService : IEventRegistrationService
 
         var student = existing ?? new StudentInfoModel
         {
-            Id = 0,
-            Hotendem = input.Hotendem.Trim(),
-            Ten = input.Ten.Trim(),
+            Id          = 0,
+            Hotendem    = input.Hotendem.Trim(),
+            Ten         = input.Ten.Trim(),
             Sodienthoai = normalizedPhone,
-            Email = input.Email?.Trim(),
-            Diachi = input.TinhThanh?.Trim(),
+            Email       = input.Email?.Trim(),
+            Diachi      = input.TinhThanh?.Trim(),
+            Ngaysinh    = input.NgaySinh,
+            Tinh        = await LookupTinhIdAsync(input.TinhThanh),
         };
+
+        // Bổ sung ngày sinh và tỉnh cho student cũ (SP sẽ chỉ điền nếu đang NULL)
+        if (existing is not null)
+        {
+            existing.Ngaysinh = input.NgaySinh;
+            existing.Tinh     = await LookupTinhIdAsync(input.TinhThanh);
+            existing.Diachi   = input.TinhThanh?.Trim();
+        }
 
         // ── Atomic register ───────────────────────────────────────────────────
         var (studentId, studentCode, isDuplicate) = await _repo.RegisterAsync(
             student, input.EventId, input.EventCatId, portalId, ct);
 
-        if (isDuplicate)
-            return (false, true, "Bạn đã đăng ký địa điểm này rồi.", studentId, studentCode);
+        // Duplicate = đã đăng ký rồi NHƯNG vẫn gửi mail xác nhận lại
+        // (thông tin student đã được SP update nếu có thay đổi)
+        var message = isDuplicate
+            ? "Bạn đã đăng ký sự kiện này trước đó. Email xác nhận sẽ được gửi lại cho bạn."
+            : "Đăng ký thành công. Email xác nhận sẽ được gửi trong ít phút.";
 
-        return (true, false,
-            "Đăng ký thành công. Email xác nhận sẽ được gửi trong ít phút.",
-            studentId, studentCode);
+        return (true, isDuplicate, message, studentId, studentCode);
+    }
+
+    /// <summary>
+    /// Tra cứu id của tỉnh/thành trong NVCMS_DM_DVHanhChinh_Tinh theo tên.
+    /// Trả về null nếu không tìm thấy hoặc tên trống.
+    /// </summary>
+    private async Task<int?> LookupTinhIdAsync(string? tinhName)
+    {
+        if (string.IsNullOrWhiteSpace(tinhName)) return null;
+        try
+        {
+            await using var conn = new SqlConnection(_connectionString);
+            var id = await conn.ExecuteScalarAsync<int?>(
+                "SELECT TOP 1 id FROM NVCMS_DM_DVHanhChinh_Tinh WHERE _name = @name",
+                new { name = tinhName.Trim() });
+            return id;
+        }
+        catch { return null; }
     }
 }

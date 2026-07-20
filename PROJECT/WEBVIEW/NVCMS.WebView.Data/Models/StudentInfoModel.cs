@@ -9,8 +9,10 @@ public class StudentInfoModel
     public string? Ten          { get; set; }
     public string? Sodienthoai  { get; set; }
     public string? Email        { get; set; }
-    public string? Diachi       { get; set; }
-    public int     PortalId     { get; set; }
+    public string?   Diachi      { get; set; }
+    public DateTime?  Ngaysinh    { get; set; }
+    public int?       Tinh        { get; set; }   // NVCMS_DM_DVHanhChinh_Tinh.id
+    public int        PortalId    { get; set; }
 
     public string FullName => $"{Hotendem} {Ten}".Trim();
 }

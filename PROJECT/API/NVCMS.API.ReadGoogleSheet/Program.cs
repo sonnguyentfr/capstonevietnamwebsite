@@ -109,6 +109,7 @@ builder.Services.AddScoped<IGoogleSheetService, GoogleSheetService>();
 builder.Services.AddScoped<ICrmDataService, CrmDataService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddSingleton<EmailTemplateRenderer>();
 builder.Services.AddScoped<IZaloService, ZaloService>();
 
 // Marketing DbContext (DefaultCRMConnection)
