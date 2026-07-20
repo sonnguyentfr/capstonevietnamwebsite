@@ -12,7 +12,7 @@ public interface IEventRegistrationRepository
     /// Uses Student_Info_Insert stored procedure.
     /// </summary>
     Task<(int StudentId, string StudentCode)> InsertStudentAsync(
-        StudentInfoModel student, int portalId);
+        StudentInfoModel student, int portalId, int eventCatId = 0);
 
     /// <summary>
     /// Check whether StudentId is already registered for EventId.

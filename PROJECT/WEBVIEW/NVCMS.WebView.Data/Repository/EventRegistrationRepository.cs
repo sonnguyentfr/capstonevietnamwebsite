@@ -67,7 +67,7 @@ public class EventRegistrationRepository : IEventRegistrationRepository
     // ── Student insert ────────────────────────────────────────────────────────
 
     public async Task<(int StudentId, string StudentCode)> InsertStudentAsync(
-        StudentInfoModel student, int portalId)
+        StudentInfoModel student, int portalId, int eventCatId = 0)
     {
         await using var conn = CreateConn();
         // Student_Info_Insert SP returns the new ID as scalar
@@ -123,8 +123,19 @@ public class EventRegistrationRepository : IEventRegistrationRepository
             },
             commandType: CommandType.StoredProcedure);
 
-        // Generate code: C + zero-padded id
-        var code = "C" + newId.ToString("D6");
+        // Generate code: {CatCode}{YY}{MM}{StudentId}
+        string catCode = string.Empty;
+        if (eventCatId > 0)
+        {
+            catCode = await conn.ExecuteScalarAsync<string>(
+                "SELECT ISNULL(Code, '') FROM NV_Events_Cat WHERE id = @eventCatId",
+                new { eventCatId }) ?? string.Empty;
+        }
+        var now = DateTime.Now;
+        var code = catCode
+            + now.ToString("yy")
+            + now.ToString("MM")
+            + newId.ToString();
 
         // Persist code back using Student_Info_InsertCode SP
         await conn.ExecuteAsync(
@@ -152,7 +163,7 @@ public class EventRegistrationRepository : IEventRegistrationRepository
         return count > 0;
     }
 
-    // ── Atomic register ───────────────────────────────────────────────────────
+    // ── Atomic register via WebView_EventRegistration_Upsert ─────────────────
 
     public async Task<(int StudentId, string StudentCode, bool IsDuplicate)> RegisterAsync(
         StudentInfoModel student,
@@ -161,125 +172,31 @@ public class EventRegistrationRepository : IEventRegistrationRepository
         int portalId,
         CancellationToken ct = default)
     {
+        var p = new DynamicParameters();
+        p.Add("Hotendem",    student.Hotendem     ?? string.Empty);
+        p.Add("Ten",         student.Ten           ?? string.Empty);
+        p.Add("Sodienthoai", student.Sodienthoai  ?? string.Empty);
+        p.Add("Email",       student.Email         ?? string.Empty);
+        p.Add("Diachi",      student.Diachi        ?? string.Empty);
+        p.Add("Ngaysinh",    student.Ngaysinh,      dbType: DbType.DateTime);
+        p.Add("TinhId",      student.Tinh,          dbType: DbType.Int32);
+        p.Add("PortalId",    portalId);
+        p.Add("EventId",     eventId);
+        p.Add("EventCatId",  eventCatId);
+        p.Add("StudentId",   dbType: DbType.Int32,  direction: ParameterDirection.Output);
+        p.Add("StudentCode", dbType: DbType.String, direction: ParameterDirection.Output, size: 50);
+        p.Add("IsDuplicate", dbType: DbType.Boolean, direction: ParameterDirection.Output);
+
         await using var conn = CreateConn();
-        await conn.OpenAsync(ct);
-        await using var tx = await conn.BeginTransactionAsync(ct);
-        try
-        {
-            // 1. Resolve or create student
-            int    studentId;
-            string studentCode;
+        await conn.ExecuteAsync(
+            "WebView_EventRegistration_Upsert",
+            p,
+            commandType: CommandType.StoredProcedure);
 
-            if (student.Id > 0)
-            {
-                studentId   = student.Id;
-                studentCode = student.Code ?? "C" + student.Id.ToString("D6");
-            }
-            else
-            {
-                // Insert into Student_Info
-                var newId = await conn.ExecuteScalarAsync<int>(
-                    "Student_Info_Insert",
-                    new
-                    {
-                        VP               = 0,
-                        Type             = 0,
-                        Hotendem         = student.Hotendem ?? string.Empty,
-                        Ten              = student.Ten ?? string.Empty,
-                        Sex              = false,
-                        Ngaysinh         = (DateTime?)null,
-                        KieuNgaysinh     = 0,
-                        Sodienthoai      = student.Sodienthoai ?? string.Empty,
-                        Email            = student.Email ?? string.Empty,
-                        Diachi           = student.Diachi ?? string.Empty,
-                        Tinh             = 0,
-                        Huyen            = 0,
-                        EB5              = false,
-                        PermissionUser   = string.Empty,
-                        FollowPhuongThuc = 0,
-                        FollowKetQua     = 0,
-                        FollowNoiDung    = (string?)null,
-                        FollowUpStatus   = 0,
-                        FollowUpDateUpdate = DateTime.Now,
-                        TuVanHocVanmongmuon  = (string?)null,
-                        TuVanNamdi           = (string?)null,
-                        TuVanKyhoc           = (string?)null,
-                        TuVanNganhhoc        = (string?)null,
-                        TuVanTruongdukien    = (string?)null,
-                        TuVanQuocgia         = (string?)null,
-                        TuVanDiadiem         = 0,
-                        TuVanKhanangchitra   = 0,
-                        TuVanKhac            = (string?)null,
-                        TuVanEditUserId      = 0,
-                        TuVanEditDate        = DateTime.Now,
-                        TuVanApproveUserId   = 0,
-                        TuVanApproveDate     = DateTime.Now,
-                        HocVanDanghoc            = (string?)null,
-                        HocVanTruongdanghoc      = (string?)null,
-                        HocVanDiemtrungbinh      = (string?)null,
-                        HocVanDiemsobaithichuanhoa = (string?)null,
-                        HocVanLuuy               = (string?)null,
-                        HocVanEditUserId         = 0,
-                        HocVanEditDate           = DateTime.Now,
-                        HocVanApproveUserId      = 0,
-                        HocVanApproveDate        = DateTime.Now,
-                        CreatedDate = DateTime.Now,
-                        UserId      = 0,
-                        PortalId    = portalId,
-                        Xoa         = false
-                    },
-                    transaction: tx,
-                    commandType: CommandType.StoredProcedure);
+        var studentId   = p.Get<int>("StudentId");
+        var studentCode = p.Get<string>("StudentCode") ?? string.Empty;
+        var isDuplicate = p.Get<bool>("IsDuplicate");
 
-                var code = "C" + newId.ToString("D6");
-                await conn.ExecuteAsync(
-                    "Student_Info_InsertCode",
-                    new { id = newId, Code = code },
-                    transaction: tx,
-                    commandType: CommandType.StoredProcedure);
-
-                studentId   = newId;
-                studentCode = code;
-            }
-
-            // 2. Duplicate check
-            var exists = await conn.ExecuteScalarAsync<int>(
-                @"SELECT COUNT(1) FROM NV_Events_Student
-                  WHERE StudentId=@s AND EventId=@e AND EventCatId=@c",
-                new { s = studentId, e = eventId, c = eventCatId },
-                transaction: tx);
-
-            if (exists > 0)
-            {
-                await tx.RollbackAsync(ct);
-                return (studentId, studentCode, IsDuplicate: true);
-            }
-
-            // 3. Insert registration using existing SP
-            await conn.ExecuteAsync(
-                "NV_Events_Student_Insert",
-                new
-                {
-                    EventId     = eventId,
-                    EventCatId  = eventCatId,
-                    StudentId   = studentId,
-                    StudentCode = studentCode,
-                    Source      = 8,          // 8 = Website
-                    Nguon       = "WEBSITE",
-                    CreatedDate = DateTime.Now,
-                    PortalId    = portalId,
-                    Nguontutao  = "WEBSITE"
-                },
-                transaction: tx,
-                commandType: CommandType.StoredProcedure);
-
-            await tx.CommitAsync(ct);
-            return (studentId, studentCode, IsDuplicate: false);
-        }
-        catch
-        {
-            await tx.RollbackAsync(ct);
-            throw;
-        }
+        return (studentId, studentCode, isDuplicate);
     }
 }

@@ -107,36 +107,38 @@ Namespace NVCMS.Modules.HeThong
 
         End Function
 
-        Private Shared Function PostInternal(Of T)(
-            apiPath As String,
-            requestObject As Object,
-            retry As Boolean) As T
-            Dim token = GetToken()
-            Dim jsonBody = JsonConvert.SerializeObject(requestObject)
-            Dim request As New HttpRequestMessage(HttpMethod.Post, cap_api_url & apiPath)
-            request.Headers.Authorization = New AuthenticationHeaderValue("Bearer", token)
-            request.Content =
-                New StringContent(
-                    jsonBody,
-                    Encoding.UTF8,
-                    "application/json")
-            Dim response = _httpClient.SendAsync(request).GetAwaiter().GetResult()
-            Dim responseJson = response.Content.ReadAsStringAsync().GetAwaiter().GetResult()
-            If response.StatusCode = HttpStatusCode.Unauthorized AndAlso retry Then
-                ClearToken()
-                Return PostInternal(Of T)(
-                    apiPath,
-                    requestObject,
-                    False)
-            End If
-            If Not response.IsSuccessStatusCode Then
-                Throw New Exception(
-                    String.Format(
-                        "CAP API Error. Status={0}, Response={1}",
-                        CInt(response.StatusCode),
-                        responseJson))
-            End If
-            Return JsonConvert.DeserializeObject(Of T)(responseJson)
+        Private Shared Function PostInternal(Of T)(apiPath As String, requestObject As Object, retry As Boolean) As T
+            Try
+                Dim token = GetToken()
+                Dim jsonBody = JsonConvert.SerializeObject(requestObject)
+                Dim request As New HttpRequestMessage(HttpMethod.Post, cap_api_url & apiPath)
+                request.Headers.Authorization = New AuthenticationHeaderValue("Bearer", token)
+                request.Content =
+                    New StringContent(
+                        jsonBody,
+                        Encoding.UTF8,
+                        "application/json")
+                Dim response = _httpClient.SendAsync(request).GetAwaiter().GetResult()
+                Dim responseJson = response.Content.ReadAsStringAsync().GetAwaiter().GetResult()
+                If response.StatusCode = HttpStatusCode.Unauthorized AndAlso retry Then
+                    ClearToken()
+                    Return PostInternal(Of T)(
+                        apiPath,
+                        requestObject,
+                        False)
+                End If
+                If Not response.IsSuccessStatusCode Then
+                    Throw New Exception(
+                        String.Format(
+                            "CAP API Error. Status={0}, Response={1}",
+                            CInt(response.StatusCode),
+                            responseJson))
+                End If
+                Return JsonConvert.DeserializeObject(Of T)(responseJson)
+            Catch ex As Exception
+                DotNetNuke.Services.Exceptions.Exceptions.LogException(ex)
+            End Try
+
         End Function
     End Class
 End Namespace

@@ -84,7 +84,8 @@ public static class DependencyInjection
         services.AddScoped<IEventRegistrationService>(sp =>
             new EventRegistrationService(
                 sp.GetRequiredService<IEventRegistrationRepository>(),
-                sp.GetRequiredService<IEventsRepository>()));
+                sp.GetRequiredService<IEventsRepository>(),
+                connectionString));  // connectionString = DefaultConnection (CapstoneVietNamWeb)
 
         // SiteSettings — Singleton, backed by WebView_GetSiteSettings SP, cached per portalId
         services.AddMemoryCache();

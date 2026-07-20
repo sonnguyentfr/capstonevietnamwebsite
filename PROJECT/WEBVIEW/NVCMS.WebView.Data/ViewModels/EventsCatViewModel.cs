@@ -27,6 +27,8 @@ public class EventsCatViewModel
     public bool Is_show_website { get; set; }
     public int PortalId { get; set; }
 
+    /// <summary>Gửi email xác nhận cho user sau khi đăng ký (map từ NV_Events_Cat.Sendmail).</summary>
+    public bool? Sendmail { get; set; }
     /// <summary>Gửi mã QR/barcode kèm email xác nhận (map từ NV_Events_Cat.Sendcode).</summary>
     public bool? Sendcode { get; set; }
     /// <summary>Nội dung ghi chú quan trọng gửi kèm email (map từ NV_Events_Cat.ContentMail).</summary>
