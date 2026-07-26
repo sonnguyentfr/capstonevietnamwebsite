@@ -3,11 +3,9 @@ Imports System.Net.Http
 Imports System.Net.Http.Headers
 Imports System.Text
 Imports Newtonsoft.Json
-
 Namespace NVCMS.Modules.HeThong
 
     Public Class CapApiClient
-
         Private Const TOKEN_CACHE_KEY As String = "CAP_API_TOKEN"
 
         Private Shared ReadOnly cap_api_url As String = ConfigurationManager.AppSettings("cap_api_url")
@@ -39,72 +37,47 @@ Namespace NVCMS.Modules.HeThong
             Return token
         End Function
         Private Shared Function RefreshToken() As String
-            Dim payload = New With {
-                .username = username,
-                .password = password
-            }
-            Dim json = JsonConvert.SerializeObject(payload)
-            Dim content As New StringContent(
-                json,
-                Encoding.UTF8,
-                "application/json")
-            Dim response =
-                _httpClient.PostAsync(
-                    cap_api_url & tokenUrl,
-                    content).GetAwaiter().GetResult()
-            Dim responseBody =
-                response.Content.ReadAsStringAsync().GetAwaiter().GetResult()
-            If Not response.IsSuccessStatusCode Then
-                Throw New Exception(
-                    String.Format(
-                        "CAP Login Error. Status={0}, Response={1}",
-                        CInt(response.StatusCode),
-                        responseBody))
-            End If
-            Dim obj =
-                JsonConvert.DeserializeObject(Of LoginResponse)(
-                    responseBody)
-            If obj Is Nothing _
-                OrElse Not obj.Success _
-                OrElse obj.Data Is Nothing _
-                OrElse String.IsNullOrWhiteSpace(obj.Data.Token) Then
-                Throw New Exception(
-                    "Không lấy được token. Response: " &
-                    responseBody)
-            End If
-            Dim token = obj.Data.Token
-            Dim expireTime As DateTime
-            If DateTime.TryParse(obj.Data.Expiration, expireTime) Then
-                HttpRuntime.Cache.Insert(
-                    TOKEN_CACHE_KEY,
-                    token,
-                    Nothing,
-                    expireTime.AddMinutes(-5),
-                    TimeSpan.Zero)
-            Else
-                HttpRuntime.Cache.Insert(
-                    TOKEN_CACHE_KEY,
-                    token,
-                    Nothing,
-                    DateTime.Now.AddHours(23),
-                    TimeSpan.Zero)
-            End If
-            Return token
-
+            Try
+                Dim token As String = ""
+                Dim payload = New LoginRequest With {
+                    .username = username,
+                    .password = password
+                }
+                Dim json = JsonConvert.SerializeObject(payload)
+                Dim content As New StringContent(json, Encoding.UTF8, "application/json")
+                Dim response = _httpClient.PostAsync(cap_api_url & tokenUrl, content).GetAwaiter().GetResult()
+                Dim responseBody = response.Content.ReadAsStringAsync().GetAwaiter().GetResult()
+                If Not response.IsSuccessStatusCode Then
+                    Throw New Exception(String.Format("CAP Login Error. Status={0}, Response={1}", CInt(response.StatusCode), responseBody))
+                End If
+                Dim obj = JsonConvert.DeserializeObject(Of LoginResponse)(responseBody)
+                If obj Is Nothing OrElse Not obj.Success OrElse obj.Data Is Nothing OrElse String.IsNullOrWhiteSpace(obj.Data.Token) Then
+                    Throw New Exception("Không lấy được token. Response: " & responseBody)
+                End If
+                token = obj.Data.Token
+                Dim expireTime As DateTime
+                If DateTime.TryParse(obj.Data.Expiration, expireTime) Then
+                    HttpRuntime.Cache.Insert(TOKEN_CACHE_KEY, token, Nothing, expireTime.AddMinutes(-5), TimeSpan.Zero)
+                Else
+                    HttpRuntime.Cache.Insert(TOKEN_CACHE_KEY, token, Nothing, DateTime.Now.AddHours(23), TimeSpan.Zero)
+                End If
+                Return token
+            Catch ex As Exception
+                DotNetNuke.Services.Exceptions.Exceptions.LogException(ex)
+                Throw
+            End Try
         End Function
 
         Public Shared Sub ClearToken()
             HttpRuntime.Cache.Remove(TOKEN_CACHE_KEY)
         End Sub
 
-        Public Shared Function Post(Of T)(
-            apiPath As String,
-            requestObject As Object) As T
-            Return PostInternal(Of T)(
-                apiPath,
-                requestObject,
-                True)
-
+        Public Shared Function Post(Of T)(apiPath As String, requestObject As Object) As T
+            Try
+                Return PostInternal(Of T)(apiPath, requestObject, True)
+            Catch ex As Exception
+                DotNetNuke.Services.Exceptions.Exceptions.LogException(ex)
+            End Try
         End Function
 
         Private Shared Function PostInternal(Of T)(apiPath As String, requestObject As Object, retry As Boolean) As T
@@ -113,26 +86,15 @@ Namespace NVCMS.Modules.HeThong
                 Dim jsonBody = JsonConvert.SerializeObject(requestObject)
                 Dim request As New HttpRequestMessage(HttpMethod.Post, cap_api_url & apiPath)
                 request.Headers.Authorization = New AuthenticationHeaderValue("Bearer", token)
-                request.Content =
-                    New StringContent(
-                        jsonBody,
-                        Encoding.UTF8,
-                        "application/json")
+                request.Content = New StringContent(jsonBody, Encoding.UTF8, "application/json")
                 Dim response = _httpClient.SendAsync(request).GetAwaiter().GetResult()
                 Dim responseJson = response.Content.ReadAsStringAsync().GetAwaiter().GetResult()
                 If response.StatusCode = HttpStatusCode.Unauthorized AndAlso retry Then
                     ClearToken()
-                    Return PostInternal(Of T)(
-                        apiPath,
-                        requestObject,
-                        False)
+                    Return PostInternal(Of T)(apiPath, requestObject, False)
                 End If
                 If Not response.IsSuccessStatusCode Then
-                    Throw New Exception(
-                        String.Format(
-                            "CAP API Error. Status={0}, Response={1}",
-                            CInt(response.StatusCode),
-                            responseJson))
+                    Throw New Exception(String.Format("CAP API Error. Status={0}, Response={1}", CInt(response.StatusCode), responseJson))
                 End If
                 Return JsonConvert.DeserializeObject(Of T)(responseJson)
             Catch ex As Exception
@@ -140,5 +102,10 @@ Namespace NVCMS.Modules.HeThong
             End Try
 
         End Function
+
+        Private Class LoginRequest
+            Public Property username As String
+            Public Property password As String
+        End Class
     End Class
 End Namespace

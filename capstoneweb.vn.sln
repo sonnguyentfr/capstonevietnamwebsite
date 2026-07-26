@@ -23,25 +23,6 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "http://capstoneweb.vn", "ht
 		Release.AspNetCompiler.Debug = "False"
 		SlnRelativePath = "WWW\"
 	EndProjectSection
-	ProjectSection(WebsiteProperties) = preProject
-		UseIISExpress = "false"
-		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.7.2"
-		Debug.AspNetCompiler.VirtualPath = "/capstoneweb.vn"
-		Debug.AspNetCompiler.PhysicalPath = "WWW\"
-		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\capstoneweb.vn\"
-		Debug.AspNetCompiler.Updateable = "true"
-		Debug.AspNetCompiler.ForceOverwrite = "true"
-		Debug.AspNetCompiler.FixedNames = "false"
-		Debug.AspNetCompiler.Debug = "True"
-		Release.AspNetCompiler.VirtualPath = "/capstoneweb.vn"
-		Release.AspNetCompiler.PhysicalPath = "WWW\"
-		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\capstoneweb.vn\"
-		Release.AspNetCompiler.Updateable = "true"
-		Release.AspNetCompiler.ForceOverwrite = "true"
-		Release.AspNetCompiler.FixedNames = "false"
-		Release.AspNetCompiler.Debug = "False"
-		SlnRelativePath = "WWW\"
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MODULES", "MODULES", "{6A6B662A-1283-4A8E-9C67-22E2B4B80618}"
 EndProject
@@ -95,6 +76,27 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NVCMS.API.ReadGoogleSheet", "PROJECT\API\NVCMS.API.ReadGoogleSheet\NVCMS.API.ReadGoogleSheet.csproj", "{F74E06F3-C0AA-4CAA-CCF8-47940562E045}"
 EndProject
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "NVCMS.Modules.Scheduler", "PROJECT\MODULES\NVCMS.Modules.Scheduler\NVCMS.Modules.Scheduler.vbproj", "{6F378C46-991F-4271-B00B-EFCFE01937E2}"
+EndProject
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "http://capv2.vn", "http://capv2.vn", "{02E015B7-FC75-4148-A6B9-7B580F2BF796}"
+	ProjectSection(WebsiteProperties) = preProject
+		UseIISExpress = "false"
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.7.2"
+		Debug.AspNetCompiler.VirtualPath = "/capv2.vn"
+		Debug.AspNetCompiler.PhysicalPath = "WWW_VIEW\"
+		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\capv2.vn\"
+		Debug.AspNetCompiler.Updateable = "true"
+		Debug.AspNetCompiler.ForceOverwrite = "true"
+		Debug.AspNetCompiler.FixedNames = "false"
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.VirtualPath = "/capv2.vn"
+		Release.AspNetCompiler.PhysicalPath = "WWW_VIEW\"
+		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\capv2.vn\"
+		Release.AspNetCompiler.Updateable = "true"
+		Release.AspNetCompiler.ForceOverwrite = "true"
+		Release.AspNetCompiler.FixedNames = "false"
+		Release.AspNetCompiler.Debug = "False"
+		SlnRelativePath = "WWW_VIEW\"
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -334,6 +336,18 @@ Global
 		{6F378C46-991F-4271-B00B-EFCFE01937E2}.Release|x64.Build.0 = Release|Any CPU
 		{6F378C46-991F-4271-B00B-EFCFE01937E2}.Release|x86.ActiveCfg = Release|Any CPU
 		{6F378C46-991F-4271-B00B-EFCFE01937E2}.Release|x86.Build.0 = Release|Any CPU
+		{02E015B7-FC75-4148-A6B9-7B580F2BF796}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{02E015B7-FC75-4148-A6B9-7B580F2BF796}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{02E015B7-FC75-4148-A6B9-7B580F2BF796}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{02E015B7-FC75-4148-A6B9-7B580F2BF796}.Debug|x64.Build.0 = Debug|Any CPU
+		{02E015B7-FC75-4148-A6B9-7B580F2BF796}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{02E015B7-FC75-4148-A6B9-7B580F2BF796}.Debug|x86.Build.0 = Debug|Any CPU
+		{02E015B7-FC75-4148-A6B9-7B580F2BF796}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{02E015B7-FC75-4148-A6B9-7B580F2BF796}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{02E015B7-FC75-4148-A6B9-7B580F2BF796}.Release|x64.ActiveCfg = Debug|Any CPU
+		{02E015B7-FC75-4148-A6B9-7B580F2BF796}.Release|x64.Build.0 = Debug|Any CPU
+		{02E015B7-FC75-4148-A6B9-7B580F2BF796}.Release|x86.ActiveCfg = Debug|Any CPU
+		{02E015B7-FC75-4148-A6B9-7B580F2BF796}.Release|x86.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

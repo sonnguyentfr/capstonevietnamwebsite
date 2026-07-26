@@ -96,6 +96,8 @@
   <ItemGroup>
     <Compile Include="Account\Account_Controller.vb" />
     <Compile Include="Account\Account_Info.vb" />
+    <Compile Include="Mail\Mail_Send_LogInfo.vb" />
+    <Compile Include="Mail\Mail_Campaign_SendInfo.vb" />
     <Compile Include="Campaing\Campaing_Controller.vb" />
     <Compile Include="Campaing\Campaing_Info.vb" />
     <Compile Include="ListMailUnsub\ListMailUnsub_Controller.vb" />
