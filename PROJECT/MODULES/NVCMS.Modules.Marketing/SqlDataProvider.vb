@@ -287,6 +287,24 @@ Namespace NVCMS.Modules.Marketing
 
 
 #End Region
+#Region "Marketing_Mail_Campaign_Send"
+
+        Public Overrides Function Marketing_Mail_Campaign_Send_Insert(ByVal campaignId As Integer, ByVal subject As String, ByVal body As String, ByVal totalRecipient As Integer, ByVal createdDate As DateTime) As Integer
+            Return CInt(SqlHelper.ExecuteScalar(ConnectionString, "Marketing_Mail_Campaign_Send_Insert", campaignId, subject, body, totalRecipient, createdDate))
+        End Function
+
+        '------------------------------------------'
+
+#End Region
+#Region "Marketing_Mail_Send_Log"
+
+        Public Overrides Function Marketing_Mail_Send_Log_Insert(ByVal campaignSendId As Integer, ByVal listMailId As Integer, ByVal email As String, ByVal createdDate As DateTime) As Integer
+            Return CInt(SqlHelper.ExecuteScalar(ConnectionString, "Marketing_Mail_Send_Log_Insert", campaignSendId, listMailId, email, createdDate))
+        End Function
+
+        '------------------------------------------'
+
+#End Region
 #End Region
 
 

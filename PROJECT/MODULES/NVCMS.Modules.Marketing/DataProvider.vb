@@ -106,6 +106,16 @@ Namespace NVCMS.Modules.Marketing
         Public MustOverride Sub Marketing_Mail_ListMail_Unsub_Update(ByVal objInfo As Marketing_Mail_ListMailUnsubInfo)
 
 #End Region
+#Region "Marketing_Mail_Campaign_Send"
+
+        Public MustOverride Function Marketing_Mail_Campaign_Send_Insert(ByVal campaignId As Integer, ByVal subject As String, ByVal body As String, ByVal totalRecipient As Integer, ByVal createdDate As DateTime) As Integer
+
+#End Region
+#Region "Marketing_Mail_Send_Log"
+
+        Public MustOverride Function Marketing_Mail_Send_Log_Insert(ByVal campaignSendId As Integer, ByVal listMailId As Integer, ByVal email As String, ByVal createdDate As DateTime) As Integer
+
+#End Region
 #End Region
 
 

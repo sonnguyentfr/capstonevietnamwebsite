@@ -12,6 +12,7 @@ namespace NVCMS.API.ReadGoogleSheet.Data
         public DbSet<MarketingMailListMailUnsub> Unsubs         { get; set; }
         public DbSet<Marketing_Mail_Template>    Templates      { get; set; }
         public DbSet<MarketingMailSendLog>       SendLogs       { get; set; }
+        public DbSet<MarketingMailCampaignSend>  CampaignSends  { get; set; }
         public DbSet<student_from_ladipage>      CrmDataLadings { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -80,6 +81,19 @@ namespace NVCMS.API.ReadGoogleSheet.Data
                 e.Property(x => x.DeliveredTime).HasColumnName("DeliveredTime").HasColumnType("datetime");
                 e.Property(x => x.OpenedTime).HasColumnName("OpenedTime").HasColumnType("datetime");
                 e.Property(x => x.ClickedTime).HasColumnName("ClickedTime").HasColumnType("datetime");
+                e.Property(x => x.CreatedDate).HasColumnName("CreatedDate").HasColumnType("datetime");
+            });
+
+            modelBuilder.Entity<MarketingMailCampaignSend>(e =>
+            {
+                e.ToTable("Marketing_Mail_Campaign_Send");
+                e.HasKey(x => x.Id);
+                e.Property(x => x.Id).HasColumnName("Id").UseIdentityColumn();
+                e.Property(x => x.CampaignId).HasColumnName("CampaignId");
+                e.Property(x => x.Subject).HasColumnName("Subject").HasMaxLength(500).IsRequired();
+                e.Property(x => x.Body).HasColumnName("Body");
+                e.Property(x => x.Status).HasColumnName("Status");
+                e.Property(x => x.TotalRecipient).HasColumnName("TotalRecipient");
                 e.Property(x => x.CreatedDate).HasColumnName("CreatedDate").HasColumnType("datetime");
             });
 
