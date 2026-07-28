@@ -102,6 +102,7 @@ public class EventRegistrationController : Controller
     public async Task<IActionResult> Index(EventRegistrationInputViewModel input, CancellationToken ct)
     {
         var portalId = _siteOptions.Value.PortalCRMId;
+        var portalWebsiteId = _siteOptions.Value.PortalId;
 
         // ── reCAPTCHA v3 verification ─────────────────────────────────────────
         var recaptchaToken = Request.Form["g-recaptcha-response"].ToString();
@@ -114,7 +115,7 @@ public class EventRegistrationController : Controller
         {
             var cat = await _events.GetCatWithEventsAsync(input.EventCatId, portalId);
             var ev = cat?.Events.FirstOrDefault(e => e.Id == input.EventId) ?? new EventsViewModel();
-            var site2 = await _siteSettings.GetSettingsAsync(portalId);
+            var site2 = await _siteSettings.GetSettingsAsync(portalWebsiteId);
             var provinces = await _locations.GetProvincesAsync(VietnamLocationId);
             //ViewBag.RecaptchaSiteKey = site2.Google.CaptchaKey ?? string.Empty;
             ViewBag.RecaptchaSiteKey = _googlerecaptchav3_sitekey ?? string.Empty;
@@ -147,7 +148,7 @@ public class EventRegistrationController : Controller
         var catForMail = await _events.GetCatWithEventsAsync(input.EventCatId, portalId);
         if (catForMail?.Sendmail == true)
         {
-            var site = await _siteSettings.GetSettingsAsync(portalId);
+            var site = await _siteSettings.GetSettingsAsync(portalWebsiteId);
             var adminEmails = (site.Mail.MailList ?? string.Empty)
                 .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
                 .Where(EmailHelper.IsValid)

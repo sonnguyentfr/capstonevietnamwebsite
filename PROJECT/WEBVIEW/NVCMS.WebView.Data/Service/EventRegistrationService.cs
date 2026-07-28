@@ -49,8 +49,7 @@ public class EventRegistrationService : IEventRegistrationService
         };
     }
 
-    public async Task<(bool Success, bool IsDuplicate, string Message, int StudentId, string StudentCode)>
-        RegisterAsync(EventRegistrationInputViewModel input, int portalId, CancellationToken ct = default)
+    public async Task<(bool Success, bool IsDuplicate, string Message, int StudentId, string StudentCode)> RegisterAsync(EventRegistrationInputViewModel input, int portalId, CancellationToken ct = default)
     {
         input.Hotendem = InputCleaner.Name(input.Hotendem);
         input.Ten = InputCleaner.Name(input.Ten);
@@ -81,22 +80,22 @@ public class EventRegistrationService : IEventRegistrationService
 
         var student = existing ?? new StudentInfoModel
         {
-            Id          = 0,
-            Hotendem    = input.Hotendem.Trim(),
-            Ten         = input.Ten.Trim(),
+            Id = 0,
+            Hotendem = input.Hotendem.Trim(),
+            Ten = input.Ten.Trim(),
             Sodienthoai = normalizedPhone,
-            Email       = input.Email?.Trim(),
-            Diachi      = input.TinhThanh?.Trim(),
-            Ngaysinh    = input.NgaySinh,
-            Tinh        = await LookupTinhIdAsync(input.TinhThanh),
+            Email = input.Email?.Trim(),
+            Diachi = input.TinhThanh?.Trim(),
+            Ngaysinh = input.NgaySinh,
+            Tinh = await LookupTinhIdAsync(input.TinhThanh),
         };
 
         // Bổ sung ngày sinh và tỉnh cho student cũ (SP sẽ chỉ điền nếu đang NULL)
         if (existing is not null)
         {
             existing.Ngaysinh = input.NgaySinh;
-            existing.Tinh     = await LookupTinhIdAsync(input.TinhThanh);
-            existing.Diachi   = input.TinhThanh?.Trim();
+            existing.Tinh = await LookupTinhIdAsync(input.TinhThanh);
+            existing.Diachi = input.TinhThanh?.Trim();
         }
 
         // ── Atomic register ───────────────────────────────────────────────────

@@ -19,8 +19,8 @@ public class EventRegistrationMailService
 {
     // ── Config ─────────────────────────────────────────────────────────────────
     private readonly string _host;
-    private readonly int    _port;
-    private readonly bool   _enableSsl;
+    private readonly int _port;
+    private readonly bool _enableSsl;
     private readonly string _fromAddress;
     private readonly string _user;
     private readonly string _password;
@@ -28,7 +28,8 @@ public class EventRegistrationMailService
     private readonly string _crmConnStr;
     private readonly string _siteBaseUrl;
     private readonly ILogger<EventRegistrationMailService> _logger;
-
+    private const string QrHandlerBase = "https://crm.capstonevietnam.com/Services/QrcodeHandler.ashx";
+    private const string BarHandlerBase = "https://crm.capstonevietnam.com/Services/BarcodeHandler.ashx";
     // ── Template cache ─────────────────────────────────────────────────────────
     private static readonly object _cacheLock = new();
     private static readonly Dictionary<string, string> _templateCache = new();
@@ -40,14 +41,14 @@ public class EventRegistrationMailService
         ILogger<EventRegistrationMailService> logger)
     {
         var sec = config.GetSection("Email");
-        _host        = sec["Host"]             ?? "localhost";
-        _port        = int.TryParse(sec["Port"], out var p) ? p : 587;
-        _enableSsl   = bool.TryParse(sec["EnableSsl"], out var s) && s;
+        _host = sec["Host"] ?? "localhost";
+        _port = int.TryParse(sec["Port"], out var p) ? p : 587;
+        _enableSsl = bool.TryParse(sec["EnableSsl"], out var s) && s;
         _fromAddress = sec["FromEmailAddress"] ?? string.Empty;
-        _user        = sec["UserMail"]         ?? string.Empty;
-        _password    = sec["Password"]         ?? string.Empty;
-        _displayName = sec["DisplayName"]      ?? "No Reply";
-        _crmConnStr  = config.GetConnectionString("CRMConnection")
+        _user = sec["UserMail"] ?? string.Empty;
+        _password = sec["Password"] ?? string.Empty;
+        _displayName = sec["DisplayName"] ?? "No Reply";
+        _crmConnStr = config.GetConnectionString("CRMConnection")
                        ?? throw new InvalidOperationException("CRMConnection not configured");
         _siteBaseUrl = (config["SiteBaseUrl"] ?? config["SiteSettings:SiteWeb"] ?? string.Empty)
                        .TrimEnd('/');
@@ -82,17 +83,17 @@ public class EventRegistrationMailService
             ? ev.Fromdatetime.Value.ToString("HH:mm")
             : cat.FromDate?.ToString("HH:mm") ?? string.Empty;
 
-        var studentName  = input.HoVaTen.Trim();
+        var studentName = input.HoVaTen.Trim();
         var studentPhone = PhoneHelper.Normalize(input.SoDienThoai);
         var studentEmail = input.Email ?? string.Empty;
-        var eventName    = cat.CatName ?? string.Empty;
-        var eventLoc     = ev.Diadiem  ?? string.Empty;
-        var regTime      = registeredAt.ToString("HH:mm dd/MM/yyyy");
-        var logoUrl      = site.Logo.HeaderLogo ?? string.Empty;
-        var siteUrl      = site.General.SiteWeb ?? string.Empty;
-        var siteName     = site.General.SiteName ?? _displayName;
-        var sendCode     = cat.Sendcode == true;
-        var notes        = cat.ContentMail ?? string.Empty;
+        var eventName = cat.CatName ?? string.Empty;
+        var eventLoc = ev.Diadiem ?? string.Empty;
+        var regTime = registeredAt.ToString("HH:mm dd/MM/yyyy");
+        var logoUrl = site.Logo.HeaderLogo.Replace("/DATA", site.Cdn.FileServer) ?? string.Empty;
+        var siteUrl = site.General.SiteWeb ?? string.Empty;
+        var siteName = site.General.SiteName ?? _displayName;
+        var sendCode = cat.Sendcode == true;
+        var notes = cat.ContentMail ?? string.Empty;
 
         // ── 1. Lưu Campaign_Send (nội dung mail customer) ──────────────────────
         var customerSubject = $"[{siteName}] Xác nhận đăng ký - {eventName}";
@@ -189,7 +190,7 @@ public class EventRegistrationMailService
         if (adminEmails.Count > 0)
         {
             var adminSubject = $"[Đăng ký sự kiện] {studentName} – {eventName}";
-            var adminBody    = BuildAdminBody(
+            var adminBody = BuildAdminBody(
                 studentName, studentPhone, studentEmail, input.TinhThanh ?? string.Empty,
                 eventName, eventLoc, eventDate, eventTime, regTime, siteName);
 
@@ -253,7 +254,7 @@ public class EventRegistrationMailService
                 : new MailboxAddress(name, addr));
 
         message.Subject = subject;
-        message.Body    = new TextPart(TextFormat.Html) { Text = htmlBody };
+        message.Body = new TextPart(TextFormat.Html) { Text = htmlBody };
 
         using var smtp = new SmtpClient();
         var secOpt = _enableSsl ? SecureSocketOptions.StartTls : SecureSocketOptions.Auto;
@@ -270,26 +271,36 @@ public class EventRegistrationMailService
         string eventName, string eventLoc,
         string eventDate, string eventTime,
         string studentPhone,
-        string logoUrl, string siteUrl, string siteName,
+        string logoUrl, 
+        string siteUrl, 
+        string siteName,
         string notes, bool sendCode,
         long trackingLogId)
     {
         var logoHtml = string.IsNullOrWhiteSpace(logoUrl)
             ? $"<span style=\"color:#fff;font-size:20px;font-weight:700;\">{H(siteName)}</span>"
             : $"<img src=\"{H(logoUrl)}\" alt=\"{H(siteName)}\" style=\"max-height:60px;\">";
+        var checkinUrl = $"http://crm.capstonevietnam.com/quantri/partner/checkin-eventm.html?studentcode={Uri.EscapeDataString(studentCode)}";
+        var qrUrl = $"{QrHandlerBase}?data={Uri.EscapeDataString(checkinUrl)}&width=200&height=200";
+        var barUrl = $"{BarHandlerBase}?data={Uri.EscapeDataString(studentCode)}&type=barcode&width=400&height=100";
 
         var qrSection = sendCode
-            ? $"""
+            ?
+            $"""
               <tr>
-                <td style="padding:16px 0 8px;">
-                  <p style="font-size:14px;color:#333;margin:0 0 8px;">
-                    Mã đăng ký của bạn:
-                  </p>
-                  <div style="font-size:28px;font-weight:700;color:#003087;letter-spacing:4px;
-                              background:#f0f4ff;padding:12px 24px;border-radius:6px;
-                              display:inline-block;">
-                    {H(studentCode)}
-                  </div>
+                <td style="padding:16px 0 8px; text-align: center;">
+                    <p style="font-size:20px;font-weight:700;color:#333;margin:0 0 10px;">
+                        Mã đăng ký của bạn:
+                    </p>
+                    <p style="font-size:14px;color:#333;margin:0 0 8px; text-align: center;">
+                        <center><img src="{qrUrl}" width="300" height="300" alt="QR Code" style="display:block;border:1px solid #e0e0e0;border-radius:4px;"></center>
+                    </p>
+                    <p style="font-size:14px;color:#333;margin:0 0 8px; text-align: center;">
+                        <center><img src="{barUrl}" width="220" height="60" alt="Barcode" style="display:block;border:1px solid #e0e0e0;border-radius:4px;"></center>
+                    </p>
+                    <div style="font-size:28px;font-weight:700;color:#003087;letter-spacing:4px; background:#f0f4ff;padding:12px 24px;border-radius:6px; display:inline-block;">
+                        {H(studentCode)}
+                    </div>
                 </td>
               </tr>
               """
@@ -325,20 +336,20 @@ public class EventRegistrationMailService
         var template = LoadTemplate("customer-registration.html");
 
         return template
-            .Replace("{{LOGO_HTML}}",       logoHtml)
-            .Replace("{{STUDENT_NAME}}",    H(studentName))
-            .Replace("{{EVENT_NAME}}",      H(eventName))
-            .Replace("{{EVENT_LOCATION}}",  H(eventLoc))
-            .Replace("{{EVENT_DATE}}",      H(eventDate))
-            .Replace("{{EVENT_TIME}}",      H(eventTime))
-            .Replace("{{ADDRESS_ROW}}",     string.Empty)
-            .Replace("{{PHONE_ROW}}",       phoneRow)
-            .Replace("{{QR_SECTION}}",      qrSection)
-            .Replace("{{NOTES_SECTION}}",   notesSection)
-            .Replace("{{SITE_URL}}",        H(siteUrl))
-            .Replace("{{SITE_NAME}}",       H(siteName))
-            .Replace("{{YEAR}}",            DateTime.Now.Year.ToString())
-            .Replace("{{TRACKING_PIXEL}}",  trackingPixel);
+            .Replace("{{LOGO_HTML}}", logoHtml)
+            .Replace("{{STUDENT_NAME}}", H(studentName))
+            .Replace("{{EVENT_NAME}}", H(eventName))
+            .Replace("{{EVENT_LOCATION}}", H(eventLoc))
+            .Replace("{{EVENT_DATE}}", H(eventDate))
+            .Replace("{{EVENT_TIME}}", H(eventTime))
+            .Replace("{{ADDRESS_ROW}}", string.Empty)
+            .Replace("{{PHONE_ROW}}", phoneRow)
+            .Replace("{{QR_SECTION}}", qrSection)
+            .Replace("{{NOTES_SECTION}}", notesSection)
+            .Replace("{{SITE_URL}}", H(siteUrl))
+            .Replace("{{SITE_NAME}}", H(siteName))
+            .Replace("{{YEAR}}", DateTime.Now.Year.ToString())
+            .Replace("{{TRACKING_PIXEL}}", trackingPixel);
     }
 
     // ── Template builder: Admin ───────────────────────────────────────────────
@@ -357,15 +368,15 @@ public class EventRegistrationMailService
         var template = LoadTemplate("admin-notification.html");
 
         return template
-            .Replace("{{SITE_NAME}}",         H(siteName))
-            .Replace("{{STUDENT_NAME}}",      H(studentName))
-            .Replace("{{STUDENT_PHONE}}",     H(studentPhone))
+            .Replace("{{SITE_NAME}}", H(siteName))
+            .Replace("{{STUDENT_NAME}}", H(studentName))
+            .Replace("{{STUDENT_PHONE}}", H(studentPhone))
             .Replace("{{STUDENT_EMAIL_LINK}}", emailLink)
-            .Replace("{{STUDENT_ADDRESS}}",   H(studentAddress))
-            .Replace("{{EVENT_NAME}}",        H(eventName))
-            .Replace("{{EVENT_LOCATION}}",    H(eventLoc))
-            .Replace("{{EVENT_DATE}}",        H(eventDate))
-            .Replace("{{EVENT_TIME}}",        H(eventTime))
+            .Replace("{{STUDENT_ADDRESS}}", H(studentAddress))
+            .Replace("{{EVENT_NAME}}", H(eventName))
+            .Replace("{{EVENT_LOCATION}}", H(eventLoc))
+            .Replace("{{EVENT_DATE}}", H(eventDate))
+            .Replace("{{EVENT_TIME}}", H(eventTime))
             .Replace("{{REGISTRATION_TIME}}", H(regTime));
     }
 
@@ -378,7 +389,7 @@ public class EventRegistrationMailService
             if (_templateCache.TryGetValue(fileName, out var cached))
                 return cached;
 
-            var path    = Path.Combine(_templateRoot, fileName);
+            var path = Path.Combine(_templateRoot, fileName);
             var content = File.Exists(path)
                 ? File.ReadAllText(path)
                 : $"<p>Template '{fileName}' not found.</p>";
