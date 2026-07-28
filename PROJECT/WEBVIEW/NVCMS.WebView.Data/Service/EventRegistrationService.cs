@@ -52,8 +52,6 @@ public class EventRegistrationService : IEventRegistrationService
     public async Task<(bool Success, bool IsDuplicate, string Message, int StudentId, string StudentCode)>
         RegisterAsync(EventRegistrationInputViewModel input, int portalId, CancellationToken ct = default)
     {
-
-
         input.Hotendem = InputCleaner.Name(input.Hotendem);
         input.Ten = InputCleaner.Name(input.Ten);
         input.TinhThanh = InputCleaner.Text(input.TinhThanh);

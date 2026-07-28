@@ -2,7 +2,7 @@
 @model IEnumerable<EventsCatViewModel>
 @if (Model != null && Model.Any())
 {
-    
+
     <div class="swiper-relative one-slider mt-8 equal-height" data-aos="fade-up" data-aos-delay="100">
         <div class="swiper" id="events-home-swiper">
             <div class="swiper-wrapper">
@@ -14,27 +14,24 @@
                             <div class="image img-cover" data-aos="fade-right" data-aos-delay="300">
                                 @if (!string.IsNullOrEmpty(cat.AvatarUrl))
                                 {
-                                    <img src="@(cat.AvatarUrl)?width=1024&height=530&mode=crop&anchor=middlecenter"
-                                         alt="@cat.CatName"
-                                         loading="lazy" />
+                                    <a href="/su-kien/@cat.Slug-@cat.Id">
+                                        <img src="@(cat.AvatarUrl)?width=1024&height=530&mode=crop&anchor=middlecenter"
+                                             alt="@cat.CatName"
+                                             loading="lazy" />
+                                    </a>
                                 }
                                 else
                                 {
-                                    <img src="/data/no-photo.png?width=1024&height=530&mode=crop&anchor=middlecenter"
-                                         alt="@cat.CatName"
-                                         loading="lazy" />
+                                    <a href="/su-kien/@cat.Slug-@cat.Id">
+                                        <img src="/data/no-photo.png?width=1024&height=530&mode=crop&anchor=middlecenter"
+                                             alt="@cat.CatName"
+                                             loading="lazy" />
+                                    </a>
                                 }
                             </div>
                             <div class="caption" data-aos="fade-left" data-aos-delay="300">
                                 <h3 class="name">
-                                    @if (!string.IsNullOrEmpty(cat.Link_pr))
-                                    {
-                                        <a target="_blank" href="@cat.Link_pr">@cat.CatName</a>
-                                    }
-                                    else
-                                    {
-                                        <span>@cat.CatName</span>
-                                    }
+                                    <span><a href="/su-kien/@cat.Slug-@cat.Id">@cat.CatName</a></span>
                                 </h3>
                                 @if (cat.FromDate.HasValue || cat.EndDate.HasValue)
                                 {
@@ -96,19 +93,19 @@
         </div>
     </div>
     <script>
-    (function () {
-        var el = document.getElementById('events-home-swiper');
-        if (!el || typeof Swiper === 'undefined') return;
-        var sw = el.swiper;
-        if (sw) {
-            sw.params.autoplay.delay = 3000;
-            sw.autoplay.start();
-        } else {
-            document.addEventListener('DOMContentLoaded', function () {
-                var s = el.swiper;
-                if (s) { s.params.autoplay.delay = 3000; s.autoplay.start(); }
-            });
-        }
-    })();
+        (function () {
+            var el = document.getElementById('events-home-swiper');
+            if (!el || typeof Swiper === 'undefined') return;
+            var sw = el.swiper;
+            if (sw) {
+                sw.params.autoplay.delay = 3000;
+                sw.autoplay.start();
+            } else {
+                document.addEventListener('DOMContentLoaded', function () {
+                    var s = el.swiper;
+                    if (s) { s.params.autoplay.delay = 3000; s.autoplay.start(); }
+                });
+            }
+        })();
     </script>
 }

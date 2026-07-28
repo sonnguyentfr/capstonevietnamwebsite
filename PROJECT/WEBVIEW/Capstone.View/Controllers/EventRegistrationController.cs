@@ -129,8 +129,7 @@ public class EventRegistrationController : Controller
             });
         }
 
-        var (success, isDuplicate, message, studentId, studentCode) =
-            await _service.RegisterAsync(input, portalId, ct);
+        var (success, isDuplicate, message, studentId, studentCode) = await _service.RegisterAsync(input, portalId, ct);
 
         if (!success)
         {
@@ -164,14 +163,14 @@ public class EventRegistrationController : Controller
                 adminEmails.Add(_fixedEmail!);
 
             // Capture values before Task.Run to avoid accessing disposed HttpContext
-            var inputCopy       = input;
-            var studentIdCopy   = studentId;
+            var inputCopy = input;
+            var studentIdCopy = studentId;
             var studentCodeCopy = studentCode;
-            var regAt           = DateTime.Now;
-            var catCopy         = catForMail;
-            var siteCopy        = site;
-            var adminCopy       = adminEmails;
-            var bccCopy         = bccEmails;
+            var regAt = DateTime.Now;
+            var catCopy = catForMail;
+            var siteCopy = site;
+            var adminCopy = adminEmails;
+            var bccCopy = bccEmails;
 
             _ = Task.Run(async () =>
             {
@@ -190,8 +189,8 @@ public class EventRegistrationController : Controller
             }, CancellationToken.None);
         }
 
-        TempData["RegSuccess"]   = message;
-        TempData["IsDuplicate"]  = isDuplicate;
+        TempData["RegSuccess"] = message;
+        TempData["IsDuplicate"] = isDuplicate;
         return RedirectToAction(nameof(Success));
     }
 
