@@ -1,5 +1,7 @@
 using Hangfire;
+using Microsoft.EntityFrameworkCore;
 using NVCMS.API.ReadGoogleSheet.Common;
+using NVCMS.API.ReadGoogleSheet.Data;
 using NVCMS.API.ReadGoogleSheet.Entities;
 using NVCMS.API.ReadGoogleSheet.Jobs;
 using NVCMS.API.ReadGoogleSheet.Models;
@@ -14,6 +16,7 @@ namespace NVCMS.API.ReadGoogleSheet.Services
         private readonly IMarketingUnsubRepository      _unsubRepo;
         private readonly IMarketingSendLogRepository    _sendLogRepo;
         private readonly IBackgroundJobClient           _jobClient;
+        private readonly CRMDbContext                   _crmContext;
         private readonly ILogger<EmailMarketingService> _logger;
 
         public EmailMarketingService(
@@ -22,6 +25,7 @@ namespace NVCMS.API.ReadGoogleSheet.Services
             IMarketingUnsubRepository      unsubRepo,
             IMarketingSendLogRepository    sendLogRepo,
             IBackgroundJobClient           jobClient,
+            CRMDbContext                   crmContext,
             ILogger<EmailMarketingService> logger)
         {
             _campaignRepo = campaignRepo;
@@ -29,6 +33,7 @@ namespace NVCMS.API.ReadGoogleSheet.Services
             _unsubRepo    = unsubRepo;
             _sendLogRepo  = sendLogRepo;
             _jobClient    = jobClient;
+            _crmContext   = crmContext;
             _logger       = logger;
         }
 
@@ -43,8 +48,8 @@ namespace NVCMS.API.ReadGoogleSheet.Services
                 listMails.Count, request.CampaignId);
 
             // Bước 2+3 – Lọc unsub, làm sạch email (trim/distinct/validate)
-            var seen     = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-            var sendLogs = new List<MarketingMailSendLog>();
+            var seen          = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            var validMailItems = new List<Marketing_Mail_ListMail>();
 
             foreach (var lm in listMails)
             {
@@ -61,33 +66,51 @@ namespace NVCMS.API.ReadGoogleSheet.Services
                     continue;
                 }
 
-                // Bước 4 – Tạo send-log với Status = Queued
-                sendLogs.Add(new MarketingMailSendLog
-                {
-                    CampaignSendId = request.CampaignId,
-                    ListMailId     = lm.id,
-                    Email          = email,
-                    Status         = MailSendStatus.Queued,
-                    CreatedDate    = DateTime.UtcNow
-                });
+                validMailItems.Add(lm);
             }
+
+            // Bước 4 – Insert 1 bản ghi Marketing_Mail_Campaign_Send cho lần gửi này
+            var campaignSend = new MarketingMailCampaignSend
+            {
+                CampaignId     = request.CampaignId,
+                Subject        = request.Subject,
+                Body           = request.Body,
+                Status         = 0,
+                TotalRecipient = validMailItems.Count,
+                CreatedDate    = DateTime.UtcNow
+            };
+            _crmContext.CampaignSends.Add(campaignSend);
+            await _crmContext.SaveChangesAsync();
+
+            _logger.LogInformation("Inserted Campaign_Send Id={CampaignSendId} for campaign {CampaignId}",
+                campaignSend.Id, request.CampaignId);
+
+            // Bước 5 – Insert Marketing_Mail_Send_Log (1 bản ghi / email), CampaignSendId = campaignSend.Id
+            var sendLogs = validMailItems.Select(lm => new MarketingMailSendLog
+            {
+                CampaignSendId = campaignSend.Id,
+                ListMailId     = lm.id,
+                Email          = lm.Email!.Trim(),
+                Status         = MailSendStatus.Queued,
+                CreatedDate    = DateTime.UtcNow
+            }).ToList();
 
             if (sendLogs.Count > 0)
                 await _sendLogRepo.AddRangeAsync(sendLogs);
 
-            _logger.LogInformation("Inserted {Count} Queued send-logs for campaign {Id}",
-                sendLogs.Count, request.CampaignId);
+            _logger.LogInformation("Inserted {Count} Queued send-logs for campaignSendId={CampaignSendId}",
+                sendLogs.Count, campaignSend.Id);
 
-            // Bước 5 – Enqueue Hangfire job trực tiếp
+            // Bước 6 – Enqueue Hangfire job trực tiếp
             _jobClient.Enqueue<CampaignBatchJob>(job =>
                 job.ExecuteAsync(
-                    request.CampaignId,
+                    campaignSend.Id,
                     request.Subject,
                     request.Body,
                     request.EmailAccountId,
                     CancellationToken.None));
 
-            _logger.LogInformation("Enqueued CampaignBatchJob for campaignId={Id}", request.CampaignId);
+            _logger.LogInformation("Enqueued CampaignBatchJob for campaignSendId={Id}", campaignSend.Id);
 
             return new SendCampaignResult
             {
@@ -126,7 +149,17 @@ namespace NVCMS.API.ReadGoogleSheet.Services
             if (campaign is null)
                 throw new KeyNotFoundException($"Campaign {campaignId} not found");
 
-            var logs = (await _sendLogRepo.GetAllByCampaignIdAsync(campaignId)).ToList();
+            // Lấy tất cả Campaign_Send Ids thuộc campaign này
+            var campaignSendIds = await _crmContext.CampaignSends
+                .Where(cs => cs.CampaignId == campaignId)
+                .Select(cs => cs.Id)
+                .ToListAsync();
+
+            var logs = campaignSendIds.Count > 0
+                ? (await _crmContext.SendLogs
+                    .Where(l => campaignSendIds.Contains(l.CampaignSendId))
+                    .ToListAsync())
+                : new List<MarketingMailSendLog>();
 
             return new CampaignStatisticsResponse
             {

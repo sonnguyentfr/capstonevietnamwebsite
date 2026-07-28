@@ -1,12 +1,11 @@
 using Capstone.View.Options;
+using Capstone.View.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using NVCMS.WebView.Data.Common;
 using NVCMS.WebView.Data.Contracts.Service;
 using NVCMS.WebView.Data.SiteSettings;
 using NVCMS.WebView.Data.ViewModels;
-using System.Text;
-using System.Text.Json;
 
 namespace Capstone.View.Controllers;
 
@@ -20,6 +19,7 @@ public class EventRegistrationController : Controller
     private readonly ISiteSettingsHelper _siteSettings;
     private readonly IHttpClientFactory _httpFactory;
     private readonly IOptions<SiteSettings> _siteOptions;
+    private readonly EventRegistrationMailService _mailService;
     private readonly ILogger<EventRegistrationController> _logger;
     private readonly string _googlerecaptchav3_sitekey;
     private readonly string _googlerecaptchav3_secretkey;
@@ -32,6 +32,7 @@ public class EventRegistrationController : Controller
         ISiteSettingsHelper siteSettings,
         IHttpClientFactory httpFactory,
         IOptions<SiteSettings> siteOptions,
+        EventRegistrationMailService mailService,
         IConfiguration config,
         ILogger<EventRegistrationController> logger)
     {
@@ -41,6 +42,7 @@ public class EventRegistrationController : Controller
         _siteSettings = siteSettings;
         _httpFactory = httpFactory;
         _siteOptions = siteOptions;
+        _mailService = mailService;
         _logger = logger;
         _googlerecaptchav3_sitekey = config["Google:recaptchav3_sitekey"] ?? string.Empty;
         _googlerecaptchav3_secretkey = config["Google:recaptchav3_secretkey"] ?? string.Empty;
@@ -141,20 +143,17 @@ public class EventRegistrationController : Controller
             isDuplicate ? "DuplicateReRegistration" : "RegistrationSuccess",
             studentId, input.EventCatId, input.EventId, isDuplicate);
 
-        // ── Fire-and-forget to API → Hangfire enqueues the email job ─────────
+        // ── Gửi email trực tiếp qua SMTP (MailKit) ──────────────────────────
         // Only send if Sendmail == true on the event category
         var catForMail = await _events.GetCatWithEventsAsync(input.EventCatId, portalId);
         if (catForMail?.Sendmail == true)
         {
-            // Capture all request-scoped values NOW — before Task.Run — to avoid
-            // accessing disposed HttpContext inside the background thread.
             var site = await _siteSettings.GetSettingsAsync(portalId);
             var adminEmails = (site.Mail.MailList ?? string.Empty)
                 .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
                 .Where(EmailHelper.IsValid)
                 .ToList();
 
-            // BCC on the customer email: FixedEmail + cat.Email
             var bccEmails = new List<string>();
             if (EmailHelper.IsValid(_fixedEmail))
                 bccEmails.Add(_fixedEmail!);
@@ -164,9 +163,31 @@ public class EventRegistrationController : Controller
             if (EmailHelper.IsValid(_fixedEmail))
                 adminEmails.Add(_fixedEmail!);
 
-            _ = Task.Run(() => EnqueueEmailAsync(
-                input, portalId, studentId, studentCode, DateTime.Now,
-                catForMail, site, adminEmails, bccEmails), CancellationToken.None);
+            // Capture values before Task.Run to avoid accessing disposed HttpContext
+            var inputCopy       = input;
+            var studentIdCopy   = studentId;
+            var studentCodeCopy = studentCode;
+            var regAt           = DateTime.Now;
+            var catCopy         = catForMail;
+            var siteCopy        = site;
+            var adminCopy       = adminEmails;
+            var bccCopy         = bccEmails;
+
+            _ = Task.Run(async () =>
+            {
+                try
+                {
+                    await _mailService.SendRegistrationEmailAsync(
+                        inputCopy, studentIdCopy, studentCodeCopy, regAt,
+                        catCopy, siteCopy, adminCopy, bccCopy);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex,
+                        "SendRegistrationEmail failed: StudentId={StudentId} EventCatId={EventCatId}",
+                        studentIdCopy, inputCopy.EventCatId);
+                }
+            }, CancellationToken.None);
         }
 
         TempData["RegSuccess"]   = message;
@@ -190,79 +211,6 @@ public class EventRegistrationController : Controller
     {
         var result = await _service.CheckStudentAsync(phone, email);
         return Json(result);
-    }
-
-    // ── Internal: POST payload to API, API enqueues into existing Hangfire ────
-
-    private async Task EnqueueEmailAsync(
-        EventRegistrationInputViewModel input,
-        int portalId,
-        int studentId,
-        string studentCode,
-        DateTime registeredAt,
-        EventsCatViewModel cat,
-        NVCMS.WebView.Data.SiteSettings.WebSiteSettings site,
-        List<string> adminEmails,
-        List<string> bccEmails)
-    {
-        try
-        {
-            var ev = cat.Events.FirstOrDefault(e => e.Id == input.EventId);
-            if (ev is null) return;
-
-            var eventDate = ev.Fromdatetime.HasValue
-                ? ev.Fromdatetime.Value.ToString("dd/MM/yyyy")
-                : cat.FromDate?.ToString("dd/MM/yyyy") ?? string.Empty;
-
-            var eventTime = ev.Fromdatetime.HasValue
-                ? ev.Fromdatetime.Value.ToString("HH:mm")
-                : cat.FromDate?.ToString("HH:mm") ?? string.Empty;
-
-            var payload = new
-            {
-                studentId,
-                studentCode,
-                studentName    = input.HoVaTen.Trim(),
-                studentPhone   = PhoneHelper.Normalize(input.SoDienThoai),
-                studentEmail   = input.Email ?? string.Empty,
-                studentAddress = input.TinhThanh ?? string.Empty,
-                eventCatId     = input.EventCatId,
-                eventId        = input.EventId,
-                eventName      = cat.CatName ?? string.Empty,
-                eventLocation  = ev.Diadiem ?? string.Empty,
-                eventDate,
-                eventTime,
-                registrationTime = registeredAt.ToString("HH:mm dd/MM/yyyy"),
-                sendCode         = cat.Sendcode == true,
-                importantNotes   = cat.ContentMail,
-                companyLogoUrl   = site.Logo.HeaderLogo,
-                siteUrl          = site.General.SiteWeb,
-                siteName         = site.General.SiteName,
-                adminEmails,
-                bccEmails,
-            };
-
-            var json    = JsonSerializer.Serialize(payload);
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
-            var client  = _httpFactory.CreateClient("ApiClient");
-            var response = await client.PostAsync("api/EventRegistrationEmail/enqueue", content);
-
-            if (!response.IsSuccessStatusCode)
-                _logger.LogWarning(
-                    "EnqueueEmail API returned {Status} for StudentId={StudentId}",
-                    (int)response.StatusCode, studentId);
-            else
-                _logger.LogInformation(
-                    "EnqueueEmail OK: StudentId={StudentId} EventCatId={EventCatId}",
-                    studentId, input.EventCatId);
-        }
-        catch (Exception ex)
-        {
-            // Email failure must NEVER fail the registration
-            _logger.LogError(ex,
-                "EnqueueEmailFailure: StudentId={StudentId} EventCatId={EventCatId}",
-                studentId, input.EventCatId);
-        }
     }
 
     // ── reCAPTCHA v3 verification ─────────────────────────────────────────────

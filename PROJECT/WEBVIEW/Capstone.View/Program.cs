@@ -1,6 +1,7 @@
 using Capstone.View.Helpers;
 using Capstone.View.Middleware;
 using Capstone.View.Options;
+using Capstone.View.Services;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Net.Http.Headers;
 using NVCMS.WebView.Data;
@@ -40,6 +41,8 @@ builder.Services.AddWebViewData(connStr, crmConnStr, webRootPath, serverFilesBas
 
 builder.Services.AddScoped<ITuVanFormService>(sp =>
     new TuVanFormService(connStr, sp.GetRequiredService<IConfiguration>()));
+
+builder.Services.AddScoped<EventRegistrationMailService>();
 
 builder.Services.AddHttpClient("ApiClient", client =>
 {

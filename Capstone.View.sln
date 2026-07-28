@@ -1,13 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 18
-VisualStudioVersion = 18.5.11723.231 stable
+VisualStudioVersion = 18.5.11723.231
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Capstone.View", "PROJECT\WEBVIEW\Capstone.View\Capstone.View.csproj", "{717DBAA7-2A95-50C6-C12A-F6BCACD86C1C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NVCMS.WebView.Data", "PROJECT\WEBVIEW\NVCMS.WebView.Data\NVCMS.WebView.Data.csproj", "{30A04A76-9F94-5854-4C03-9FC891BA8B86}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NVCMS.API.ReadGoogleSheet", "PROJECT\API\NVCMS.API.ReadGoogleSheet\NVCMS.API.ReadGoogleSheet.csproj", "{89B3BF16-2FED-6141-27AC-BC2D81195D13}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,10 +21,6 @@ Global
 		{30A04A76-9F94-5854-4C03-9FC891BA8B86}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{30A04A76-9F94-5854-4C03-9FC891BA8B86}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{30A04A76-9F94-5854-4C03-9FC891BA8B86}.Release|Any CPU.Build.0 = Release|Any CPU
-		{89B3BF16-2FED-6141-27AC-BC2D81195D13}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{89B3BF16-2FED-6141-27AC-BC2D81195D13}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{89B3BF16-2FED-6141-27AC-BC2D81195D13}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{89B3BF16-2FED-6141-27AC-BC2D81195D13}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

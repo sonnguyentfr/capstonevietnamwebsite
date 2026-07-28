@@ -2,8 +2,17 @@
 <%@ Register TagPrefix="dnn" TagName="TextEditor" Src="~/controls/TextEditor.ascx" %>
 <link rel="stylesheet" href="/static/_admin/assets/css/nvcmsadmin.css" />
 <link rel="stylesheet" href="/Portals/_default/Skins/_admin/controls/newsedit.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" />
 <style type="text/css">
-    .unsubmail {    text-decoration: line-through !important}
+    .unsubmail {
+        text-decoration: line-through !important
+    }
+
+    .select2-container--default .select2-selection--single .select2-selection__rendered {
+        color: #444;
+        line-height: 28px;
+        padding: 1px 5px 4px !important;
+    }
 </style>
 <div class="nk-block-head nk-block-head-sm">
     <div class="nk-block-between">
@@ -22,15 +31,15 @@
                         <div class="card-inner">
                             <div class="form-group">
                                 <label class="form-label"><b>CHỌN SỰ KIỆN: </b></label>
-                                <asp:DropDownList ID="ddlEventCat" runat="server" CssClass="form-select form-control" data-search="on" placeholder="--chọn sự kiện--" AutoPostBack="true" OnSelectedIndexChanged="ddlEventCat_SelectedIndexChanged"></asp:DropDownList>
+                                <asp:DropDownList ID="ddlEventCat" runat="server" CssClass="form-select form-control select2-ddl" data-search="on" placeholder="--chọn sự kiện--" AutoPostBack="true" OnSelectedIndexChanged="ddlEventCat_SelectedIndexChanged"></asp:DropDownList>
                             </div>
                             <div class="form-group">
                                 <label class="form-label"><b>ĐIA ĐIỂM: </b></label>
-                                <asp:DropDownList ID="ddlEvent" runat="server" CssClass="form-select form-control" data-search="on" placeholder="--chọn sự kiện--"></asp:DropDownList>
+                                <asp:DropDownList ID="ddlEvent" runat="server" CssClass="form-select form-control select2-ddl" data-search="on" placeholder="--chọn sự kiện--"></asp:DropDownList>
                             </div>
                             <div class="form-group">
                                 <label class="form-label"><b>CHỌN CHIẾN DỊCH: </b></label>
-                                <asp:DropDownList ID="ddlcampaing" runat="server" CssClass="form-select form-control" data-search="on" placeholder="--Chọn chiến dịch--" AutoPostBack="true" OnSelectedIndexChanged="ddlcampaing_SelectedIndexChanged"></asp:DropDownList>
+                                <asp:DropDownList ID="ddlcampaing" runat="server" CssClass="form-select form-control select2-ddl" data-search="on" placeholder="--Chọn chiến dịch--" AutoPostBack="true" OnSelectedIndexChanged="ddlcampaing_SelectedIndexChanged"></asp:DropDownList>
                             </div>
                         </div>
                         <div class="card-inner ">
@@ -57,7 +66,7 @@
                                                     </div>
                                                     <div class="nk-tb-col">
                                                         <span class="tb-sub <%#CheckUnSub(Eval("Email"))%>"><span>
-                                                             <asp:Label ID="StudentEmail" Text='<%#Eval("Email") %>' runat="server"></asp:Label>
+                                                            <asp:Label ID="StudentEmail" Text='<%#Eval("Email") %>' runat="server"></asp:Label>
                                                         </span></span>
                                                     </div>
                                                     <div class="nk-tb-col text-right">
@@ -75,7 +84,7 @@
                         <div class="card-inner">
                             <div class="form-group">
                                 <label class="form-label"><b>CHỌN Email gửi đi: </b></label>
-                                <asp:DropDownList ID="ddlEmail" runat="server" CssClass="form-select form-control" data-search="on" placeholder="--chọn email--" AutoPostBack="true" OnSelectedIndexChanged="ddlEmail_SelectedIndexChanged"></asp:DropDownList>
+                                <asp:DropDownList ID="ddlEmail" runat="server" CssClass="form-select form-control select2-ddl" data-search="on" placeholder="--chọn email--" AutoPostBack="true" OnSelectedIndexChanged="ddlEmail_SelectedIndexChanged"></asp:DropDownList>
                             </div>
                             <div class="form-group">
                                 <h3 class="text-danger">
@@ -101,7 +110,7 @@
                         <div class="card-header border-bottom">
                             <div class="form-group">
                                 <label class="form-label"><b>CHỌN TEMPLATE: </b></label>
-                                <asp:DropDownList ID="ddltemplate" runat="server" CssClass="form-select form-control" data-search="on" placeholder="--Chọn tempate--" AutoPostBack="true" OnSelectedIndexChanged="ddltemplate_SelectedIndexChanged"></asp:DropDownList>
+                                <asp:DropDownList ID="ddltemplate" runat="server" CssClass="form-select form-control select2-ddl" data-search="on" placeholder="--Chọn tempate--" AutoPostBack="true" OnSelectedIndexChanged="ddltemplate_SelectedIndexChanged"></asp:DropDownList>
                             </div>
                         </div>
                         <div class="card-inner card-bordered">
@@ -130,20 +139,51 @@
     </ProgressTemplate>
 </asp:UpdateProgress>
 
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script type="text/javascript">
-    function ValidateEvent() {
+        function initSelect2() {
+            $('.select2-ddl').each(function () {
+                var placeholder = $(this).attr('placeholder') || '--Chọn--';
+                $(this).select2({
+                    placeholder: placeholder,
+                    allowClear: true,
+                    width: '100%',
+                    language: {
+                        noResults: function () { return "Không tìm thấy kết quả"; },
+                        searching: function () { return "Đang tìm..."; }
+                    }
+                }).on('change', function () {
+                    // Trigger ASP.NET postback on change for AutoPostBack dropdowns
+                    var ddlId = $(this).attr('id');
+                    if (typeof __doPostBack !== 'undefined') {
+                        __doPostBack(ddlId, '');
+                    }
+                });
+            });
+                                    }
+
+        $(document).ready(function () {
+            initSelect2();
+                                    });
+
+        // Re-initialize after UpdatePanel async postback
+        var prm = Sys.WebForms.PageRequestManager.getInstance();
+        prm.add_endRequest(function () {
+            initSelect2();
+                                    });
+        function ValidateEvent() {
         var ddlEventCat = document.getElementById('<%=ddlEventCat.ClientID%>').value;
         if (ddlEventCat == 0) {
             alert("Vui lòng Chọn sự kiện");
             document.getElementById('<%=ddlEventCat.ClientID%>').focus;
-            return false;
+        return false;
         }
     }
-    function Modalhoatdong() {
-        $('#modalEdit').modal('show');
+        function Modalhoatdong() {
+            $('#modalEdit').modal('show');
     };
-    function ModalFollowUpClose() {
-        $('#modalEditl').modal('hide');
+        function ModalFollowUpClose() {
+            $('#modalEditl').modal('hide');
         $('.modal-backdrop').css({
             display: 'none'
         });

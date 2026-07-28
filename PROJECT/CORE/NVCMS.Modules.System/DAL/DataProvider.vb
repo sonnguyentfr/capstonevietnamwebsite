@@ -1,7 +1,7 @@
 Imports System
 Imports DotNetNuke
 
-Namespace NVCMS.Modules.Hethong
+Namespace NVCMS.Modules.HeThong
 
     ''' -----------------------------------------------------------------------------
     ''' <summary>
@@ -26,7 +26,7 @@ Namespace NVCMS.Modules.Hethong
 
         ' dynamically create provider
         Private Shared Sub CreateProvider()
-            objProvider = CType(Framework.Reflection.CreateObject("data", "DOI.Modules.CongBoKH", ""), DataProvider)
+            objProvider = CType(Framework.Reflection.CreateObject("data", "NVCMS.Modules.HeThong", ""), DataProvider)
         End Sub
 
         ' return the provider
