@@ -54,7 +54,7 @@
                                 <div class="tab-pane" id="tabItem6">
                                     <p><strong>Nhập danh sách Email vào đây</strong></p>
                                     <asp:TextBox ID="txtMail" runat="server" TextMode="MultiLine" Height="330px" CssClass="form-control no-resize"></asp:TextBox>
-                                    <p>Các Email cách nhau bới dấu <mark>;</mark> (phẩy)</p>
+                                    <p>Các Email cách nhau bới dấu <mark>;</mark> (chấm phẩy)</p>
                                     <asp:LinkButton ID="lbtUpdate_TextBox" OnClientClick="return ValidateTexBox();" runat="server" Font-Bold="True" class="btn btn-primary">CẬP NHẬT VÀO DANH SÁCH</asp:LinkButton>
                                 </div>
 

@@ -110,10 +110,18 @@ Namespace NVCMS.Modules.Marketing
 
         Public MustOverride Function Marketing_Mail_Campaign_Send_Insert(ByVal campaignId As Integer, ByVal subject As String, ByVal body As String, ByVal totalRecipient As Integer, ByVal createdDate As DateTime) As Integer
 
+        Public MustOverride Function Marketing_Mail_Campaign_Send_GetByID(ByVal id As Integer) As IDataReader
+
 #End Region
 #Region "Marketing_Mail_Send_Log"
 
         Public MustOverride Function Marketing_Mail_Send_Log_Insert(ByVal campaignSendId As Integer, ByVal listMailId As Integer, ByVal email As String, ByVal createdDate As DateTime) As Integer
+
+        Public MustOverride Function Marketing_Mail_Send_Log_GetByCampaignSendId(ByVal campaignSendId As Integer, ByVal status As String, ByVal email As String, ByVal pageIndex As Integer, ByVal pageSize As Integer, ByVal sortBy As String, ByVal sortDirection As String) As IDataReader
+
+        Public MustOverride Function Marketing_Mail_Send_Log_GetStatistics(ByVal campaignSendId As Integer) As IDataReader
+
+        Public MustOverride Function Marketing_Mail_Send_Log_GetStatusDistribution(ByVal campaignSendId As Integer) As IDataReader
 
 #End Region
 #End Region

@@ -134,6 +134,7 @@
         if (campaigns && campaigns.length > 0) {
             campaigns.forEach(function (item) {
                 var emailListUrl = tabUrl + "?view=mail&itemid=" + item.id;
+                var staticUrl = tabUrl + "?view=static&itemid=" + item.id;
                 html += '<div class="col-sm-6 col-lg-4 col-xxl-3">';
                 html += '  <div class="card card-bordered h-100">';
                 html += '    <div class="card-inner">';
@@ -150,6 +151,7 @@
                 html += '            <div class="dropdown-menu dropdown-menu-right">';
                 html += '              <ul class="link-list-opt no-bdr">';
                 html += '                <li><a href="javascript:void(0);" class="btn-edit" data-id="' + item.id + '"><em class="icon ni ni-edit-fill"></em><span>Sửa</span></a></li>';
+                html += '                <li><a href="' + staticUrl + '"><em class="icon ni ni-emails-fill"></em><span>Thống kê</span></a></li>';
                 html += '                <li><a href="' + emailListUrl + '"><em class="icon ni ni-emails-fill"></em><span>Danh sách email</span></a></li>';
                 html += '                <li><a href="javascript:void(0);" class="btn-delete" data-id="' + item.id + '"><em class="icon ni ni-cross-sm"></em><span>Xóa</span></a></li>';
                 html += '              </ul>';
@@ -157,7 +159,7 @@
                 html += '          </div>';
                 html += '        </div>';
                 html += '        <div class="project-meta">';
-                html += '          <span class="badge badge-dim badge-light text-gray fw-bold fs-16px"><em class="icon ni ni-clock"></em><span>Số lượng email: <mark>' + (item.soluongemail || 0) + '</mark></span></span>';
+                html += '          <span class="badge badge-dim badge-light text-gray"><em class="icon ni ni-clock"></em><span>Số lượng email: <mark>' + (item.soluongemail || 0) + '</mark></span></span>';
                 html += '        </div>';
                 html += '      </div>';
                 html += '    </div>';

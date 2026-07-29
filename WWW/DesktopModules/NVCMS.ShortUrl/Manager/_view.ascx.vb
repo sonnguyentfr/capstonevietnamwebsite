@@ -144,13 +144,18 @@ Namespace NVCMS.Modules.ShortURL
         Private Sub BinddrgDataViewer()
             TotalRecord = _ShortUrlController._Find_Count(KeySearch)
             Dim totalPage As Integer = If(TotalRecord Mod PageSize <> 0, (TotalRecord / PageSize + 1), (TotalRecord / PageSize))
-            If totalPage > 1 Then
-                vbPaging.TotalPage = totalPage
-                vbPaging.bindPages()
-                vbPaging.Visible = True
-            Else
-                vbPaging.Visible = False
-            End If
+            'If totalPage > 1 Then
+            '    vbPaging.TotalPage = totalPage
+            '    vbPaging.bindPages()
+            '    vbPaging.Visible = True
+            'Else
+            '    vbPaging.Visible = False
+            'End If
+            ctlPagingControl.TotalRecords = TotalRecord
+            ctlPagingControl.PageSize = PageSize
+            ctlPagingControl.CurrentPage = CurrentPage
+            ctlPagingControl.TabID = TabId
+            ctlPagingControl.QuerystringParams = Ultis.GenerateQueryStringParameters(Request, BL.qsTimKiem)
             'Nem vao cache chơi
             'Dim cacheName As String = nvcmsBL.cacheShortUrl & action & KeySearch & CurrentPage & PageSize
             ''Dim fromCache As ArrayList = HttpCacheHelper.GetFromCache(cacheName)

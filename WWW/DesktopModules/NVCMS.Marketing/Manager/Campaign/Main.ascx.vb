@@ -12,6 +12,8 @@ Namespace NVCMS.Modules.Marketing
                         DynamicPage = DotNetNuke.Common.ResolveUrl(Me.TemplateSourceDirectory & "/Edit.ascx")
                     Case "mail"
                         DynamicPage = DotNetNuke.Common.ResolveUrl(Me.TemplateSourceDirectory & "/Mail.ascx")
+                    Case "static"
+                        DynamicPage = DotNetNuke.Common.ResolveUrl(Me.TemplateSourceDirectory & "/Static.ascx")
                     Case Else
                         DynamicPage = DotNetNuke.Common.ResolveUrl(Me.TemplateSourceDirectory & "/Viewer.ascx")
                 End Select

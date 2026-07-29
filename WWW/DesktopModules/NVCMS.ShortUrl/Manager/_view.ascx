@@ -1,7 +1,5 @@
 <%@ Control Language="vb" AutoEventWireup="false" Explicit="true" CodeFile="_view.ascx.vb" Inherits="NVCMS.Modules.ShortURL.inc_list" %>
 <%@ Register TagPrefix="dnn" Assembly="DotNetNuke" Namespace="DotNetNuke.UI.WebControls" %>
-<%@ Register Src="~/controls/Pagesadmin.ascx" TagPrefix="uc1" TagName="Pages" %>
-
 <style type="text/css">
     .location {
         padding: 5px;
@@ -128,8 +126,8 @@
                                             <td class="nk-tb-col">
                                                 <div class="user-card">
                                                     <div class="user-info">
-                                                        <a  href="<%#NavigateURL() & "?view=edit&itemid=" & Eval("id") %>" data-toggle="tooltip" data-placement="top" data-original-title="Sửa thông tin">
-                                                        <strong><%#Eval("short_url") %></strong></a>
+                                                        <a href="<%#NavigateURL() & "?view=edit&itemid=" & Eval("id") %>" data-toggle="tooltip" data-placement="top" data-original-title="Sửa thông tin">
+                                                            <strong><%#Eval("short_url") %></strong></a>
                                                     </div>
                                                 </div>
                                             </td>
@@ -153,7 +151,7 @@
                                                         <%--<asp:LinkButton ID="cmdEdit" OnClick="cmdEdit" CommandName="cmdEdit" CommandArgument='<%# DataBinder.Eval(Container.DataItem, "id") %>' runat="server" data-target="addInfo" data-toggle="tooltip" data-placement="top" title="Sửa thông tin">
                                                         <em class="icon ni ni-edit-fill"></em>
                                                         </asp:LinkButton>--%>
-                                                        <a  href="<%#NavigateURL() & "?view=edit&itemid=" & Eval("id") %>" data-toggle="tooltip" data-placement="top" data-original-title="Sửa thông tin">
+                                                        <a href="<%#NavigateURL() & "?view=edit&itemid=" & Eval("id") %>" data-toggle="tooltip" data-placement="top" data-original-title="Sửa thông tin">
                                                             <em class="icon ni ni-edit-fill"></em></a></span>
                                                     </li>
                                                     <li class="nk-tb-action-hidden">
@@ -168,7 +166,13 @@
                                 </asp:Repeater>
                             </tbody>
                         </table>
-                        <uc1:Pages runat="server" ID="vbPaging" />
+                        <%--<uc1:Pages runat="server" ID="vbPaging" />--%>
+                        <div class="g">
+                            <ul class="pagination justify-content-center justify-content-md-start">
+                                <dnn:PagingControl ID="ctlPagingControl" runat="server" EnableViewState="true" Mode="URL" PageLinksPerPage="20" />
+                            </ul>
+                            <!-- .pagination -->
+                        </div>
                     </div>
                 </div>
             </div>

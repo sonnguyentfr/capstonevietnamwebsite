@@ -294,12 +294,32 @@ Namespace NVCMS.Modules.Marketing
         End Function
 
         '------------------------------------------'
+        Public Overrides Function Marketing_Mail_Campaign_Send_GetByID(ByVal id As Integer) As IDataReader
+            Return CType(SqlHelper.ExecuteReader(ConnectionString, "Marketing_Mail_Campaign_Send_GetByID", id), IDataReader)
+        End Function
+
+        '------------------------------------------'
 
 #End Region
 #Region "Marketing_Mail_Send_Log"
 
         Public Overrides Function Marketing_Mail_Send_Log_Insert(ByVal campaignSendId As Integer, ByVal listMailId As Integer, ByVal email As String, ByVal createdDate As DateTime) As Integer
             Return CInt(SqlHelper.ExecuteScalar(ConnectionString, "Marketing_Mail_Send_Log_Insert", campaignSendId, listMailId, email, createdDate))
+        End Function
+
+        '------------------------------------------'
+        Public Overrides Function Marketing_Mail_Send_Log_GetByCampaignSendId(ByVal campaignSendId As Integer, ByVal status As String, ByVal email As String, ByVal pageIndex As Integer, ByVal pageSize As Integer, ByVal sortBy As String, ByVal sortDirection As String) As IDataReader
+            Return CType(SqlHelper.ExecuteReader(ConnectionString, "Marketing_Mail_Send_Log_GetByCampaignSendId", campaignSendId, status, email, pageIndex, pageSize, sortBy, sortDirection), IDataReader)
+        End Function
+
+        '------------------------------------------'
+        Public Overrides Function Marketing_Mail_Send_Log_GetStatistics(ByVal campaignSendId As Integer) As IDataReader
+            Return CType(SqlHelper.ExecuteReader(ConnectionString, "Marketing_Mail_Send_Log_GetStatistics", campaignSendId), IDataReader)
+        End Function
+
+        '------------------------------------------'
+        Public Overrides Function Marketing_Mail_Send_Log_GetStatusDistribution(ByVal campaignSendId As Integer) As IDataReader
+            Return CType(SqlHelper.ExecuteReader(ConnectionString, "Marketing_Mail_Send_Log_GetStatusDistribution", campaignSendId), IDataReader)
         End Function
 
         '------------------------------------------'
