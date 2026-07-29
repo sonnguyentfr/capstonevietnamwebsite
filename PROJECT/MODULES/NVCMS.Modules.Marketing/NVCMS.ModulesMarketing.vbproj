@@ -107,6 +107,14 @@
     <Compile Include="ListMail\ListMail_Info.vb" />
     <Compile Include="SendCampaign\SendCampaignRequest.vb" />
     <Compile Include="SendCampaign\SendCampaignResponse.vb" />
+    <Compile Include="Static\DashboardDelay.vb" />
+    <Compile Include="Static\DashboardDetail.vb" />
+    <Compile Include="Static\DashboardResult.vb" />
+    <Compile Include="Static\DashboardStatus.vb" />
+    <Compile Include="Static\DashboardSummary.vb" />
+    <Compile Include="Static\DashboardTimeline.vb" />
+    <Compile Include="Static\DataReaderExtensions.vb" />
+    <Compile Include="Static\MarketingReportController.vb" />
     <Compile Include="Template\Template_Controller.vb" />
     <Compile Include="Template\Template_Info.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />

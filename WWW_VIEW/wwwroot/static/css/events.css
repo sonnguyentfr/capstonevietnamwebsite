@@ -142,7 +142,8 @@
 }
 @media (max-width: 900px) {
     .event-detail-layout { grid-template-columns: 1fr; }
-    .event-detail-sidebar { order: -1; }
+    /* Sidebar xuống dưới thay vì lên trên */
+    .event-detail-sidebar { order: 2; }
 }
 
 /* ----- Main content ----- */
@@ -177,7 +178,12 @@
 .fair-dl dd { color: #4b5563; margin: 0; }
 
 /* ----- Sidebar ----- */
-.event-detail-sidebar { position: sticky; top: 90px; display: flex; flex-direction: column; gap: 1.25rem; }
+.event-detail-sidebar { display: flex; flex-direction: column; gap: 1.25rem; }
+
+/* Sticky trên desktop */
+@media (min-width: 901px) {
+    .event-detail-sidebar { position: sticky; top: 90px; }
+}
 .sidebar-box {
 
 /* ----- event-card-desc: clamp 4 dong ----- */

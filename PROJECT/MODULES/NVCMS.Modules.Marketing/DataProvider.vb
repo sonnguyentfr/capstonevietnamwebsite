@@ -124,6 +124,14 @@ Namespace NVCMS.Modules.Marketing
         Public MustOverride Function Marketing_Mail_Send_Log_GetStatusDistribution(ByVal campaignSendId As Integer) As IDataReader
 
 #End Region
+#Region "Marketing_Static"
+
+        Public MustOverride Function MarketingMailDashboard(
+            CampaignId As Integer
+            ) As IDataReader
+
+
+#End Region
 #End Region
 
 

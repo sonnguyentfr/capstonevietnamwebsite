@@ -168,6 +168,20 @@
             </div>
         </div>
 
+        <!-- Engagement charts: calculated from Send/Open/Click timestamps, not only Status. -->
+        <div class="nk-block">
+            <div class="alert alert-info"><strong>Tracking note:</strong> Open and click figures are calculated from event times. A blank Delivered Time means delivery is unknown, not that the email failed.</div>
+            <asp:HiddenField ID="hdnAnalyticsJson" runat="server" />
+            <div class="row g-gs">
+                <div class="col-lg-4"><div class="card card-bordered h-100"><div class="card-inner"><h5 class="card-title">Engagement funnel</h5><p class="text-soft small">Sent to opened to clicked</p><canvas id="emailFunnelChart" height="250"></canvas></div></div></div>
+                <div class="col-lg-8"><div class="card card-bordered h-100"><div class="card-inner"><h5 class="card-title">Send and open activity by hour</h5><p class="text-soft small">Useful for selecting a better sending time.</p><canvas id="emailActivityChart" height="250"></canvas></div></div></div>
+            </div>
+            <div class="row g-gs mt-1">
+                <div class="col-lg-4"><div class="card card-bordered h-100"><div class="card-inner"><h5 class="card-title">Technical status</h5><p class="text-soft small">Status returned by the sending provider.</p><canvas id="emailStatusChart" height="220"></canvas></div></div></div>
+                <div class="col-lg-8"><div class="card card-bordered h-100"><div class="card-inner"><h5 class="card-title">Audience quality</h5><div class="row text-center mt-3"><div class="col-4 border-right"><span class="amount d-block h3"><asp:Literal ID="ltUniqueRecipients" runat="server" Text="0"></asp:Literal></span><span class="text-soft">Unique recipients</span></div><div class="col-4 border-right"><span class="amount d-block h3"><asp:Literal ID="ltUniqueOpened" runat="server" Text="0"></asp:Literal></span><span class="text-soft">Unique opened</span></div><div class="col-4"><span class="amount d-block h3"><asp:Literal ID="ltAverageOpenDelay" runat="server" Text="-"></asp:Literal></span><span class="text-soft">Average time to open</span></div></div></div></div></div>
+            </div>
+        </div>
+
         <!-- Email Preview Section -->
         <div class="nk-block">
             <div class="card card-bordered">
@@ -290,6 +304,119 @@
 </asp:UpdateProgress>
 
 <script type="text/javascript">
+    // Lightweight canvas charts: no CDN or third-party script required.
+    function getEmailAnalytics() {
+        var source = document.getElementById('<%= hdnAnalyticsJson.ClientID %>');
+        if (!source || !source.value) return null;
+        try { return JSON.parse(source.value); } catch (e) { return null; }
+    }
+
+    // The page is initially rendered by WebForms, then refreshed from the
+    // dashboard API so its figures always match the send-log statistics.
+    function loadDashboardFromApi() {
+        var query = new URLSearchParams(window.location.search);
+        var sendId = query.get('sendid') || query.get('itemid');
+        console.log('Loading dashboard for campaign send ID:', sendId);
+        if (!sendId || !window.jQuery || !jQuery.ServicesFramework) return;
+
+        var serviceFramework = jQuery.ServicesFramework(<%= ModuleId %>);
+        jQuery.ajax({
+            url: '/DesktopModules/NVCMS/API/Report/GetDashboard?campaignSendId=' + encodeURIComponent(sendId),
+            type: 'GET',
+            beforeSend: serviceFramework.setModuleHeaders
+        }).done(function (response) {
+            if (!response || !readDashboardValue(response, 'success') || !readDashboardValue(response, 'data')) return;
+            renderDashboard(readDashboardValue(response, 'data'));
+        }).fail(function (xhr) {
+            // Keep the server-rendered values visible if the API is temporarily unavailable.
+            if (window.console) console.warn('Unable to refresh campaign dashboard.', xhr.status);
+        });
+    }
+
+    function renderDashboard(data) {
+        var summary = readDashboardValue(data, 'summary') || {};
+        setDashboardText('<%= ltTotalRecipients.ClientID %>', readDashboardValue(summary, 'totalRecipient'));
+        setDashboardText('<%= ltTotalSent.ClientID %>', readDashboardValue(summary, 'sent'));
+        setDashboardText('<%= ltTotalDelivered.ClientID %>', readDashboardValue(summary, 'delivered'));
+        setDashboardText('<%= ltTotalOpened.ClientID %>', readDashboardValue(summary, 'opened'));
+        setDashboardText('<%= ltTotalClicked.ClientID %>', readDashboardValue(summary, 'clicked'));
+        setDashboardText('<%= ltTotalBounced.ClientID %>', readDashboardValue(summary, 'bounce'));
+        setDashboardText('<%= ltTotalComplaint.ClientID %>', readDashboardValue(summary, 'complaint'));
+        setDashboardText('<%= ltTotalUnsubscribed.ClientID %>', readDashboardValue(summary, 'unsubscribe'));
+        setDashboardText('<%= ltOpenRate.ClientID %>', formatRate(readDashboardValue(summary, 'openRate'), 'Open Rate'));
+        setDashboardText('<%= ltClickRate.ClientID %>', formatRate(readDashboardValue(summary, 'clickRate'), 'Click Rate'));
+        setDashboardText('<%= ltBounceRate.ClientID %>', formatRate(readDashboardValue(summary, 'bounceRate'), 'Bounce Rate'));
+
+        var analytics = {
+            funnel: { labels: ['Sent', 'Opened', 'Clicked'], values: [readDashboardValue(summary, 'sent') || 0, readDashboardValue(summary, 'opened') || 0, readDashboardValue(summary, 'clicked') || 0] },
+            activity: { sent: makeHourlySeries(readDashboardValue(data, 'sentTimeline')), opened: makeHourlySeries(readDashboardValue(data, 'openTimeline')) },
+            status: {
+                labels: (readDashboardValue(data, 'status') || []).map(function (x) { return readDashboardValue(x, 'status') || ''; }),
+                values: (readDashboardValue(data, 'status') || []).map(function (x) { return readDashboardValue(x, 'total') || 0; })
+            }
+        };
+        var source = document.getElementById('<%= hdnAnalyticsJson.ClientID %>');
+        if (source) source.value = JSON.stringify(analytics);
+        drawEmailCharts();
+    }
+
+    function setDashboardText(id, value) {
+        var element = document.getElementById(id);
+        if (element) element.textContent = value === undefined || value === null ? '0' : value;
+    }
+
+    function formatRate(value, label) {
+        return (Number(value || 0)).toFixed(2) + '% ' + label;
+    }
+
+    function readDashboardValue(object, property) {
+        if (!object) return undefined;
+        return object[property] !== undefined ? object[property] : object[property.charAt(0).toUpperCase() + property.slice(1)];
+    }
+
+    function makeHourlySeries(points) {
+        var series = [], i;
+        for (i = 0; i < 24; i++) series.push(0);
+        (points || []).forEach(function (point) {
+            var hour = Number(readDashboardValue(point, 'gio'));
+            if (hour >= 0 && hour < 24) series[hour] += Number(readDashboardValue(point, 'total') || 0);
+        });
+        return series;
+    }
+
+    function chartCanvas(id) {
+        var canvas = document.getElementById(id);
+        if (!canvas) return null;
+        var width = canvas.clientWidth || 360, height = canvas.height || 220;
+        canvas.width = width; canvas.height = height;
+        return { x: canvas.getContext('2d'), w: width, h: height };
+    }
+
+    function drawEmailCharts() {
+        var data = getEmailAnalytics();
+        if (!data) return;
+        var colors = ['#6576ff', '#1ee0ac', '#f4bd0e', '#e85347', '#816bff', '#09c2de'], graph = chartCanvas('emailFunnelChart');
+        if (graph) {
+            var max = Math.max.apply(null, data.funnel.values.concat([1])); graph.x.font = '12px Arial'; graph.x.textBaseline = 'middle';
+            data.funnel.labels.forEach(function (label, i) { var y = 28 + i * 62, barW = Math.max(4, (graph.w - 125) * data.funnel.values[i] / max); graph.x.fillStyle = '#526484'; graph.x.fillText(label, 8, y + 15); graph.x.fillStyle = colors[i]; graph.x.fillRect(75, y, barW, 30); graph.x.fillStyle = '#364a63'; graph.x.fillText(data.funnel.values[i], 82 + barW, y + 15); });
+        }
+        graph = chartCanvas('emailActivityChart');
+        if (graph) {
+            var pad = { l: 32, r: 12, t: 22, b: 28 }, maxValue = Math.max.apply(null, data.activity.sent.concat(data.activity.opened).concat([1])), cw = graph.w - pad.l - pad.r, ch = graph.h - pad.t - pad.b, step = cw / 24;
+            graph.x.strokeStyle = '#e5e9f2'; graph.x.fillStyle = '#8094ae'; graph.x.font = '11px Arial';
+            for (var n = 0; n <= 4; n++) { var gy = pad.t + ch - ch * n / 4; graph.x.beginPath(); graph.x.moveTo(pad.l, gy); graph.x.lineTo(graph.w - pad.r, gy); graph.x.stroke(); graph.x.fillText(Math.round(maxValue * n / 4), 2, gy + 3); }
+            [['sent', colors[0]], ['opened', colors[1]]].forEach(function (series) { graph.x.strokeStyle = series[1]; graph.x.lineWidth = 2; graph.x.beginPath(); data.activity[series[0]].forEach(function (value, i) { var px = pad.l + step * (i + .5), py = pad.t + ch - (value / maxValue * ch); i ? graph.x.lineTo(px, py) : graph.x.moveTo(px, py); }); graph.x.stroke(); });
+            graph.x.fillStyle = colors[0]; graph.x.fillRect(graph.w - 120, 8, 10, 10); graph.x.fillStyle = '#526484'; graph.x.fillText('Sent', graph.w - 106, 14); graph.x.fillStyle = colors[1]; graph.x.fillRect(graph.w - 65, 8, 10, 10); graph.x.fillStyle = '#526484'; graph.x.fillText('Opened', graph.w - 51, 14);
+            for (var h = 0; h < 24; h += 3) graph.x.fillText(('0' + h).slice(-2), pad.l + step * h, graph.h - 8);
+        }
+        graph = chartCanvas('emailStatusChart');
+        if (graph) {
+            var total = data.status.values.reduce(function(a, b) { return a + b; }, 0), start = -Math.PI / 2, cx = graph.w / 2, cy = graph.h / 2 - 5, radius = Math.min(graph.w, graph.h) / 3;
+            data.status.values.forEach(function (value, i) { var end = start + (total ? value / total * Math.PI * 2 : 0); graph.x.beginPath(); graph.x.moveTo(cx, cy); graph.x.arc(cx, cy, radius, start, end); graph.x.closePath(); graph.x.fillStyle = colors[i % colors.length]; graph.x.fill(); start = end; });
+            graph.x.font = '12px Arial'; data.status.labels.forEach(function (label, i) { var y = graph.h - 35 + i * 16; graph.x.fillStyle = colors[i % colors.length]; graph.x.fillRect(8, y, 10, 10); graph.x.fillStyle = '#526484'; graph.x.fillText(label + ' (' + data.status.values[i] + ')', 23, y + 9); });
+        }
+    }
+
     function loadEmailPreview() {
         var iframe = document.getElementById('emailPreviewFrame');
         var hdnBody = document.getElementById('<%= hdnEmailBody.ClientID %>');
@@ -303,7 +430,7 @@
 
     // Load preview after page load
     if (window.addEventListener) {
-        window.addEventListener('load', loadEmailPreview, false);
+        window.addEventListener('load', function () { loadEmailPreview(); drawEmailCharts(); loadDashboardFromApi(); }, false);
     } else if (window.attachEvent) {
         window.attachEvent('onload', loadEmailPreview);
     }
@@ -312,5 +439,7 @@
     var prm = Sys.WebForms.PageRequestManager.getInstance();
     prm.add_endRequest(function() {
         loadEmailPreview();
+        drawEmailCharts();
+        loadDashboardFromApi();
     });
 </script>
