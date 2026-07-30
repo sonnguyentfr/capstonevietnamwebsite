@@ -29,7 +29,9 @@
                                     </select>
                                 </div>
                                 <div class="form-group col-span-2">
-                                    <input name="HoVaTen" id="HoVaTen" placeholder="Họ và tên *" required />
+                                    <input name="HoVaTen" id="HoVaTen" type="tel" placeholder="Họ và tên *" />
+                                    <span class="text-danger" id="hovaten-error"></span>
+
                                 </div>
                                 <div class="form-group lg:col-span-1 col-span-2">
                                     <input name="Email" id="Email" type="email" placeholder="Email" />
@@ -46,7 +48,7 @@
                                     <p>Capstone cam kết không chia sẻ thông tin của bạn cho bất kỳ bên thứ ba nào.</p>
                                     <p>
                                         <label>
-                                            <input name="DongYDieuKhoan" id="DongYDieuKhoan" type="checkbox" required>
+                                            <input name="DongYDieuKhoanTuvan" id="DongYDieuKhoanTuvan" type="checkbox" required>
                                             Tôi đồng ý với các điều khoản và điều kiện bảo mật thông tin của Capstone *
                                         </label>
                                     </p>
@@ -57,7 +59,7 @@
                                         </label>
                                     </p>
                                     <p class="text-sm text-gray-600 mt-3">
-                                        <i class="fa fa-shield-alt"></i> 
+                                        <i class="fa fa-shield-alt"></i>
                                         Form được bảo vệ bởi <strong>reCAPTCHA</strong>.
                                     </p>
                                 </div>
@@ -75,94 +77,97 @@
                         <script src="https://www.google.com/recaptcha/api.js?render=@recaptchaKey"></script>
                         <script type="text/javascript">
                             (function() {
-                                var siteKeyValue = '@recaptchaKey';
+                            var siteKeyValue = '@recaptchaKey';
 
-                                function showToast(message, type) {
-                                    var toast = document.createElement('div');
-                                    toast.style.cssText = 'position:fixed;top:20px;right:20px;padding:15px 20px;background:' + 
-                                        (type === 'success' ? '#28a745' : type === 'error' ? '#dc3545' : '#ffc107') + 
-                                        ';color:#fff;border-radius:5px;box-shadow:0 2px 10px rgba(0,0,0,0.2);z-index:9999;max-width:350px;';
-                                    toast.textContent = message;
-                                    document.body.appendChild(toast);
-                                    setTimeout(function() { toast.remove(); }, 5000);
-                                }
+                            function showToast(message, type) {
+                            var toast = document.createElement('div');
+                            toast.style.cssText = 'position:fixed;top:20px;right:20px;padding:15px 20px;background:' +
+                            (type === 'success' ? '#28a745' : type === 'error' ? '#dc3545' : '#ffc107') +
+                            ';color:#fff;border-radius:5px;box-shadow:0 2px 10px rgba(0,0,0,0.2);z-index:9999;max-width:350px;';
+                            toast.textContent = message;
+                            document.body.appendChild(toast);
+                            setTimeout(function() { toast.remove(); }, 5000);
+                            }
 
-                                function validateEmail(email) {
-                                    var re = /^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/;
-                                    return re.test(email);
-                                }
+                            function validateEmail(email) {
+                            var re = /^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/;
+                            return re.test(email);
+                            }
 
-                                function validatePhone(phone) {
-                                    var cleaned = phone.replace(/[\s\-\.\(\)]/g, '');
-                                    var re = /^(0|\+?84)[0-9]{9}$/;
-                                    return re.test(cleaned);
-                                }
+                            function validatePhone(phone) {
+                            var cleaned = phone.replace(/[\s\-\.\(\)]/g, '');
+                            var re = /^(0|\+?84)[0-9]{9}$/;
+                            return re.test(cleaned);
+                            }
 
-                                var form = document.getElementById('tuvan-form');
-                                var recaptchaInput = document.getElementById('recaptcha-token');
+                            var form = document.getElementById('tuvan-form');
+                            var recaptchaInput = document.getElementById('recaptcha-token');
 
-                                form && form.addEventListener('submit', function (e) {
-                                    e.preventDefault();
+                            form && form.addEventListener('submit', function (e) {
+                            e.preventDefault();
 
-                                    var email = document.getElementById('Email').value.trim();
-                                    var phone = document.getElementById('SoDienThoai').value.trim();
-                                    var agree = document.getElementById('DongYDieuKhoan').checked;
+                            var hovaten = document.getElementById('HoVaTen').value.trim();
+                            var email = document.getElementById('Email').value.trim();
+                            var phone = document.getElementById('SoDienThoai').value.trim();
+                            var agree = document.getElementById('DongYDieuKhoanTuvan').checked;
 
-                                    document.getElementById('email-error').textContent = '';
-                                    document.getElementById('phone-error').textContent = '';
+                            document.getElementById('email-error').textContent = '';
+                            document.getElementById('phone-error').textContent = '';
 
-                                    var hasError = false;
+                            var hasError = false;
 
-                                    if (!email && !phone) {
-                                        showToast('Vui lòng nhập Email hoặc Số điện thoại.', 'warning');
-                                        return;
-                                    }
+                            if (!email && !phone && !hovaten) {
+                            showToast('Vui lòng nhập Email hoặc Số điện thoại.', 'warning');
+                            return;
+                            }
 
-                                    if (email && !validateEmail(email)) {
-                                        document.getElementById('email-error').textContent = 'Email không đúng định dạng.';
-                                        document.getElementById('Email').focus();
-                                        hasError = true;
-                                    }
+                            if (email && !validateEmail(email)) {
+                            document.getElementById('email-error').textContent = 'Email không đúng định dạng.';
+                            document.getElementById('Email').focus();
+                            hasError = true;
+                            }
 
-                                    if (phone && !validatePhone(phone)) {
-                                        document.getElementById('phone-error').textContent = 'Số điện thoại không đúng định dạng.';
-                                        if (!hasError) document.getElementById('SoDienThoai').focus();
-                                        hasError = true;
-                                    }
+                            if (phone && !validatePhone(phone)) {
+                            document.getElementById('phone-error').textContent = 'Số điện thoại không đúng định dạng.';
+                            if (!hasError) document.getElementById('SoDienThoai').focus();
+                            hasError = true;
+                            }
 
-                                    if (hasError) return;
+                            if (hasError) return;
 
-                                    if (!agree) {
-                                        showToast('Bạn phải đồng ý với điều khoản bảo mật.', 'warning');
-                                        return;
-                                    }
+                            if (!agree) {
+                            showToast('Bạn phải đồng ý với điều khoản bảo mật.', 'warning');
+                            return;
+                            }
 
-                                    grecaptcha.execute(siteKeyValue, { action: 'submit_tuvan' }).then(function(token) {
-                                        recaptchaInput.value = token;
+                            grecaptcha.execute(siteKeyValue, { action: 'submit_tuvan' }).then(function(token) {
+                            recaptchaInput.value = token;
+                            
 
-                                        var formData = new FormData(form);
-                                        fetch('/Home/DangKyTuVan', {
-                                            method: 'POST',
-                                            body: formData
-                                        })
-                                        .then(function(response) { return response.json(); })
-                                        .then(function(result) {
-                                            if (result.success) {
-                                                showToast(result.message, 'success');
-                                                form.reset();
-                                            } else {
-                                                showToast(result.message, 'error');
-                                            }
-                                        })
-                                        .catch(function(error) {
-                                            console.error('Submit error:', error);
-                                            showToast('Có lỗi xảy ra. Vui lòng thử lại.', 'error');
-                                        });
-                                    }).catch(function(error) {
-                                        console.error('reCAPTCHA error:', error);
-                                        showToast('Có lỗi xảy ra với xác thực bảo mật. Vui lòng thử lại.', 'error');
-                                    });
-                                });
+                            var formData = new FormData(form);
+
+                            fetch('/Home/DangKyTuVan', {
+                            method: 'POST',
+                            body: formData
+                            })
+                            .then(function(response) { return response.json(); })
+                            .then(function(result) {
+                            if (result.success) {
+                            showToast(result.message, 'success');
+                            form.reset();
+                            } else {
+                            showToast(result.message, 'error');
+                            }
+                            })
+                            .catch(function(error) {
+                            console.error('Submit error:', error);
+                            showToast('Có lỗi xảy ra. Vui lòng thử lại.', 'error');
+                            });
+                            }).catch(function(error) {
+                            console.error('reCAPTCHA error:', error);
+                            showToast('Có lỗi xảy ra với xác thực bảo mật. Vui lòng thử lại.', 'error');
+                            });
+                            });
                             })();
                         </script>
                     }
@@ -180,5 +185,7 @@
 </section>
 
 <style>
-    .grecaptcha-badge { visibility: visible !important; }
+    .grecaptcha-badge {
+    visibility: visible !important;
+    }
 </style>

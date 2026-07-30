@@ -26,8 +26,9 @@ public class HomeController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> DangKyTuVan(TuVanFormInputViewModel model, CancellationToken ct)
+    public async Task<IActionResult> DangKyTuVan([FromForm] TuVanFormInputViewModel model, CancellationToken ct)
     {
+
         if (!ModelState.IsValid)
         {
             return Json(new { success = false, message = "Vui lòng nhập đúng thông tin." });

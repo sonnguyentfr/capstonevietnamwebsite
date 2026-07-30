@@ -22,10 +22,10 @@ public class TuVanFormInputViewModel : IValidatableObject
     [StringLength(2000, ErrorMessage = "Nội dung không được quá 2000 ký tự.")]
     public string? NoiDung { get; set; }
 
-    [Range(typeof(bool), "true", "true", ErrorMessage = "Bạn phải đồng ý điều khoản bảo mật.")]
-    public bool DongYDieuKhoan { get; set; }
+    [Required(ErrorMessage = "Vui lòng chọn đồng ý điều khoản.")]
+    public string? DongYDieuKhoanTuvan { get; set; }
 
-    public bool NhanThongTin { get; set; } = true;
+    public string? NhanThongTin { get; set; }
 
     public string? RecaptchaToken { get; set; }
 

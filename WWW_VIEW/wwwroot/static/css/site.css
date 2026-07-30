@@ -1443,6 +1443,10 @@ body {
         .truong-quocgia-layout {
             grid-template-columns: 1fr;
         }
+
+        .truong-filter-sidebar {
+            position: static;
+        }
     }
     /* Sidebar */
     .truong-filter-sidebar {
@@ -1596,6 +1600,10 @@ body {
     @media (max-width: 960px) {
         .truong-search-layout {
             grid-template-columns: 1fr;
+        }
+
+        .truong-filter-sidebar {
+            position: static;
         }
     }
     /* ---- Sidebar ---- */
@@ -2148,6 +2156,7 @@ body {
 /* Header */
 .nd-header {
     margin-bottom: 2rem;
+    position: relative !important;
 }
 .nd-cat-badge {
     display: inline-block;
