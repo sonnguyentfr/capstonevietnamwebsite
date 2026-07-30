@@ -19,6 +19,7 @@ public class TuVanFormInputViewModel : IValidatableObject
     [RegularExpression(@"^[0-9+\s().-]{8,20}$", ErrorMessage = "Số điện thoại không hợp lệ.")]
     public string? SoDienThoai { get; set; }
 
+    [StringLength(2000, ErrorMessage = "Nội dung không được quá 2000 ký tự.")]
     public string? NoiDung { get; set; }
 
     [Range(typeof(bool), "true", "true", ErrorMessage = "Bạn phải đồng ý điều khoản bảo mật.")]
@@ -26,13 +27,66 @@ public class TuVanFormInputViewModel : IValidatableObject
 
     public bool NhanThongTin { get; set; } = true;
 
+    public string? RecaptchaToken { get; set; }
+
     public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
     {
+        // Phải có ít nhất Email hoặc SĐT
         if (string.IsNullOrWhiteSpace(Email) && string.IsNullOrWhiteSpace(SoDienThoai))
         {
             yield return new ValidationResult(
                 "Vui lòng nhập Email hoặc Số điện thoại.",
                 [nameof(Email), nameof(SoDienThoai)]);
         }
+
+        // Validate email format nếu có
+        if (!string.IsNullOrWhiteSpace(Email))
+        {
+            var emailTrimmed = Email.Trim();
+            if (!IsValidEmail(emailTrimmed))
+            {
+                yield return new ValidationResult(
+                    "Email không đúng định dạng.",
+                    [nameof(Email)]);
+            }
+        }
+
+        // Validate phone format nếu có
+        if (!string.IsNullOrWhiteSpace(SoDienThoai))
+        {
+            var phoneTrimmed = SoDienThoai.Trim().Replace(" ", "").Replace("-", "").Replace(".", "");
+            if (!IsValidVietnamesePhone(phoneTrimmed))
+            {
+                yield return new ValidationResult(
+                    "Số điện thoại không đúng định dạng Việt Nam.",
+                    [nameof(SoDienThoai)]);
+            }
+        }
+    }
+
+    private static bool IsValidEmail(string email)
+    {
+        try
+        {
+            var addr = new System.Net.Mail.MailAddress(email);
+            return addr.Address == email;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    private static bool IsValidVietnamesePhone(string phone)
+    {
+        // Remove country code if present
+        phone = phone.TrimStart('+');
+        if (phone.StartsWith("84"))
+            phone = "0" + phone[2..];
+
+        // Vietnamese phone: starts with 0, followed by 9 digits
+        // Mobile: 03, 05, 07, 08, 09 (10 digits total)
+        // Landline: 02 (10 digits total)
+        return System.Text.RegularExpressions.Regex.IsMatch(phone, @"^0[2-9][0-9]{8}$");
     }
 }

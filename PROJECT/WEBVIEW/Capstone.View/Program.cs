@@ -40,7 +40,10 @@ var serverFilesBaseUrl = builder.Configuration["SiteSettings:ServerFilesBaseUrl"
 builder.Services.AddWebViewData(connStr, crmConnStr, webRootPath, serverFilesBaseUrl);
 
 builder.Services.AddScoped<ITuVanFormService>(sp =>
-    new TuVanFormService(connStr, sp.GetRequiredService<IConfiguration>()));
+    new TuVanFormService(
+        connStr, 
+        sp.GetRequiredService<IConfiguration>(),
+        sp.GetRequiredService<IHttpClientFactory>()));
 
 builder.Services.AddScoped<EventRegistrationMailService>();
 

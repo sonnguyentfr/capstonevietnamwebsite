@@ -1,62 +1,64 @@
 @model NVCMS.WebView.Data.ViewModels.TuVanFormInputViewModel
-<!-- Dang ky tu van -->
-<section class="contact-form section-b-large">
+
+@{
+    var recaptchaKey = (ViewBag.RecaptchaSiteKey as string) ?? string.Empty;
+}
+
+<section class="contact-form section-b-large" id="tuvan-section">
     <div class="container">
         <div class="row">
             <div class="col lg:w-1/2">
                 <div class="block-wrap">
                     <h2 class="site-title mb-6 text-center lg:text-left">Đăng ký tư vấn</h2>
-                    @if (TempData["TuVanSuccess"] is string ok)
-                    {
-                        <div class="alert alert-success mb-4">@ok</div>
-                    }
-                    @if (TempData["TuVanError"] is string er)
-                    {
-                        <div class="alert alert-danger mb-4">@er</div>
-                    }
-                    <form asp-controller="Home" asp-action="DangKyTuVan" method="post" id="tuvan-form">
+                    <form id="tuvan-form">
                         @Html.AntiForgeryToken()
+                        <input type="hidden" name="g-recaptcha-response" id="recaptcha-token" />
                         <div class="wrap-form">
                             <div class="grid grid-cols-2 gap-6">
-
                                 <div class="form-group col-span-2">
-                                    <select type="text" placeholder="Hình thức tư vấn">
-                                        <option value="TUVANDUHOC">Tư vẫn du học</option>
+                                    <select name="HinhThuc" id="HinhThuc" class="form-control">
+                                        <option value="TUVANDUHOC">Tư vấn du học</option>
                                         <option value="DINHCU">Định cư</option>
                                         <option value="DINHHUONGNGHENGHIEP">Định hướng nghề nghiệp</option>
                                     </select>
                                 </div>
                                 <div class="form-group col-span-2">
-                                    <select type="text" placeholder="Văn phòng">
+                                    <select name="VanPhong" id="VanPhong" class="form-control">
                                         <option value="HN">Hà Nội</option>
                                         <option value="HCM">Hồ Chí Minh</option>
                                     </select>
                                 </div>
                                 <div class="form-group col-span-2">
-                                    <input asp-for="HoVaTen" placeholder="Họ và tên" />
+                                    <input name="HoVaTen" id="HoVaTen" placeholder="Họ và tên *" required />
                                 </div>
                                 <div class="form-group lg:col-span-1 col-span-2">
-                                    <input asp-for="Email" placeholder="Email" />
+                                    <input name="Email" id="Email" type="email" placeholder="Email" />
+                                    <span class="text-danger" id="email-error"></span>
                                 </div>
                                 <div class="form-group lg:col-span-1 col-span-2">
-                                    <input asp-for="SoDienThoai" placeholder="Số điện thoại" />
+                                    <input name="SoDienThoai" id="SoDienThoai" type="tel" placeholder="Số điện thoại" />
+                                    <span class="text-danger" id="phone-error"></span>
                                 </div>
                                 <div class="form-group col-span-2">
-                                    <textarea asp-for="NoiDung" placeholder="Nội dung"></textarea>
+                                    <textarea name="NoiDung" id="NoiDung" placeholder="Nội dung"></textarea>
                                 </div>
                                 <div class="form-group col-span-2" style="font-style: italic">
                                     <p>Capstone cam kết không chia sẻ thông tin của bạn cho bất kỳ bên thứ ba nào.</p>
                                     <p>
                                         <label>
-                                            <input type="checkbox">
-                                            Tôi đồng ý với các điều khoản và điều kiện bảo mật thông tin của Capstone
+                                            <input name="DongYDieuKhoan" id="DongYDieuKhoan" type="checkbox" required>
+                                            Tôi đồng ý với các điều khoản và điều kiện bảo mật thông tin của Capstone *
                                         </label>
                                     </p>
                                     <p>
                                         <label>
-                                            <input type="checkbox" checked="">
-                                            Tôi muốn nhận thông tin du học và các ưu đãi cập nhật từ Capstone, vui lòng liên hệ với tôi qua điện thoại, email hoặc SMS.
+                                            <input name="NhanThongTin" id="NhanThongTin" type="checkbox" checked>
+                                            Tôi muốn nhận thông tin du học và các ưu đãi cập nhật từ Capstone.
                                         </label>
+                                    </p>
+                                    <p class="text-sm text-gray-600 mt-3">
+                                        <i class="fa fa-shield-alt"></i> 
+                                        Form được bảo vệ bởi <strong>reCAPTCHA</strong>.
                                     </p>
                                 </div>
                                 <div class="frm-btnwrap">
@@ -67,16 +69,103 @@
                             </div>
                         </div>
                     </form>
-                    <script>
-                        document.getElementById('tuvan-form')?.addEventListener('submit', function (e) {
-                            var email = (document.getElementById('Email')?.value || '').trim();
-                            var phone = (document.getElementById('SoDienThoai')?.value || '').trim();
-                            if (!email && !phone) {
-                                e.preventDefault();
-                                alert('Vui lòng nhập Email hoặc Số điện thoại.');
-                            }
-                        });
-                    </script>
+
+                    @if (!string.IsNullOrEmpty(recaptchaKey))
+                    {
+                        <script src="https://www.google.com/recaptcha/api.js?render=@recaptchaKey"></script>
+                        <script type="text/javascript">
+                            (function() {
+                                var siteKeyValue = '@recaptchaKey';
+
+                                function showToast(message, type) {
+                                    var toast = document.createElement('div');
+                                    toast.style.cssText = 'position:fixed;top:20px;right:20px;padding:15px 20px;background:' + 
+                                        (type === 'success' ? '#28a745' : type === 'error' ? '#dc3545' : '#ffc107') + 
+                                        ';color:#fff;border-radius:5px;box-shadow:0 2px 10px rgba(0,0,0,0.2);z-index:9999;max-width:350px;';
+                                    toast.textContent = message;
+                                    document.body.appendChild(toast);
+                                    setTimeout(function() { toast.remove(); }, 5000);
+                                }
+
+                                function validateEmail(email) {
+                                    var re = /^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/;
+                                    return re.test(email);
+                                }
+
+                                function validatePhone(phone) {
+                                    var cleaned = phone.replace(/[\s\-\.\(\)]/g, '');
+                                    var re = /^(0|\+?84)[0-9]{9}$/;
+                                    return re.test(cleaned);
+                                }
+
+                                var form = document.getElementById('tuvan-form');
+                                var recaptchaInput = document.getElementById('recaptcha-token');
+
+                                form && form.addEventListener('submit', function (e) {
+                                    e.preventDefault();
+
+                                    var email = document.getElementById('Email').value.trim();
+                                    var phone = document.getElementById('SoDienThoai').value.trim();
+                                    var agree = document.getElementById('DongYDieuKhoan').checked;
+
+                                    document.getElementById('email-error').textContent = '';
+                                    document.getElementById('phone-error').textContent = '';
+
+                                    var hasError = false;
+
+                                    if (!email && !phone) {
+                                        showToast('Vui lòng nhập Email hoặc Số điện thoại.', 'warning');
+                                        return;
+                                    }
+
+                                    if (email && !validateEmail(email)) {
+                                        document.getElementById('email-error').textContent = 'Email không đúng định dạng.';
+                                        document.getElementById('Email').focus();
+                                        hasError = true;
+                                    }
+
+                                    if (phone && !validatePhone(phone)) {
+                                        document.getElementById('phone-error').textContent = 'Số điện thoại không đúng định dạng.';
+                                        if (!hasError) document.getElementById('SoDienThoai').focus();
+                                        hasError = true;
+                                    }
+
+                                    if (hasError) return;
+
+                                    if (!agree) {
+                                        showToast('Bạn phải đồng ý với điều khoản bảo mật.', 'warning');
+                                        return;
+                                    }
+
+                                    grecaptcha.execute(siteKeyValue, { action: 'submit_tuvan' }).then(function(token) {
+                                        recaptchaInput.value = token;
+
+                                        var formData = new FormData(form);
+                                        fetch('/Home/DangKyTuVan', {
+                                            method: 'POST',
+                                            body: formData
+                                        })
+                                        .then(function(response) { return response.json(); })
+                                        .then(function(result) {
+                                            if (result.success) {
+                                                showToast(result.message, 'success');
+                                                form.reset();
+                                            } else {
+                                                showToast(result.message, 'error');
+                                            }
+                                        })
+                                        .catch(function(error) {
+                                            console.error('Submit error:', error);
+                                            showToast('Có lỗi xảy ra. Vui lòng thử lại.', 'error');
+                                        });
+                                    }).catch(function(error) {
+                                        console.error('reCAPTCHA error:', error);
+                                        showToast('Có lỗi xảy ra với xác thực bảo mật. Vui lòng thử lại.', 'error');
+                                    });
+                                });
+                            })();
+                        </script>
+                    }
                 </div>
             </div>
             <div class="col lg:w-1/2">
@@ -90,5 +179,6 @@
     </div>
 </section>
 
-
-
+<style>
+    .grecaptcha-badge { visibility: visible !important; }
+</style>

@@ -30,13 +30,22 @@ public class HomeController : Controller
     {
         if (!ModelState.IsValid)
         {
-            TempData["TuVanError"] = "Vui lòng nhập đúng thông tin. Cần ít nhất Email hoặc Số điện thoại.";
-            return RedirectToAction(nameof(Index));
+            return Json(new { success = false, message = "Vui lòng nhập đúng thông tin." });
         }
 
-        await _tuVanFormService.SubmitAsync(model, _siteSettings.Value.PortalId, ct);
-        TempData["TuVanSuccess"] = "Đăng ký tư vấn thành công. Chúng tôi sẽ liên hệ sớm.";
-        return RedirectToAction(nameof(Index));
+        try
+        {
+            await _tuVanFormService.SubmitAsync(model, _siteSettings.Value.PortalId, ct);
+            return Json(new { success = true, message = "Đăng ký tư vấn thành công. Chúng tôi sẽ liên hệ sớm." });
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Json(new { success = false, message = ex.Message });
+        }
+        catch (Exception)
+        {
+            return Json(new { success = false, message = "Có lỗi xảy ra khi đăng ký. Vui lòng thử lại sau." });
+        }
     }
 
     public IActionResult Error() => View();
