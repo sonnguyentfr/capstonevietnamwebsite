@@ -2157,6 +2157,7 @@ body {
 .nd-header {
     margin-bottom: 2rem;
     position: relative !important;
+    z-index: auto;
 }
 .nd-cat-badge {
     display: inline-block;

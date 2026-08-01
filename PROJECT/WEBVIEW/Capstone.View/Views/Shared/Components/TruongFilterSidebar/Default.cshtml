@@ -71,9 +71,131 @@
     // Reset URL: giữ lại ten, bỏ hết filter
     string resetUrl = baseUrl + (!string.IsNullOrEmpty(f.Ten) ? "?ten=" + Uri.EscapeDataString(f.Ten!) : "");
 }
+<style>
 
-<aside class="truong-filter-sidebar" data-aos="fade-right">
+    .mobile-filter-trigger {
+        display: none;
+    }
 
+    .filter-overlay {
+        display: none;
+    }
+
+    @@media (max-width:768px) {
+
+        .mobile-filter-trigger {
+            display: block;
+            margin-bottom: 16px;
+        }
+
+            .mobile-filter-trigger button {
+                width: 100%;
+                height: 46px;
+                border: none;
+                border-radius: 12px;
+                background: #0d6efd;
+                color: #fff;
+                font-weight: 600;
+            }
+
+        .truong-filter-sidebar {
+            position: fixed;
+            top: 0;
+            left: -350px;
+            width: 350px;
+            height: 100vh;
+            overflow: auto;
+            background: #fff;
+            z-index: 9999;
+            transition: .3s;
+            border-radius:0px;
+        }
+
+            .truong-filter-sidebar.show {
+                left: 0;
+            }
+
+        .filter-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,.45);
+            opacity: 0;
+            visibility: hidden;
+            transition: .3s;
+            display: block;
+            z-index: 9998;
+        }
+
+            .filter-overlay.show {
+                opacity: 1;
+                visibility: visible;
+            }
+    }
+
+    .filter-sidebar__header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .filter-sidebar__title {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .filter-sidebar__actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .filter-sidebar__close {
+        display: none;
+        width: 36px;
+        height: 36px;
+        border: none;
+        border-radius: 50%;
+        background: #f3f4f6;
+        cursor: pointer;
+        font-size: 18px;
+        transition: .2s;
+    }
+
+        .filter-sidebar__close:hover {
+            background: #e5e7eb;
+        }
+
+    body.filter-open {
+        overflow: hidden;
+    }
+
+    @@media (max-width:768px) {
+
+        .filter-sidebar__close {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .truong-filter-sidebar {
+            overscroll-behavior: contain;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .mobile-filter-trigger {
+            display: block;
+            position: sticky;
+            top: 12px;
+            z-index: 100;
+            margin-bottom: 16px;
+        }
+    }
+
+</style>
+
+<aside id="filterSidebar" class="truong-filter-sidebar" data-aos="fade-right">
     <!-- ── HEADER ─────────────────────────────────────── -->
     <div class="filter-sidebar__header">
         <i class="fa-solid fa-sliders"></i>
@@ -84,6 +206,9 @@
                 <i class="fa-solid fa-rotate-left"></i> Xóa lọc
             </a>
         }
+        <button type="button" id="closeFilter" class="filter-sidebar__close">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
     </div>
 
     <!-- ── QUỐC GIA (ẩn nếu route đã fix quốc gia) ───── -->
@@ -177,3 +302,44 @@
     }
 
 </aside>
+<div id="filterOverlay" class="filter-overlay"></div>
+<div class="mobile-filter-trigger">
+    <button type="button" id="openFilter">
+        <i class="fa-solid fa-sliders"></i>
+        Bộ lọc
+    </button>
+</div>
+<script>
+
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const btn = document.getElementById("openFilter");
+        const closeBtn = document.getElementById("closeFilter");
+        const sidebar = document.getElementById("filterSidebar");
+        const overlay = document.getElementById("filterOverlay");
+
+        if (!btn || !sidebar || !overlay)
+            return;
+
+        function openFilter() {
+            sidebar.classList.add("show");
+            overlay.classList.add("show");
+            document.body.classList.add("filter-open");
+        }
+
+        function closeFilter() {
+            sidebar.classList.remove("show");
+            overlay.classList.remove("show");
+            document.body.classList.remove("filter-open");
+        }
+
+        btn.addEventListener("click", openFilter);
+
+        overlay.addEventListener("click", closeFilter);
+
+        if (closeBtn) {
+            closeBtn.addEventListener("click", closeFilter);
+        }
+    });
+
+</script>
