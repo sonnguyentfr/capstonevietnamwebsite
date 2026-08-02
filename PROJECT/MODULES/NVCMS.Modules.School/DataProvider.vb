@@ -69,8 +69,8 @@ Namespace NVCMS.Modules.School
         Public MustOverride Function Marketing_Truong_Version_GetByID(ByVal id As Integer) As IDataReader
 #End Region
 #Region "Cap_NewsBySchool"
-        Public MustOverride Sub NewsBySchool_Insert(ByVal NewId As Integer, ByVal SchoolId As Integer)
-        Public MustOverride Function NewsBySchool_Update(ByVal Id As Integer, ByVal NewId As Integer, ByVal SchoolId As Integer) As IDataReader
+        Public MustOverride Sub NewsBySchool_Insert(ByVal obj As NewsBySchoolInfo)
+        Public MustOverride Function NewsBySchool_Update(ByVal obj As NewsBySchoolInfo) As IDataReader
         Public MustOverride Function NewsBySchool_GetByNewID(ByVal NewId As Integer) As IDataReader
         Public MustOverride Function NewsBySchool_GetShowNewID(ByVal Count As Integer) As IDataReader
         Public MustOverride Function NewsBySchool_GetByID(ByVal Id As Integer) As IDataReader

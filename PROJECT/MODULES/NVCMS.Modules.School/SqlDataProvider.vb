@@ -221,11 +221,11 @@ Namespace NVCMS.Modules.School
         End Function
 #End Region
 #Region "Cap_NewsBySchool"
-        Public Overrides Sub NewsBySchool_Insert(ByVal NewId As Integer, ByVal SchoolId As Integer)
-            SqlHelper.ExecuteNonQuery(ConnectionString, "NewsBySchool_Insert", NewId, SchoolId)
+        Public Overrides Sub NewsBySchool_Insert(ByVal obj As NewsBySchoolInfo)
+            SqlHelper.ExecuteNonQuery(ConnectionString, "NewsBySchool_Insert", obj.NewId, obj.SchoolId)
         End Sub
-        Public Overrides Function NewsBySchool_Update(ByVal Id As Integer, ByVal NewId As Integer, ByVal SchoolId As Integer) As IDataReader
-            Return SqlHelper.ExecuteReader(ConnectionString, "NewsBySchool_Update", Id, NewId, SchoolId)
+        Public Overrides Function NewsBySchool_Update(ByVal obj As NewsBySchoolInfo) As IDataReader
+            Return SqlHelper.ExecuteReader(ConnectionString, "NewsBySchool_Update", obj.Id, obj.NewId, obj.SchoolId)
         End Function
         Public Overrides Function NewsBySchool_GetByNewID(ByVal NewId As Integer) As IDataReader
             Return SqlHelper.ExecuteReader(ConnectionString, "NewsBySchool_GetByNewID", NewId)

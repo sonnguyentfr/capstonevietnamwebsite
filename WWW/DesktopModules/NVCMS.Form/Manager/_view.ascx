@@ -133,7 +133,7 @@
                                                                     </asp:HyperLink>
                                                                 </li>
                                                                 <li>
-                                                                    <asp:HyperLink ID="cmdEdit" NavigateUrl='<%#NavigateURL() & "?view=answer&answer=" & DataBinder.Eval(Container.DataItem, "id") %>' runat="server">
+                                                                    <asp:HyperLink ID="cmdEdit" NavigateUrl='<%#NavigateURL() & "?view=answer&itemid=" & DataBinder.Eval(Container.DataItem, "id") %>' runat="server">
                                                         <em class="icon ni ni-pen"></em><span>Trả lời</span>
                                                                     </asp:HyperLink>
                                                                 </li>
