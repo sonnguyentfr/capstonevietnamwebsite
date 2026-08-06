@@ -59,7 +59,7 @@ public class TruongController : Controller
         NormalizeFilter(filter, majorids, quocgiaids);
         filter.IsPartner = true;
         var vm = await _truongService.SearchAsync(filter);
-        ViewData["Title"] = "Trường đối tác";
+        ViewData["TrangDanhMuc"] = "Trường đối tác";
         return View(vm);
     }
 
@@ -68,7 +68,7 @@ public class TruongController : Controller
     {
         NormalizeFilter(filter, majorids, quocgiaids);
         var vm = await _truongService.SearchAsync(filter);
-        ViewData["Title"] = "Tìm trường";
+        ViewData["TrangDanhMuc"] = "Tìm trường";
         return View(vm);
     }
 
@@ -87,7 +87,7 @@ public class TruongController : Controller
         var countries = await _truongService.GetCountriesAsync();
         var countryName = countries.FirstOrDefault(c => c.Id == countryId)?.Ten ?? countrySlug;
 
-        ViewData["Title"]       = $"Trường đối tác tại {countryName}";
+        ViewData["TrangDanhMuc"]       = $"Trường đối tác tại {countryName}";
         ViewBag.CountrySlug     = countrySlug;
         ViewBag.CountryName     = countryName;
         ViewBag.CountryId       = countryId;
@@ -105,7 +105,7 @@ public class TruongController : Controller
         if (!string.Equals(slug, canonical, StringComparison.OrdinalIgnoreCase))
             return RedirectToRoutePermanent("truong-detail", new { slug = canonical, id });
 
-        ViewData["Title"] = vm.NameofSchool;
+        ViewData["TrangDanhMuc"] = vm.NameofSchool;
         ViewData["CanonicalUrl"] = $"{Request.Scheme}://{Request.Host}/truong-doi-tac/{canonical}-{id}";
         return View(vm);
     }
@@ -114,7 +114,7 @@ public class TruongController : Controller
     public async Task<IActionResult> TimNganhHoc(string? filter, int? quocGia, string? loai)
     {
         var vm = await _truongService.GetMajorSearchAsync(filter, quocGia, loai);
-        ViewData["Title"] = "Tìm ngành học";
+        ViewData["TrangDanhMuc"] = "Tìm ngành học";
         return View(vm);
     }
 

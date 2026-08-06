@@ -53,7 +53,7 @@ public class DichVuController : Controller
         var vm = await _gioiThieuService.GetByIdAsync(pageId, _portalId);
         if (vm is null) return NotFound();
 
-        ViewData["Title"]        = vm.TrangDanhMuc;
+        ViewData["TrangDanhMuc"]        = vm.TrangDanhMuc;
         ViewData["CanonicalUrl"] = $"{Request.Scheme}://{Request.Host}{canonicalPath}";
         ViewData["MenuGroupUrl"] = "/tu-van-dinh-cu";
 

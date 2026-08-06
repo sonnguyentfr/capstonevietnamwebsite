@@ -20,7 +20,7 @@ public class FairGuideController : Controller
     {
         var items = await _service.GetAllAsync(_portalId);
 
-        ViewData["Title"]        = "FairGuide";
+        ViewData["TrangDanhMuc"]        = "FairGuide";
         ViewData["CanonicalUrl"] = $"{Request.Scheme}://{Request.Host}/gioi-thieu/fairguide";
 
         return View(items);
@@ -37,7 +37,7 @@ public class FairGuideController : Controller
 
         var canonical = $"{Request.Scheme}://{Request.Host}/gioi-thieu/fairguide/{vm.Slug}-{vm.Id}";
 
-        ViewData["Title"]           = vm.Title;
+        ViewData["TrangDanhMuc"]           = vm.Title;
         ViewData["MetaDescription"] = vm.Descreption;
         ViewData["CanonicalUrl"]    = canonical;
 

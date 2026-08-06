@@ -107,7 +107,7 @@ public class ThongTinDuHocController : Controller
         var vm = await _gioiThieuService.GetByIdAsync(pageId, _portalId);
         if (vm is null) return NotFound();
 
-        ViewData["Title"]        = vm.TrangDanhMuc;
+        ViewData["TrangDanhMuc"]        = vm.TrangDanhMuc;
         ViewData["CanonicalUrl"] = $"{Request.Scheme}://{Request.Host}/thong-tin-du-hoc/{countrySlug}";
         ViewData["MenuGroupUrl"] = $"/thong-tin-du-hoc/{countrySlug}";
 
@@ -125,7 +125,7 @@ public class ThongTinDuHocController : Controller
             var vm = await _gioiThieuService.GetByIdAsync(pageId, _portalId);
             if (vm is null) return NotFound();
 
-            ViewData["Title"]        = vm.TrangDanhMuc;
+            ViewData["TrangDanhMuc"]        = vm.TrangDanhMuc;
             ViewData["CanonicalUrl"] = $"{Request.Scheme}://{Request.Host}/thong-tin-du-hoc/{key}";
             ViewData["MenuGroupUrl"] = $"/thong-tin-du-hoc/{countrySlug}";
 
@@ -141,7 +141,7 @@ public class ThongTinDuHocController : Controller
             var page  = int.TryParse(Request.Query["page"], out var p) && p > 0 ? p : 1;
             var paged = await _newsService.GetByCategoryIdAsync(categoryId, _portalId, page, 27);
 
-            ViewData["Title"]            = category.CategoryName;
+            ViewData["TrangDanhMuc"]            = category.CategoryName;
             ViewData["MetaDescription"]  = category.Description ?? category.CategoryName;
             ViewData["CanonicalUrl"]     = $"{Request.Scheme}://{Request.Host}/thong-tin-du-hoc/{key}";
             ViewData["Category"]         = category;
@@ -165,7 +165,7 @@ public class ThongTinDuHocController : Controller
 
         var vm = await _truongService.SearchAsync(filter);
 
-        ViewData["Title"]   = $"Danh sách trường du học {country.Ten}";
+        ViewData["TrangDanhMuc"]   = $"Danh sách trường du học {country.Ten}";
         ViewBag.CountryName = country.Ten;
         ViewBag.CountrySlug = TruongSlugMap.TryGetValue(country.Id, out var ts) ? ts : countrySlug;
         ViewBag.CountryId   = country.Id;

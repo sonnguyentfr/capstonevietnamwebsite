@@ -62,7 +62,7 @@ public class EventRegistrationController : Controller
         bool isOpen = (!cat.EndDate.HasValue || now <= cat.EndDate.Value);
         if (!isOpen)
         {
-            ViewData["Title"] = "Đăng ký đã đóng";
+            ViewData["TrangDanhMuc"] = "Đăng ký đã đóng";
             return View("Closed");
         }
 
@@ -86,7 +86,7 @@ public class EventRegistrationController : Controller
             }
         };
 
-        ViewData["Title"] = $"Đăng ký tham dự - {cat.CatName}";
+        ViewData["TrangDanhMuc"] = $"Đăng ký tham dự - {cat.CatName}";
 
         var site = await _siteSettings.GetSettingsAsync(_siteOptions.Value.PortalCRMId);
         //ViewBag.RecaptchaSiteKey = site.Google.CaptchaKey ?? string.Empty;
@@ -200,7 +200,7 @@ public class EventRegistrationController : Controller
     [HttpGet("dang-ky-su-kien/thanh-cong")]
     public IActionResult Success()
     {
-        ViewData["Title"] = "Đăng ký thành công";
+        ViewData["TrangDanhMuc"] = "Đăng ký thành công";
         return View();
     }
 

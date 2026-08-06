@@ -18,7 +18,7 @@ public class VideoRepository : IVideoRepository
     public async Task<IEnumerable<VideoModel>> GetVideosAsync(int portalId, int page, int pageSize)
     {
         const string sql = @"
-            SELECT VideoId, CategoryId, Title, ImagePath, VideoPath,
+            SELECT VideoId, CategoryId, TrangDanhMuc, ImagePath, VideoPath,
                    Summary, TypeVideo, IsActive, Status, Createdate, ViewCount, PortalId
             FROM   NVCMS_Video
             WHERE  IsActive = 1

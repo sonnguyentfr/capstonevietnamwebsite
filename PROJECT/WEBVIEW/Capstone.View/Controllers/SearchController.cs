@@ -16,7 +16,7 @@ public class SearchController : Controller
     {
         var query = q?.Trim() ?? string.Empty;
 
-        ViewData["Title"]        = string.IsNullOrEmpty(query)
+        ViewData["TrangDanhMuc"]        = string.IsNullOrEmpty(query)
             ? "Tìm kiếm"
             : $"Kết quả tìm kiếm: {query}";
         ViewData["CanonicalUrl"] = $"{Request.Scheme}://{Request.Host}/tim-kiem";

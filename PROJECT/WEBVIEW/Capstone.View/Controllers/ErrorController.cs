@@ -8,7 +8,7 @@ public class ErrorController : Controller
     public IActionResult NotFound404()
     {
         Response.StatusCode = 404;
-        ViewData["Title"] = "Trang không tìm thấy";
+        ViewData["TrangDanhMuc"] = "Trang không tìm thấy";
         return View("NotFound");
     }
 
@@ -16,7 +16,7 @@ public class ErrorController : Controller
     public IActionResult ServerError()
     {
         Response.StatusCode = 500;
-        ViewData["Title"] = "Đã xảy ra lỗi";
+        ViewData["TrangDanhMuc"] = "Đã xảy ra lỗi";
         return View("~/Views/Home/Error.cshtml");
     }
 }

@@ -20,7 +20,7 @@ public class VideoController : Controller
     {
         var items = await _service.GetVideosAsync(_portalId, 1, PageSize);
 
-        ViewData["Title"]           = "Thư viện ảnh & Video";
+        ViewData["TrangDanhMuc"]           = "Thư viện ảnh & Video";
         ViewData["MetaDescription"] = "Xem thư viện ảnh và video các sự kiện, hội thảo du học của Capstone Vietnam.";
         ViewData["CanonicalUrl"]    = $"{Request.Scheme}://{Request.Host}/gioi-thieu/thu-vien-anh-video";
 
