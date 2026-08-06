@@ -1,5 +1,5 @@
 <%@ Control Language="vb" AutoEventWireup="false" Explicit="true" CodeFile="_edit.ascx.vb" Inherits="NVCMS.Modules.LadingPage.inc_edit" %>
-<script src="/Providers/HtmlEditorProviders/DNNConnect.CKE/js/ckeditor/4.15.1/ckeditor.js"></script>
+<%@ Register TagPrefix="dnn" TagName="TextEditor" Src="~/controls/TextEditor.ascx" %>
 <link rel="stylesheet" href="/static/_admin/assets/css/nvcmsadmin.css" />
 <link rel="stylesheet" href="/Portals/_default/Skins/_admin/controls/newsedit.css" />
 <div class="nk-block-head nk-block-head-sm">
@@ -59,7 +59,7 @@
                     </div>
                     <div class="form-group">
                         <div class="form-control-wrap">
-                            <textarea id="txtdiadiem" width="100%" runat="server" height="200px" validationgroup="InputValidate"></textarea>
+                            <dnn:TextEditor DefaultMode="basic" ID="txtdiadiem" Width="100%" Height="200px" runat="server" />
                         </div>
                     </div>
                     <div class="card-title-group align-start pb-3 g-2">
@@ -69,7 +69,7 @@
                     </div>
                     <div class="form-group">
                         <div class="form-control-wrap">
-                            <textarea id="txtNoiDung" width="100%" runat="server" height="800px" validationgroup="InputValidate"></textarea>
+                            <dnn:TextEditor DefaultMode="basic" ID="txtNoiDung" Width="100%" Height="800px" runat="server" />
                         </div>
                     </div>
                 </div>
@@ -153,10 +153,6 @@
         }
         return true;
     }
-    var editortxtNoiDung = CKEDITOR.replace('<%=txtNoiDung.ClientID %>');
-    var editortxtdiadiem = CKEDITOR.replace('<%=txtdiadiem.ClientID %>', {
-        height: 200
-    });
     window.onload = function () {
         fileUpload = document.getElementById('<%=filelogo.ClientID%>');
         fileUpload.onchange = function () {
