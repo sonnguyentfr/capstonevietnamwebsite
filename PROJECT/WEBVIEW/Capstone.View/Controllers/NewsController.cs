@@ -34,7 +34,7 @@ public class NewsController : Controller
             .Take(5)
             .ToList();
 
-        ViewData["Title"]        = $"#{tag}";
+        ViewData["TrangDanhMuc"]        = $"#{tag}";
         ViewData["Tag"]          = tag;
         ViewData["CanonicalUrl"] = $"{Request.Scheme}://{Request.Host}/tin-tuc/tag?tag={Uri.EscapeDataString(tag)}";
         ViewData["UpcomingEvents"] = upcomingEvents;
@@ -55,7 +55,7 @@ public class NewsController : Controller
             return RedirectPermanent(qs);
         }
         var paged = await _news.GetAllPagedAsync(_portalId, page, pageSize);
-        ViewData["Title"]        = "Tất cả tin tức";
+        ViewData["TrangDanhMuc"]        = "Tất cả tin tức";
         ViewData["CanonicalUrl"] = $"{Request.Scheme}://{Request.Host}/tin-tuc";
         return View(paged);
     }
@@ -75,7 +75,7 @@ public class NewsController : Controller
 
         var paged = await _news.GetByCategoryIdAsync(categoryId, _portalId, page, pageSize);
 
-        ViewData["Title"]           = cat.CategoryName;
+        ViewData["TrangDanhMuc"]           = cat.CategoryName;
         ViewData["MetaDescription"] = cat.Description ?? cat.CategoryName;
         ViewData["CanonicalUrl"]    = $"{Request.Scheme}://{Request.Host}{canonicalPath}";
         ViewData["BaseUrl"]         = canonicalPath;
@@ -106,7 +106,7 @@ public class NewsController : Controller
         // Ensure news belongs to expected category
         if (vm.CategoryId != expectedCategoryId) return NotFound();
 
-        ViewData["Title"]           = vm.MetaTitle ?? vm.Title;
+        ViewData["TrangDanhMuc"]           = vm.MetaTitle ?? vm.Title;
         ViewData["MetaDescription"] = vm.MetaDescription ?? vm.Summary;
         ViewData["MetaImage"]       = vm.MetaImage ?? vm.ImagePath;
         ViewData["CanonicalUrl"]    = $"{Request.Scheme}://{Request.Host}/{categoryPath}/{vm.Slug}-{id}";
@@ -136,7 +136,7 @@ public class NewsController : Controller
         if (!string.Equals(slug, canonical, StringComparison.OrdinalIgnoreCase))
             return RedirectToRoutePermanent("news-detail", new { slug = canonical, id });
 
-        ViewData["Title"]           = vm.MetaTitle ?? vm.Title;
+        ViewData["TrangDanhMuc"]           = vm.MetaTitle ?? vm.Title;
         ViewData["MetaDescription"] = vm.MetaDescription ?? vm.Summary;
         ViewData["MetaImage"]       = vm.MetaImage ?? vm.ImagePath;
         ViewData["CanonicalUrl"]    = NewsUrlBuilder.BuildFullNewsUrl(Request.Scheme, Request.Host.Value, vm);
@@ -176,7 +176,7 @@ public class NewsController : Controller
             var vm = await _news.GetDetailAsync(newsId.Value, _portalId);
             if (vm is null) return NotFound();
 
-            ViewData["Title"]           = vm.MetaTitle ?? vm.Title;
+            ViewData["TrangDanhMuc"]           = vm.MetaTitle ?? vm.Title;
             ViewData["MetaDescription"] = vm.MetaDescription ?? vm.Summary;
             ViewData["MetaImage"]       = vm.MetaImage ?? vm.ImagePath;
             ViewData["CanonicalUrl"]    = canonicalUrl;
@@ -200,7 +200,7 @@ public class NewsController : Controller
             var page = int.TryParse(Request.Query["page"], out var p) && p > 0 ? p : 1;
             var paged = await _news.GetByCategoryIdAsync(category.CategoryID, _portalId, page, 27);
 
-            ViewData["Title"] = category.CategoryName;
+            ViewData["TrangDanhMuc"] = category.CategoryName;
             ViewData["MetaDescription"] = category.Description ?? category.CategoryName;
             ViewData["CanonicalUrl"] = $"{Request.Scheme}://{Request.Host}/{category.Slug}";
             ViewData["Category"] = category;

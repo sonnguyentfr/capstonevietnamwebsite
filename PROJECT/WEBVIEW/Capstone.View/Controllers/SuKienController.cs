@@ -22,7 +22,7 @@ public class SuKienController : Controller
             Upcoming = await _events.GetActiveCatsWithEventsAsync(50),
             Past     = []
         };
-        ViewData["Title"] = "Hội thảo - Sự kiện";
+        ViewData["TrangDanhMuc"] = "Hội thảo - Sự kiện";
         return View(vm);
     }
 
@@ -59,7 +59,7 @@ public class SuKienController : Controller
             : vm.CatName;
         if (description.Length > 160) description = description[..157] + "...";
 
-        ViewData["Title"]           = vm.CatName;
+        ViewData["TrangDanhMuc"]           = vm.CatName;
         ViewData["MetaDescription"] = description;
         ViewData["MetaImage"]       = vm.AvatarUrl;
         ViewData["CanonicalUrl"]    = $"{Request.Scheme}://{Request.Host}/su-kien/{canonical}-{id}";

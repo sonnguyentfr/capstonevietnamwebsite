@@ -1,0 +1,20 @@
+@model NVCMS.WebView.Data.Models.NVCMS_LadingPageModel
+@{
+    Layout = "_LayoutEmpty";
+    ViewData["Title"] = Model.TrangDanhMuc;
+}
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    
+</head>
+<body>
+    <a href="/landing-page" class="back-link">← Quay lại danh sách</a>
+    @Html.Raw(Model.Noidung)
+    
+</body>
+</html>
