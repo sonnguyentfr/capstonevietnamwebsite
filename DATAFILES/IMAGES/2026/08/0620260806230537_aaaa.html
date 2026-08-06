@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Disable Scroll on Hover</title>
+    <style>
+        /* Để thấy rõ vùng hover */
+        #hoverDiv {
+            width: 200px;
+            height: 200px;
+            background-color: lightblue;
+            margin: 100px auto;
+            text-align: center;
+            line-height: 200px;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        /* CSS để vô hiệu hóa cuộn */
+        body.no-scroll {
+            overflow: hidden; /* Vô hiệu hóa cuộn */
+        }
+    </style>
+</head>
+<body style="height: 2000px">
+    <div id="hoverDiv">Hover me</div>
+
+    <!-- Thêm jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Khi hover vào div, thêm lớp 'no-scroll' vào body
+            $('#hoverDiv').hover(
+                function () {
+                    $('body').addClass('no-scroll');
+                },
+                function () {
+                    $('body').removeClass('no-scroll');
+                }
+            );
+        });
+    </script>
+</body>
+</html>

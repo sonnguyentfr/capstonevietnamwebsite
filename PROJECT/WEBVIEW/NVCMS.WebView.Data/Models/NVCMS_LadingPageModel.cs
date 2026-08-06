@@ -8,6 +8,9 @@ public class NVCMS_LadingPageModel
     public string TrangDanhMuc { get; set; } = string.Empty;
     public string Tieudephu { get; set; } = string.Empty;
     public string ImagePath { get; set; } = string.Empty;
+    public string diadiem { get; set; } = string.Empty;
+    public string Link { get; set; } = string.Empty;
+    public string NoidungFile { get; set; } = string.Empty;
     public string tomtat { get; set; } = string.Empty;
     public bool isActive { get; set; }
     public string Noidung { get; set; } = string.Empty;
