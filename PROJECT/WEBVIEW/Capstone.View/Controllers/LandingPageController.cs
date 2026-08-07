@@ -26,7 +26,6 @@ public class LandingPageController : Controller
     {
         var portalId = _siteSettings.Value.PortalId;
         var all = await _service.GetAllAsync(portalId);
-
         // Nhóm theo Parent (ParentId = 0) và lấy children tương ứng
         var groups = all
             .Where(x => x.ParentId == 0)
@@ -57,6 +56,7 @@ public class LandingPageController : Controller
         var correctSlug = SlugHelper.ToSlug(record.TrangDanhMuc);
         var currentSlugPart = SlugHelper.RemoveIdSuffix(slug, id.Value);
         record.Noidung =  WebUtility.HtmlDecode(record.Noidung);
+        record.diadiem =  WebUtility.HtmlDecode(record.diadiem);
         // Redirect if slug is incorrect (SEO: avoid duplicate content)
         if (!string.Equals(currentSlugPart, correctSlug, StringComparison.OrdinalIgnoreCase))
         {

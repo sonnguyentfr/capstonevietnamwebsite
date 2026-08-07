@@ -529,6 +529,7 @@ Namespace NVCMS.Modules.TinTuc
         Public MustOverride Sub News_Note_Insert(ByVal objInfo As NewsNoteInfo)
 
 #End Region
+
 #End Region
 
     End Class

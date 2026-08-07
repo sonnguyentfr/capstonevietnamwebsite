@@ -233,8 +233,8 @@
                         </div>
 
                         <div class="er-field">
-                            <label class="er-label">Giới tính / Gender</label>
-                            <div class="er-radio-group">
+                            <label class="er-label">Giới tính / Gender <span class="er-required">*</span></label>
+                            <div class="er-radio-group" id="gioi-tinh-group">
                                 <label class="er-radio-item">
                                     <input type="radio" asp-for="Input.GioiTinh" value="1" />
                                     <span class="er-radio-box"></span>
@@ -245,12 +245,12 @@
                                     <span class="er-radio-box"></span>
                                     <span class="er-radio-label"><i class="fa-solid fa-venus"></i> Nữ / Female</span>
                                 </label>
-                                
                             </div>
+                            <span id="er-err-gioitinh" class="er-error" style="display:none"></span>
                         </div>
 
                         <div class="er-field">
-                            <label class="er-label">Ngày sinh / Date of birth</label>
+                            <label class="er-label">Ngày sinh / Date of birth <span class="er-required">*</span></label>
                             <div class="er-dob-row">
                                 <div class="er-select-wrap">
                                     <select asp-for="Input.NgaySinhNgay" class="er-control er-select" id="dob-day">
@@ -283,10 +283,11 @@
                                     <i class="fa-solid fa-chevron-down er-select-arrow"></i>
                                 </div>
                             </div>
+                            <span id="er-err-dob" class="er-error" style="display:none"></span>
                         </div>
 
                         <div class="er-field">
-                            <label class="er-label" for="inp-tinh">Tỉnh / Province</label>
+                            <label class="er-label" for="inp-tinh">Tỉnh / Province <span class="er-required">*</span></label>
                             @* Hidden real input bound to model *@
                             <input asp-for="Input.TinhThanh" id="inp-tinh" type="hidden" />
                             @* Searchable province picker *@
@@ -312,6 +313,7 @@
                                     </ul>
                                 </div>
                             </div>
+                            <span id="er-err-tinh" class="er-error" style="display:none"></span>
                         </div>
                     </div>
 
@@ -715,6 +717,59 @@
         });
 
         check({
+        type: "radio",
+        name: "Input.GioiTinh",
+        errorId: "er-err-gioitinh",
+        message: "Vui lòng chọn giới tính."
+        });
+
+        (function () {
+        var day   = document.getElementById('dob-day');
+        var month = document.getElementById('dob-month');
+        var year  = document.getElementById('dob-year');
+        var dobEl = day;
+        var dobOk = day.value && month.value && year.value;
+        if (!dobOk) {
+        if (!firstInvalid) firstInvalid = dobEl;
+        var dobMsg = 'Vui lòng chọn ngày, tháng, năm sinh.';
+        errors.push(dobMsg);
+        showFieldError('er-err-dob', dobMsg);
+        setInvalid(day, !day.value);
+        setInvalid(month, !month.value);
+        setInvalid(year, !year.value);
+        } else {
+        var d = parseInt(day.value), m = parseInt(month.value), y = parseInt(year.value);
+        var dt = new Date(y, m - 1, d);
+        var valid = dt.getFullYear() === y && dt.getMonth() === m - 1 && dt.getDate() === d;
+        if (!valid) {
+        if (!firstInvalid) firstInvalid = dobEl;
+        var invalidMsg = 'Ngày sinh không hợp lệ.';
+        errors.push(invalidMsg);
+        showFieldError('er-err-dob', invalidMsg);
+        setInvalid(day, true);
+        } else {
+        showFieldError('er-err-dob', '');
+        setInvalid(day, false); setInvalid(month, false); setInvalid(year, false);
+        }
+        }
+        })();
+
+        (function () {
+        var tinhInp = document.getElementById('inp-tinh');
+        var tinhDisplay = document.getElementById('province-display');
+        if (!tinhInp.value) {
+        if (!firstInvalid) firstInvalid = tinhDisplay;
+        var tinhMsg = 'Vui lòng chọn tỉnh/thành.';
+        errors.push(tinhMsg);
+        showFieldError('er-err-tinh', tinhMsg);
+        tinhDisplay && tinhDisplay.classList.add('er-control--invalid');
+        } else {
+        showFieldError('er-err-tinh', '');
+        tinhDisplay && tinhDisplay.classList.remove('er-control--invalid');
+        }
+        })();
+
+        check({
         type: "checkbox",
         input: document.getElementById("inp-terms"),
         errorId: "er-err-terms",
@@ -750,6 +805,28 @@
         'inp-hotendem': 'er-err-hotendem', 'inp-ten': 'er-err-ten' }[el.id];
         if (errId) showFieldError(errId, '');
         });
+        });
+
+        // Clear DOB errors on change
+        ['dob-day','dob-month','dob-year'].forEach(function(id) {
+        var el = document.getElementById(id);
+        if (!el) return;
+        el.addEventListener('change', function() {
+        showFieldError('er-err-dob', '');
+        setInvalid(el, false);
+        });
+        });
+
+        // Clear gender error on change
+        document.querySelectorAll('input[name="Input.GioiTinh"]').forEach(function(el) {
+        el.addEventListener('change', function() { showFieldError('er-err-gioitinh', ''); });
+        });
+
+        // Clear province error on selection (hook into province picker)
+        document.getElementById('province-list') && document.getElementById('province-list').addEventListener('click', function() {
+        showFieldError('er-err-tinh', '');
+        var d = document.getElementById('province-display');
+        d && d.classList.remove('er-control--invalid');
         });
 
         // ── Submit with validation + reCAPTCHA ────────────────────────────────

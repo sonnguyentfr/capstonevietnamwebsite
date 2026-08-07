@@ -33,6 +33,12 @@
     .newsnotes {
         min-height: auto !important;
     }
+    .list-truong-lq ul { list-style: none; margin: 0; padding: 4px 0; }
+    .list-truong-lq ul li { display: flex; align-items: center; padding: 4px 6px; border-bottom: 1px solid #f0f0f0; }
+    .list-truong-lq ul li:last-child { border-bottom: none; }
+    .list-truong-lq ul li .truong-name { flex: 1; }
+    .list-truong-lq ul li .delTruong { color: #dc3545; }
+    .list-truong-lq ul li .delTruong:hover { color: #a71d2a; }
 </style>
 <script type="text/javascript">
     //Xu ly viec tuong tac anh
@@ -369,7 +375,7 @@
                                 ErrorMessage="Chưa chọn chuyên mục" InitialValue="0" ValidationGroup="InputValidate"></asp:RequiredFieldValidator>
                         </div>
                     </div>
-                    <div class="form-group" style="display:none">
+                    <div class="form-group" style="display: none">
                         <div class="card card-bordered">
                             <div class="card-inner">
                                 <div class="overline-title-alt mb-2">Chuyên mục phụ</div>
@@ -453,10 +459,10 @@
                                 <div class="g">
                                     <div class="custom-control custom-control-sm custom-checkbox">
                                         <input type="checkbox" class="custom-control-input" id="chkconfighotslide" runat="server">
-                                        <label class="custom-control-label" for="<%=chkconfighotslide.ClientID %>">Slide</label>
+                                        <label class="custom-control-label" for="<%=chkconfighotslide.ClientID %>">Tin tức - Sự kiện Trang chủ</label>
                                     </div>
                                 </div>
-                                <div class="g">
+                                <div class="g" style="display: none">
                                     <div class="custom-control custom-control-sm custom-checkbox">
                                         <input type="checkbox" class="custom-control-input" id="chkconfigtinnong" runat="server">
                                         <label class="custom-control-label" for="<%=chkconfigtinnong.ClientID %>">Nóng</label>
@@ -465,19 +471,19 @@
 
                             </div>
                             <div class="cauhinhtin g-2 align-center flex-wrap">
-                                <div class="g">
+                                <div class="g" style="display: none">
                                     <div class="custom-control custom-control-sm custom-checkbox">
                                         <input type="checkbox" class="custom-control-input" id="chkconfigxuhuongdoc" runat="server">
                                         <label class="custom-control-label" for="<%=chkconfigxuhuongdoc.ClientID %>">Xu hướng đọc</label>
                                     </div>
                                 </div>
-                                <div class="g">
+                                <div class="g" style="display: none">
                                     <div class="custom-control custom-control-sm custom-checkbox" style="display: none">
                                         <input type="checkbox" class="custom-control-input" id="chkAnNoiDung" runat="server">
                                         <label class="custom-control-label" for="<%=chkAnNoiDung.ClientID %>">Ẩn nội dung</label>
                                     </div>
                                 </div>
-                                <div class="g">
+                                <div class="g" style="display: none">
                                     <div class="custom-control custom-control-sm custom-checkbox text-danger" id="Dechoxemnoidung" runat="server" visible="false">
                                         <input type="checkbox" class="custom-control-input" id="chkisAnLink" runat="server">
                                         <label class="custom-control-label text-danger" for="<%=chkisAnLink.ClientID %>">Không hiện bài viết</label>
@@ -487,7 +493,29 @@
 
                         </div>
                     </div>
-
+                    <div class="form-group">
+                        <div class="overline-title-alt mb-2">Trường liên quan</div>
+                        <div class="form-group">
+                            <div class="form-control-wrap">
+                                <a id="btn-chon-truong" onclick="popupChonTruong(800,560); return false;" class="btn btn-xs btn-info"><em class="icon ni ni-building"></em><span>Chọn trường liên quan</span></a>
+                                <div id="div-truong-lienquan-scroll" class="border border-primary p-2" style="min-height:40px;">
+                                    <div class="list-truong-lq" id="divTruongRelated">
+                                        <ul>
+                                            <asp:Repeater runat="server" ID="rptSchoolRelated">
+                                                <ItemTemplate>
+                                                    <li id='idtruonglqzzz<%# Eval("SchoolId")%>'>
+                                                        <span class="truong-name"><strong><%# Eval("SchoolName")%></strong></span>
+                                                        <a class="delTruong" onclick="javascript:delTruong(this,<%# Eval("SchoolId")%>);" data-toggle="tooltip" title="Xóa trường" style="cursor:pointer;margin-left:8px;"><em class="icon ni ni-trash-fill"></em></a>
+                                                    </li>
+                                                </ItemTemplate>
+                                            </asp:Repeater>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
                     <div class="form-group">
                         <div class="card-inner2">
                             <h6 class="overline-title title">Thông báo</h6>
@@ -797,6 +825,7 @@
 <asp:HiddenField ID="hdf_Category" runat="server" />
 <asp:HiddenField ID="hdf_theloai" runat="server" Value="1" />
 <asp:HiddenField ID="hdf_Related" runat="server" />
+<asp:HiddenField ID="hdf_Schools" runat="server" />
 <asp:HiddenField ID="hdf_Tags" runat="server" />
 <asp:HiddenField ID="hdf_nhuanbut" runat="server" />
 <div id="divclipboardswf"></div>
@@ -1059,6 +1088,7 @@
     var arrdongtg = document.getElementById('<%=hdf_dongtg.ClientID %>').value;
     var luuy = '';
     var links = document.getElementById('<%=hdf_Related.ClientID %>').value;
+    var Lhdf_Schools = document.getElementById('<%=hdf_Schools.ClientID %>').value;
     var anhdd = document.getElementById('<%=txtImagePath.ClientID %>').value;
     var imgDD = '';
     var mediaList = '';
@@ -1115,6 +1145,7 @@
         mediaList = Base64.encode($('#<%=hdf_list_files.ClientID %>').val());
         imgList = Base64.encode($('#<%=hdf_IMG_files.ClientID %>').val());
         links = Base64.encode($('#<%=hdf_Related.ClientID %>').val());
+        Lhdf_Schools = Base64.encode($('#<%=hdf_Schools.ClientID %>').val());
 
         chkconfighotslide = (document.getElementById('<%=chkconfighotslide.ClientID %>')) ? document.getElementById('<%=chkconfighotslide.ClientID %>').checked : false;
         chkconfigtinnong = (document.getElementById('<%=chkHotCat.ClientID %>')) ? document.getElementById('<%=chkconfigtinnong.ClientID %>').checked : false;
@@ -1144,7 +1175,7 @@
                 FetchData();
                 data = Base64.encode(elEditor);
                 //console.log(elEditor);
-                AutoSave(sID + "~!@|" + metatitle + "~!@|" + metadesc + "~!@|" + metaslug + "~!@|" + title + "~!@|" + img + "~!@|" + bHotCat + "~!@|" + bHotSite + "~!@|" + category + "~!@|" + subcategory + "~!@|" + summary + "~!@|" + he + "~!@|" + data + "~!@|" + nguontin + "~!@|" + arrdongtg + "~!@|" + luuy + "~!@|" + links + "~!@|" + anhdd + "~!@|" + mediaList + "~!@|" + imgList + "~!@|" + bisVideo + "~!@|" + bisPhoto + "~!@|" + bisPR + "~!@|" + bisShowBaiMoi + "~!@|" + bisAMP + "~!@|" + bisHienQuangCao + "~!@|" + bisAnNoiDung + "~!@|" + bisAnLink + "~!@|" + keyword + "~!@|" + butdanh + "~!@|" + SourceText + "~!@|" + chkconfighotslide + "~!@|" + chkconfigtinnong + "~!@|" + chkconfigxuhuongdoc + "~!@|" + txtTags);
+                AutoSave(sID + "~!@|" + metatitle + "~!@|" + metadesc + "~!@|" + metaslug + "~!@|" + title + "~!@|" + img + "~!@|" + bHotCat + "~!@|" + bHotSite + "~!@|" + category + "~!@|" + subcategory + "~!@|" + summary + "~!@|" + he + "~!@|" + data + "~!@|" + nguontin + "~!@|" + arrdongtg + "~!@|" + luuy + "~!@|" + links + "~!@|" + Lhdf_Schools + "~!@|" + anhdd + "~!@|" + mediaList + "~!@|" + imgList + "~!@|" + bisVideo + "~!@|" + bisPhoto + "~!@|" + bisPR + "~!@|" + bisShowBaiMoi + "~!@|" + bisAMP + "~!@|" + bisHienQuangCao + "~!@|" + bisAnNoiDung + "~!@|" + bisAnLink + "~!@|" + keyword + "~!@|" + butdanh + "~!@|" + SourceText + "~!@|" + chkconfighotslide + "~!@|" + chkconfigtinnong + "~!@|" + chkconfigxuhuongdoc + "~!@|" + txtTags);
             }
         }
     }
@@ -1161,7 +1192,7 @@
         if (Page_ClientValidate("InputValidate")) {
             FetchData();
             data = Base64.encode(elEditor.value());
-            AutoSave(sID + "~!@|" + "~!@|" + metatitle + "~!@|" + metadesc + "~!@|" + metaslug + "~!@|" + title + "~!@|" + img + "~!@|" + bHotCat + "~!@|" + bHotSite + "~!@|" + category + "~!@|" + subcategory + "~!@|" + summary + "~!@|" + he + "~!@|" + data + "~!@|" + nguontin + "~!@|" + arrdongtg + "~!@|" + luuy + "~!@|" + links + "~!@|" + anhdd + "~!@|" + mediaList + "~!@|" + imgList + "~!@|" + bisVideo + "~!@|" + bisPhoto + "~!@|" + bisPR + "~!@|" + bisShowBaiMoi + "~!@|" + bisAMP + "~!@|" + bisHienQuangCao + "~!@|" + bisAnNoiDung + "~!@|" + bisAnLink + "~!@|" + keyword + "~!@|" + butdanh + "~!@|" + SourceText + "~!@|" + chkconfighotslide + "~!@|" + chkconfigtinnong + "~!@|" + chkconfigxuhuongdoc + "~!@|" + txtTags);
+            AutoSave(sID + "~!@|" + "~!@|" + metatitle + "~!@|" + metadesc + "~!@|" + metaslug + "~!@|" + title + "~!@|" + img + "~!@|" + bHotCat + "~!@|" + bHotSite + "~!@|" + category + "~!@|" + subcategory + "~!@|" + summary + "~!@|" + he + "~!@|" + data + "~!@|" + nguontin + "~!@|" + arrdongtg + "~!@|" + luuy + "~!@|" + links + "~!@|" + Lhdf_Schools + "~!@|" + anhdd + "~!@|" + mediaList + "~!@|" + imgList + "~!@|" + bisVideo + "~!@|" + bisPhoto + "~!@|" + bisPR + "~!@|" + bisShowBaiMoi + "~!@|" + bisAMP + "~!@|" + bisHienQuangCao + "~!@|" + bisAnNoiDung + "~!@|" + bisAnLink + "~!@|" + keyword + "~!@|" + butdanh + "~!@|" + SourceText + "~!@|" + chkconfighotslide + "~!@|" + chkconfigtinnong + "~!@|" + chkconfigxuhuongdoc + "~!@|" + txtTags);
         }
     }
     //Update all included media
@@ -1442,6 +1473,46 @@
     });
 </script>
 <script type="text/javascript">
+    /* ========== TRƯỜNG LIÊN QUAN ========== */
+    function popupChonTruong(w, h) {
+        var left = (screen.width / 2) - (w / 2);
+        return window.open("/DesktopModules/NVCMS.TinTuc/Manager/controls/_chontruong.aspx", "Chon truong lien quan", 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=yes, resizable=no, copyhistory=no, width=' + w + ', height=' + h + ', top=20, left=' + left);
+    }
+    function HandleSchoolResult(id, name) {
+        id = String(id);
+        var hidSchool = document.getElementById('<%= hdf_Schools.ClientID %>');
+        var cur = hidSchool.value;
+        var arr = cur ? cur.split(';') : [];
+        // Tránh trùng
+        for (var i = 0; i < arr.length; i++) {
+            if (arr[i].split('|')[0] === id) return;
+        }
+        arr.push(id + '|' + name);
+        hidSchool.value = arr.join(';');
+        // Render dòng mới vào danh sách
+        var li = '<li id="idtruonglqzzz' + id + '">'
+            + '<span class="truong-name"><strong>' + name + '</strong></span>'
+            + ' <a class="delTruong" onclick="javascript:delTruong(this,' + id + ');" title="Xóa trường" style="cursor:pointer;margin-left:8px;"><em class="icon ni ni-trash-fill"></em></a>'
+            + '</li>';
+        $('#divTruongRelated ul').append(li);
+    }
+    function delTruong(sender, id) {
+        if (confirm('Bạn có chắc chắn muốn xóa trường này?')) {
+            var hidSchool = document.getElementById('<%= hdf_Schools.ClientID %>');
+            var cur = hidSchool.value;
+            var arr = cur ? cur.split(';') : [];
+            var result = [];
+            for (var i = 0; i < arr.length; i++) {
+                if (arr[i] && arr[i].split('|')[0] != String(id)) {
+                    result.push(arr[i]);
+                }
+            }
+            hidSchool.value = result.join(';');
+            $('#idtruonglqzzz' + id).remove();
+        }
+        return false;
+    }
+    /* ========== TIN LIÊN QUAN ========== */
     function popupwindow(w, h) {
         var left = (screen.width / 2) - (w / 2);
         var top = (screen.height / 2) - (h / 2);

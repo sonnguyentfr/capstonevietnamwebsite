@@ -5515,7 +5515,7 @@ input[type='radio'] {
             color: rgb(164 16 52 / var(--tw-text-opacity));
         }
 
-.contact-form .wrap-form .form-group input[type='text'], .contact-form .wrap-form .form-group input[type='email'], .contact-form .wrap-form .form-group input[type='tel'], .contact-form .wrap-form .form-group textarea, .contact-form .wrap-form .form-group select {
+.contact-form .wrap-form .form-group input[type='text'], .contact-form .wrap-form .form-group input, .contact-form .wrap-form .form-group input[type='email'], .contact-form .wrap-form .form-group input[type='tel'], .contact-form .wrap-form .form-group textarea, .contact-form .wrap-form .form-group select {
     --tw-bg-opacity: 1;
     --tw-text-opacity: 1;
     border-color: transparent;

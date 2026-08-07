@@ -41,10 +41,10 @@ builder.Services.AddWebViewData(connStr, crmConnStr, webRootPath, serverFilesBas
 
 builder.Services.AddScoped<ITuVanFormService>(sp =>
     new TuVanFormService(
-        connStr, 
+        connStr,
         sp.GetRequiredService<IConfiguration>(),
-        sp.GetRequiredService<IHttpClientFactory>()));
-
+        sp.GetRequiredService<IHttpClientFactory>(),
+        sp.GetRequiredService<ILogger<TuVanFormService>>()));
 builder.Services.AddScoped<EventRegistrationMailService>();
 
 builder.Services.AddHttpClient("ApiClient", client =>

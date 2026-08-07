@@ -501,6 +501,22 @@ Public Class Ultis
             Next
         End If
     End Sub
+    Public Shared Sub UpdateNewsBySChool(newsid As Integer, schoolIds As String)
+        Dim ctltags As New NewsBySchool_Controller
+        ctltags._DeleteByNewId(newsid)
+        If schoolIds <> "" Then
+            Dim tag2 As String() = schoolIds.Split(CType(",", Char))
+            For i2 As Integer = 0 To tag2.Length - 1
+                Dim tagmoi As String = tag2(i2).Trim()
+                Dim objNewByschool As New NewsBySchoolInfo
+                With objNewByschool
+                    .NewId = newsid
+                    .SchoolId = Convert.ToInt16(tagmoi)
+                End With
+                ctltags._Insert(objNewByschool)
+            Next
+        End If
+    End Sub
     Public Shared Function NewsDaXuatBanCanEdit(newsid As Integer, ByVal UserId As Integer) As Boolean
         Dim returnvalue As Boolean = True
         Dim objUserinfo As UserInfo = UserController.GetUserById(PortalSettings.Current.PortalId, UserId)

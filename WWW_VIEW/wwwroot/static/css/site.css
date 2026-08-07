@@ -2157,6 +2157,10 @@ body {
 .nd-header {
     margin-bottom: 2rem;
     position: relative !important;
+<<<<<<< HEAD
+=======
+    z-index: auto;
+>>>>>>> 972ed442e32b86de05caf89d28590607e2afd770
 }
 .nd-cat-badge {
     display: inline-block;
@@ -3166,4 +3170,7 @@ body {
 
 @media (max-width: 600px) {
     .truong-related__grid { grid-template-columns: 1fr; }
+}
+.landing-card-body ul {}
+.landing-card-body ul  li{
 }

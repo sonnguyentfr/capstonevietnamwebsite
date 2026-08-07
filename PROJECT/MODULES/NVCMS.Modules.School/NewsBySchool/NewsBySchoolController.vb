@@ -15,14 +15,14 @@ Namespace NVCMS.Modules.School
             DataCache.ClearCache("NewsBySchool_Controller_GetShowNewID")
             DataCache.ClearCache(nvcmsBL.cacheMarketingSchoolDetail)
         End Sub
-        Public Sub _Insert(ByVal NewId As Integer, ByVal SchoolId As Integer)
-            DataProvider.Instance.NewsBySchool_Insert(NewId, SchoolId)
+        Public Sub _Insert(ByVal obj As NewsBySchoolInfo)
+            DataProvider.Instance.NewsBySchool_Insert(obj)
             ClearCache()
         End Sub
 
         '------------------------------------------'
-        Public Sub _Update(ByVal Id As Integer, ByVal NewId As Integer, ByVal SchoolId As Integer)
-            DataProvider.Instance.NewsBySchool_Update(Id, NewId, SchoolId)
+        Public Sub _Update(ByVal obj As NewsBySchoolInfo)
+            DataProvider.Instance.NewsBySchool_Update(obj)
             ClearCache()
         End Sub
         '------------------------------------------'
