@@ -1,5 +1,13 @@
 ﻿@using NVCMS.WebView.Data.ViewModels
 @model IEnumerable<EventsCatViewModel>
+
+@{
+    Func<EventsCatViewModel, string> CatHref = cat =>
+        string.IsNullOrEmpty(cat.Link_pr) ? "/su-kien/" + cat.Slug + "-" + cat.Id : cat.Link_pr;
+    Func<EventsCatViewModel, string> CatTarget = cat =>
+        string.IsNullOrEmpty(cat.Link_pr) ? string.Empty : "target='_blank' rel='noopener'";
+}
+
 @if (Model != null && Model.Any())
 {
 
@@ -14,7 +22,7 @@
                             <div class="image img-cover" data-aos="fade-right" data-aos-delay="300">
                                 @if (!string.IsNullOrEmpty(cat.AvatarUrl))
                                 {
-                                    <a href="/su-kien/@cat.Slug-@cat.Id">
+                                    <a href="@CatHref(cat)" @Html.Raw(CatTarget(cat))>
                                         <img src="@(cat.AvatarUrl)?width=1024&height=530&mode=crop&anchor=middlecenter"
                                              alt="@cat.CatName"
                                              loading="lazy" />
@@ -22,7 +30,7 @@
                                 }
                                 else
                                 {
-                                    <a href="/su-kien/@cat.Slug-@cat.Id">
+                                    <a href="@CatHref(cat)" @Html.Raw(CatTarget(cat))>
                                         <img src="/data/no-photo.png?width=1024&height=530&mode=crop&anchor=middlecenter"
                                              alt="@cat.CatName"
                                              loading="lazy" />
@@ -31,7 +39,7 @@
                             </div>
                             <div class="caption" data-aos="fade-left" data-aos-delay="300">
                                 <h3 class="name">
-                                    <span><a href="/su-kien/@cat.Slug-@cat.Id">@cat.CatName</a></span>
+                                    <span><a href="@CatHref(cat)" @Html.Raw(CatTarget(cat))>@cat.CatName</a></span>
                                 </h3>
                                 @if (cat.FromDate.HasValue || cat.EndDate.HasValue)
                                 {
@@ -71,18 +79,9 @@
                                     </div>
                                 }
                                 <div class="button mt-6" data-aos="fade-up" data-aos-delay="500">
-                                    @if (!string.IsNullOrEmpty(cat.Link_pr))
-                                    {
-                                        <a class="btn-solid" href="/su-kien/@cat.Slug-@cat.Id">
-                                            <span>Xem thêm</span><i class="fa-solid fa-plus"></i>
-                                        </a>
-                                    }
-                                    else
-                                    {
-                                        <a class="btn-solid" href="/su-kien/@cat.Slug-@cat.Id">
-                                            <span>Xem thêm</span><i class="fa-solid fa-plus"></i>
-                                        </a>
-                                    }
+                                    <a class="btn-solid" href="@CatHref(cat)" @Html.Raw(CatTarget(cat))>
+                                        <span>Xem thêm</span><i class="fa-solid fa-plus"></i>
+                                    </a>
                                 </div>
                             </div>
                         </div>

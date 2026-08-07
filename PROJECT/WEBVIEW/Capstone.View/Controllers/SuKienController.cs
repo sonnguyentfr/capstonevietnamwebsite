@@ -39,7 +39,8 @@ public class SuKienController : Controller
             avatarUrl= c.AvatarUrl,
             fromDate = c.FromDate?.ToString("dd/MM/yyyy"),
             endDate  = c.EndDate?.ToString("dd/MM/yyyy"),
-            desc     = c.Desception
+            desc     = c.Desception,
+            linkPr   = c.Link_pr
         });
         return Json(new { items = list, total });
     }

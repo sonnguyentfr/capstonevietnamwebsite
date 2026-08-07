@@ -30,7 +30,7 @@
                 @foreach (var cat in Model.Upcoming)
                 {
                     <article class="event-card" data-aos="fade-up" data-aos-delay="100">
-                        <a class="event-card-thumb" href="/su-kien/@cat.Slug-@cat.Id">
+                        <a class="event-card-thumb" href="@(!string.IsNullOrEmpty(cat.Link_pr) ? cat.Link_pr : $"/su-kien/{cat.Slug}-{cat.Id}")" @(!string.IsNullOrEmpty(cat.Link_pr) ? "target=\"_blank\" rel=\"noopener\"" : "")>
                             @{
                                 var imgSrc = !string.IsNullOrEmpty(cat.AvatarUrl)
                                     ? $"{cat.AvatarUrl}?width=720&height=400&mode=crop&anchor=middlecenter"
@@ -58,7 +58,7 @@
                                 </div>
                             }
                             <h3 class="event-card-title">
-                                <a href="/su-kien/@cat.Slug-@cat.Id">@cat.CatName</a>
+                                <a href="@(!string.IsNullOrEmpty(cat.Link_pr) ? cat.Link_pr : $"/su-kien/{cat.Slug}-{cat.Id}")" @(!string.IsNullOrEmpty(cat.Link_pr) ? "target=\"_blank\" rel=\"noopener\"" : "")>@cat.CatName</a>
                             </h3>
                             @if (cat.Events != null && cat.Events.Any())
                             {
@@ -70,15 +70,9 @@
                                 </ul>
                             }
                             <div class="event-card-footer mt-4">
-                                <a class="btn-solid" href="/su-kien/@cat.Slug-@cat.Id">
+                                <a class="btn-solid" href="@(!string.IsNullOrEmpty(cat.Link_pr) ? cat.Link_pr : $"/su-kien/{cat.Slug}-{cat.Id}")" @(!string.IsNullOrEmpty(cat.Link_pr) ? "target=\"_blank\" rel=\"noopener\"" : "")>
                                     <span>Xem chi tiết</span><i class="fa-solid fa-arrow-right"></i>
                                 </a>
-                                @* @if (!string.IsNullOrEmpty(cat.Link_pr))
-                                {
-                                    <a class="btn-outline" href="@cat.Link_pr" target="_blank">
-                                        <span>Đăng ký</span><i class="fa-solid fa-external-link"></i>
-                                    </a>
-                                } *@
                             </div>
                         </div>
                     </article>
@@ -136,7 +130,8 @@
 
             function buildCard(c) {
 
-                const href = `/su-kien/${c.slug}-${c.id}`;
+                const href = c.linkPr ? c.linkPr : `/su-kien/${c.slug}-${c.id}`;
+                const target = c.linkPr ? ` target="_blank" rel="noopener"` : ``;
 
                 const img = c.avatarUrl
                     ? `${c.avatarUrl}?width=720&height=400&mode=crop&anchor=middlecenter`
@@ -160,7 +155,7 @@
                 return `
                     <article class="event-card event-card-past">
 
-                        <a class="event-card-thumb" href="${href}">
+                        <a class="event-card-thumb" href="${href}"${target}>
                             <img src="${img}" alt="${c.catName}" loading="lazy"/>
 
                             <div class="event-card-badge badge-past">
@@ -174,7 +169,7 @@
                             ${dates}
 
                             <h3 class="event-card-title">
-                                <a href="${href}">
+                                <a href="${href}"${target}>
                                     ${c.catName}
                                 </a>
                             </h3>
@@ -182,7 +177,7 @@
                             ${desc}
 
                             <div class="event-card-footer mt-4">
-                                <a class="btn-outline" href="${href}">
+                                <a class="btn-outline" href="${href}"${target}>
                                     <span>Xem lại</span>
                                 </a>
                             </div>
