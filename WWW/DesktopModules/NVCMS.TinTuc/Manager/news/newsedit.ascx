@@ -1489,12 +1489,14 @@
         }
         arr.push(id + '|' + name);
         hidSchool.value = arr.join(';');
+        addValue('<%= hdf_Schools.ClientID %>', id);
         // Render dòng mới vào danh sách
         var li = '<li id="idtruonglqzzz' + id + '">'
             + '<span class="truong-name"><strong>' + name + '</strong></span>'
             + ' <a class="delTruong" onclick="javascript:delTruong(this,' + id + ');" title="Xóa trường" style="cursor:pointer;margin-left:8px;"><em class="icon ni ni-trash-fill"></em></a>'
             + '</li>';
         $('#divTruongRelated ul').append(li);
+        console.log('a: ',<%= hdf_Schools.ClientID %>);
     }
     function delTruong(sender, id) {
         if (confirm('Bạn có chắc chắn muốn xóa trường này?')) {

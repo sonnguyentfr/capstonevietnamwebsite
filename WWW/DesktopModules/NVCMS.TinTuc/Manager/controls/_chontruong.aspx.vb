@@ -13,7 +13,7 @@ Namespace DesktopModules.TinTuc.Control
                 If ViewState("SchoolPage") IsNot Nothing Then
                     Return CInt(ViewState("SchoolPage"))
                 End If
-                Return 0
+                Return 1
             End Get
             Set(value As Integer)
                 ViewState("SchoolPage") = value
@@ -72,7 +72,7 @@ Namespace DesktopModules.TinTuc.Control
             Dim totalPages As Integer = Math.Max(1, CInt(Math.Ceiling(total / PAGE_SIZE)))
 
             lblTotal.Text = total.ToString()
-            lblCurPage.Text = (CurrentPage + 1).ToString()
+            lblCurPage.Text = CurrentPage.ToString()
             lblTotalPage.Text = totalPages.ToString()
 
             lbtPrev.Enabled = (CurrentPage > 0)
