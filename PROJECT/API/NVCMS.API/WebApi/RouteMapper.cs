@@ -1,6 +1,6 @@
 ﻿using DotNetNuke.Web.Api;
 
-namespace NVCMS.APIWebApi
+namespace NVCMS.API.WebApi
 {
     public class RouteMapper : IServiceRouteMapper
     {
