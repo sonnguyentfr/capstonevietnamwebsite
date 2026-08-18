@@ -65,7 +65,7 @@
                                                         </span></span>
                                                     </div>
                                                     <div class="nk-tb-col">
-                                                        <span class="tb-sub <%#CheckUnSub(Eval("Email"))%>"><span>
+                                                        <span class="tb-sub <%#IIf(CBool(DataBinder.Eval(Container.DataItem, "Unsub")) = True, "", "unsubmail") %>"><span>
                                                             <asp:Label ID="StudentEmail" Text='<%#Eval("Email") %>' runat="server"></asp:Label>
                                                         </span></span>
                                                     </div>

@@ -12,6 +12,7 @@ Namespace NVCMS.Modules.Marketing
         Private _Email As String
         Private _Status As Boolean
         Private _sendcount As Integer
+        Private _isUnsub As Boolean
         Private _Datetime As DateTime
         Private _UserId As Integer
         Private _PortalId As Integer
@@ -52,6 +53,15 @@ Namespace NVCMS.Modules.Marketing
             End Get
             Set(ByVal Value As Integer)
                 _sendcount = Value
+            End Set
+        End Property
+        '------------------------------------------'
+        Public Property isUnsub() As Boolean
+            Get
+                Return _isUnsub
+            End Get
+            Set(ByVal Value As Boolean)
+                _isUnsub = Value
             End Set
         End Property
         '------------------------------------------'
