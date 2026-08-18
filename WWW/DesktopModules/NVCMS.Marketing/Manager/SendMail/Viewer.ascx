@@ -65,7 +65,7 @@
                                                         </span></span>
                                                     </div>
                                                     <div class="nk-tb-col">
-                                                        <span class="tb-sub <%#IIf(CBool(DataBinder.Eval(Container.DataItem, "Unsub")) = True, "", "unsubmail") %>"><span>
+                                                        <span class="tb-sub <%#IIf(CBool(DataBinder.Eval(Container.DataItem, "isUnsub")) = True, "", "unsubmail") %>"><span>
                                                             <asp:Label ID="StudentEmail" Text='<%#Eval("Email") %>' runat="server"></asp:Label>
                                                         </span></span>
                                                     </div>
@@ -141,55 +141,36 @@
 
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script type="text/javascript">
-        function initSelect2() {
-            $('.select2-ddl').each(function () {
-                var placeholder = $(this).attr('placeholder') || '--Chọn--';
-                $(this).select2({
-                    placeholder: placeholder,
-                    allowClear: true,
-                    width: '100%',
-                    language: {
-                        noResults: function () { return "Không tìm thấy kết quả"; },
-                        searching: function () { return "Đang tìm..."; }
-                    }
-                }).on('change', function () {
-                    // Trigger ASP.NET postback on change for AutoPostBack dropdowns
-                    var ddlId = $(this).attr('id');
-                    if (typeof __doPostBack !== 'undefined') {
-                        __doPostBack(ddlId, '');
-                    }
-                });
+    function initSelect2() {
+        $('.select2-ddl').each(function () {
+            var placeholder = $(this).attr('placeholder') || '--Chọn--';
+            $(this).select2({
+                placeholder: placeholder,
+                allowClear: true,
+                width: '100%',
+                language: {
+                    noResults: function () { return "Không tìm thấy kết quả"; },
+                    searching: function () { return "Đang tìm..."; }
+                }
+            }).on('change', function () {
+                // Trigger ASP.NET postback on change for AutoPostBack dropdowns
+                var ddlId = $(this).attr('id');
+                if (typeof __doPostBack !== 'undefined') {
+                    __doPostBack(ddlId, '');
+                }
             });
-                                    }
-
-        $(document).ready(function () {
-            initSelect2();
-                                    });
-
-        // Re-initialize after UpdatePanel async postback
-        var prm = Sys.WebForms.PageRequestManager.getInstance();
-        prm.add_endRequest(function () {
-            initSelect2();
-                                    });
-        function ValidateEvent() {
-        var ddlEventCat = document.getElementById('<%=ddlEventCat.ClientID%>').value;
-        if (ddlEventCat == 0) {
-            alert("Vui lòng Chọn sự kiện");
-            document.getElementById('<%=ddlEventCat.ClientID%>').focus;
-        return false;
-        }
-    }
-        function Modalhoatdong() {
-            $('#modalEdit').modal('show');
-    };
-        function ModalFollowUpClose() {
-            $('#modalEditl').modal('hide');
-        $('.modal-backdrop').css({
-            display: 'none'
         });
-    };
+    }
 
+    $(document).ready(function () {
+        initSelect2();
+    });
 
+    // Re-initialize after UpdatePanel async postback
+    var prm = Sys.WebForms.PageRequestManager.getInstance();
+    prm.add_endRequest(function () {
+        initSelect2();
+    });
 </script>
 
 

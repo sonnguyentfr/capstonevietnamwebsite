@@ -22,10 +22,9 @@ NVCMS.Modules.Marketing
   resource lookups using this strongly typed resource class.
 </summary>
 </member>
-<member name="M:NVCMS.Modules.Marketing.MarketingReportController.GetDashboard(System.Int32)">
+<member name="M:NVCMS.Modules.Marketing.MarketingMailAnalyticsService.GetCampaignAnalytics(System.Int32)">
  <summary>
- Returns analytics for a campaign send (the Static page's "sendid"),
- without relying on a separate report stored procedure.
+ Xử lý nghiệp vụ và map dữ liệu từ IDataReader vào Models
  </summary>
 </member>
 <member name="T:NVCMS.Modules.Marketing.DataProvider">

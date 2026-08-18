@@ -122,6 +122,7 @@ builder.Services.AddScoped<IMarketingListMailRepository, MarketingListMailReposi
 builder.Services.AddScoped<IMarketingTemplateRepository, MarketingTemplateRepository>();
 builder.Services.AddScoped<IMarketingUnsubRepository, MarketingUnsubRepository>();
 builder.Services.AddScoped<IMarketingSendLogRepository, MarketingSendLogRepository>();
+builder.Services.AddScoped<IMailAccountRepository, MailAccountRepository>();
 builder.Services.AddScoped<IEmailMarketingService, EmailMarketingService>();
 builder.Services.AddScoped<ISESService, SESService>();
 

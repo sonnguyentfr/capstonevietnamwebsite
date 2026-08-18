@@ -1,249 +1,104 @@
 ﻿Imports System.Data
-Imports System.Linq
-Imports DotNetNuke.Common.Utilities
 Imports NVCMS.Modules.Marketing
-
 Namespace NVCMS.Modules.Marketing
+    Public Class MarketingMailAnalyticsService
+        Private ReadOnly _dataProvider As DataProvider
 
-    Public Class MarketingReportController
+        Public Sub New()
+            _dataProvider = DataProvider.Instance()
+        End Sub
 
         ''' <summary>
-        ''' Returns analytics for a campaign send (the Static page's "sendid"),
-        ''' without relying on a separate report stored procedure.
+        ''' Xử lý nghiệp vụ và map dữ liệu từ IDataReader vào Models
         ''' </summary>
-        Public Function GetDashboard(CampaignSendId As Integer) As DashboardResult
-            If CampaignSendId <= 0 Then Throw New ArgumentOutOfRangeException("CampaignSendId")
-
-            Dim sendController As New Mail_Campaign_SendController()
-            Dim statistics As CampaignStatistics = sendController.GetStatistics(CampaignSendId)
-            Dim logs As List(Of Mail_Send_LogInfo) = sendController.GetSendLogs(CampaignSendId, Nothing, Nothing, 0, 100000, "CreatedDate", "DESC").Logs
-
-            Return New DashboardResult With {
-                .Summary = CreateSummary(statistics, logs),
-                .Status = sendController.GetStatusDistribution(CampaignSendId).Select(Function(x) New DashboardStatus With {.Status = x.Status, .Total = x.Count}).ToList(),
-                .SentTimeline = CreateTimeline(logs, Function(x) x.SentTime),
-                .OpenTimeline = CreateTimeline(logs, Function(x) x.OpenedTime),
-                .Delay = CreateDelays(logs),
-                .Details = logs.Select(Function(x) New DashboardDetail With {
-                    .Email = x.Email, .Status = x.Status,
-                    .SentTime = ToNullableDate(x.SentTime), .DeliveredTime = ToNullableDate(x.DeliveredTime),
-                    .OpenedTime = ToNullableDate(x.OpenedTime), .ClickedTime = ToNullableDate(x.ClickedTime),
-                    .OpenSeconds = GetOpenSeconds(x), .ErrorMessage = x.ErrorMessage, .SesMessageId = x.SesMessageId
-                }).ToList()
-            }
-        End Function
-
-        Private Function CreateSummary(statistics As CampaignStatistics, logs As IEnumerable(Of Mail_Send_LogInfo)) As DashboardSummary
-            Dim sent = logs.Count(Function(x) x.SentTime <> DateTime.MinValue)
-            Dim delivered = logs.Count(Function(x) x.DeliveredTime <> DateTime.MinValue)
-            Dim openedLogs = logs.Where(Function(x) x.OpenedTime <> DateTime.MinValue).ToList()
-            Dim opened = openedLogs.Count
-            Dim clicked = logs.Count(Function(x) x.ClickedTime <> DateTime.MinValue)
-            Dim openSeconds = openedLogs.Where(Function(x) x.SentTime <> DateTime.MinValue AndAlso x.OpenedTime >= x.SentTime).
-                Select(Function(x) CInt((x.OpenedTime - x.SentTime).TotalSeconds)).ToList()
-            Dim totalRecipients = If(statistics.TotalRecipients > 0, statistics.TotalRecipients, logs.Count)
-
-            Return New DashboardSummary With {
-                .TotalRecipient = totalRecipients,
-                .Queued = Math.Max(0, totalRecipients - sent),
-                .Sent = sent, .Delivered = delivered,
-                .Opened = opened, .Clicked = clicked,
-                .Bounce = statistics.CountBounced, .Complaint = statistics.CountComplaint,
-                .Unsubscribe = statistics.CountUnsubscribed,
-                .AvgOpenSeconds = If(openSeconds.Any(), CInt(Math.Round(openSeconds.Average())), 0),
-                .FastestOpen = If(openSeconds.Any(), openSeconds.Min(), 0),
-                .SlowestOpen = If(openSeconds.Any(), openSeconds.Max(), 0),
-                .OpenRate = If(sent = 0, 0D, Math.Round(opened * 100D / sent, 2)),
-                .ClickRate = If(sent = 0, 0D, Math.Round(clicked * 100D / sent, 2)),
-                .BounceRate = If(sent = 0, 0D, Math.Round(statistics.CountBounced * 100D / sent, 2)),
-                .ComplaintRate = If(sent = 0, 0D, Math.Round(statistics.CountComplaint * 100D / sent, 2)),
-                .CTR = If(opened = 0, 0D, Math.Round(clicked * 100D / opened, 2))
-            }
-        End Function
-
-        Private Function CreateTimeline(logs As IEnumerable(Of Mail_Send_LogInfo), selector As Func(Of Mail_Send_LogInfo, DateTime)) As List(Of DashboardTimeline)
-            Return logs.Where(Function(x) selector(x) <> DateTime.MinValue).
-                GroupBy(Function(x) New With {.Ngay = selector(x).Date, .Gio = selector(x).Hour}).
-                OrderBy(Function(x) x.Key.Ngay).ThenBy(Function(x) x.Key.Gio).
-                Select(Function(x) New DashboardTimeline With {.Ngay = x.Key.Ngay, .Gio = x.Key.Gio, .Total = x.Count()}).ToList()
-        End Function
-
-        Private Function CreateDelays(logs As IEnumerable(Of Mail_Send_LogInfo)) As List(Of DashboardDelay)
-            Return logs.Where(Function(x) x.SentTime <> DateTime.MinValue AndAlso x.OpenedTime <> DateTime.MinValue AndAlso x.OpenedTime >= x.SentTime).
-                GroupBy(Function(x) GetDelayRange((x.OpenedTime - x.SentTime).TotalSeconds)).
-                Select(Function(x) New DashboardDelay With {.DelayRange = x.Key, .Total = x.Count()}).
-                OrderBy(Function(x) x.DelayRange).ToList()
-        End Function
-
-        Private Function GetDelayRange(seconds As Double) As String
-            If seconds < 60 Then Return "Under 1 minute"
-            If seconds < 300 Then Return "1-5 minutes"
-            If seconds < 1800 Then Return "5-30 minutes"
-            If seconds < 3600 Then Return "30-60 minutes"
-            Return "Over 1 hour"
-        End Function
-
-        Private Function ToNullableDate(value As DateTime) As Nullable(Of DateTime)
-            Return If(value = DateTime.MinValue, CType(Nothing, Nullable(Of DateTime)), value)
-        End Function
-
-        Private Function GetOpenSeconds(log As Mail_Send_LogInfo) As Integer
-            If log.SentTime = DateTime.MinValue OrElse log.OpenedTime = DateTime.MinValue OrElse log.OpenedTime < log.SentTime Then Return 0
-            Return CInt((log.OpenedTime - log.SentTime).TotalSeconds)
-        End Function
-        Private Sub ReadSummary(dr As IDataReader,
-                                result As DashboardResult)
-
-            If dr.Read() Then
-
-                With result.Summary
-
-                    .TotalRecipient = Null.SetNullInteger(dr("TotalRecipient"))
-                    .Queued = Null.SetNullInteger(dr("Queued"))
-                    .Sending = Null.SetNullInteger(dr("Sending"))
-                    .Sent = Null.SetNullInteger(dr("Sent"))
-                    .Delivered = Null.SetNullInteger(dr("Delivered"))
-                    .Opened = Null.SetNullInteger(dr("Opened"))
-                    .Clicked = Null.SetNullInteger(dr("Clicked"))
-                    .Bounce = Null.SetNullInteger(dr("Bounce"))
-                    .Complaint = Null.SetNullInteger(dr("Complaint"))
-                    .Unsubscribe = Null.SetNullInteger(dr("Unsubscribe"))
-
-                    .AvgOpenSeconds = Null.SetNullInteger(dr("AvgOpenSeconds"))
-                    .FastestOpen = Null.SetNullInteger(dr("FastestOpen"))
-                    .SlowestOpen = Null.SetNullInteger(dr("SlowestOpen"))
-
-                    If .TotalRecipient > 0 Then
-
-                        .OpenRate = Math.Round(.Opened * 100D / .TotalRecipient, 2)
-
-                        .ClickRate = Math.Round(.Clicked * 100D / .TotalRecipient, 2)
-
-                        .BounceRate = Math.Round(.Bounce * 100D / .TotalRecipient, 2)
-
-                        .ComplaintRate = Math.Round(.Complaint * 100D / .TotalRecipient, 2)
-
-                    End If
-
-                    If .Opened > 0 Then
-
-                        .CTR = Math.Round(.Clicked * 100D / .Opened, 2)
-
-                    End If
-
-                End With
-
+        Public Function GetCampaignAnalytics(ByVal campaignId As Integer) As Marketing_Mail_CampaignAnalyticsResult
+            ' 1. Validate logic nghiệp vụ
+            If campaignId <= 0 Then
+                Throw New ArgumentException("CampaignId không hợp lệ.")
             End If
 
-        End Sub
-        Private Sub ReadStatus(dr As IDataReader,
-                               result As DashboardResult)
+            Dim result As New Marketing_Mail_CampaignAnalyticsResult()
 
-            While dr.Read()
+            ' 2. Gọi DataProvider để lấy IDataReader từ Store Procedure
+            Using reader As IDataReader = _dataProvider.Marketing_Mail_Campaign_Analytics(campaignId)
 
-                Dim item As New DashboardStatus()
+                ' ==========================================
+                ' RESULT SET 1: CAMPAIGN SUMMARY
+                ' ==========================================
+                If reader.Read() Then
+                    Dim summary As New Marketing_Mail_CampaignSummary()
+                    summary.CampaignId = GetValue(Of Integer)(reader("CampaignId"))
+                    summary.Title = GetValue(Of String)(reader("Title"))
+                    summary.Description = GetValue(Of String)(reader("Description"))
+                    summary.CreatedDate = GetNullable(Of DateTime)(reader("CreatedDate"))
+                    summary.TotalCampaignSend = GetValue(Of Integer)(reader("TotalCampaignSend"))
+                    summary.TotalRecipient = GetValue(Of Integer)(reader("TotalRecipient"))
+                    summary.TotalSent = GetValue(Of Integer)(reader("TotalSent"))
+                    summary.TotalDelivered = GetValue(Of Integer)(reader("TotalDelivered"))
+                    summary.TotalOpened = GetValue(Of Integer)(reader("TotalOpened"))
+                    summary.TotalClicked = GetValue(Of Integer)(reader("TotalClicked"))
+                    summary.TotalBounced = GetValue(Of Integer)(reader("TotalBounced"))
+                    summary.TotalComplaint = GetValue(Of Integer)(reader("TotalComplaint"))
+                    summary.TotalUnsubscribed = GetValue(Of Integer)(reader("TotalUnsubscribed"))
+                    summary.OpenRate = GetValue(Of Decimal)(reader("OpenRate"))
+                    summary.ClickRate = GetValue(Of Decimal)(reader("ClickRate"))
+                    summary.DeliveryRate = GetValue(Of Decimal)(reader("DeliveryRate"))
+                    summary.BounceRate = GetValue(Of Decimal)(reader("BounceRate"))
+                    summary.FirstStartedTime = GetNullable(Of DateTime)(reader("FirstStartedTime"))
+                    summary.LastCompletedTime = GetNullable(Of DateTime)(reader("LastCompletedTime"))
 
-                item.Status = dr("Status").ToString()
-
-                item.Total = Null.SetNullInteger(dr("Total"))
-
-                result.Status.Add(item)
-
-            End While
-
-        End Sub
-        Private Sub ReadSentTimeline(dr As IDataReader,
-                                     result As DashboardResult)
-
-            While dr.Read()
-
-                Dim item As New DashboardTimeline()
-
-                item.Ngay = CType(dr("Ngay"), DateTime)
-
-                item.Gio = Convert.ToInt32(dr("Gio"))
-
-                item.Total = Convert.ToInt32(dr("Total"))
-
-                result.SentTimeline.Add(item)
-
-            End While
-
-        End Sub
-        Private Sub ReadOpenTimeline(dr As IDataReader,
-                                     result As DashboardResult)
-
-            While dr.Read()
-
-                Dim item As New DashboardTimeline()
-
-                item.Ngay = CType(dr("Ngay"), DateTime)
-
-                item.Gio = Convert.ToInt32(dr("Gio"))
-
-                item.Total = Convert.ToInt32(dr("Total"))
-
-                result.OpenTimeline.Add(item)
-
-            End While
-
-        End Sub
-        Private Sub ReadDelay(dr As IDataReader,
-                              result As DashboardResult)
-
-            While dr.Read()
-
-                Dim item As New DashboardDelay()
-
-                item.DelayRange = dr("DelayRange").ToString()
-
-                item.Total = Convert.ToInt32(dr("Total"))
-
-                result.Delay.Add(item)
-
-            End While
-
-        End Sub
-        Private Sub ReadDetail(dr As IDataReader,
-                               result As DashboardResult)
-
-            While dr.Read()
-
-                Dim item As New DashboardDetail()
-
-                item.Email = dr("Email").ToString()
-
-                item.Status = dr("Status").ToString()
-
-                If Not IsDBNull(dr("SentTime")) Then
-                    item.SentTime = CType(dr("SentTime"), DateTime)
+                    result.Summary = summary
                 End If
 
-                If Not IsDBNull(dr("DeliveredTime")) Then
-                    item.DeliveredTime = CType(dr("DeliveredTime"), DateTime)
+                ' ==========================================
+                ' RESULT SET 2: MAIL SEND DETAIL LOG
+                ' ==========================================
+                If reader.NextResult() Then
+                    While reader.Read()
+                        Dim detail As New Marketing_Mail_SendDetailLog()
+                        detail.SendLogId = GetValue(Of Long)(reader("SendLogId"))
+                        detail.CampaignSendId = GetValue(Of Integer)(reader("CampaignSendId"))
+                        detail.ListMailId = GetNullable(Of Integer)(reader("ListMailId"))
+                        detail.Email = GetValue(Of String)(reader("Email"))
+                        detail.Status = GetValue(Of String)(reader("Status"))
+                        detail.SesMessageId = GetValue(Of String)(reader("SesMessageId"))
+                        detail.SentTime = GetNullable(Of DateTime)(reader("SentTime"))
+                        detail.DeliveredTime = GetNullable(Of DateTime)(reader("DeliveredTime"))
+                        detail.OpenedTime = GetNullable(Of DateTime)(reader("OpenedTime"))
+                        detail.ClickedTime = GetNullable(Of DateTime)(reader("ClickedTime"))
+                        detail.ErrorMessage = GetValue(Of String)(reader("ErrorMessage"))
+                        detail.CreatedDate = GetValue(Of DateTime)(reader("CreatedDate"))
+
+                        ' Log metrics thời gian
+                        detail.SentToDeliveredSeconds = GetNullable(Of Integer)(reader("SentToDeliveredSeconds"))
+                        detail.DeliveredToOpenSeconds = GetNullable(Of Integer)(reader("DeliveredToOpenSeconds"))
+                        detail.SentToOpenSeconds = GetNullable(Of Integer)(reader("SentToOpenSeconds"))
+                        detail.DeliveredToOpenMinutes = GetNullable(Of Decimal)(reader("DeliveredToOpenMinutes"))
+                        detail.SentToOpenMinutes = GetNullable(Of Decimal)(reader("SentToOpenMinutes"))
+
+                        result.Details.Add(detail)
+                    End While
                 End If
 
-                If Not IsDBNull(dr("OpenedTime")) Then
-                    item.OpenedTime = CType(dr("OpenedTime"), DateTime)
-                End If
+            End Using
 
-                If Not IsDBNull(dr("ClickedTime")) Then
-                    item.ClickedTime = CType(dr("ClickedTime"), DateTime)
-                End If
+            Return result
+        End Function
 
-                If Not IsDBNull(dr("OpenSeconds")) Then
-                    item.OpenSeconds = Convert.ToInt32(dr("OpenSeconds"))
-                End If
+#Region "Helper Methods ép kiểu chống DBNull"
+        Private Function GetValue(Of T)(ByVal value As Object) As T
+            If value Is DBNull.Value OrElse value Is Nothing Then
+                Return CType(Nothing, T)
+            End If
+            Return CType(Convert.ChangeType(value, GetType(T)), T)
+        End Function
 
-                item.ErrorMessage = If(IsDBNull(dr("ErrorMessage")), "", dr("ErrorMessage").ToString())
-                item.SesMessageId = If(IsDBNull(dr("SesMessageId")), "", dr("SesMessageId").ToString())
-
-                result.Details.Add(item)
-
-            End While
-
-        End Sub
-
+        Private Function GetNullable(Of T As Structure)(ByVal value As Object) As Nullable(Of T)
+            If value Is DBNull.Value OrElse value Is Nothing Then
+                Return Nothing
+            End If
+            Return CType(Convert.ChangeType(value, GetType(T)), T)
+        End Function
+#End Region
     End Class
-
 End Namespace

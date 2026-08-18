@@ -327,8 +327,8 @@ Namespace NVCMS.Modules.Marketing
 #End Region
 #Region "Marketing_Static"
 
-        Public Overrides Function MarketingMailDashboard(CampaignId As Integer) As IDataReader
-            Return CType(SqlHelper.ExecuteReader(ConnectionString, "Marketing_Mail_Report_Dashboard", CampaignId), IDataReader)
+        Public Overrides Function Marketing_Mail_Campaign_Analytics(CampaignId As Integer) As IDataReader
+            Return CType(SqlHelper.ExecuteReader(ConnectionString, "sp_Marketing_Mail_Campaign_Analytics", CampaignId), IDataReader)
         End Function
 
         '------------------------------------------'

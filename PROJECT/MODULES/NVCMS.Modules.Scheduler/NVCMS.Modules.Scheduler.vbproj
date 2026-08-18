@@ -177,11 +177,11 @@
   <ItemGroup>
     <ProjectReference Include="..\NVCMS.Modules.EventsWebsite\NVCMS.Modules.EventsWebsite.vbproj">
       <Project>{69b607a1-ba4e-4ef4-882e-0bcdc941a077}</Project>
-      <Name>07. NVCMS.Modules.EventsWebsite</Name>
+      <Name>NVCMS.Modules.EventsWebsite</Name>
     </ProjectReference>
     <ProjectReference Include="..\NVCMS.Modules.Student\NVCMS.Modules.Student.vbproj">
       <Project>{dd42071e-7d88-4890-a647-5439b99f12bd}</Project>
-      <Name>14. NVCMS.Modules.Student</Name>
+      <Name>NVCMS.Modules.Student</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

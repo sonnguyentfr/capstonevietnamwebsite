@@ -7,6 +7,7 @@ namespace NVCMS.API.ReadGoogleSheet.Data
     {
         public CRMDbContext(DbContextOptions<CRMDbContext> options) : base(options) { }
 
+        public DbSet<Marketing_Mail_Account>      MailAccounts   { get; set; }
         public DbSet<Marketing_Mail_Campaing>    Campaigns      { get; set; }
         public DbSet<Marketing_Mail_ListMail>    ListMails      { get; set; }
         public DbSet<MarketingMailListMailUnsub> Unsubs         { get; set; }
@@ -18,6 +19,15 @@ namespace NVCMS.API.ReadGoogleSheet.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Marketing_Mail_Account>(e =>
+            {
+                e.ToTable("Marketing_Mail_Account");
+                e.HasKey(x => x.Id);
+                e.Property(x => x.Id).HasColumnName("Id").UseIdentityColumn();
+                e.Property(x => x.Name).HasColumnName("Name").HasMaxLength(200);
+                e.Property(x => x.Mail).HasColumnName("Mail").HasMaxLength(200);
+            });
 
             modelBuilder.Entity<Marketing_Mail_Campaing>(e =>
             {

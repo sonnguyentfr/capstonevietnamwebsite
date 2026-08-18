@@ -24,7 +24,7 @@ namespace NVCMS.API.Controller
             {
                 return Request.CreateResponse(
                     HttpStatusCode.BadRequest,
-                    ApiResponse<DashboardResult>.ErrorResponse(
+                    ApiResponse<Marketing_Mail_CampaignAnalyticsResult>.ErrorResponse(
                         "campaignSendId phải lớn hơn 0."));
             }
 
@@ -32,7 +32,7 @@ namespace NVCMS.API.Controller
             {
                 var data = MarketingReportServices.GetDashboard(campaignSendId);
 
-                var response = ApiResponse<DashboardResult>.SuccessResponse(
+                var response = ApiResponse<Marketing_Mail_CampaignAnalyticsResult>.SuccessResponse(
                     data,
                     "Load dashboard thành công",
                     1);
@@ -41,103 +41,13 @@ namespace NVCMS.API.Controller
             }
             catch (Exception ex)
             {
-                var response = ApiResponse<DashboardResult>.ErrorResponse(ex.Message);
+                var response = ApiResponse<Marketing_Mail_CampaignAnalyticsResult>.ErrorResponse(ex.Message);
 
                 return Request.CreateResponse(
                     HttpStatusCode.InternalServerError,
                     response);
             }
         }
-    //    [HttpGet]
-    //    public HttpResponseMessage GetStatus(int campaignId)
-    //    {
-    //        try
-    //        {
-    //            var data = MarketingReportServices.GetStatus(campaignId);
-
-    //            return Request.CreateResponse(
-    //                HttpStatusCode.OK,
-    //                ApiResponse<List<DashboardStatus>>
-    //                .SuccessResponse(data, "", data.Count));
-    //        }
-    //        catch (Exception ex)
-    //        {
-    //            return Request.CreateResponse(
-    //                HttpStatusCode.InternalServerError,
-    //                ApiResponse<List<DashboardStatus>>
-    //                .ErrorResponse(ex.Message));
-    //        }
-    //    }
-    //    [HttpGet]
-    //    public HttpResponseMessage GetTimeline(int campaignId)
-    //    {
-    //        try
-    //        {
-    //            var data = MarketingReportServices.GetTimeline(campaignId);
-
-    //            return Request.CreateResponse(
-    //                HttpStatusCode.OK,
-    //                ApiResponse<List<DashboardTimeline>>
-    //                .SuccessResponse(data, "", data.Count));
-    //        }
-    //        catch (Exception ex)
-    //        {
-    //            return Request.CreateResponse(
-    //                HttpStatusCode.InternalServerError,
-    //                ApiResponse<List<DashboardTimeline>>
-    //                .ErrorResponse(ex.Message));
-    //        }
-    //    }
-    //    [HttpGet]
-    //    public HttpResponseMessage GetDetails(
-    //int campaignId,
-    //int page = 1,
-    //int pageSize = 20,
-    //string keyword = "",
-    //string status = "")
-    //    {
-    //        try
-    //        {
-    //            var data = MarketingReportServices.GetDetails(
-    //                campaignId,
-    //                page,
-    //                pageSize,
-    //                keyword,
-    //                status);
-
-    //            return Request.CreateResponse(
-    //                HttpStatusCode.OK,
-    //                ApiResponse<PagedResult<DashboardDetail>>
-    //                .SuccessResponse(data, "", data.TotalRecords));
-    //        }
-    //        catch (Exception ex)
-    //        {
-    //            return Request.CreateResponse(
-    //                HttpStatusCode.InternalServerError,
-    //                ApiResponse<PagedResult<DashboardDetail>>
-    //                .ErrorResponse(ex.Message));
-    //        }
-    //    }
-    //    [HttpPost]
-    //    public HttpResponseMessage Refresh(int campaignId)
-    //    {
-    //        try
-    //        {
-    //            MarketingReportServices.Refresh(campaignId);
-
-    //            return Request.CreateResponse(
-    //                HttpStatusCode.OK,
-    //                ApiResponse<bool>.SuccessResponse(
-    //                    true,
-    //                    "Refresh thành công",
-    //                    1));
-    //        }
-    //        catch (Exception ex)
-    //        {
-    //            return Request.CreateResponse(
-    //                HttpStatusCode.InternalServerError,
-    //                ApiResponse<bool>.ErrorResponse(ex.Message));
-    //        }
-    //    }
+    
     }
 }

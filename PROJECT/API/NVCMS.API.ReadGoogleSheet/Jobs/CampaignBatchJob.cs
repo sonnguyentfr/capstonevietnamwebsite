@@ -17,19 +17,22 @@ namespace NVCMS.API.ReadGoogleSheet.Jobs
 
         private readonly IMarketingSendLogRepository _sendLogRepo;
         private readonly ISESService _sesService;
+        private readonly IMailAccountRepository _mailAccountRepo;
         private readonly IConfiguration _config;
         private readonly ILogger<CampaignBatchJob> _logger;
 
         public CampaignBatchJob(
             IMarketingSendLogRepository sendLogRepo,
             ISESService sesService,
+            IMailAccountRepository mailAccountRepo,
             IConfiguration config,
             ILogger<CampaignBatchJob> logger)
         {
-            _sendLogRepo = sendLogRepo;
-            _sesService  = sesService;
-            _config      = config;
-            _logger      = logger;
+            _sendLogRepo     = sendLogRepo;
+            _sesService      = sesService;
+            _mailAccountRepo = mailAccountRepo;
+            _config          = config;
+            _logger          = logger;
         }
 
         [AutomaticRetry(Attempts = 3, DelaysInSeconds = new[] { 60, 300, 600 })]
@@ -38,6 +41,10 @@ namespace NVCMS.API.ReadGoogleSheet.Jobs
             _logger.LogInformation("CampaignBatchJob: start campaignSendId={CampaignSendId}", campaignSendId);
 
             var apiBaseUrl = (_config["ApiSelfBaseUrl"] ?? string.Empty).TrimEnd('/');
+
+            var mailAccount  = await _mailAccountRepo.GetByIdAsync(emailAccountId);
+            var fromEmail    = mailAccount?.Mail ?? string.Empty;
+            var fromName     = mailAccount?.Name ?? string.Empty;
 
             var queuedLogs = (await _sendLogRepo.GetQueuedByCampaignIdAsync(campaignSendId)).ToList();
             _logger.LogInformation("CampaignBatchJob: {Count} queued send-logs", queuedLogs.Count);
@@ -65,7 +72,7 @@ namespace NVCMS.API.ReadGoogleSheet.Jobs
                         var trackingPixel    = $"<img src=\"{apiBaseUrl}/api/EmailTracking/open?id={log.Id}\" width=\"1\" height=\"1\" alt=\"\" style=\"display:none;\">";
                         var personalizedBody = InjectTrackingPixel(body, trackingPixel);
 
-                        var sesMessageId = await _sesService.SendBodyEmailAsync(log.Email, string.Empty, subject, personalizedBody);
+                        var sesMessageId = await _sesService.SendBodyEmailAsync(fromEmail, log.Email, fromName, subject, personalizedBody);
                         await _sendLogRepo.UpdateStatusAsync(log.Id, MailSendStatus.Sent, sesMessageId: sesMessageId);
                         totalSent++;
                         _logger.LogDebug("Sent to {Email} logId={LogId} sesId={SesId}", log.Email, log.Id, sesMessageId);

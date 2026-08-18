@@ -9,6 +9,7 @@ namespace NVCMS.API.ReadGoogleSheet.Services
         /// Không đọc template từ DB.
         /// </summary>
         Task<string> SendBodyEmailAsync(
+            string fromEmail,
             string toEmail,
             string toName,
             string subject,
@@ -20,6 +21,7 @@ namespace NVCMS.API.ReadGoogleSheet.Services
         /// </summary>
         Task<string> SendTemplatedEmailAsync(
             Marketing_Mail_Template    template,
+            string                   fromEmail,
             string                   toEmail,
             string                   toName,
             Dictionary<string, string> placeholders);

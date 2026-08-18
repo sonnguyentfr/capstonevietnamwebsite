@@ -30,6 +30,7 @@ namespace NVCMS.API.ReadGoogleSheet.Services
 
         // ── SendBodyEmailAsync (NEW – body-only, no template) ─────────────────
         public async Task<string> SendBodyEmailAsync(
+            string fromEmail,
             string toEmail,
             string toName,
             string subject,
@@ -43,7 +44,7 @@ namespace NVCMS.API.ReadGoogleSheet.Services
                 _smtpSettings.EnableSsl,
                 _smtpSettings.Username,
                 _smtpSettings.Password,
-                _sesSettings.FromEmail,
+                string.IsNullOrWhiteSpace(fromEmail) ? _sesSettings.FromEmail : fromEmail, 
                 toEmail,
                 ccEmail:  null,
                 bccEmail: null,
@@ -59,6 +60,7 @@ namespace NVCMS.API.ReadGoogleSheet.Services
         // ── SendTemplatedEmailAsync ───────────────────────────────────────────
         public async Task<string> SendTemplatedEmailAsync(
             Marketing_Mail_Template      template,
+            string                     fromEmail,
             string                     toEmail,
             string                     toName,
             Dictionary<string, string> placeholders)
@@ -66,7 +68,7 @@ namespace NVCMS.API.ReadGoogleSheet.Services
             var htmlBody = await LoadAndRenderTemplateAsync(template, placeholders);
             var subject  = ReplacePlaceholders(template.TemplateName ?? "(no subject)", placeholders);
 
-            return await SendBodyEmailAsync(toEmail, toName, subject, htmlBody);
+            return await SendBodyEmailAsync(fromEmail,toEmail, toName, subject, htmlBody);
         }
 
         // ── SendToRecipientAsync ──────────────────────────────────────────────
@@ -85,6 +87,7 @@ namespace NVCMS.API.ReadGoogleSheet.Services
             {
                 messageId = await SendTemplatedEmailAsync(
                     template,
+                    "",
                     recipient.Email ?? throw new InvalidOperationException("Recipient email is null"),
                     string.Empty,
                     placeholders);

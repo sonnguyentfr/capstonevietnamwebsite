@@ -74,7 +74,7 @@ namespace NVCMS.API.ReadGoogleSheet.Jobs
                     var body = BuildCustomerBody(request, logId);
                     var bcc  = request.BccEmails.Count > 0
                         ? string.Join(",", request.BccEmails) : null;
-                    await _email.SendEmailAsync(request.StudentEmail, subject, body, bccEmail: bcc);
+                    await _email.SendEmailAsync("", request.StudentEmail, subject, body, bccEmail: bcc);
                     await UpdateSendLogSentAsync(logId);
                     totalSent++;
                     _logger.LogInformation(
@@ -96,7 +96,7 @@ namespace NVCMS.API.ReadGoogleSheet.Jobs
                 try
                 {
                     var body = BuildAdminBody(request);
-                    await _email.SendEmailAsync(adminEmail, adminSubject, body);
+                    await _email.SendEmailAsync("",adminEmail, adminSubject, body);
                     await UpdateSendLogSentAsync(logId);
                     totalSent++;
                     _logger.LogInformation(

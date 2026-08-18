@@ -25,6 +25,7 @@ namespace NVCMS.API.ReadGoogleSheet.Controllers
             try
             {
                 await _emailService.SendEmailAsync(
+                    request.FromEmail,
                     request.ToEmail,
                     request.Subject,
                     request.Body,
@@ -45,6 +46,7 @@ namespace NVCMS.API.ReadGoogleSheet.Controllers
 
     public class SendEmailRequest
     {
+        public string FromEmail { get; set; } = string.Empty;
         public string ToEmail { get; set; } = string.Empty;
         public string Subject { get; set; } = string.Empty;
         public string Body { get; set; } = string.Empty;

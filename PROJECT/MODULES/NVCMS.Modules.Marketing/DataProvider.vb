@@ -126,7 +126,7 @@ Namespace NVCMS.Modules.Marketing
 #End Region
 #Region "Marketing_Static"
 
-        Public MustOverride Function MarketingMailDashboard(
+        Public MustOverride Function Marketing_Mail_Campaign_Analytics(
             CampaignId As Integer
             ) As IDataReader
 

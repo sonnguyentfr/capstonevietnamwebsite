@@ -15,10 +15,10 @@ namespace NVCMS.API.ReadGoogleSheet.Services
             _logger = logger;
         }
 
-        public async Task SendEmailAsync(string toEmail, string subject, string body, string? ccEmail = null, string? bccEmail = null)
+        public async Task SendEmailAsync(string fromEmail, string toEmail, string subject, string body, string? ccEmail = null, string? bccEmail = null)
         {
             await SendEmailAsync(
-                _smtpSettings.DefaultFromEmail,
+                string.IsNullOrWhiteSpace(fromEmail) ? _smtpSettings.DefaultFromEmail : fromEmail,
                 _smtpSettings.DefaultFromName,
                 toEmail,
                 subject,
@@ -39,7 +39,7 @@ namespace NVCMS.API.ReadGoogleSheet.Services
                     _smtpSettings.EnableSsl,
                     _smtpSettings.Username,
                     _smtpSettings.Password,
-                    fromEmail,
+                    string.IsNullOrWhiteSpace(fromEmail) ? _smtpSettings.DefaultFromEmail : fromEmail,
                     toEmail,
                     ccEmail,
                     bccEmail,
