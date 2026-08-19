@@ -6,20 +6,30 @@ using System;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using System.Web.Security;
 namespace NVCMS.API.Controller
 {
     [DnnAuthorize]
     [ValidateAntiForgeryToken]
     public class ReportController : DnnApiController
     {
-        /// <summary>
-        /// Dashboard Campaign
-        /// GET:
-        /// /DesktopModules/NVCMS/API/Report/GetDashboard?campaignSendId=1256
-        /// </summary>
+        private bool HasReportPermission()
+        {
+            return UserInfo.IsSuperUser
+                || UserInfo.IsInRole("Administrators")
+                || UserInfo.IsInRole("Manager")
+                || UserInfo.IsInRole("Xuat ban")
+                || UserInfo.IsInRole("LanhDaoToaSoan");
+        }
         [HttpGet]
         public HttpResponseMessage GetDashboard(int campaignSendId)
         {
+            if (!HasReportPermission())
+            {
+                return Request.CreateResponse(
+                    HttpStatusCode.Forbidden,
+                    "Bạn không có quyền truy cập API Report.");
+            }
             if (campaignSendId <= 0)
             {
                 return Request.CreateResponse(
@@ -42,12 +52,11 @@ namespace NVCMS.API.Controller
             catch (Exception ex)
             {
                 var response = ApiResponse<Marketing_Mail_CampaignAnalyticsResult>.ErrorResponse(ex.Message);
-
                 return Request.CreateResponse(
                     HttpStatusCode.InternalServerError,
                     response);
             }
         }
-    
+
     }
 }
