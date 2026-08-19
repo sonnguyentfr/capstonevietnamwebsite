@@ -45,7 +45,9 @@ Namespace NVCMS.Modules.Marketing
 
             'Return CBO.FillCollection(DataProvider.Instance.Marketing_Mail_Campaing_GetAll(), GetType(Marketing_Mail_CampaingInfo))
         End Function
-
+        Public Function _Marketing_Mail_Send_Log_GetUnopenedForResend(ByVal campaignSendId As Integer, ByVal maxResendCount As Integer)
+            Return CBO.FillCollection(DataProvider.Instance.Marketing_Mail_Send_Log_GetUnopenedForResend(campaignSendId, maxResendCount), GetType(Marketing_Mail_Send_Log_GetUnopenedForResend_Result))
+        End Function
         '------------------------------------------'
     End Class
 

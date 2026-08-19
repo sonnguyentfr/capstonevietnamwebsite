@@ -12,6 +12,8 @@
         Private _OpenedTime As DateTime
         Private _ClickedTime As DateTime
         Private _CreatedDate As DateTime
+        Private _ResendCount As Integer
+        Private _SenderEmailId As Integer
 
 
         '------------------------------------------'
@@ -131,6 +133,26 @@
             End Get
             Set(ByVal Value As DateTime)
                 _CreatedDate = Value
+            End Set
+        End Property
+
+        '------------------------------------------'
+        Public Property ResendCount() As Integer
+            Get
+                Return _ResendCount
+            End Get
+            Set(ByVal Value As Integer)
+                _ResendCount = Value
+            End Set
+        End Property
+
+        '------------------------------------------'
+        Public Property SenderEmailId() As Integer
+            Get
+                Return _SenderEmailId
+            End Get
+            Set(ByVal Value As Integer)
+                _SenderEmailId = Value
             End Set
         End Property
 

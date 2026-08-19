@@ -185,12 +185,27 @@
                                                             (<span id="unopenedCount">0</span>)
                                                     </h5>
                                                 </div>
+                                                <div class="card-tools me-n1">
+                                                    <ul class="btn-toolbar gx-1">
+                                                        <li>
+                                                            <button type="button" class="btn btn-primary" id="btnResendSelected" onclick="showResendModal()" disabled>
+                                                                <em class="icon ni ni-send"></em><span>Resend Selected</span>
+                                                            </button>
+                                                        </li>
+                                                    </ul>
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="card-inner p-0">
                                             <div class="nk-tb-list nk-tb-ulist" data-simplebar style="max-height: 500px; overflow-y: auto;">
                                                 <!-- Fixed Header -->
                                                 <div class="nk-tb-item nk-tb-head">
+                                                    <div class="nk-tb-col nk-tb-col-check">
+                                                        <div class="custom-control custom-control-sm custom-checkbox notext">
+                                                            <input type="checkbox" class="custom-control-input" id="selectAllUnopened" onclick="toggleSelectAll(this)">
+                                                            <label class="custom-control-label" for="selectAllUnopened"></label>
+                                                        </div>
+                                                    </div>
                                                     <div class="nk-tb-col"><span class="sub-text">Send Log ID</span></div>
                                                     <div class="nk-tb-col"><span class="sub-text">Email</span></div>
                                                     <div class="nk-tb-col tb-col-md"><span class="sub-text">Status</span></div>
@@ -702,6 +717,21 @@
                     '<div class="nk-tb-item">';
 
 
+                // Checkbox
+                html +=
+                    '<div class="nk-tb-col nk-tb-col-check">' +
+                    '<div class="custom-control custom-control-sm custom-checkbox notext">' +
+                    '<input type="checkbox" class="custom-control-input email-checkbox" ' +
+                    'id="email_' + item.SendLogId + '" ' +
+                    'data-id="' + item.SendLogId + '" ' +
+                    'data-email="' + (item.Email || '') + '" ' +
+                    'data-listmailid="' + (item.ListMailId || '') + '" ' +
+                    'onchange="updateSelectedEmails()">' +
+                    '<label class="custom-control-label" for="email_' + item.SendLogId + '"></label>' +
+                    '</div>' +
+                    '</div>';
+
+
                 // Send Log ID
                 html +=
                     '<div class="nk-tb-col">' +
@@ -907,4 +937,181 @@
         );
 
     }
+
+    // ============================================================
+    // RESEND FUNCTIONALITY
+    // ============================================================
+
+    var selectedEmails = [];
+
+    function toggleSelectAll(checkbox) {
+        var checkboxes = document.querySelectorAll('.email-checkbox');
+        checkboxes.forEach(function(cb) {
+            cb.checked = checkbox.checked;
+        });
+        updateSelectedEmails();
+    }
+
+    function updateSelectedEmails() {
+        selectedEmails = [];
+        var checkboxes = document.querySelectorAll('.email-checkbox:checked');
+        checkboxes.forEach(function(cb) {
+            selectedEmails.push({
+                id: cb.getAttribute('data-id'),
+                email: cb.getAttribute('data-email'),
+                listMailId: cb.getAttribute('data-listmailid')
+            });
+        });
+
+        // Update button state and count
+        var btnResend = document.getElementById('btnResendSelected');
+        if (selectedEmails.length > 0) {
+            btnResend.disabled = false;
+            btnResend.innerHTML = '<em class="icon ni ni-send"></em><span>Resend Selected (' + selectedEmails.length + ')</span>';
+        } else {
+            btnResend.disabled = true;
+            btnResend.innerHTML = '<em class="icon ni ni-send"></em><span>Resend Selected</span>';
+        }
+
+        // Update hidden field
+        document.getElementById('<%= hdnSelectedEmails.ClientID %>').value = JSON.stringify(selectedEmails);
+    }
+
+    function showResendModal() {
+        if (selectedEmails.length === 0) {
+            alert('Vui lòng chọn ít nhất một email để resend.');
+            return;
+        }
+
+        // Show modal
+        $('#resendModal').modal('show');
+
+        // Update selected count in modal
+        document.getElementById('selectedEmailCount').innerText = selectedEmails.length;
+    }
+
 </script>
+
+<!-- Resend Modal -->
+<div class="modal fade" id="resendModal" tabindex="-1" role="dialog" aria-labelledby="resendModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document" style="max-width: 90%;">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="resendModalLabel">
+                    <em class="icon ni ni-send"></em> Resend Email Campaign
+                </h5>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <asp:UpdatePanel runat="server" ID="upnlResend">
+                    <ContentTemplate>
+                        <!-- Result Message Area -->
+                        <asp:Panel ID="pnlResendResult" runat="server" Visible="false" CssClass="mb-3">
+                            <div class="alert alert-dismissible fade show" role="alert" id="resendResultAlert">
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                <asp:Literal ID="ltrResendResult" runat="server"></asp:Literal>
+                            </div>
+                        </asp:Panel>
+
+                        <div class="row">
+                            <!-- Left Column: Form Fields -->
+                            <div class="col-md-6">
+                                <div class="alert alert-info mb-3">
+                                    <em class="icon ni ni-info"></em>
+                                    Bạn đã chọn <strong><span id="selectedEmailCount">0</span></strong> email để resend.
+                                </div>
+
+                                <div class="alert alert-warning mb-4">
+                                    <em class="icon ni ni-alert"></em>
+                                    <strong>Lưu ý:</strong> Mỗi email chỉ được resend tối đa <strong><%= MaxResendCount %></strong> lần. 
+                                    Email đã vượt quá giới hạn sẽ được bỏ qua.
+                                </div>
+
+                                <div class="form-group mb-3">
+                                    <label class="form-label"><b>CHỌN TEMPLATE: </b><span class="text-danger">*</span></label>
+                                    <asp:DropDownList ID="ddlResendTemplate" runat="server" CssClass="form-select form-control" AutoPostBack="true" OnSelectedIndexChanged="ddlResendTemplate_SelectedIndexChanged"></asp:DropDownList>
+                                </div>
+
+                                <div class="form-group mb-3">
+                                    <label class="form-label"><b>CHỌN EMAIL GỬI ĐI: </b><span class="text-danger">*</span></label>
+                                    <asp:DropDownList ID="ddlResendEmail" runat="server" CssClass="form-select form-control" AutoPostBack="true" OnSelectedIndexChanged="ddlResendEmail_SelectedIndexChanged"></asp:DropDownList>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group mb-3">
+                                            <label class="form-label"><b>CHỌN SỰ KIỆN: </b></label>
+                                            <asp:DropDownList ID="ddlResendEventCat" runat="server" CssClass="form-select form-control" AutoPostBack="true" OnSelectedIndexChanged="ddlResendEventCat_SelectedIndexChanged"></asp:DropDownList>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group mb-3">
+                                            <label class="form-label"><b>ĐIA ĐIỂM: </b></label>
+                                            <asp:DropDownList ID="ddlResendEvent" runat="server" CssClass="form-select form-control"></asp:DropDownList>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group mb-3">
+                                    <label class="form-label"><b>TIÊU ĐỀ MAIL: </b><span class="text-danger">*</span></label>
+                                    <asp:TextBox ID="txtResendTitleMail" runat="server" CssClass="form-control"></asp:TextBox>
+                                </div>
+
+                                <div class="form-group mb-3">
+                                    <label class="form-label"><b>NỘI DUNG HIỂN THỊ VIEW MAIL: </b></label>
+                                    <asp:TextBox ID="txtResendContentView" runat="server" CssClass="form-control" TextMode="MultiLine" Rows="3"></asp:TextBox>
+                                </div>
+
+                                <div class="form-group mb-3">
+                                    <label class="form-label"><b>Email Sender Name: </b></label>
+                                    <div class="form-control-plaintext">
+                                        <asp:Literal ID="ltrResendEmailName" runat="server"></asp:Literal>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Right Column: Preview Template -->
+                            <div class="col-md-6">
+                                <div class="card card-bordered h-100">
+                                    <div class="card-header bg-light">
+                                        <h6 class="title mb-0">
+                                            <em class="icon ni ni-eye"></em> Preview Template
+                                        </h6>
+                                    </div>
+                                    <div class="card-inner" style="max-height: 600px; overflow-y: auto; background-color: #f8f9fa;">
+                                        <asp:Literal ID="ltrResendEmailPreview" runat="server"></asp:Literal>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <asp:HiddenField ID="hdnSelectedEmails" runat="server" />
+                    </ContentTemplate>
+                </asp:UpdatePanel>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                    <em class="icon ni ni-cross"></em> Đóng
+                </button>
+                <asp:LinkButton ID="btnConfirmResend" runat="server" CssClass="btn btn-primary" OnClick="btnConfirmResend_Click">
+                    <em class="icon ni ni-send"></em> Xác Nhận Resend
+                </asp:LinkButton>
+            </div>
+        </div>
+    </div>
+</div>
+
+<asp:UpdateProgress runat="server" ID="UpdateProgressResend" AssociatedUpdatePanelID="upnlResend">
+    <ProgressTemplate>
+        <div style="top: 0; left: 0; width: 100vw; height: 100vh; padding: 20% 45%; background: #00000030; position: fixed; z-index: 9999;">
+            <div class="spinner-border text-primary" role="status" style="width: 10rem !important; height: 10rem !important;">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+    </ProgressTemplate>
+</asp:UpdateProgress>
+

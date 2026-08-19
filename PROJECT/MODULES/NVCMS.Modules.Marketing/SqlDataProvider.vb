@@ -323,6 +323,21 @@ Namespace NVCMS.Modules.Marketing
         End Function
 
         '------------------------------------------'
+        Public Overrides Function Marketing_Mail_Send_Log_UpdateResendCount(ByVal sendLogId As Integer, ByVal senderEmailId As Integer) As IDataReader
+            Return CType(SqlHelper.ExecuteReader(ConnectionString, "Marketing_Mail_Send_Log_UpdateResendCount", sendLogId, senderEmailId), IDataReader)
+        End Function
+
+        '------------------------------------------'
+        Public Overrides Function Marketing_Mail_Send_Log_GetResendStatistics(ByVal campaignSendId As Integer) As IDataReader
+            Return CType(SqlHelper.ExecuteReader(ConnectionString, "Marketing_Mail_Send_Log_GetResendStatistics", campaignSendId), IDataReader)
+        End Function
+
+        '------------------------------------------'
+        Public Overrides Function Marketing_Mail_Send_Log_GetUnopenedForResend(ByVal campaignSendId As Integer, ByVal maxResendCount As Integer) As IDataReader
+            Return CType(SqlHelper.ExecuteReader(ConnectionString, "Marketing_Mail_Send_Log_GetUnopenedForResend", campaignSendId, maxResendCount), IDataReader)
+        End Function
+
+        '------------------------------------------'
 
 #End Region
 #Region "Marketing_Static"

@@ -123,6 +123,12 @@ Namespace NVCMS.Modules.Marketing
 
         Public MustOverride Function Marketing_Mail_Send_Log_GetStatusDistribution(ByVal campaignSendId As Integer) As IDataReader
 
+        Public MustOverride Function Marketing_Mail_Send_Log_UpdateResendCount(ByVal sendLogId As Integer, ByVal senderEmailId As Integer) As IDataReader
+
+        Public MustOverride Function Marketing_Mail_Send_Log_GetResendStatistics(ByVal campaignSendId As Integer) As IDataReader
+
+        Public MustOverride Function Marketing_Mail_Send_Log_GetUnopenedForResend(ByVal campaignSendId As Integer, ByVal maxResendCount As Integer) As IDataReader
+
 #End Region
 #Region "Marketing_Static"
 

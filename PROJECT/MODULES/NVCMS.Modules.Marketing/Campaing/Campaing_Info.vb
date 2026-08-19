@@ -89,4 +89,29 @@ Namespace NVCMS.Modules.Marketing
             End Set
         End Property
     End Class
+    Public Class Marketing_Mail_Send_Log_GetUnopenedForResend_Result
+
+        Public Property Id As Integer
+
+        Public Property CampaignSendId As Integer
+
+        Public Property ListMailId As Integer
+
+        Public Property Email As String
+
+        Public Property Status As String
+
+        Public Property SentTime As Nullable(Of DateTime)
+
+        Public Property OpenedTime As Nullable(Of DateTime)
+
+        Public Property ResendCount As Integer
+
+        Public Property SenderEmailId As Nullable(Of Integer)
+
+        Public Property SenderEmail As String
+
+        Public Property SenderName As String
+
+    End Class
 End Namespace
