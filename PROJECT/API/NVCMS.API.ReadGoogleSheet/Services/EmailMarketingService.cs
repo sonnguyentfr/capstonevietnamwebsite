@@ -78,7 +78,7 @@ namespace NVCMS.API.ReadGoogleSheet.Services
                 Body           = request.Body,
                 Status         = 0,
                 TotalRecipient = validMailItems.Count,
-                CreatedDate    = DateTime.UtcNow
+                CreatedDate    = DateTime.Now
             };
             _crmContext.CampaignSends.Add(campaignSend);
             await _crmContext.SaveChangesAsync();
@@ -93,7 +93,8 @@ namespace NVCMS.API.ReadGoogleSheet.Services
                 ListMailId     = lm.id,
                 Email          = lm.Email!.Trim(),
                 Status         = MailSendStatus.Queued,
-                CreatedDate    = DateTime.UtcNow
+                CreatedDate    = DateTime.Now,
+                SenderEmailId = request.EmailAccountId
             }).ToList();
 
             if (sendLogs.Count > 0)

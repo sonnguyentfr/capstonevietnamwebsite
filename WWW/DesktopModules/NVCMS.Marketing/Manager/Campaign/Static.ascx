@@ -38,7 +38,6 @@
         z-index: 10;
     }
 </style>
-<asp:Label ID="lblblblb" runat="server"></asp:Label>
 <div class="nk-body bg-lighter npc-general has-sidebar">
 
     <div class="nk-app-root">
@@ -1046,9 +1045,10 @@
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">
                     <em class="icon ni ni-cross"></em>Đóng
                 </button>
-                <asp:LinkButton ID="btnConfirmResend" runat="server" CssClass="btn btn-primary" OnClick="btnConfirmResend_Click">
+                <asp:LinkButton ID="btnConfirmResend" runat="server" CssClass="btn btn-primary" OnClick="btnConfirmResend_Click" Visible="false">
                     <em class="icon ni ni-send"></em> Xác Nhận Resend
                 </asp:LinkButton>
+                Chưa hoạt động
             </div>
         </div>
     </div>

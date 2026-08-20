@@ -15,6 +15,7 @@ namespace NVCMS.API.ReadGoogleSheet.Entities
         public DateTime? OpenedTime    { get; set; }
         public DateTime? ClickedTime   { get; set; }
         public DateTime  CreatedDate   { get; set; }
+        public int SenderEmailId { get; set; }
     }
 }
 

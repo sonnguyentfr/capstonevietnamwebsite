@@ -92,6 +92,7 @@ namespace NVCMS.API.ReadGoogleSheet.Data
                 e.Property(x => x.OpenedTime).HasColumnName("OpenedTime").HasColumnType("datetime");
                 e.Property(x => x.ClickedTime).HasColumnName("ClickedTime").HasColumnType("datetime");
                 e.Property(x => x.CreatedDate).HasColumnName("CreatedDate").HasColumnType("datetime");
+                e.Property(x => x.SenderEmailId).HasColumnName("SenderEmailId");
             });
 
             modelBuilder.Entity<MarketingMailCampaignSend>(e =>
