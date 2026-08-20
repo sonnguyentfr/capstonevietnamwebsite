@@ -182,6 +182,9 @@ app.MapControllerRoute(name: "su-kien-past-paged", pattern: "su-kien/past-paged"
 app.MapControllerRoute(name: "su-kien-detail",     pattern: "su-kien/{slug}-{id:int}", defaults: new { controller = "SuKien", action = "Detail" });
 app.MapControllerRoute(name: "su-kien-index",      pattern: "su-kien",                 defaults: new { controller = "SuKien", action = "Index" });
 
+// Email unsubscribe
+app.MapControllerRoute(name: "mail-unsubscribe", pattern: "mail-unsubscribe", defaults: new { controller = "MailUnsubscribe", action = "Index" });
+
 // Các dịch vụ Capstone – canonical: /dich-vu/*
 app.MapControllerRoute(name: "dich-vu-index",            pattern: "dich-vu",                                      defaults: new { controller = "DichVu", action = "Index" });
 app.MapControllerRoute(name: "tu-van-du-hoc-cac-nuoc",   pattern: "dich-vu/tu-van-du-hoc-cac-nuoc",               defaults: new { controller = "DichVu", action = "TuVanDuHocCacNuoc" });

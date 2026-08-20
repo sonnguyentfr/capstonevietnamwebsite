@@ -5,6 +5,7 @@ namespace NVCMS.API.ReadGoogleSheet.Models
     public class SendCampaignBodyRequest
     {
         public int    CampaignId      { get; set; }
+        public int TemplateId { get; set; }
         public string Subject         { get; set; } = string.Empty;
         public string Body            { get; set; } = string.Empty;
         public int    EmailAccountId  { get; set; }

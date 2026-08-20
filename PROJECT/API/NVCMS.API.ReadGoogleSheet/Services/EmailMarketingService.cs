@@ -73,6 +73,7 @@ namespace NVCMS.API.ReadGoogleSheet.Services
             var campaignSend = new MarketingMailCampaignSend
             {
                 CampaignId     = request.CampaignId,
+                TemplateId     = request.TemplateId,
                 Subject        = request.Subject,
                 Body           = request.Body,
                 Status         = 0,

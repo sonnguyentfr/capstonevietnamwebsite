@@ -10,6 +10,7 @@ Imports DotNetNuke.Common.Utilities
 Namespace NVCMS.Modules.Marketing
     Public Class SendCampaignRequest
         Public Property CampaignId As Integer
+        Public Property TemplateId As Integer
 
         Public Property EmailAccountId As Integer
 

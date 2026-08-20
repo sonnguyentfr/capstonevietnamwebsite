@@ -100,6 +100,7 @@ namespace NVCMS.API.ReadGoogleSheet.Data
                 e.HasKey(x => x.Id);
                 e.Property(x => x.Id).HasColumnName("Id").UseIdentityColumn();
                 e.Property(x => x.CampaignId).HasColumnName("CampaignId");
+                e.Property(x => x.TemplateId).HasColumnName("TemplateId");
                 e.Property(x => x.Subject).HasColumnName("Subject").HasMaxLength(500).IsRequired();
                 e.Property(x => x.Body).HasColumnName("Body");
                 e.Property(x => x.Status).HasColumnName("Status");

@@ -38,7 +38,7 @@
         z-index: 10;
     }
 </style>
-
+<asp:Label ID="lblblblb" runat="server"></asp:Label>
 <div class="nk-body bg-lighter npc-general has-sidebar">
 
     <div class="nk-app-root">
@@ -197,25 +197,25 @@
                                             </div>
                                         </div>
                                         <div class="card-inner p-0">
-                                            <div class="nk-tb-list nk-tb-ulist" data-simplebar style="max-height: 500px; overflow-y: auto;">
-                                                <!-- Fixed Header -->
-                                                <div class="nk-tb-item nk-tb-head">
-                                                    <div class="nk-tb-col nk-tb-col-check">
-                                                        <div class="custom-control custom-control-sm custom-checkbox notext">
-                                                            <input type="checkbox" class="custom-control-input" id="selectAllUnopened" onclick="toggleSelectAll(this)">
-                                                            <label class="custom-control-label" for="selectAllUnopened"></label>
-                                                        </div>
-                                                    </div>
-                                                    <div class="nk-tb-col"><span class="sub-text">Send Log ID</span></div>
-                                                    <div class="nk-tb-col"><span class="sub-text">Email</span></div>
-                                                    <div class="nk-tb-col tb-col-md"><span class="sub-text">Status</span></div>
-                                                    <div class="nk-tb-col tb-col-lg"><span class="sub-text">Thời Gian Gửi</span></div>
-                                                    <div class="nk-tb-col tb-col-md"><span class="sub-text">Thời Gian Mở</span></div>
-                                                </div>
-                                                <!-- Scrollable Table Body -->
-                                                <div class="table-scroll-container">
-                                                    <div id="tableUnopenedBody"></div>
-                                                </div>
+                                            <div style="max-height: 500px; overflow-y: auto;">
+                                                <table class="table table-tranx is-compact">
+                                                    <thead class="tb-tnx-head" style="position:sticky;top:0;background:#fff;z-index:10;">
+                                                        <tr>
+                                                            <th style="width:40px;">
+                                                                <div class="custom-control custom-control-sm custom-checkbox notext">
+                                                                    <input type="checkbox" class="custom-control-input" id="selectAllUnopened" onclick="toggleSelectAll(this)">
+                                                                    <label class="custom-control-label" for="selectAllUnopened"></label>
+                                                                </div>
+                                                            </th>
+                                                            <th><span class="sub-text">Send Log ID</span></th>
+                                                            <th><span class="sub-text">Email</span></th>
+                                                            <th><span class="sub-text">Status</span></th>
+                                                            <th><span class="sub-text">Thời Gian Gửi</span></th>
+                                                            <th><span class="sub-text">Thời Gian Mở</span></th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="tableUnopenedBody"></tbody>
+                                                </table>
                                             </div>
                                         </div>
                                     </div>
@@ -683,26 +683,13 @@
 
         list = list || [];
 
-        $('#unopenedCount').text(
-            list.length
-        );
-
+        $('#unopenedCount').text(list.length);
 
         var html = '';
 
-
-        // --------------------------------------------------------
-        // Không có dữ liệu
-        // --------------------------------------------------------
-
         if (list.length === 0) {
 
-            html =
-                '<div class="nk-tb-item">' +
-                '<div class="nk-tb-col text-center" colspan="5">' +
-                'Không có email nào chưa mở.' +
-                '</div>' +
-                '</div>';
+            html = '<tr><td colspan="6" class="text-center">Không có email nào chưa mở.</td></tr>';
 
         } else {
 
@@ -712,14 +699,10 @@
                     ? new Date(item.SentTime).toLocaleString('vi-VN')
                     : '-';
 
-
-                html +=
-                    '<div class="nk-tb-item">';
-
+                html += '<tr>';
 
                 // Checkbox
-                html +=
-                    '<div class="nk-tb-col nk-tb-col-check">' +
+                html += '<td>' +
                     '<div class="custom-control custom-control-sm custom-checkbox notext">' +
                     '<input type="checkbox" class="custom-control-input email-checkbox" ' +
                     'id="email_' + item.SendLogId + '" ' +
@@ -729,64 +712,30 @@
                     'onchange="updateSelectedEmails()">' +
                     '<label class="custom-control-label" for="email_' + item.SendLogId + '"></label>' +
                     '</div>' +
-                    '</div>';
-
+                    '</td>';
 
                 // Send Log ID
-                html +=
-                    '<div class="nk-tb-col">' +
-                    '<span class="tb-lead">#' +
-                    (item.SendLogId || '') +
-                    '</span>' +
-                    '</div>';
-
+                html += '<td><span class="tb-lead">#' + (item.SendLogId || '') + '</span></td>';
 
                 // Email
-                html +=
-                    '<div class="nk-tb-col">' +
-                    '<span class="tb-sub font-weight-bold text-dark">' +
-                    (item.Email || '') +
-                    '</span>' +
-                    '</div>';
-
+                html += '<td><span class="tb-sub font-weight-bold text-dark">' + (item.Email || '') + '</span></td>';
 
                 // Status
-                html +=
-                    '<div class="nk-tb-col tb-col-md">' +
-                    '<span class="badge badge-dim badge-warning">' +
-                    (item.Status || '') +
-                    '</span>' +
-                    '</div>';
-
+                html += '<td><span class="badge badge-dim badge-warning">' + (item.Status || '') + '</span></td>';
 
                 // Sent Time
-                html +=
-                    '<div class="nk-tb-col tb-col-lg">' +
-                    '<span class="tb-sub">' +
-                    sentTimeFormatted +
-                    '</span>' +
-                    '</div>';
-
+                html += '<td><span class="tb-sub">' + sentTimeFormatted + '</span></td>';
 
                 // Open status
-                html +=
-                    '<div class="nk-tb-col tb-col-md">' +
-                    '<span class="badge badge-dot badge-danger">' +
-                    'Chưa mở' +
-                    '</span>' +
-                    '</div>';
+                html += '<td><span class="badge badge-dot badge-danger">Chưa mở</span></td>';
 
-
-                html += '</div>';
+                html += '</tr>';
 
             });
 
         }
 
-
-        $('#tableUnopenedBody').html(
-            html
-        );
+        $('#tableUnopenedBody').html(html);
 
     }
 
@@ -946,7 +895,7 @@
 
     function toggleSelectAll(checkbox) {
         var checkboxes = document.querySelectorAll('.email-checkbox');
-        checkboxes.forEach(function(cb) {
+        checkboxes.forEach(function (cb) {
             cb.checked = checkbox.checked;
         });
         updateSelectedEmails();
@@ -955,7 +904,7 @@
     function updateSelectedEmails() {
         selectedEmails = [];
         var checkboxes = document.querySelectorAll('.email-checkbox:checked');
-        checkboxes.forEach(function(cb) {
+        checkboxes.forEach(function (cb) {
             selectedEmails.push({
                 id: cb.getAttribute('data-id'),
                 email: cb.getAttribute('data-email'),
@@ -998,7 +947,7 @@
         <div class="modal-content">
             <div class="modal-header bg-primary text-white">
                 <h5 class="modal-title" id="resendModalLabel">
-                    <em class="icon ni ni-send"></em> Resend Email Campaign
+                    <em class="icon ni ni-send"></em>Resend Email Campaign
                 </h5>
                 <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
@@ -1079,7 +1028,7 @@
                                 <div class="card card-bordered h-100">
                                     <div class="card-header bg-light">
                                         <h6 class="title mb-0">
-                                            <em class="icon ni ni-eye"></em> Preview Template
+                                            <em class="icon ni ni-eye"></em>Preview Template
                                         </h6>
                                     </div>
                                     <div class="card-inner" style="max-height: 600px; overflow-y: auto; background-color: #f8f9fa;">
@@ -1095,7 +1044,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">
-                    <em class="icon ni ni-cross"></em> Đóng
+                    <em class="icon ni ni-cross"></em>Đóng
                 </button>
                 <asp:LinkButton ID="btnConfirmResend" runat="server" CssClass="btn btn-primary" OnClick="btnConfirmResend_Click">
                     <em class="icon ni ni-send"></em> Xác Nhận Resend

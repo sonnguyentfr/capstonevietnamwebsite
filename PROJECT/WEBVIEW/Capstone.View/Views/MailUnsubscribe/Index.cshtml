@@ -1,0 +1,276 @@
+@{
+    ViewData["Title"] = "Hủy đăng ký nhận email";
+    var email   = ViewBag.Email   as string ?? string.Empty;
+    var success = (bool)(ViewBag.Success ?? false);
+    var errMsg  = ViewBag.ErrorMsg as string;
+}
+
+<section class="section-large">
+    <div class="container" style="max-width:780px; margin:0 auto;">
+        <div class="unsub-card">
+            <h1 class="unsub-title">
+                <i class="fa-solid fa-envelope-circle-check"></i>
+                Unsubscribe (Huỷ đăng ký)
+            </h1>
+
+            @if (success)
+            {
+                <div class="unsub-success">
+                    <i class="fa-solid fa-circle-check"></i>
+                    <p>
+                        <strong>@email</strong> đã được xóa khỏi danh sách nhận email marketing.<br />
+                        <em>(You have been successfully unsubscribed.)</em>
+                    </p>
+                </div>
+            }
+            else
+            {
+                <p class="unsub-desc">
+                    You will no longer receive email marketing from this list.
+                    <em>(Từ nay, quý khách sẽ không còn nhận được các email tiếp thị từ danh sách này.)</em>
+                </p>
+                <p class="unsub-desc unsub-desc--bold">
+                    If you have a moment, please let us know why you unsubscribed
+                    <em>(Nếu quý khách có một chút thời gian, xin vui lòng cho chúng tôi biết lý do tại sao quý khách hủy đăng ký):</em>
+                </p>
+
+                @if (!string.IsNullOrEmpty(errMsg))
+                {
+                    <div class="er-alert er-alert--danger mb-4">
+                        <i class="fa-solid fa-circle-xmark"></i> @errMsg
+                    </div>
+                }
+
+                <form method="post" id="unsub-form" novalidate>
+                    @Html.AntiForgeryToken()
+
+                    <div class="unsub-radio-group" id="unsub-reason-group">
+                        <label class="er-radio-item">
+                            <input type="radio" name="reason" value="1" class="unsub-radio-input" />
+                            <span class="er-radio-box"></span>
+                            <span class="er-radio-label">I no longer want to receive these emails / Tôi không còn muốn nhận các email này</span>
+                        </label>
+                        <label class="er-radio-item">
+                            <input type="radio" name="reason" value="2" class="unsub-radio-input" />
+                            <span class="er-radio-box"></span>
+                            <span class="er-radio-label">I never signed up for this mailing list / Tôi chưa bao giờ đăng ký nhận danh sách gửi thư này</span>
+                        </label>
+                        <label class="er-radio-item">
+                            <input type="radio" name="reason" value="3" class="unsub-radio-input" />
+                            <span class="er-radio-box"></span>
+                            <span class="er-radio-label">The emails are inappropriate / Các email không phù hợp</span>
+                        </label>
+                        <label class="er-radio-item">
+                            <input type="radio" name="reason" value="5" class="unsub-radio-input" />
+                            <span class="er-radio-box"></span>
+                            <span class="er-radio-label">Other / Lý do khác</span>
+                        </label>
+                    </div>
+                    <span id="unsub-err-reason" class="er-error" style="display:none">
+                        Vui lòng chọn lý do hủy đăng ký.
+                    </span>
+
+                    <div class="mt-6">
+                        <button type="submit" class="btn-solid unsub-submit-btn">
+                            <i class="fa-solid fa-paper-plane"></i>
+                            <span>Bỏ đăng ký nhận mail</span>
+                        </button>
+                    </div>
+                </form>
+            }
+
+        </div>
+    </div>
+</section>
+
+<style>
+    .unsub-card {
+        padding: 1em;
+        border: 1em solid transparent;
+        background: linear-gradient(white, white) padding-box, repeating-linear-gradient(-45deg, red 0, red 12.5%, transparent 0, transparent 25%, #58a 0, #58a 37.5%, transparent 0, transparent 50%) 0 / 5em 5em;
+    }
+    .unsub-title {
+        font-size: 1.6rem;
+        font-weight: 700;
+        margin-bottom: 1.2rem;
+        color: #1a1a2e;
+    }
+    .unsub-title i { color: #c0392b; margin-right: .4rem; }
+    .unsub-desc { margin-bottom: .8rem; color: #444; line-height: 1.7; }
+    .unsub-desc--bold { font-weight: 600; }
+   
+    .unsub-submit-btn { margin-top: .5rem; gap: .5rem; }
+    .unsub-success {
+        display: flex; align-items: flex-start; gap: 1rem;
+        background: #eafaf1; border: 1px solid #27ae60;
+        border-radius: 8px; padding: 1.2rem 1.5rem; color: #1a6b3c;
+    }
+    .unsub-success i { font-size: 1.8rem; color: #27ae60; flex-shrink: 0; margin-top: .1rem; }
+
+    /* =========================================================
+   UNSUBSCRIBE RADIO
+   ========================================================= */
+
+.unsub-radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: .65rem;
+    margin: 1.2rem 0;
+}
+
+/* Radio item */
+.er-radio-item {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    gap: .75rem;
+
+    padding: .85rem 1rem;
+    border: 1px solid #e1e5eb;
+    border-radius: 8px;
+    background: #fff;
+
+    cursor: pointer;
+    user-select: none;
+
+    transition:
+        border-color .2s ease,
+        background-color .2s ease,
+        box-shadow .2s ease,
+        transform .15s ease;
+}
+
+/* Hover */
+.er-radio-item:hover {
+    border-color: #3498db;
+    background: #f8fbff;
+}
+
+/* Native input hidden */
+.unsub-radio-input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Custom radio */
+.er-radio-box {
+    position: relative;
+
+    width: 20px;
+    height: 20px;
+    min-width: 20px;
+
+    margin-top: 1px;
+
+    border: 2px solid #aeb7c2;
+    border-radius: 50%;
+    background: #fff;
+
+    transition:
+        border-color .2s ease,
+        background-color .2s ease,
+        box-shadow .2s ease;
+}
+
+/* Radio dot */
+.er-radio-box::after {
+    content: "";
+
+    position: absolute;
+    top: 50%;
+    left: 50%;
+
+    width: 8px;
+    height: 8px;
+
+    border-radius: 50%;
+    background: #fff;
+
+    transform: translate(-50%, -50%) scale(0);
+
+    transition: transform .2s ease;
+}
+
+/* Checked */
+.unsub-radio-input:checked + .er-radio-box {
+    border-color: #c0392b;
+    background: #c0392b;
+    box-shadow: 0 0 0 3px rgba(192, 57, 43, .12);
+}
+
+.unsub-radio-input:checked + .er-radio-box::after {
+    transform: translate(-50%, -50%) scale(1);
+}
+
+/* Checked item */
+.er-radio-item:has(.unsub-radio-input:checked) {
+    border-color: #c0392b;
+    background: #fff8f7;
+    box-shadow: 0 2px 8px rgba(192, 57, 43, .08);
+}
+
+/* Label */
+.er-radio-label {
+    flex: 1;
+
+    color: #343a40;
+    font-size: .95rem;
+    line-height: 1.55;
+}
+
+/* Focus - accessibility */
+.er-radio-input:focus-visible + .er-radio-box {
+    box-shadow:
+        0 0 0 3px rgba(52, 152, 219, .2);
+}
+
+/* Error */
+.er-error {
+    display: block;
+    margin-top: -.5rem;
+    color: #c0392b;
+    font-size: .875rem;
+}
+
+/* Mobile */
+@@media (max-width: 576px) {
+
+    .er-radio-item {
+        padding: .75rem .8rem;
+        gap: .65rem;
+    }
+
+    .er-radio-label {
+        font-size: .9rem;
+    }
+
+    .er-radio-box {
+        width: 19px;
+        height: 19px;
+        min-width: 19px;
+    }
+}
+</style>
+
+@section Scripts {
+    <script>
+        (function () {
+            var form  = document.getElementById('unsub-form');
+            var errEl = document.getElementById('unsub-err-reason');
+            if (!form) return;
+            form.addEventListener('submit', function (e) {
+                var checked = form.querySelector('input[name="reason"]:checked');
+                if (!checked) {
+                    e.preventDefault();
+                    errEl.style.display = '';
+                } else {
+                    errEl.style.display = 'none';
+                }
+            });
+            form.querySelectorAll('input[name="reason"]').forEach(function (r) {
+                r.addEventListener('change', function () { errEl.style.display = 'none'; });
+            });
+        })();
+    </script>
+}

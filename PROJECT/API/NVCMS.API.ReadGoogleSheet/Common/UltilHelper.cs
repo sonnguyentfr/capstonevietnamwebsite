@@ -1,5 +1,6 @@
 using System.Net;
 using System.Net.Mail;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace NVCMS.API.ReadGoogleSheet.Common
@@ -235,6 +236,29 @@ namespace NVCMS.API.ReadGoogleSheet.Common
                     System.Diagnostics.Debug.WriteLine($"Invalid email address: {address}. Error: {ex.Message}");
                 }
             }
+        }
+        public static string Encrypt(string plainText)
+        {
+            const string key = "SonNguyenCapStone8CDoanNayLafUyEmailDawng";
+
+            using var aes = Aes.Create();
+
+            aes.Key = Encoding.UTF8.GetBytes(
+                key.PadRight(32).Substring(0, 32)
+            );
+
+            aes.IV = new byte[16];
+
+            using var encryptor = aes.CreateEncryptor();
+            using var ms = new MemoryStream();
+            using var cs = new CryptoStream(ms, encryptor, CryptoStreamMode.Write);
+
+            byte[] plainBytes = Encoding.UTF8.GetBytes(plainText);
+
+            cs.Write(plainBytes, 0, plainBytes.Length);
+            cs.FlushFinalBlock();
+
+            return Convert.ToHexString(ms.ToArray()).ToLowerInvariant();
         }
     }
 }

@@ -70,7 +70,10 @@ namespace NVCMS.API.ReadGoogleSheet.Jobs
                     {
                         // Chèn tracking pixel riêng cho t?ng email, dùng log.Id làm logId
                         var trackingPixel    = $"<img src=\"{apiBaseUrl}/api/EmailTracking/open?id={log.Id}\" width=\"1\" height=\"1\" alt=\"\" style=\"display:none;\">";
-                        var personalizedBody = InjectTrackingPixel(body, trackingPixel);
+                        var stringUsub = (_config["Marketing:MailUnsubContent"] ?? string.Empty)
+                            .Replace("{unsubmail}", UltilHelper.Encrypt(log.Email ?? string.Empty), StringComparison.OrdinalIgnoreCase);
+
+                        var personalizedBody = InjectTrackingPixel(body + stringUsub, trackingPixel);
 
                         var sesMessageId = await _sesService.SendBodyEmailAsync(fromEmail, log.Email, fromName, subject, personalizedBody);
                         await _sendLogRepo.UpdateStatusAsync(log.Id, MailSendStatus.Sent, sesMessageId: sesMessageId);

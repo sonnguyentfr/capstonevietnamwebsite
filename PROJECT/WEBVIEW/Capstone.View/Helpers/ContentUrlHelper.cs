@@ -1,7 +1,9 @@
-using System.Text.RegularExpressions;
 using Capstone.View.Options;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using Microsoft.Extensions.Options;
+using System.Security.Cryptography;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Capstone.View.Helpers;
 
@@ -208,6 +210,27 @@ public class CdnSrcTagHelper : TagHelper
         output.Attributes.RemoveAll(CdnSrcAttr);
         output.Attributes.RemoveAll(CdnWAttr);
         output.Attributes.RemoveAll(CdnHAttr);
+    }
+    public static string Decrypt(string cipherText)
+    {
+        const string key = "SonNguyenCapStone8CDoanNayLafUyEmailDawng";
+
+        using var aes = Aes.Create();
+
+        aes.Key = Encoding.UTF8.GetBytes(
+            key.PadRight(32).Substring(0, 32)
+        );
+
+        aes.IV = new byte[16];
+
+        byte[] cipherBytes = Convert.FromHexString(cipherText);
+
+        using var decryptor = aes.CreateDecryptor();
+        using var ms = new MemoryStream(cipherBytes);
+        using var cs = new CryptoStream(ms, decryptor, CryptoStreamMode.Read);
+        using var sr = new StreamReader(cs, Encoding.UTF8);
+
+        return sr.ReadToEnd();
     }
 }
 
