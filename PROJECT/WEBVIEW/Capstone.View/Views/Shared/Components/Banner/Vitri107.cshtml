@@ -1,0 +1,23 @@
+@model IEnumerable<NVCMS.WebView.Data.ViewModels.BannerViewModel>
+@{
+    var banner = Model?.OrderByDescending(b => b.Id).FirstOrDefault();
+}
+
+@if (banner != null)
+{
+    <div class="col lg:w-1/2">
+        <div class="img img-cover img-zoom-in">
+            <a href="@banner.Link" title="@banner.Title">
+                @if (!string.IsNullOrEmpty(banner.IMGLink))
+                {
+                    <img cdn-src="@banner.IMGLink" cdn-w="@banner.Width" cdn-h="@banner.Height"
+                         alt="@banner.Title" loading="lazy" />
+                }
+                else
+                {
+                    <img src="/static/img/48.jpg" alt="@banner.Title" loading="lazy" />
+                }
+            </a>
+        </div>
+    </div>
+}
