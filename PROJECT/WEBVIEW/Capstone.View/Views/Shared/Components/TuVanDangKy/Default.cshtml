@@ -173,13 +173,7 @@
                     }
                 </div>
             </div>
-            <div class="col lg:w-1/2">
-                <div class="img img-cover img-zoom-in">
-                    <a>
-                        <img src="/static/img/48.jpg" alt="alt">
-                    </a>
-                </div>
-            </div>
+            @await Component.InvokeAsync("Banner", new { vitriid = 107 })
         </div>
     </div>
 </section>
