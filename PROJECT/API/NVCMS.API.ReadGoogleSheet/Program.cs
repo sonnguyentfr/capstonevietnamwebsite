@@ -103,6 +103,10 @@ builder.Services.AddAuthorization();
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddScoped<ICrmDataLadingRepository, CrmDataLadingRepository>();
 builder.Services.AddScoped<IZaloTokenRepository, ZaloTokenRepository>();
+builder.Services.AddScoped<IZaloZnsClient, ZaloZnsClient>();
+builder.Services.AddScoped<IZnsTemplateRepository, ZnsTemplateRepository>();
+builder.Services.AddScoped<IZnsSendQueueRepository, ZnsSendQueueRepository>();
+builder.Services.AddScoped<IZnsSendLogRepository, ZnsSendLogRepository>();
 
 // Register Services
 builder.Services.AddScoped<IGoogleSheetService, GoogleSheetService>();
@@ -111,6 +115,8 @@ builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddSingleton<EmailTemplateRenderer>();
 builder.Services.AddScoped<IZaloService, ZaloService>();
+builder.Services.AddScoped<IZnsTemplateService, ZnsTemplateService>();
+builder.Services.AddScoped<IZnsSendService, ZnsSendService>();
 
 // Marketing DbContext (DefaultCRMConnection)
 builder.Services.AddDbContext<CRMDbContext>(options =>
@@ -151,6 +157,8 @@ builder.Services.AddHangfireServer(options =>
 builder.Services.AddTransient<CampaignBatchJob>();
 // ZNS refresh token
 builder.Services.AddTransient<ZnsRefreshTokenJob>();
+builder.Services.AddTransient<ZnsTemplateSyncJob>();
+builder.Services.AddTransient<ZnsSendJob>();
 // Event registration confirmation emails (enqueued by Capstone.View)
 builder.Services.AddTransient<EventRegistrationEmailJob>();
 
