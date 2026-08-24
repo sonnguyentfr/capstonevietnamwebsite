@@ -43,7 +43,7 @@
     <DebugType>full</DebugType>
     <DefineDebug>true</DefineDebug>
     <DefineTrace>true</DefineTrace>
-    <OutputPath>..\..\WWW\bin\</OutputPath>
+    <OutputPath>..\..\..\bin_build\</OutputPath>
     <DocumentationFile>NVCMS.Modules.Scheduler.xml</DocumentationFile>
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022,42353,42354,42355</NoWarn>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
@@ -66,9 +66,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\WWW\Bin\AngleSharp.dll</HintPath>
     </Reference>
-    <Reference Include="Dapper, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Dapper.2.1.28\lib\net461\Dapper.dll</HintPath>
-    </Reference>
     <Reference Include="DotNetNuke, Version=10.1.2.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\bin\DotNetNuke.dll</HintPath>
@@ -80,17 +77,15 @@
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.CodeDom, Version=7.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\System.CodeDom.7.0.0\lib\net462\System.CodeDom.dll</HintPath>
+    <Reference Include="NVCMS.Modules.Student, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\WWW\bin\NVCMS.Modules.Student.dll</HintPath>
     </Reference>
+    <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Management" />
     <Reference Include="System.Net.Http" />
-    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
-    </Reference>
     <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core">
@@ -178,10 +173,6 @@
     <ProjectReference Include="..\NVCMS.Modules.EventsWebsite\NVCMS.Modules.EventsWebsite.vbproj">
       <Project>{69b607a1-ba4e-4ef4-882e-0bcdc941a077}</Project>
       <Name>NVCMS.Modules.EventsWebsite</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NVCMS.Modules.Student\NVCMS.Modules.Student.vbproj">
-      <Project>{dd42071e-7d88-4890-a647-5439b99f12bd}</Project>
-      <Name>NVCMS.Modules.Student</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

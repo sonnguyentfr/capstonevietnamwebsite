@@ -6,6 +6,10 @@
 
         public string ApiSendMessage { get; set; }
 
+        public string TemplateListEndpoint { get; set; }
+
+        public string TemplateDetailEndpoint { get; set; }
+
         public string AppId { get; set; }
 
         public string AppSecret { get; set; }

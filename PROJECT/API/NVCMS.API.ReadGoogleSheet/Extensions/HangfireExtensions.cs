@@ -14,6 +14,7 @@ namespace NVCMS.API.ReadGoogleSheet.Infrastructure
                 .Value;
 
             RegisterZnsRefreshToken(settings);
+            RegisterZnsTemplateSync(settings);
         }
 
         private static void RegisterZnsRefreshToken(HangfireJobSettings settings)
@@ -32,6 +33,20 @@ namespace NVCMS.API.ReadGoogleSheet.Infrastructure
                 });
         }
 
-        
+        private static void RegisterZnsTemplateSync(HangfireJobSettings settings)
+        {
+            if (!settings.ZnsTemplateSync.Enabled)
+                return;
+
+            RecurringJob.AddOrUpdate<ZnsTemplateSyncJob>(
+                "zns-template-sync",
+                x => x.Execute(CancellationToken.None),
+                settings.ZnsTemplateSync.Cron,
+                new RecurringJobOptions
+                {
+                    TimeZone = TimeZoneInfo.FindSystemTimeZoneById(
+                        settings.ZnsTemplateSync.TimeZone)
+                });
+        }
     }
 }

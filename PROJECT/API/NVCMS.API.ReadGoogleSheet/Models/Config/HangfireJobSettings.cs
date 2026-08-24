@@ -5,6 +5,8 @@
         public JobSetting ZnsRefreshToken { get; set; } = new();
 
         public JobSetting CampaignBatch { get; set; } = new();
+
+        public JobSetting ZnsTemplateSync { get; set; } = new();
     }
 
     public class JobSetting

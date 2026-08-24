@@ -16,6 +16,36 @@ namespace NVCMS.API.ReadGoogleSheet.Infrastructure.Http
             _client.Timeout = TimeSpan.FromSeconds(30);
         }
 
+        public async Task<TResponse> GetJsonAsync<TResponse>(
+            string url,
+            Dictionary<string, string>? headers = null)
+        {
+            var request = new HttpRequestMessage(HttpMethod.Get, url);
+
+            if (headers != null)
+            {
+                foreach (var item in headers)
+                {
+                    request.Headers.TryAddWithoutValidation(item.Key, item.Value);
+                }
+            }
+
+            var response = await _client.SendAsync(request);
+            var json = await response.Content.ReadAsStringAsync();
+
+            _logger.LogInformation(json);
+
+            if (!response.IsSuccessStatusCode)
+                throw new Exception(json);
+
+            return JsonSerializer.Deserialize<TResponse>(
+                json,
+                new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                })!;
+        }
+
         public async Task<TResponse> PostJsonAsync<TRequest, TResponse>(
             string url,
             TRequest body,
