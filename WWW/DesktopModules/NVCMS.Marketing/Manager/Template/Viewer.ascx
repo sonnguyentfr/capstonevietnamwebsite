@@ -86,6 +86,7 @@
             "info": false,
             "dom": 'frtip',
             "searching": false,
+            "order": [[0, "desc"]], // ID DESC
             buttons: ['copy', 'excel', 'csv', 'pdf'],
         });
 

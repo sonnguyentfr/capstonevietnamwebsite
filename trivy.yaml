@@ -1,0 +1,21 @@
+scan:
+  skip-dirs:
+    - .vs
+    - .git
+    - "**/bin"
+    - "**/obj"
+    - "**/node_modules"
+    - "**/packages"
+    - "**/dist"
+    - "**/build"
+    - .trivycache
+    - "**/wwwroot/lib"
+    - "**/Scripts/lib"
+
+  skip-files:
+    - "**/*.deps.json"
+    - "**/*.runtimeconfig.json"
+    - "**/*.min.js"
+    - "**/jquery*.js"
+    - "**/bootstrap*.js"
+    - "**/appsettings.Development.json"

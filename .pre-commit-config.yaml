@@ -1,0 +1,83 @@
+# ============================================================================
+# Pre-commit configuration - minimal enterprise DevSecOps stack
+# ----------------------------------------------------------------------------
+# Aligns with:
+#   - NIST SSDF SP 800-218 PW.7 (SAST + SCA automated)
+#   - OWASP SAMM v2 (security linters at Build stage)
+#   - OWASP DevSecOps Guideline (secrets management)
+#
+# Tool stack (no overlap, low false-positive):
+#   File hygiene : pre-commit-hooks (YAML/JSON/TOML sanity, large files, keys)
+#   Secrets      : gitleaks
+#   SCA          : trivy fs
+#   IaC misconfig: trivy config + hadolint
+#   SAST multi   : semgrep
+#   SAST Go      : gosec
+#
+# Hooks invoke Git Bash and tool binaries via absolute paths produced by
+# install-tools.ps1. Nothing on PATH is required.
+# ============================================================================
+
+minimum_pre_commit_version: '3.5.0'
+fail_fast: false
+default_stages: [pre-commit]
+
+repos:
+
+  # -------------------------------------------------------------------------
+  # Local hooks dispatch to shell scripts installed at $PRECOMMIT_HOOKS_DIR
+  # via Git Bash at $PRECOMMIT_BASH. Tool binaries themselves come from
+  # .pre-commit-tools.env at $PRE_COMMIT_TOOLS_ENV.
+  # Target repos need ONLY this .pre-commit-config.yaml, nothing else.
+  # -------------------------------------------------------------------------
+  - repo: local
+    hooks:
+      - id: gitleaks
+        name: 'Gitleaks - Secret Detection'
+        entry: 'powershell -NoProfile -ExecutionPolicy Bypass -Command "$runner = Join-Path $env:PRECOMMIT_HOOKS_DIR ''run-hook.ps1''; & $runner ''gitleaks.sh''"'
+        language: system
+        pass_filenames: false
+
+      - id: trivy-vuln
+        name: 'Trivy - Vulnerability Scan (SCA)'
+        entry: 'powershell -NoProfile -ExecutionPolicy Bypass -Command "$runner = Join-Path $env:PRECOMMIT_HOOKS_DIR ''run-hook.ps1''; & $runner ''trivy-vuln.sh''"'
+        language: system
+        pass_filenames: false
+        always_run: true
+
+      - id: trivy-config
+        name: 'Trivy - IaC Misconfiguration'
+        entry: 'powershell -NoProfile -ExecutionPolicy Bypass -Command "$runner = Join-Path $env:PRECOMMIT_HOOKS_DIR ''run-hook.ps1''; & $runner ''trivy-config.sh''"'
+        language: system
+        pass_filenames: false
+        files: '\.(ya?ml|json|tf|hcl|dockerfile|Dockerfile)$'
+
+      - id: hadolint
+        name: 'Hadolint - Dockerfile Linter'
+        entry: 'powershell -NoProfile -ExecutionPolicy Bypass -Command "$runner = Join-Path $env:PRECOMMIT_HOOKS_DIR ''run-hook.ps1''; & $runner ''hadolint.sh''"'
+        language: system
+        pass_filenames: false
+        files: '(^|/)(Dockerfile|Dockerfile\..*|.*\.[Dd]ockerfile)$'
+
+      - id: semgrep
+        name: 'Semgrep - Multi-language SAST'
+        entry: 'powershell -NoProfile -ExecutionPolicy Bypass -Command "$runner = Join-Path $env:PRECOMMIT_HOOKS_DIR ''run-hook.ps1''; & $runner ''semgrep.sh''"'
+        language: system
+        pass_filenames: false
+        files: '\.(py|js|ts|jsx|tsx|java|go|rb|php|c|cc|cpp|cs|ya?ml|json|tf|hcl)$'
+
+      - id: gosec
+        name: 'GoSec - Go SAST'
+        entry: 'powershell -NoProfile -ExecutionPolicy Bypass -Command "$runner = Join-Path $env:PRECOMMIT_HOOKS_DIR ''run-hook.ps1''; & $runner ''gosec.sh''"'
+        language: system
+        pass_filenames: false
+        files: '\.go$'
+
+      - id: summary
+        name: 'Security Scan Summary'
+        entry: 'powershell -NoProfile -ExecutionPolicy Bypass -Command "$runner = Join-Path $env:PRECOMMIT_HOOKS_DIR ''run-hook.ps1''; & $runner ''summary.sh''"'
+        language: system
+        pass_filenames: false
+        always_run: true
+        verbose: true
+        stages: [pre-commit]
