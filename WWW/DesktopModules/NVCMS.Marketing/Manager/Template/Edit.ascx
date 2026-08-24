@@ -1,4 +1,5 @@
 <%@ Control Language="vb" AutoEventWireup="false" Explicit="true" CodeFile="Edit.ascx.vb" Inherits="NVCMS.Modules.Marketing.inc_edit" %>
+<%@ Register TagPrefix="dnn" TagName="TextEditor" Src="~/controls/TextEditor.ascx" %>
 <script src="/static/_Admin/js/ace/ace.js"></script>
 <link rel="stylesheet" href="/static/_admin/assets/css/nvcmsadmin.css" />
 <link rel="stylesheet" href="/Portals/_default/Skins/_admin/controls/newsedit.css" />
@@ -85,9 +86,9 @@
                     </div>
                     <div class="form-group">
                         <div class="form-control-wrap">
-                            <%--<dnn:TextEditor DefaultMode="basic" ID="txtValue" Width="100%" Height="1000px" runat="server" />--%>
-                            <textarea id="txtValue" runat="server" cols="10" rows="10" class="codetemplate form-control" style="height: 400px;"></textarea>
-                            <asp:HiddenField ID="hdf_textcode" runat="server" />
+                            <dnn:TextEditor DefaultMode="basic" ID="txtValue" Width="100%" Height="1000px" runat="server" />
+                            <%--<textarea id="txtValue" runat="server" cols="10" rows="10" class="codetemplate form-control" style="height: 400px;"></textarea>
+                            <asp:HiddenField ID="hdf_textcode" runat="server" />--%>
                         </div>
                     </div>
                 </div>
@@ -97,7 +98,7 @@
 
 </div>
 <asp:HiddenField ID="hdf_itemid" runat="server" Value="0" />
-<style type="text/css">
+<%--<style type="text/css">
     .ace_editor {
         height: 500px;
     }
@@ -113,7 +114,7 @@
             $('#<%=hdf_textcode.ClientID%>').val(HeadScript.getValue());
         });
     });
-</script>
+</script>--%>
 
 
 
