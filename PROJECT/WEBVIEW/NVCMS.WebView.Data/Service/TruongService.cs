@@ -177,6 +177,10 @@ public class TruongService : ITruongService
             if (aESL is not null) vmESL = MapESL(aESL);
         }
         var social = (t.Social ?? "").Split(',', StringSplitOptions.TrimEntries);
+
+        var allCats = await _newsRepo.GetAllCategoriesAsync(0);
+        var catMap = allCats.ToDictionary(c => c.CategoryID);
+
         var detail = new TruongDetailViewModel
         {
             Card = MapCard(t),
@@ -218,7 +222,11 @@ public class TruongService : ITruongService
             GPlus = social.ElementAtOrDefault(3),
             Youtube = social.ElementAtOrDefault(4),
             Instagram = social.ElementAtOrDefault(5),
-            RelatedNews = relatedNews.Select(MapNewsItem).ToList()
+            RelatedNews = relatedNews.Select(n =>
+            {
+                catMap.TryGetValue(n.CategoryId, out var cat);
+                return MapNewsItem(n, cat);
+            }).ToList()
         };
         detail.RelatedTruong = await GetRelatedAsync(detail, top: 20);
         return detail;
@@ -277,7 +285,7 @@ public class TruongService : ITruongService
             .Take(pageSize);
     }
 
-    private NewsItemViewModel MapNewsItem(NewsModel n) => new()
+    private NewsItemViewModel MapNewsItem(NewsModel n, NewsCategoryModel? cat) => new()
     {
         NewId         = n.NewId,
         CategoryId    = n.CategoryId,
@@ -287,9 +295,14 @@ public class TruongService : ITruongService
         Tacgia        = n.Tacgia,
         Tags          = n.Tags,
         PublishedDate = n.PublishedDate,
-        Slug          = SlugHelper.ToSlug(n.Title),
-        CategorySlug  = string.Empty,
-        CategoryName  = string.Empty
+        Slug          = !string.IsNullOrEmpty(n.MetaUrl) ? n.MetaUrl : SlugHelper.ToSlug(n.Title),
+        CategorySlug  = cat?.CategoryID switch
+        {
+            202 => "tu-van-dinh-cu",
+            196 => "tu-van-dau-tu",
+            _   => cat?.FullSlug ?? string.Empty
+        },
+        CategoryName  = cat?.CategoryName ?? string.Empty
     };
 
     private TruongCardViewModel MapCard(TruongModel t)
