@@ -40,7 +40,7 @@ Namespace DesktopModules.TinTuc.Control
 
         Protected Sub btnSearch_Click(ByVal sender As Object, ByVal e As EventArgs)
             SearchKeyword = txtSearch.Text.Trim()
-            CurrentPage = 0
+            CurrentPage = 1
             LoadSchools()
         End Sub
 
@@ -78,7 +78,7 @@ Namespace DesktopModules.TinTuc.Control
             lbtPrev.Enabled = (CurrentPage > 0)
             lbtNext.Enabled = (CurrentPage < totalPages - 1)
 
-            Dim lst = _schoolCtl.Marketing_Truong_Find_Index(keyword, "", -1, -1, 0, CurrentPage, PAGE_SIZE)
+            Dim lst = _schoolCtl.Marketing_Truong_Find_Index(keyword, "", -1, -1, -1, CurrentPage, PAGE_SIZE)
 
             If lst Is Nothing OrElse lst.Count = 0 Then
                 rptSchools.DataSource = Nothing

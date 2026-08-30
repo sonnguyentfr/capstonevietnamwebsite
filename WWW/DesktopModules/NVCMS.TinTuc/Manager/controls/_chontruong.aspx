@@ -47,7 +47,7 @@
             list-style: none;
             margin: 0;
             padding: 0;
-            max-height: 380px;
+            max-height: 680px;
             overflow-y: auto;
             border: 1px solid #dee2e6;
             border-radius: 4px;
@@ -154,18 +154,22 @@
             <asp:TextBox ID="txtSearch" runat="server" placeholder="Nhập tên trường..." />
             <asp:Button ID="btnSearch" runat="server" Text="Tìm" OnClick="btnSearch_Click" />
         </div>
-        <div class="info-row">Tìm thấy: <strong>
-            <asp:Label ID="lblTotal" runat="server" Text="0"></asp:Label></strong> trường</div>
+        <div class="info-row">
+            Tìm thấy: <strong>
+                <asp:Label ID="lblTotal" runat="server" Text="0"></asp:Label></strong> trường
+        </div>
         <asp:Repeater ID="rptSchools" runat="server">
             <HeaderTemplate>
                 <ul class="school-list">
             </HeaderTemplate>
             <ItemTemplate>
                 <li>
+                    <img src="<%# Ultis.FormatThumbImage(CStr(Eval("logo")), 120, 70, "", "", "", "") %>" alt="<%# Eval("NameofSchool") %>" />
                     <span class="school-name"><%# Eval("NameofSchool") %></span>
                     <button type="button" class="btn-add"
                         data-id="<%# Eval("id") %>"
                         data-name="<%# Server.HtmlEncode(Eval("NameofSchool").ToString()) %>"
+                        data-logo="<%# Server.HtmlEncode(Ultis.FormatThumbImage(CStr(Eval("logo")), 60, 40, "", "", "", "")) %>"
                         onclick="addSchool(this)">
                         + chọn</button>
                 </li>
@@ -189,13 +193,14 @@
         function addSchool(btn) {
             var id = btn.getAttribute('data-id');
             var name = btn.getAttribute('data-name');
+            var logo = btn.getAttribute('data-logo') || '';
             if (window.opener && typeof window.opener.HandleSchoolResult === 'function') {
-                window.opener.HandleSchoolResult(id, name);
+                window.opener.HandleSchoolResult(id, name, logo);
             }
             btn.disabled = true;
             btn.className = 'btn-add btn-added';
             btn.textContent = '\u2713 đã chọn';
         }
-</script>
+    </script>
 </body>
 </html>

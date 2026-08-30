@@ -33,12 +33,35 @@
     .newsnotes {
         min-height: auto !important;
     }
-    .list-truong-lq ul { list-style: none; margin: 0; padding: 4px 0; }
-    .list-truong-lq ul li { display: flex; align-items: center; padding: 4px 6px; border-bottom: 1px solid #f0f0f0; }
-    .list-truong-lq ul li:last-child { border-bottom: none; }
-    .list-truong-lq ul li .truong-name { flex: 1; }
-    .list-truong-lq ul li .delTruong { color: #dc3545; }
-    .list-truong-lq ul li .delTruong:hover { color: #a71d2a; }
+
+    .list-truong-lq ul {
+        list-style: none;
+        margin: 0;
+        padding: 4px 0;
+    }
+
+        .list-truong-lq ul li {
+            display: flex;
+            align-items: center;
+            padding: 4px 6px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+            .list-truong-lq ul li:last-child {
+                border-bottom: none;
+            }
+
+            .list-truong-lq ul li .truong-name {
+                flex: 1;
+            }
+
+            .list-truong-lq ul li .delTruong {
+                color: #dc3545;
+            }
+
+                .list-truong-lq ul li .delTruong:hover {
+                    color: #a71d2a;
+                }
 </style>
 <script type="text/javascript">
     //Xu ly viec tuong tac anh
@@ -389,7 +412,7 @@
                     </div>
                     <div class="form-group">
                         <div class="card-inner2">
-                            <h6 class="overline-title title">Cấu hình hiện thị</h6>
+                            <h6 class="overline-title title">Cấu hình hiện display</h6>
                             <div class="cauhinhtin g-2 align-center flex-wrap">
                                 <div class="g">
                                     <div class="custom-control custom-control-sm custom-checkbox">
@@ -497,15 +520,16 @@
                         <div class="overline-title-alt mb-2">Trường liên quan</div>
                         <div class="form-group">
                             <div class="form-control-wrap">
-                                <a id="btn-chon-truong" onclick="popupChonTruong(800,560); return false;" class="btn btn-xs btn-info"><em class="icon ni ni-building"></em><span>Chọn trường liên quan</span></a>
-                                <div id="div-truong-lienquan-scroll" class="border border-primary p-2" style="min-height:40px;">
+                                <a id="btn-chon-truong" onclick="popupChonTruong(800,860); return false;" class="btn btn-xs btn-info"><em class="icon ni ni-building"></em><span>Chọn trường liên quan</span></a>
+                                <div id="div-truong-lienquan-scroll" class="border border-primary p-2" style="min-height: 40px;">
                                     <div class="list-truong-lq" id="divTruongRelated">
                                         <ul>
                                             <asp:Repeater runat="server" ID="rptSchoolRelated">
                                                 <ItemTemplate>
                                                     <li id='idtruonglqzzz<%# Eval("SchoolId")%>'>
+                                                        <img class="truong-logo" src='<%# Ultis.FormatThumbImage(CStr(Eval("Logo")), 60, 40, "", "", "", "") %>' alt='<%# Eval("SchoolName")%>' style="width: 40px; height: 26px; object-fit: cover; margin-right: 8px; border-radius: 3px;" />
                                                         <span class="truong-name"><strong><%# Eval("SchoolName")%></strong></span>
-                                                        <a class="delTruong" onclick="javascript:delTruong(this,<%# Eval("SchoolId")%>);" data-toggle="tooltip" title="Xóa trường" style="cursor:pointer;margin-left:8px;"><em class="icon ni ni-trash-fill"></em></a>
+                                                        <a class="delTruong" onclick="javascript:delTruong(this,<%# Eval("SchoolId")%>);" data-toggle="tooltip" title="Xóa trường" style="cursor: pointer; margin-left: 8px;"><em class="icon ni ni-trash-fill"></em></a>
                                                     </li>
                                                 </ItemTemplate>
                                             </asp:Repeater>
@@ -514,7 +538,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                     </div>
                     <div class="form-group">
                         <div class="card-inner2">
@@ -1231,7 +1255,7 @@
     var warnMessage = 'Tin bài đã bị thay đổi và thoát không đúng cách!\n' +
         '1. Bạn phải chọn: Ở lại trang (Stay on page) \n' +
         '2. Bấm Lưu thay đổi (hoặc Thực hiện tác vụ) \n' +
-        '3. Sau đó bấm nút Ɔ Thoát (Phải sử dụng nút này để thoát). \n' +
+        '3. Sau đó bấm nút Ƅ Thoát (Phải sử dụng nút này để thoát). \n' +
         '(Nếu không, tin bài này sẽ bị khóa, người khác không mở để duyệt sửa được!)';
     var formModified = new Boolean();
     formModified = false;
@@ -1292,7 +1316,6 @@
         }
     }--%>
 </script>
-
 <script type="text/javascript">
     function OpenDialog() {
         $("#dialog-modal").dialog({
@@ -1478,39 +1501,45 @@
         var left = (screen.width / 2) - (w / 2);
         return window.open("/DesktopModules/NVCMS.TinTuc/Manager/controls/_chontruong.aspx", "Chon truong lien quan", 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=yes, resizable=no, copyhistory=no, width=' + w + ', height=' + h + ', top=20, left=' + left);
     }
-    function HandleSchoolResult(id, name) {
+    function HandleSchoolResult(id, name, logo) {
         id = String(id);
+        logo = logo || '';
         var hidSchool = document.getElementById('<%= hdf_Schools.ClientID %>');
         var cur = hidSchool.value;
-        var arr = cur ? cur.split(';') : [];
+        var arr = cur ? cur.split(',') : [];
         // Tránh trùng
         for (var i = 0; i < arr.length; i++) {
-            if (arr[i].split('|')[0] === id) return;
+            if (arr[i] === id) return;
         }
-        arr.push(id + '|' + name);
-        hidSchool.value = arr.join(';');
+        arr.push(id);
+        hidSchool.value = arr.join(',');
         addValue('<%= hdf_Schools.ClientID %>', id);
+        var safeName = $('<div/>').text(name).html();
+        var safeLogo = $('<div/>').text(logo).html();
         // Render dòng mới vào danh sách
         var li = '<li id="idtruonglqzzz' + id + '">'
-            + '<span class="truong-name"><strong>' + name + '</strong></span>'
+            + '<img class="truong-logo" src="' + safeLogo + '" alt="' + safeName + '" style="width:40px;height:26px;object-fit:cover;margin-right:8px;border-radius:3px;" />'
+            + '<span class="truong-name"><strong>' + safeName + '</strong></span>'
             + ' <a class="delTruong" onclick="javascript:delTruong(this,' + id + ');" title="Xóa trường" style="cursor:pointer;margin-left:8px;"><em class="icon ni ni-trash-fill"></em></a>'
             + '</li>';
         $('#divTruongRelated ul').append(li);
         console.log('a: ',<%= hdf_Schools.ClientID %>);
     }
+
     function delTruong(sender, id) {
         if (confirm('Bạn có chắc chắn muốn xóa trường này?')) {
             var hidSchool = document.getElementById('<%= hdf_Schools.ClientID %>');
             var cur = hidSchool.value;
-            var arr = cur ? cur.split(';') : [];
+            var arr = cur ? cur.split(',') : [];
             var result = [];
             for (var i = 0; i < arr.length; i++) {
-                if (arr[i] && arr[i].split('|')[0] != String(id)) {
+                if (arr[i] && arr[i] != String(id)) {
                     result.push(arr[i]);
                 }
             }
-            hidSchool.value = result.join(';');
+            hidSchool.value = result.join(',');
             $('#idtruonglqzzz' + id).remove();
+            console.log('a: ',<%= hdf_Schools.ClientID %>);
         }
         return false;
     }
@@ -1537,7 +1566,7 @@
                     + '<div style="width: auto; float: left" id=' + ttitle2 + '>'
                     + '<a href="#"><strong>' + title + '</strong></a>'
                     + '<a title="linkbai" style="display: none" class="' + slinkbai + '" href="#">&nbsp;</a>'
-                    + '<a title="sumary" style="display: none" class="' + ssumary + '" href="#">&nbsp; </a>'
+                    + '<a title="sumary" style="display: none" class="' + ssumary + '" href="#">&nbsp;</a>'
                     + '<a title="imagepath" style="display: none" class="' + simagepath + '" href="#">&nbsp;</a>'
                     + '<a title="tieude" class="' + title + '" href="' + id + '">&nbsp;</a>'
                     + '</div>'

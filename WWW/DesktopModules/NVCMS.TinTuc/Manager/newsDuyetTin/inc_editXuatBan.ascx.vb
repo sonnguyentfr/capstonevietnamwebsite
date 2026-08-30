@@ -2,7 +2,9 @@ Imports DotNetNuke.Security.Roles
 Imports DotNetNuke.UI.Utilities
 Imports NVCMS.Modules.Hethong
 Imports NVCMS.Modules.TinTuc
+Imports NVCMS.Modules.School
 Imports NVCMS.Vietnamnet2sao
+
 Namespace DesktopModules.TinTuc.Manager.news
 
     Public MustInherit Class newsedit
@@ -24,6 +26,8 @@ Namespace DesktopModules.TinTuc.Manager.news
         Dim ctlMedia As New MediaItemController
         Dim _NewsSettingsController As New NewsSettingsController
         Dim ctlnhuabut As New NhuanButController
+        Dim _NewsBySchoolController As New NewsBySchool_Controller
+        Dim _MarketingSchoolCtl As New MarketingSchoolController
         Public Property ItemID() As Integer
             Get
                 If Not ViewState("ItemID") Is Nothing Then
@@ -82,7 +86,7 @@ Namespace DesktopModules.TinTuc.Manager.news
                 If cvl.Contains("~!@|") Then
                     Dim arr As String() = cvl.Split("~!@|")
 
-                    Dim iID As Integer = AutoSave(arr(0), arr(1).Substring(3), arr(2).Substring(3), arr(3).Substring(3), arr(4).Substring(3), arr(5).Substring(3), arr(6).Substring(3), arr(7).Substring(3), arr(8).Substring(3), arr(9).Substring(3), arr(10).Substring(3), arr(11).Substring(3), arr(12).Substring(3), arr(13).Substring(3), arr(14).Substring(3), arr(15).Substring(3), arr(16).Substring(3), arr(17).Substring(3), arr(18).Substring(3), arr(19).Substring(3), arr(20).Substring(3), arr(21).Substring(3), arr(22).Substring(3), arr(23).Substring(3), arr(24).Substring(3), arr(25).Substring(3), arr(26).Substring(3), arr(27).Substring(3), arr(28).Substring(3), arr(29).Substring(3), arr(30).Substring(3), arr(31).Substring(3))
+                    Dim iID As Integer = AutoSave(arr(0), arr(1).Substring(3), arr(2).Substring(3), arr(3).Substring(3), arr(4).Substring(3), arr(5).Substring(3), arr(6).Substring(3), arr(7).Substring(3), arr(8).Substring(3), arr(9).Substring(3), arr(10).Substring(3), arr(11).Substring(3), arr(12).Substring(3), arr(13).Substring(3), arr(14).Substring(3), arr(15).Substring(3), arr(16).Substring(3), arr(17).Substring(3), arr(18).Substring(3), arr(19).Substring(3), arr(20).Substring(3), arr(21).Substring(3), arr(22).Substring(3), arr(23).Substring(3), arr(24).Substring(3), arr(25).Substring(3), arr(26).Substring(3), arr(27).Substring(3), arr(28).Substring(3), arr(29).Substring(3), arr(30).Substring(3), arr(31).Substring(3), arr(32).Substring(3))
 
                     Return Server.HtmlDecode(iID)
                 Else
@@ -101,7 +105,7 @@ Namespace DesktopModules.TinTuc.Manager.news
 
             Return ""
         End Function
-        Private Function AutoSave(ByVal sID As String, ByVal title64 As String, ByVal loaitinbai As String, ByVal tinnongchuyenmuc As Boolean, ByVal tinnongsite As Boolean, ByVal chuyenmucchinh As Integer, ByVal chuyenmucphu As String, ByVal tomtat64 As String, ByVal he As String, ByVal noidung64 As String, ByVal nguontin As String, ByVal dongtg As String, ByVal luuy64 As String, ByVal links64 As String, ByVal anhdd64 As String, mediaList64 As String, imgList64 As String, isVideo As Boolean, isPhoto As Boolean, isPr As Boolean, isShowBaiMoi As Boolean, isAMP As Boolean, isHienQuangCao As Boolean, isAnNoiDung As Boolean, isAnLink As Boolean, keyword64 As String, butdanh64 As String, SourceText64 As String, chkconfighotslide As Boolean, chkconfigtinnong As Boolean, chkconfigxuhuongdoc As Boolean, sTags64 As String) As Integer
+        Private Function AutoSave(ByVal sID As String, ByVal title64 As String, ByVal loaitinbai As String, ByVal tinnongchuyenmuc As Boolean, ByVal tinnongsite As Boolean, ByVal chuyenmucchinh As Integer, ByVal chuyenmucphu As String, ByVal tomtat64 As String, ByVal he As String, ByVal noidung64 As String, ByVal nguontin As String, ByVal dongtg As String, ByVal luuy64 As String, ByVal links64 As String, ByVal lschool64 As String, ByVal anhdd64 As String, mediaList64 As String, imgList64 As String, isVideo As Boolean, isPhoto As Boolean, isPr As Boolean, isShowBaiMoi As Boolean, isAMP As Boolean, isHienQuangCao As Boolean, isAnNoiDung As Boolean, isAnLink As Boolean, keyword64 As String, butdanh64 As String, SourceText64 As String, chkconfighotslide As Boolean, chkconfigtinnong As Boolean, chkconfigxuhuongdoc As Boolean, sTags64 As String) As Integer
             Try
                 'Title = "" van luu.
                 'If String.IsNullOrEmpty(title64) Then
@@ -119,6 +123,8 @@ Namespace DesktopModules.TinTuc.Manager.news
                 Dim luuy As String = System.Text.Encoding.UTF8.GetString(b)
                 b = Convert.FromBase64String(links64)
                 Dim links As String = System.Text.Encoding.UTF8.GetString(b)
+                b = Convert.FromBase64String(lschool64)
+                Dim lschool As String = System.Text.Encoding.UTF8.GetString(b)
                 b = Convert.FromBase64String(anhdd64)
                 Dim anhdd As String = System.Text.Encoding.UTF8.GetString(b)
                 b = Convert.FromBase64String(mediaList64)
@@ -169,13 +175,12 @@ Namespace DesktopModules.TinTuc.Manager.news
                     .ButDanh = butdanh
                     .SourceText = SourceText
                     .Tags = sTags
-                    'ajItemID, chuyenmucchinh, title, loaitinbai, tomtat, noidung, 1, tinnongchuyenmuc, tinnongsite, PortalId, tnUpload.FileList, he, Null.NullDate, "", False, tnUpload.FileList, "", UserId, DateTime.Now
-                    'chuyenmucchinh, title, loaitinbai, tomtat, noidung, 1, tinnongchuyenmuc, tinnongsite, DateTime.Now, PortalId, UserId, tnUpload.FileList, he, Null.NullDate, "", False, tnUpload.FileList, "", -1, Null.NullDate
                 End With
                 ctlNews.Update(objNews)
                 Insert_Categories_AutoSave(ajItemID, chuyenmucchinh, chuyenmucphu)
                 Insert_CauHinhTin_AutoSave(ajItemID, chkconfighotslide, chkconfigtinnong, chkconfigxuhuongdoc)
                 Ultis.UpdateNewsByTags(ajItemID, sTags)
+                Ultis.UpdateNewsBySChool(ajItemID, lschool)
                 'Ultis.InsertMediaFiles(Server, PortalId, UserId, ajItemID, chuyenmucchinh, mediaList)
                 Return ajItemID
             Catch ex As Exception
@@ -390,6 +395,7 @@ Namespace DesktopModules.TinTuc.Manager.news
                                     rptRelated.DataSource = arrRelated
                                     rptRelated.DataBind()
                                 End If
+                                BindSchool(.NewId)
                                 'Tags
                                 txtTags.Text = .Tags
                                 'Doan nay lay cau hinh tin bai News_Settings
@@ -448,34 +454,19 @@ Namespace DesktopModules.TinTuc.Manager.news
                     End With
                     ctlProcess.Insert(objProcessInfo)
                     Dim objNewsInfo As NV_NewsInfo = ctlNews.GetByID(ItemID)
-                    'If objNewsInfo.ImagePath <> txtImagePath.Value Then
-                    '    'Generate Thumbs
-                    '    Ultis.GenerateThumbs(Server.MapPath(txtImagePath.Value))
-                    'End If
                     '1.2. Update News
                     objNewsInfo = CollectNewsInfo(objNewsInfo)
                     ctlNews.Update(objNewsInfo)
                     '1.3. Save a Version
                     Ultis.Save2Version(objNewsInfo, UserId)
-                    'SEND MAIL & SMS
-                    'Dim lstUsers As New List(Of Entities.Users.UserInfo)
-                    'lstUsers.Add(UserController.GetUserById(PortalId, 145)) 'Mr Cuongvx
-                    'If chkSendMail.Checked Then
-                    '    SendEmails(lstUsers)
-                    'End If
-                    'If chkSendSMS.Checked Then
-                    '    Send_SMSToUsers(lstUsers)
-                    'End If
-                    '============================================
                 End If
                 '3. Update News -- Category
                 InsertNews_Category(ItemID)
-                '4. Update Media
-                'Ultis.InsertMediaFiles(Server, PortalId, UserId, ItemID, CType(hdf_Category.Value, Integer), tnUpload.FileList)
                 '5 Nem vao cau hinh tin news_setting
                 Insert_CauHinhTin(ItemID)
                 '6 update Tag
                 Ultis.UpdateNewsByTags(ItemID, txtTags.Text)
+                SaveNewsBySchool(ItemID)
             Catch ex As Exception
                 ProcessModuleLoadException(Me, ex)
             End Try
@@ -976,6 +967,7 @@ Namespace DesktopModules.TinTuc.Manager.news
         End Sub
         Private Sub ReconfigNodeChecked()
             Dim sresult As String = "<script type='text/javascript'>jQuery(function ($) {"
+
             Dim arr As ArrayList = (New NV_NewsController).NewsByCategory_GetByNewsId(ItemID)
             'For Each node As RadTreeNode In radTreeCategory.GetAllNodes
             Dim sIdcatselected As String = ""
@@ -1119,6 +1111,53 @@ Namespace DesktopModules.TinTuc.Manager.news
                 Me.rptTacGiaNhuanBut.DataBind()
             End If
         End Sub
+
+#Region "Truong lien quan"
+        Private Sub BindSchool(ByVal newsId As Integer)
+            Try
+                Dim arrSaved As ArrayList = _NewsBySchoolController._GetByNewID(newsId)
+                Dim parts As New System.Text.StringBuilder
+                Dim display As New ArrayList
+                For Each obj As NewsBySchoolInfo In arrSaved
+                    Dim school As MarketingSchoolInfo = _MarketingSchoolCtl.Marketing_Truong_GetByID(obj.SchoolId)
+                    Dim schoolName As String = If(school IsNot Nothing, school.NameofSchool, "")
+                    Dim schoolLogo As String = If(school IsNot Nothing, school.Logo, "")
+                    If parts.Length > 0 Then parts.Append(",")
+                    parts.Append(obj.SchoolId.ToString())
+                    display.Add(New With {.SchoolId = obj.SchoolId, .SchoolName = schoolName, .Logo = schoolLogo})
+                Next
+                hdf_Schools.Value = parts.ToString()
+                rptSchoolRelated.DataSource = display
+                rptSchoolRelated.DataBind()
+            Catch ex As Exception
+                ProcessModuleLoadException(Me, ex)
+            End Try
+        End Sub
+
+        Private Sub SaveNewsBySchool(ByVal newsId As Integer)
+            Try
+                _NewsBySchoolController._DeleteByNewId(newsId)
+                Dim raw As String = hdf_Schools.Value
+                If Not String.IsNullOrEmpty(raw) Then
+                    For Each part As String In raw.Split(","c)
+                        If Not String.IsNullOrEmpty(part) Then
+                            Dim schoolId As Integer = 0
+                            Integer.TryParse(part, schoolId)
+                            If schoolId > 0 Then
+                                Dim objInfo As New NewsBySchoolInfo With {
+                                    .NewId = newsId,
+                                    .SchoolId = schoolId
+                                }
+                                _NewsBySchoolController._Insert(objInfo)
+                            End If
+                        End If
+                    Next
+                End If
+            Catch ex As Exception
+                ProcessModuleLoadException(Me, ex)
+            End Try
+        End Sub
+#End Region
 
         ''' <summary>
         ''' Neu la them moi thi moi bat dau chay cai nay

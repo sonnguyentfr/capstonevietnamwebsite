@@ -10,9 +10,58 @@
 <link rel="stylesheet" href="/static/_admin/assets/css/libs/jstree.css?ver=2.7.0">
 <script src="/static/_admin/assets/js/libs/jstree.js?ver=2.7.0"></script>
 <style type="text/css">
+    .tagreset {
+        margin: 5px 7px;
+        border: solid 1px #0062c5;
+        padding: 5px 10px;
+        border-radius: 10px;
+        background: #3c81c7;
+        color: #fff;
+        display: block;
+    }
+
+        .tagreset:hover {
+            background: #c9a017;
+            color: #fff;
+            border: solid 1px #fff;
+        }
+
+        .tagreset em {
+            margin-right: 4px;
+        }
+
     .newsnotes {
         min-height: auto !important;
     }
+
+    .list-truong-lq ul {
+        list-style: none;
+        margin: 0;
+        padding: 4px 0;
+    }
+
+        .list-truong-lq ul li {
+            display: flex;
+            align-items: center;
+            padding: 4px 6px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+            .list-truong-lq ul li:last-child {
+                border-bottom: none;
+            }
+
+            .list-truong-lq ul li .truong-name {
+                flex: 1;
+            }
+
+            .list-truong-lq ul li .delTruong {
+                color: #dc3545;
+            }
+
+                .list-truong-lq ul li .delTruong:hover {
+                    color: #a71d2a;
+                }
 </style>
 <script type="text/javascript">
     //Xu ly viec tuong tac anh
@@ -205,6 +254,7 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="card-title-group align-start pb-3 g-2">
                         <div class="card-title card-title-sm">
                             <h6 class="title">Nội dung bài viết</h6>
@@ -310,7 +360,7 @@
                                 ErrorMessage="Chưa chọn chuyên mục" InitialValue="0" ValidationGroup="InputValidate"></asp:RequiredFieldValidator>
                         </div>
                     </div>
-                    <div class="form-group" style="display:none">
+                    <div class="form-group" style="display: none">
                         <div class="card card-bordered">
                             <div class="card-inner">
                                 <div class="overline-title-alt mb-2">Chuyên mục phụ</div>
@@ -324,7 +374,7 @@
                     </div>
                     <div class="form-group">
                         <div class="card-inner2">
-                            <h6 class="overline-title title">Cấu hình hiện thị</h6>
+                            <h6 class="overline-title title">Cấu hình hiện thi</h6>
                             <div class="cauhinhtin g-2 align-center flex-wrap">
                                 <div class="g">
                                     <div class="custom-control custom-control-sm custom-checkbox">
@@ -427,6 +477,30 @@
                             </div>
 
                         </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="overline-title-alt mb-2">Trường liên quan</div>
+                        <div class="form-group">
+                            <div class="form-control-wrap">
+                                <a id="btn-chon-truong" onclick="popupChonTruong(800,860); return false;" class="btn btn-xs btn-info"><em class="icon ni ni-building"></em><span>Chọn trường liên quan</span></a>
+                                <div id="div-truong-lienquan-scroll" class="border border-primary p-2" style="min-height: 40px;">
+                                    <div class="list-truong-lq" id="divTruongRelated">
+                                        <ul>
+                                            <asp:Repeater runat="server" ID="rptSchoolRelated">
+                                                <ItemTemplate>
+                                                    <li id='idtruonglqzzz<%# Eval("SchoolId")%>'>
+                                                        <img class="truong-logo" src='<%# Ultis.FormatThumbImage(CStr(Eval("Logo")), 60, 40, "", "", "", "") %>' alt='<%# Eval("SchoolName")%>' style="width: 40px; height: 26px; object-fit: cover; margin-right: 8px; border-radius: 3px;" />
+                                                        <span class="truong-name"><strong><%# Eval("SchoolName")%></strong></span>
+                                                        <a class="delTruong" onclick="javascript:delTruong(this,<%# Eval("SchoolId")%>);" data-toggle="tooltip" title="Xóa trường" style="cursor: pointer; margin-left: 8px;"><em class="icon ni ni-trash-fill"></em></a>
+                                                    </li>
+                                                </ItemTemplate>
+                                            </asp:Repeater>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                     <div class="form-group">
                         <div class="card-inner2">
@@ -564,104 +638,103 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <div class="form-group">
-                            <div class="form-control-wrap">
-                                <a href="#" class="btn btn-xs btn-info"><em class="icon ni ni-reports-alt"></em><span>Ảnh đại diện</span></a>
-                                <div class="border border-primary p-2">
-                                    <asp:HiddenField ID="txtImagePath" runat="server" />
-                                    <div id="imgDD" runat="server">
-                                        <img src="/images/no_avatar.gif" alt="Ảnh đại diện" />
-                                    </div>
+                        <div class="form-control-wrap">
+                            <a href="#" class="btn btn-xs btn-info"><em class="icon ni ni-reports-alt"></em><span>Ảnh đại diện</span></a>
+                            <div class="border border-primary p-2">
+                                <asp:HiddenField ID="txtImagePath" runat="server" />
+                                <div id="imgDD" runat="server">
+                                    <img src="/images/no_avatar.gif" alt="Ảnh đại diện" />
                                 </div>
-
-                                <!-- .nk-tb-list -->
                             </div>
+
+                            <!-- .nk-tb-list -->
                         </div>
                     </div>
+                </div>
+                <div class="form-group">
+                    <div class="overline-title-alt mb-2">Tải ảnh / Media</div>
                     <div class="form-group">
-                        <div class="overline-title-alt mb-2">Tải ảnh / Media</div>
-                        <div class="form-group">
-                            <div class="form-control-wrap uploadbtn">
-                                <asp:FileUpload ID="file_upload" class="btn btn-xs btn-info multi" AllowMultiple="true" runat="server" />
-                                <progress id="fileProgress" style="display: none"></progress>
-                                <div class="border border-primary">
-                                    <asp:UpdatePanel ID="upimage" runat="server">
-                                        <ContentTemplate>
-                                            <div class="form-horizontal form-label-left">
-                                                <div class="form-group">
-                                                    <small>Click vào ảnh / Video để xem kích thước lớn</small>
-                                                    <div class="col-md-12 scrollbar" id="anhupload">
-                                                        <ul class="anh-upload">
-                                                            <asp:Repeater ID="rptphotoatt" runat="server">
-                                                                <ItemTemplate>
-                                                                    <li class="anh-daupload">
-                                                                        <div class="anh-khunganh">
-                                                                            <a data-fancybox data-caption="" href='<%#Eval("ImageFull") %>'>
-                                                                                <img src="<%#Ultis.GetBackround(Eval("ImageExtension"), Eval("ImageFull")) %>" style="max-width: 100%;" /></a>
-                                                                            <input <%#Ultis.Enableanh(Eval("ImageExtension")) %> type="checkbox" data-img="<%# Eval("ImageFull")%>" class="anh-addToAvatar" />
-                                                                        </div>
-                                                                        <div class="anh-thongtin">
-                                                                            <asp:Button ID="btnxoaanh" Visible='<%#ChoXoaAnh(Eval("mediaid")) %>' CommandArgument='<%#Eval("mediaid") %>' CommandName="btnxoaanh" Text="Xóa" OnClick="btnxoaanh" CssClass="anh-addToContent btn" runat="server" />
-                                                                            <a class="anh-addToContent btn" data-title="<%# Eval("ImageFull")%>" data-img="<%# Eval("ImageFull")%>"><em class="icon ni ni-download"></em></a>
-                                                                            <a class="anh-addToContent2 btn" data-title="<%# Eval("ImageFull")%>" data-img="<%# Eval("ImageFull")%>"><em class="icon ni ni-camera"></em></a>
-                                                                            <a class="anh-addToContentLink btn" data-title="<%# Eval("ImageFull")%>" data-img="<%# Eval("ImageFull")%>">
-                                                                                <em class="icon ni ni-link"></em></a>
-                                                                        </div>
-                                                                        <div style="clear: both"></div>
-                                                                    </li>
-                                                                </ItemTemplate>
-                                                            </asp:Repeater>
-                                                            <asp:Label ID="lblMessage" runat="server" />
-                                                        </ul>
-                                                    </div>
-                                                    <script type="text/javascript">
-                                                        $(document).ready(function () {
-                                                            ActionImage();
-                                                        });
-
-                                                    </script>
-                                                    <div class="col-sm-12">
-                                                        <asp:HiddenField ID="hdf_orgtong" runat="server" Value="0" />
-                                                        <asp:HiddenField ID="hdf_photoattach" runat="server" Value="0" />
-                                                        <asp:HiddenField ID="hdf_itemid" runat="server" Value="0" />
-                                                    </div>
-
+                        <div class="form-control-wrap uploadbtn">
+                            <asp:FileUpload ID="file_upload" class="btn btn-xs btn-info multi" AllowMultiple="true" runat="server" />
+                            <progress id="fileProgress" style="display: none"></progress>
+                            <div class="border border-primary">
+                                <asp:UpdatePanel ID="upimage" runat="server">
+                                    <ContentTemplate>
+                                        <div class="form-horizontal form-label-left">
+                                            <div class="form-group">
+                                                <small>Click vào ảnh / Video để xem kích thước lớn</small>
+                                                <div class="col-md-12 scrollbar" id="anhupload">
+                                                    <ul class="anh-upload">
+                                                        <asp:Repeater ID="rptphotoatt" runat="server">
+                                                            <ItemTemplate>
+                                                                <li class="anh-daupload">
+                                                                    <div class="anh-khunganh">
+                                                                        <a data-fancybox data-caption="" href='<%#Eval("ImageFull") %>'>
+                                                                            <img src="<%#Ultis.GetBackround(Eval("ImageExtension"), Eval("ImageFull")) %>" style="max-width: 100%;" /></a>
+                                                                        <input <%#Ultis.Enableanh(Eval("ImageExtension")) %> type="checkbox" data-img="<%# Eval("ImageFull")%>" class="anh-addToAvatar" />
+                                                                    </div>
+                                                                    <div class="anh-thongtin">
+                                                                        <asp:Button ID="btnxoaanh" Visible='<%#ChoXoaAnh(Eval("mediaid")) %>' CommandArgument='<%#Eval("mediaid") %>' CommandName="btnxoaanh" Text="Xóa" OnClick="btnxoaanh" CssClass="anh-addToContent btn" runat="server" />
+                                                                        <a class="anh-addToContent btn" data-title="<%# Eval("ImageFull")%>" data-img="<%# Eval("ImageFull")%>"><em class="icon ni ni-download"></em></a>
+                                                                        <a class="anh-addToContent2 btn" data-title="<%# Eval("ImageFull")%>" data-img="<%# Eval("ImageFull")%>"><em class="icon ni ni-camera"></em></a>
+                                                                        <a class="anh-addToContentLink btn" data-title="<%# Eval("ImageFull")%>" data-img="<%# Eval("ImageFull")%>">
+                                                                            <em class="icon ni ni-link"></em></a>
+                                                                    </div>
+                                                                    <div style="clear: both"></div>
+                                                                </li>
+                                                            </ItemTemplate>
+                                                        </asp:Repeater>
+                                                        <asp:Label ID="lblMessage" runat="server" />
+                                                    </ul>
                                                 </div>
-                                            </div>
-                                        </ContentTemplate>
-                                    </asp:UpdatePanel>
-                                    <asp:UpdateProgress runat="server" ID="UpdateProgress1">
-                                        <ProgressTemplate>
-                                            <div id="loading">
-                                                <div class="loading">
-                                                    <div></div>
-                                                    <div></div>
-                                                </div>
-                                            </div>
-                                        </ProgressTemplate>
-                                    </asp:UpdateProgress>
-                                </div>
+                                                <script type="text/javascript">
+                                                    $(document).ready(function () {
+                                                        ActionImage();
+                                                    });
 
-                                <!-- .nk-tb-list -->
+                                                </script>
+                                                <div class="col-sm-12">
+                                                    <asp:HiddenField ID="hdf_orgtong" runat="server" Value="0" />
+                                                    <asp:HiddenField ID="hdf_photoattach" runat="server" Value="0" />
+                                                    <asp:HiddenField ID="hdf_itemid" runat="server" Value="0" />
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </ContentTemplate>
+                                </asp:UpdatePanel>
+                                <asp:UpdateProgress runat="server" ID="UpdateProgress1">
+                                    <ProgressTemplate>
+                                        <div id="loading">
+                                            <div class="loading">
+                                                <div></div>
+                                                <div></div>
+                                            </div>
+                                        </div>
+                                    </ProgressTemplate>
+                                </asp:UpdateProgress>
                             </div>
+
+                            <!-- .nk-tb-list -->
                         </div>
                     </div>
                 </div>
             </div>
-            <!-- .card -->
         </div>
-
-        <!-- .col -->
+        <!-- .card -->
     </div>
-    <div class="border-top nvcms-sticky-btn p-2">
-        <asp:LinkButton ID="lbtSave2" ValidationGroup="InputValidate" runat="server" Font-Bold="True" CssClass="__neo_submit-BTN btn btn-sm  btn-outline-primary" OnClientClick="formModified=false; updateFormAttachedMedia(); saveNews(); return false;">
+
+    <!-- .col -->
+</div>
+<div class="border-top nvcms-sticky-btn p-2">
+    <asp:LinkButton ID="lbtSave2" ValidationGroup="InputValidate" runat="server" Font-Bold="True" CssClass="__neo_submit-BTN btn btn-sm  btn-outline-primary" OnClientClick="formModified=false; updateFormAttachedMedia(); saveNews(); return false;">
                 <span>Lưu thay đổi</span><em class="icon ni ni-save-fill"></em>
-        </asp:LinkButton>
-        <asp:LinkButton ID="lbtSaveGuiBientao2" Visible="false" ValidationGroup="InputValidate" runat="server" CssClass="btn  btn-sm  btn-primary" OnClientClick="formModified=false; updateFormAttachedMedia(); saveNews(); return false;">
+    </asp:LinkButton>
+    <asp:LinkButton ID="lbtSaveGuiBientao2" Visible="false" ValidationGroup="InputValidate" runat="server" CssClass="btn  btn-sm  btn-primary" OnClientClick="formModified=false; updateFormAttachedMedia(); saveNews(); return false;">
                 <span>Gửi Biên tập</span><em class="icon ni ni-send-alt"></em>
-        </asp:LinkButton>
+    </asp:LinkButton>
 
-    </div>
+</div>
 </div>
 <%--Modal Lưu ý bút phê Trả lại tác giả--%>
 <div class="modal fade" tabindex="-1" id="modal-newsnote-submit">
@@ -805,6 +878,7 @@
 <asp:HiddenField ID="hdf_Category" runat="server" />
 <asp:HiddenField ID="hdf_theloai" runat="server" Value="1" />
 <asp:HiddenField ID="hdf_Related" runat="server" />
+<asp:HiddenField ID="hdf_Schools" runat="server" />
 <asp:HiddenField ID="hdf_Tags" runat="server" />
 <asp:HiddenField ID="hdf_nhuanbut" runat="server" />
 <div id="divclipboardswf"></div>
@@ -1098,8 +1172,9 @@
             if (Page_ClientValidate("InputValidate")) {
                 FetchData();
                 data = Base64.encode(elEditor);
+                var schoolIds = Base64.encode($('#<%=hdf_Schools.ClientID %>').val() || '');
                 //console.log(elEditor);
-                AutoSave(sID + "~!@|" + title + "~!@|" + img + "~!@|" + bHotCat + "~!@|" + bHotSite + "~!@|" + category + "~!@|" + subcategory + "~!@|" + summary + "~!@|" + he + "~!@|" + data + "~!@|" + nguontin + "~!@|" + arrdongtg + "~!@|" + luuy + "~!@|" + links + "~!@|" + anhdd + "~!@|" + mediaList + "~!@|" + imgList + "~!@|" + bisVideo + "~!@|" + bisPhoto + "~!@|" + bisPR + "~!@|" + bisShowBaiMoi + "~!@|" + bisAMP + "~!@|" + bisHienQuangCao + "~!@|" + bisAnNoiDung + "~!@|" + bisAnLink + "~!@|" + keyword + "~!@|" + butdanh + "~!@|" + SourceText + "~!@|" + chkconfighotslide + "~!@|" + chkconfigtinnong + "~!@|" + chkconfigxuhuongdoc + "~!@|" + txtTags);
+                AutoSave(sID + "~!@|" + title + "~!@|" + img + "~!@|" + bHotCat + "~!@|" + bHotSite + "~!@|" + category + "~!@|" + subcategory + "~!@|" + summary + "~!@|" + he + "~!@|" + data + "~!@|" + nguontin + "~!@|" + arrdongtg + "~!@|" + luuy + "~!@|" + links + "~!@|" + schoolIds + "~!@|" + anhdd + "~!@|" + mediaList + "~!@|" + imgList + "~!@|" + bisVideo + "~!@|" + bisPhoto + "~!@|" + bisPR + "~!@|" + bisShowBaiMoi + "~!@|" + bisAMP + "~!@|" + bisHienQuangCao + "~!@|" + bisAnNoiDung + "~!@|" + bisAnLink + "~!@|" + keyword + "~!@|" + butdanh + "~!@|" + SourceText + "~!@|" + chkconfighotslide + "~!@|" + chkconfigtinnong + "~!@|" + chkconfigxuhuongdoc + "~!@|" + txtTags);
             }
         }
     }
@@ -1116,7 +1191,8 @@
         if (Page_ClientValidate("InputValidate")) {
             FetchData();
             data = Base64.encode(elEditor);
-            AutoSave(sID + "~!@|" + title + "~!@|" + img + "~!@|" + bHotCat + "~!@|" + bHotSite + "~!@|" + category + "~!@|" + subcategory + "~!@|" + summary + "~!@|" + he + "~!@|" + data + "~!@|" + nguontin + "~!@|" + arrdongtg + "~!@|" + luuy + "~!@|" + links + "~!@|" + anhdd + "~!@|" + mediaList + "~!@|" + imgList + "~!@|" + bisVideo + "~!@|" + bisPhoto + "~!@|" + bisPR + "~!@|" + bisShowBaiMoi + "~!@|" + bisAMP + "~!@|" + bisHienQuangCao + "~!@|" + bisAnNoiDung + "~!@|" + bisAnLink + "~!@|" + keyword + "~!@|" + butdanh + "~!@|" + SourceText + "~!@|" + chkconfighotslide + "~!@|" + chkconfigtinnong + "~!@|" + chkconfigxuhuongdoc + "~!@|" + txtTags);
+            var schoolIds = Base64.encode($('#<%=hdf_Schools.ClientID %>').val() || '');
+            AutoSave(sID + "~!@|" + title + "~!@|" + img + "~!@|" + bHotCat + "~!@|" + bHotSite + "~!@|" + category + "~!@|" + subcategory + "~!@|" + summary + "~!@|" + he + "~!@|" + data + "~!@|" + nguontin + "~!@|" + arrdongtg + "~!@|" + luuy + "~!@|" + links + "~!@|" + schoolIds + "~!@|" + anhdd + "~!@|" + mediaList + "~!@|" + imgList + "~!@|" + bisVideo + "~!@|" + bisPhoto + "~!@|" + bisPR + "~!@|" + bisShowBaiMoi + "~!@|" + bisAMP + "~!@|" + bisHienQuangCao + "~!@|" + bisAnNoiDung + "~!@|" + bisAnLink + "~!@|" + keyword + "~!@|" + butdanh + "~!@|" + SourceText + "~!@|" + chkconfighotslide + "~!@|" + chkconfigtinnong + "~!@|" + chkconfigxuhuongdoc + "~!@|" + txtTags);
         }
     }
     //Update all included media
@@ -1396,42 +1472,77 @@
     });
 </script>
 <script type="text/javascript">
-    function popupwindow(w, h) {
+    popupChonTruong = function (w, h) {
         var left = (screen.width / 2) - (w / 2);
-        var top = (screen.height / 2) - (h / 2);
-        return window.open("/DesktopModules/NVCMS.TinTuc/Manager/controls/_tinlienquan.aspx", "Chọn tin liên quan", 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width=' + w + ', height=' + h + ', top=20, left=' + left);
+        return window.open("/DesktopModules/NVCMS.TinTuc/Manager/controls/_chontruong.aspx", "Chon truong lien quan", 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=yes, resizable=no, copyhistory=no, width=' + w + ', height=' + h + ', top=20, left=' + left);
+    };
+    function HandleSchoolResult(id, name, logo) {
+        id = String(id);
+        logo = logo || '';
+        var hidSchool = document.getElementById('<%= hdf_Schools.ClientID %>');
+        var cur = hidSchool.value;
+        var arr = cur ? cur.split(',') : [];
+        for (var i = 0; i < arr.length; i++) {
+            if (arr[i] === id) return;
+        }
+        arr.push(id);
+        hidSchool.value = arr.join(',');
+
+        var safeName = $('<div/>').text(name).html();
+        var safeLogo = $('<div/>').text(logo).html();
+        var li = '<li id="idtruonglqzzz' + id + '">' +
+            '<img class="truong-logo" src="' + safeLogo + '" alt="' + safeName + '" style="width:40px;height:26px;object-fit:cover;margin-right:8px;border-radius:3px;" />' +
+            '<span class="truong-name"><strong>' + safeName + '</strong></span>' +
+            '<a class="delTruong" onclick="javascript:delTruong(this,' + id + ');" data-toggle="tooltip" title="Xóa trường" style="cursor: pointer; margin-left: 8px;"><em class="icon ni ni-trash-fill"></em></a>' +
+            '</li>';
+
+        $('#divTruongRelated ul').append(li);
+        console.log('a: ',<%= hdf_Schools.ClientID %>);
+    }
+    function delTruong(sender, id) {
+        if (confirm("Bạn có chắc chắn muốn xóa?")) {
+            var hidSchool = document.getElementById('<%= hdf_Schools.ClientID %>');
+            var cur = hidSchool.value;
+            var arr = cur ? cur.split(',') : [];
+            var result = [];
+            for (var i = 0; i < arr.length; i++) {
+                if (arr[i] && arr[i] != String(id)) {
+                    result.push(arr[i]);
+                }
+            }
+            hidSchool.value = result.join(',');
+            $('#idtruonglqzzz' + id).remove();
+            console.log('a: ',<%= hdf_Schools.ClientID %>);
+        }
+        return false;
     }
     function HandlePopupResult(result) {
         var arr = new Array();
         arr = result.split(";");
+
+        var html = "";
         for (var i = 0; i < arr.length; i++) {
             if (arr[i] != null && arr[i] != '') {
                 var id = arr[i].split("|")[0];
-                var title = Base64.decode(arr[i].split("|")[1]);
-                var ttitle2 = "'idtinlienquazzz" + id + "'";
-                var simagepathx = Base64.decode(arr[i].split("|")[2]);
-                var simagepath = simagepathx.substring(0, simagepathx.length - 1);
-                var ssumary = Base64.decode(arr[i].split("|")[3]);
-                var slinkbai = Base64.decode(arr[i].split("|")[4]);
+                var tentruong = Base64.decode(arr[i].split("|")[1]);
+                var logo = Base64.decode(arr[i].split("|")[2]);
+                var idDiv = 'idtruonglqzzz' + id;
+
+                var str = "<li id='" + idDiv + "'>" +
+                    "<img class='truong-logo' src='" + logo + "' alt='" + tentruong + "' style='width:40px;height:26px;object-fit:cover;margin-right:8px;border-radius:3px;' />" +
+                    "<span class='truong-name'><strong>" + tentruong + "</strong></span>" +
+                    "<a class='delTruong' onclick=\"javascript:delTruong(this," + id + ");\" data-toggle='tooltip' title='Xóa trường' style='cursor: pointer; margin-left: 8px;'><em class='icon ni ni-trash-fill'></em></a>" +
+                    "</li>";
+
+                html += str;
+
                 addValue('<%= hdf_Related.ClientID %>', id);
-                $('.list-lq ul').append('<li>'
-                    + '<div style="width: auto; float: left" id=' + ttitle2 + '>'
-                    + '<a href="#"><strong>' + title + '</strong></a>'
-                    + '<a title="linkbai" style="display: none" class="' + slinkbai + '" href="#">&nbsp;</a>'
-                    + '<a title="sumary" style="display: none" class="' + ssumary + '" href="#">&nbsp; </a>'
-                    + '<a title="imagepath" style="display: none" class="' + simagepath + '" href="#">&nbsp;</a>'
-                    + '<a title="tieude" class="' + title + '" href="' + id + '">&nbsp;</a>'
-                    + '</div>'
-                    + '<a class="delRelated" onclick="javascript:delRl(this,' + id + ';" title="Loại bỏ tin này?" style="cursor: pointer;"><span class="removeSelected"><em class="icon ni ni-trash-fill"></em></span></a>'
-                    + '<a class="insertRelated" onclick="javascript:insertRelated(' + ttitle2 + ');" title="Chèn vào bài viết?" style="cursor: pointer;">[Dài] </a>'
-                    + '<a class="insertRelated" onclick="javascript:insertRelated4(' + ttitle2 + ');" title="Chèn vào bài viết?" style="cursor: pointer;">[Dài KHÔNG ẢNH] </a>'
-                    + '<a class="insertRelated" onclick="javascript:insertRelated3(' + ttitle2 + ');" title="Chèn vào bài viết?" style="cursor: pointer;">[Phải] </a>'
-                    + '<a class="insertRelated" onclick="javascript:insertRelated2(' + ttitle2 + ');" title="Chèn vào bài viết?" style="cursor: pointer;">[Trái] </a>'
-                    + '</li >');
             }
         }
+
+        $('#divTruongRelated ul').append(html);
     }
-    function delRl(sender, id) {
+    function delTruong(sender, id) {
         if (confirm("Bạn có chắc chắn muốn xóa?") == true) {
             //Remove file from FileList
             removeValue('<%= hdf_Related.ClientID %>', id);
@@ -1445,77 +1556,13 @@
         var sResult = "";
         var arr = new Array();
         arr = arrTemp.split(";");
+
         for (var i = 0; i < arr.length; i++) {
             if (arr[i] && arr[i] != value) {
                 sResult += ";" + arr[i];
             }
         }
+
         $('#' + id).val(sResult.substring(1, sResult.length));
-
-    }
-    function insertRelated(idDiv) {
-        var title1 = idDiv;
-        var filename = $('#' + idDiv + ' a[title="tieude"]').attr("class");
-        var idtin = $('#' + idDiv + ' a[title="tieude"]').attr("href");
-        var imagepath2 = $('#' + idDiv + ' a[title="imagepath"]').attr("class");
-        var imagepath = imagepath2 + '?width=120&height=100&mode=crop&anchor=middlecenter';
-        var sumary = $('#' + idDiv + ' a[title="sumary"]').attr("class");
-        var linkbai2 = $('#' + idDiv + ' a[title="linkbai"]').attr("class");
-        if (linkbai2 != null) {
-            var linkbai = linkbai2.replace("cms.thuongtruong.com.vn", "thuongtruong.com.vn");
-        }
-        else {
-            var linkbai = linkbai2;
-        }
-
-        var editor = CKEDITOR.instances.<%=teContent.ClientID%>; //get a reference to the editor
-        editor.insertHtml("<table class='tinlienquantrongbai' align='center'><tbody><tr><td class='tinlienquantrongbaitd1'><img alt='" + filename + "' style='width: 100%;' src='" + imagepath + "' /></td><td class='tinlienquantrongbaitd2'><h4><a href=" + linkbai + ">" + filename + "</a></h4><p>" + sumary + "</p></td></tr></tbody></table>");
-        alert("Đã chèn xong tin liên quan vào bài! Nếu không muốn giữ lại danh sách! Bạn có thể xóa tin");
-    }
-    //cHEN TIN DAI KHONG ANH
-    function insertRelated4(idDiv) {
-        var title1 = idDiv;
-        var filename = $('#' + idDiv + ' a[title="tieude"]').attr("class");
-        var idtin = $('#' + idDiv + ' a[title="tieude"]').attr("href");
-        var imagepath2 = $('#' + idDiv + ' a[title="imagepath"]').attr("class");
-        var imagepath = imagepath2 + '?width=120&height=100&mode=crop&anchor=middlecenter';
-        var sumary = $('#' + idDiv + ' a[title="sumary"]').attr("class");
-        var linkbai2 = $('#' + idDiv + ' a[title="linkbai"]').attr("class");
-        if (linkbai2 != null) {
-            var linkbai = linkbai2.replace("cms.thuongtruong.com.vn", "thuongtruong.com.vn");
-        }
-        else {
-            var linkbai = linkbai2;
-        }
-
-        var editor = CKEDITOR.instances.<%=teContent.ClientID%>; //get a reference to the editor
-        editor.insertHtml("<table align='center' class='tinlienquantrongbaikhonganh'><tbody><tr><td><p><strong><a href='" + linkbai + "' title='" + filename + "'>" + filename + " </a></strong>" + sumary + "</p></td></tr></tbody></table>");
-        alert("Đã chèn xong tin liên quan vào bài! Nếu không muốn giữ lại danh sách! Bạn có thể xóa tin");
-    }
-    function insertRelated2(idDiv) {
-        var title1 = idDiv;
-        var filename = $('#' + idDiv + ' a[title="tieude"]').attr("class");
-        var idtin = $('#' + idDiv + ' a[title="tieude"]').attr("href");
-        var imagepath2 = $('#' + idDiv + ' a[title="imagepath"]').attr("class");
-        var imagepath = imagepath2 + '?width=200&height=160&mode=crop&anchor=middlecenter';
-        var sumary = $('#' + idDiv + ' a[title="sumary"]').attr("class");
-        var linkbai2 = $('#' + idDiv + ' a[title="linkbai"]').attr("class");
-        var linkbai = linkbai2.replace("cms.thuongtruong.com.vn", "thuongtruong.com.vn");
-        var editor = CKEDITOR.instances.<%=teContent.ClientID%>; //get a reference to the editor
-        editor.insertHtml("<table class='tinlienquantrongbaidoctrai' align='center'><tbody><tr><td class='tinlienquantrongbaitd1'><img alt='" + filename + "' style='width: 100%;' src='" + imagepath + "' /></td></tr><tr><td class='tinlienquantrongbaitd2'><h4><a href=" + linkbai + ">" + filename + "</a></h4><p>" + sumary + "</p></td></tr></tbody></table>");
-        alert("Đã chèn xong tin liên quan vào bài! Nếu không muốn giữ lại danh sách! Bạn có thể xóa tin");
-    }
-    function insertRelated3(idDiv) {
-        var title1 = idDiv;
-        var filename = $('#' + idDiv + ' a[title="tieude"]').attr("class");
-        var idtin = $('#' + idDiv + ' a[title="tieude"]').attr("href");
-        var imagepath2 = $('#' + idDiv + ' a[title="imagepath"]').attr("class");
-        var imagepath = imagepath2 + '?width=200&height=160&mode=crop&anchor=middlecenter';
-        var sumary = $('#' + idDiv + ' a[title="sumary"]').attr("class");
-        var linkbai2 = $('#' + idDiv + ' a[title="linkbai"]').attr("class");
-        var linkbai = linkbai2.replace("cms.thuongtruong.com.vn", "thuongtruong.com.vn");
-        var editor = CKEDITOR.instances.<%=teContent.ClientID%>; //get a reference to the editor
-        editor.insertHtml("<table class='tinlienquantrongbaidocphai' align='center'><tbody><tr><td class='tinlienquantrongbaitd1'><img alt='" + filename + "' style='width: 100%;' src='" + imagepath + "' /></td></tr><tr><td class='tinlienquantrongbaitd2'><h4><a href=" + linkbai + ">" + filename + "</a></h4><p>" + sumary + "</p></td></tr></tbody></table>");
-        alert("Đã chèn xong tin liên quan vào bài! Nếu không muốn giữ lại danh sách! Bạn có thể xóa tin");
     }
 </script>

@@ -768,7 +768,7 @@ Namespace DesktopModules.TinTuc.Manager.news
                 End If
 
                 'Unlock tin bai
-                'Ultis.UnlockNews(ItemID, UserId)
+                'Ultis.UnlockNews(ItemID)
 
                 If ItemID <> 0 Then
                     'TrungNS: New Process
@@ -1064,6 +1064,7 @@ Namespace DesktopModules.TinTuc.Manager.news
         End Sub
         Private Sub ReconfigNodeChecked()
             Dim sresult As String = "<script type='text/javascript'>jQuery(function ($) {"
+
             Dim arr As ArrayList = (New NV_NewsController).NewsByCategory_GetByNewsId(ItemID)
             'For Each node As RadTreeNode In radTreeCategory.GetAllNodes
             Dim sIdcatselected As String = ""
@@ -1170,9 +1171,10 @@ Namespace DesktopModules.TinTuc.Manager.news
                 For Each obj As NewsBySchoolInfo In arrSaved
                     Dim school As MarketingSchoolInfo = _MarketingSchoolCtl.Marketing_Truong_GetByID(obj.SchoolId)
                     Dim schoolName As String = If(school IsNot Nothing, school.NameofSchool, "")
-                    If parts.Length > 0 Then parts.Append(";")
-                    parts.Append(obj.SchoolId.ToString() & "|" & schoolName)
-                    display.Add(New With {.SchoolId = obj.SchoolId, .SchoolName = schoolName})
+                    Dim schoolLogo As String = If(school IsNot Nothing, school.Logo, "")
+                    If parts.Length > 0 Then parts.Append(",")
+                    parts.Append(obj.SchoolId.ToString())
+                    display.Add(New With {.SchoolId = obj.SchoolId, .SchoolName = schoolName, .Logo = schoolLogo})
                 Next
                 hdf_Schools.Value = parts.ToString()
                 rptSchoolRelated.DataSource = display
@@ -1188,10 +1190,10 @@ Namespace DesktopModules.TinTuc.Manager.news
                 _NewsBySchoolController._DeleteByNewId(newsId)
                 Dim raw As String = hdf_Schools.Value
                 If Not String.IsNullOrEmpty(raw) Then
-                    For Each part As String In raw.Split(";"c)
+                    For Each part As String In raw.Split(","c)
                         If Not String.IsNullOrEmpty(part) Then
                             Dim schoolId As Integer = 0
-                            Integer.TryParse(part.Split("|"c)(0), schoolId)
+                            Integer.TryParse(part, schoolId)
                             If schoolId > 0 Then
                                 Dim objInfo As New NewsBySchoolInfo With {
                                     .NewId = newsId,

@@ -10,9 +10,58 @@
 <link rel="stylesheet" href="/static/_admin/assets/css/libs/jstree.css?ver=2.7.0">
 <script src="/static/_admin/assets/js/libs/jstree.js?ver=2.7.0"></script>
 <style type="text/css">
+    .tagreset {
+        margin: 5px 7px;
+        border: solid 1px #0062c5;
+        padding: 5px 10px;
+        border-radius: 10px;
+        background: #3c81c7;
+        color: #fff;
+        display: block;
+    }
+
+        .tagreset:hover {
+            background: #c9a017;
+            color: #fff;
+            border: solid 1px #fff;
+        }
+
+        .tagreset em {
+            margin-right: 4px;
+        }
+
     .newsnotes {
         min-height: auto !important;
     }
+
+    .list-truong-lq ul {
+        list-style: none;
+        margin: 0;
+        padding: 4px 0;
+    }
+
+        .list-truong-lq ul li {
+            display: flex;
+            align-items: center;
+            padding: 4px 6px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+            .list-truong-lq ul li:last-child {
+                border-bottom: none;
+            }
+
+            .list-truong-lq ul li .truong-name {
+                flex: 1;
+            }
+
+            .list-truong-lq ul li .delTruong {
+                color: #dc3545;
+            }
+
+                .list-truong-lq ul li .delTruong:hover {
+                    color: #a71d2a;
+                }
 </style>
 <script type="text/javascript">
     //Xu ly viec tuong tac anh
@@ -106,7 +155,7 @@
     </div>
     <!-- .nk-block-between -->
 </div>
-<div class="nk-block" >
+<div class="nk-block">
     <div class="row g-gs">
         <div class="col-md-9 col-lg-9 col-xxl-9">
             <div class="card card-bordered">
@@ -315,7 +364,7 @@
                                 ErrorMessage="Chưa chọn chuyên mục" InitialValue="0" ValidationGroup="InputValidate"></asp:RequiredFieldValidator>
                         </div>
                     </div>
-                    <div class="form-group" style="display:none">
+                    <div class="form-group" style="display: none">
                         <div class="card card-bordered">
                             <div class="card-inner">
                                 <div class="overline-title-alt mb-2">Chuyên mục phụ</div>
@@ -432,6 +481,30 @@
                             </div>
 
                         </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="overline-title-alt mb-2">Trường liên quan</div>
+                        <div class="form-group">
+                            <div class="form-control-wrap">
+                                <a id="btn-chon-truong" onclick="popupChonTruong(800,860); return false;" class="btn btn-xs btn-info"><em class="icon ni ni-building"></em><span>Chọn trường liên quan</span></a>
+                                <div id="div-truong-lienquan-scroll" class="border border-primary p-2" style="min-height: 40px;">
+                                    <div class="list-truong-lq" id="divTruongRelated">
+                                        <ul>
+                                            <asp:Repeater runat="server" ID="rptSchoolRelated">
+                                                <ItemTemplate>
+                                                    <li id='idtruonglqzzz<%# Eval("SchoolId")%>'>
+                                                        <img class="truong-logo" src='<%# Ultis.FormatThumbImage(CStr(Eval("Logo")), 60, 40, "", "", "", "") %>' alt='<%# Eval("SchoolName")%>' style="width: 40px; height: 26px; object-fit: cover; margin-right: 8px; border-radius: 3px;" />
+                                                        <span class="truong-name"><strong><%# Eval("SchoolName")%></strong></span>
+                                                        <a class="delTruong" onclick="javascript:delTruong(this,<%# Eval("SchoolId")%>);" data-toggle="tooltip" title="Xóa trường" style="cursor: pointer; margin-left: 8px;"><em class="icon ni ni-trash-fill"></em></a>
+                                                    </li>
+                                                </ItemTemplate>
+                                            </asp:Repeater>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                     <div class="form-group">
                         <div class="card-inner2">
@@ -770,7 +843,7 @@
         <div class="modal-content">
             <a href="#" class="close" data-dismiss="modal" aria-label="Close">
                 <em class="icon ni ni-cross"></em>
-            </a>
+            </div>
             <div class="modal-header">
                 <h5 class="modal-title">Bút phê Hủy xuất bản</h5>
             </div>
@@ -860,7 +933,7 @@
                 <a class="tagreset giaxangdau" href="#"><em class="icon ni ni-tags-fill"></em>Giá xăng dầu</a>
                 <a class="tagreset giatieu" href="#"><em class="icon ni ni-tags-fill"></em>Giá tiêu</a>
                 <a class="tagreset giagas" href="#"><em class="icon ni ni-tags-fill"></em>Giá Gas</a>
-                <a class="tagreset giatygia" href="#"><em class="icon ni ni-tags-fill"></em>Tỷ giá ngoại tệ</a>
+                <a class="tagreset giatygia" href="#"><em class="icon ni ni-tags-fill"></em>Tử vi con giáp</a>
                 <a class="tagreset chuyencongiap" href="#"><em class="icon ni ni-tags-fill"></em>Tử vi con giáp</a>
                 <a class="tagreset phim11thang5ngay" href="#"><em class="icon ni ni-tags-fill"></em>Phim 11 tháng 5 ngày</a>
             </div>
@@ -882,6 +955,7 @@
 <asp:HiddenField ID="hdf_Category" runat="server" />
 <asp:HiddenField ID="hdf_theloai" runat="server" Value="1" />
 <asp:HiddenField ID="hdf_Related" runat="server" />
+<asp:HiddenField ID="hdf_Schools" runat="server" />
 <asp:HiddenField ID="hdf_Tags" runat="server" />
 <asp:HiddenField ID="hdf_nhuanbut" runat="server" />
 <div id="divclipboardswf"></div>
@@ -975,7 +1049,7 @@
         var timezzz = day + "/" + month;
         $('#<%=txtTags.ClientId%>').tagsinput('add', 'hương vị tình thân,phần 2,review,phim truyền hình,vtv3,giải trí,phim việt nam,link xem trực tiếp');
         var editor = CKEDITOR.instances.<%=teContent.ClientID%>; //get a reference to the editor
-        editor.insertHtml("<div style='background: #eee;border-top: 2px solid #009cd7;padding: 15px 20px 5px;'><p>Kh&aacute;n giả c&oacute; thể thể đ&oacute;n xem Hương vị t&igrave;nh th&acirc;n tr&ecirc;n VTV1 trực tiếp c&aacute;c ng&agrave;y Thứ 2,3,4,5,6 tr&ecirc;n VTV1 l&uacute;c 21h00:</p><p>VTV Giải tr&iacute;: https://www.vtvgiaitri.vn/xem-tivi-truc-tuyen/vtv1</p><p>VTV: https://vtv.vn/truyen-hinh-truc-tuyen/vtv1.htm</p><p>VTV Go: https://vtvgo.vn/xem-truc-tuyen-kenh-vtv1-1.html</p><p>Link xem Hương vị t&igrave;nh th&acirc;n phần 2 Full HD</p><p>Để c&oacute; thể xem to&agrave;n bộ c&aacute;c tập của bộ phim Hương vị t&igrave;nh th&acirc;n Full HD đ&atilde; ph&aacute;t tr&ecirc;n VTV1, mời qu&yacute; độc giả truy cập v&agrave;o link:</p><p>https://www.vtvgiaitri.vn/title/huong-vi-tinh-than-phan-2</p><p>Để xem th&ecirc;m c&aacute;c nội dung kh&aacute;c của bộ phim h&atilde;y truy cập:&nbsp;Hương vị t&igrave;nh th&acirc;n phần 2</p></div><div style='background-color: #fef5c4;border:solid 1px #fbe4a2; margin:10px;padding:4px 10px; font-size:0.9em;'><p>Bộ phim Hương vị t&igrave;nh th&acirc;n&nbsp;xoay quanh cuộc sống v&agrave; t&igrave;nh y&ecirc;u của Phương Nam. Cuộc sống của Nam đảo lộn khi c&ocirc; ph&aacute;t hiện bản th&acirc;n chỉ l&agrave; con nu&ocirc;i trong gia đ&igrave;nh m&igrave;nh. Những biến cố li&ecirc;n tiếp ập tới. Giữa l&uacute;c đ&oacute;, &ocirc;ng Sinh - cha ruột của Nam xuất hiện, lặng thầm bảo vệ con g&aacute;i nhỏ. Nam lu&ocirc;n tin rằng c&ocirc; sẽ t&igrave;m được một gia đ&igrave;nh thực sự, v&agrave; đến khi Ho&agrave;ng Long xuất hiện, hạnh ph&uacute;c tưởng đ&atilde; mỉm cười với Nam.</p><p>Nhưng khi đ&oacute;, b&iacute; mật về &ocirc;ng Sinh được h&eacute; lộ khiến Nam sụp đổ. Những m&acirc;u thuẫn v&agrave; &acirc;n o&aacute;n lắt l&eacute;o buộc Nam đứng trước 2 lựa chọn: gia đ&igrave;nh m&agrave; c&ocirc; vừa g&acirc;y dựng hay người cha t&ugrave; tội vẫn lặng thầm bảo vệ c&ocirc;.</p><p>Hương vị t&igrave;nh th&acirc;n phần 2 sẽ được ph&aacute;t s&oacute;ng trực tiếp tr&ecirc;n k&ecirc;nh&nbsp;VTV1&nbsp;v&agrave;o l&uacute;c 21h00 từ thứ 2 đến thứ 6 h&agrave;ng tuần tại VTV Giải tr&iacute; - VTV - VTV Go.</p></div><div class='row thongtinfilm'><div class='col-xs-12 col-sm-6 col-md-6 pr-0 pl-0'><div class='phim_anh_cover'><a href='/tag.html?tag=hương+vị+tình+thân' target='_blank'  title='Phim Hương vị tình thân phần 2'><img src='https://cms.thuongtruong.com.vn/DATA/IMAGES/2021/08/25/20210825232118-1huongvitinhthancover.jpg' alt='Phim Hương vị tình thân phần 2' /></a></div></div><div class='col-xs-12 col-sm-6 col-md-6 pr-0 pl-0'><div class='phim_gioithieu'><h2><a href='/tag.html?tag=hương+vị+tình+thân' target='_blank' title='Phim Hương vị tình thân phần 2'>Hương vị tình thân</a></h2><table class='theloaifiml'><tr><td><i class='fa fa-film' aria-hidden='true'></i>Tình cảm, gia đình</td><td><i class='fa fa-video-camera' aria-hidden='true'></i>25 phút</td></tr><tr><td colspan='2'><i class='fa fa-clock-o' aria-hidden='true'></i>19/04/2021</td></tr><tr><td colspan='2'><i class='fa fa-calendar-o' aria-hidden='true'></i>Thứ 2 đến thứ 6 trên VTV1</td></tr></table><div class='tomtatfim'>Hương vị tình thân kể về Phương Nam, cuộc sống đảo lộn khi Nam phát hiện ra cô chỉ là con nuôi trong gia đình mình. Những biến cố liên tiếp ập tới. Giữa lúc đó, ông Sinh - cha ruột của Nam xuất hiện, lặng thầm bảo vệ con gái nhỏ. Nam luôn tin rằng cô sẽ tìm được một gia đình thực sự, và đến khi Hoàng Long xuất hiện, hạnh phúc tưởng đã mỉm cười với Nam. Nhưng khi đó, bí mật về ông Sinh được hé lộ khiến Nam sụp đổ. Những mâu thuẫn và ân oán lắt léo buộc Nam đứng trước hai lựa chọn: gia đình mà cô vừa gây dựng hay người cha tù tội vẫn lặng thầm bảo vệ cô.</div><table class='theloaifiml'><tr><td style='width:74px;'>Đạo diễn</td><td>Nguyễn Danh Dũng</td></tr><tr><td>Diễn viên</td><td>Phương Oanh, Mạnh Trường, Thu Quỳnh</td></tr></table></div></div></div>");
+        editor.insertHtml("<div style='background: #eee;border-top: 2px solid #009cd7;padding: 15px 20px 5px;'><p>Kh&aacute;n giả c&oacute; thể thể đ&oacute;n xem Hương vị t&igrave;nh th&acirc;n tr&ecirc;n VTV1 trực tiếp c&aacute;c ng&agrave;y Thứ 2,3,4,5,6 tr&ecirc;n VTV1 l&uacute;c 21h00:</p><p>VTV Giải tr&iacute;: https://www.vtvgiaitri.vn/xem-tivi-truc-tuyen/vtv1</p><p>VTV: https://vtv.vn/truyen-hinh-truc-tuyen/vtv1.htm</p><p>VTV Go: https://vtvgo.vn/xem-truc-tuyen-kenh-vtv1-1.html</p><p>Link xem Hương vị t&igrave;nh th&acirc;n phần 2 Full HD</p><p>Để c&oacute; thể xem to&agrave;n bộ c&aacute;c tập của bộ phim Hương vị t&igrave;nh th&acirc;n Full HD đ&atilde; ph&aacute;t tr&ecirc;n VTV1, mời qu&yacute; độc giả truy cập v&agrave;o link:</p><p>https://www.vtvgiaitri.vn/title/huong-vi-tinh-than-phan-2</p><p>Để xem th&ecirc;m c&aacute;c nội dung kh&aacute;c của bộ phim h&atilde;y truy cập:&nbsp;Hương vị t&igrave;nh th&acirc;n phần 2</p></div><div style='background-color: #fef5c4;border:solid 1px #fbe4a2; margin:10px;padding:4px 10px; font-size:0.9em;'><p>Bộ phim Hương vị tình th&acirc;n&nbsp;xoay quanh cuộc sống v&agrave; t&igrave;nh y&ecirc;u của Phương Nam. Cuộc sống của Nam đảo lộn khi c&ocirc; ph&aacute;t hiện bản th&acirc;n chỉ l&agrave; con nu&ocirc;i trong gia đ&igrave;nh m&igrave;nh. Những biến cố li&ecirc;n tiếp ập tới. Giữa l&uacute;c đ&oacute;, &ocirc;ng Sinh - cha ruột của Nam xuất hiện, lặng thầm bảo vệ con g&aacute;i nhỏ. Nam lu&ocirc;n tin rằng c&ocirc; sẽ t&igrave;m được một gia đ&igrave;nh thực sự, v&agrave; đến khi Ho&agrave;ng Long xuất hiện, hạnh ph&uacute;c tưởng đ&atilde; mỉm cười với Nam.</p><p>Nhưng khi đ&oacute;, b&iacute; mật về &ocirc;ng Sinh được h&eacute; lộ khiến Nam sụp đổ. Những m&acirc;u thuẫn v&agrave; &acirc;n o&aacute;n lắt l&eacute;o buộc Nam đứng trước 2 lựa chọn: gia đ&igrave;nh m&agrave; c&ocirc; vừa g&acirc;y dựng hay người cha t&ugrave; tội vẫn lặng thầm bảo vệ c&ocirc;.</p><p>Hương vị t&igrave;nh th&acirc;n phần 2 sẽ được ph&aacute;t s&oacute;ng trực tiếp tr&ecirc;n k&ecirc;nh&nbsp;VTV1&nbsp;v&agrave;o l&uacute;c 21h00 từ thứ 2 đến thứ 6 h&agrave;ng tuần tại VTV Giải tr&iacute; - VTV - VTV Go.</p></div><div class='row thongtinfilm'><div class='col-xs-12 col-sm-6 col-md-6 pr-0 pl-0'><div class='phim_anh_cover'><a href='/tag.html?tag=hương+vị+tình+thân' target='_blank'  title='Phim Hương vị tình thân phần 2'><img src='https://cms.thuongtruong.com.vn/DATA/IMAGES/2021/08/25/20210825232118-1huongvitinhthancover.jpg' alt='Phim Hương vị tình thân phần 2' /></a></div></div><div class='col-xs-12 col-sm-6 col-md-6 pr-0 pl-0'><div class='phim_gioithieu'><h2><a href='/tag.html?tag=hương+vị+tình+thân' target='_blank' title='Phim Hương vị tình thân phần 2'>Hương vị tình thân</a></h2><table class='theloaifiml'><tr><td><i class='fa fa-film' aria-hidden='true'></i>Tình cảm, gia đình</td><td><i class='fa fa-video-camera' aria-hidden='true'></i>25 phút</td></tr><tr><td colspan='2'><i class='fa fa-clock-o' aria-hidden='true'></i>19/04/2021</td></tr><tr><td colspan='2'><i class='fa fa-calendar-o' aria-hidden='true'></i>Thứ 2 đến thứ 6 trên VTV1</td></tr></table><div class='tomtatfim'>Hương vị tình thân kể về Phương Nam, cuộc sống đảo lộn khi Nam phát hiện ra cô chỉ là con nuôi trong gia đình mình. Những biến cố liên tiếp ập tới. Giữa lúc đó, ông Sinh - cha ruột của Nam xuất hiện, lặng thầm bảo vệ con gái nhỏ. Nam luôn tin rằng cô sẽ tìm được một gia đình thực sự, và đến khi Hoàng Long xuất hiện, hạnh phúc tưởng đã mỉm cười với Nam. Nhưng khi đó, bí mật về ông Sinh được hé lộ khiến Nam sụp đổ. Những mâu thuẫn và ân oán lắt léo buộc Nam đứng trước hai lựa chọn: gia đình mà cô vừa gây dựng hay người cha tù tội vẫn lặng thầm bảo vệ cô.</div><table class='theloaifiml'><tr><td style='width:74px;'>Đạo diễn</td><td>Nguyễn Danh Dũng</td></tr><tr><td>Diễn viên</td><td>Phương Oanh, Mạnh Trường, Thu Quỳnh</td></tr></table></div></div></div>");
     });
     $(".phim11thang5ngay").click(function () {
         $('#<%=txtTags.ClientId%>').tagsinput('removeAll');
@@ -985,7 +1059,7 @@
         var timezzz = day + "/" + month;
         $('#<%=txtTags.ClientId%>').tagsinput('add', '11 tháng 5 ngày,review,phim truyền hình,vtv3,giải trí,phim việt nam,link xem trực tiếp');
         var editor = CKEDITOR.instances.<%=teContent.ClientID%>; //get a reference to the editor
-        editor.insertHtml("<div style='background: #eee;border-top: 2px solid #009cd7;padding: 15px 20px 5px;'><p><a href='/tag.html?tag=11+tháng+5+ngày'>Lịch chiếu bộ phim 11 th&aacute;ng 5 ng&agrave;y</a></p><p>Phim 11 th&aacute;ng 5 ng&agrave;y được ph&aacute;t trực tiếp tr&ecirc;n k&ecirc;nh VTV3 tại c&aacute;c ứng dụng VTV Go - VTV - VTV Giải tr&iacute; v&agrave;o l&uacute;c 21h30 các ng&agrave;y thứ 2,3,4.</p><p><a href='/tag.html?tag=11+tháng+5+ngày'>Link xem trực tiếp phim 11 th&aacute;ng 5 ng&agrave;y</a></p><p>Kh&aacute;n giả c&oacute; thể thể đ&oacute;n xem phim 11 th&aacute;ng 5 ng&agrave;y tr&ecirc;n VTV3 trực tiếp ng&agrave;y 28/7/2021 tr&ecirc;n c&aacute;c link dưới đ&acirc;y:</p><p>VTV Giải tr&iacute;: https://www.vtvgiaitri.vn/xem-tivi-truc-tuyen/vtv3</p><p>VTV: https://vtv.vn/truyen-hinh-truc-tuyen/vtv3.htm</p><p>VTV Go: https://vtvgo.vn/xem-truc-tuyen-kenh-vtv3-3.html</p><p>Link xem phim 11 th&aacute;ng 5 ng&agrave;y Full HD</p><p>Để xem to&agrave;n bộ c&aacute;c tập 11 th&aacute;ng 5 ng&agrave;y full hd, qu&yacute; độc gi&aacute; c&oacute; thể truy cập tại: https://www.vtvgiaitri.vn/title/11-thang-5-ngay</p></div><div style='background-color: #fef5c4;border:solid 1px #fbe4a2; margin:10px;padding:4px 10px; font-size:0.9em;'><p>Bộ <a href='/tag.html?tag=11+tháng+5+ngày'>phim 11 th&aacute;ng 5 ng&agrave;y</a>&nbsp;xoay quanh h&agrave;nh tr&igrave;nh của Nhi c&ugrave;ng những người bạn trong x&oacute;m trọ, lu&ocirc;n trẻ trung, s&ocirc;i nổi, t&iacute;ch cực d&ugrave; vẫn đang tự vật lộn với những &quot;non nớt&quot; của ch&iacute;nh m&igrave;nh bất kể tuổi t&aacute;c. Cuối c&ugrave;ng Nhi c&ugrave;ng những người bạn nhận ra rằng tuổi t&aacute;c kh&ocirc;ng đảm bảo độ trưởng th&agrave;nh m&agrave; trưởng th&agrave;nh l&agrave; khi ta sống v&igrave; người kh&aacute;c.</p><p>Bộ phim sẽ được ph&aacute;t s&oacute;ng trực tiếp tr&ecirc;n k&ecirc;nh&nbsp;VTV3&nbsp;v&agrave;o l&uacute;c 21h30 thứ 2,3,4 tại VTV Go - VTV - VTV Giải tr&iacute; từ ng&agrave;y 28/7/2021</p></div><p>11 tháng 5 ngày phát sóng lúc mấy giờ, chiếu trên kênh nào? Lịch phát sóng và link xem trực tiếp phim 11 tháng 5 ngày trên VTV3, VTV Go, VTV Giải trí.</p><div class='row thongtinfilm'> <div class='col-xs-12 col-sm-6 col-md-6 pr-0 pl-0'> <div class='phim_anh_cover'> <a href='/tag.html?tag=11+tháng+5+ngày' target='_blank' title='Phim 11 tháng 5 ngày'> <img src='https://cms.thuongtruong.com.vn/DATA/IMAGES/2021/08/25/20210825233535-111thang5ngay.jpg' alt='Phim 11 tháng 5 ngày'/></a> </div></div><div class='col-xs-12 col-sm-6 col-md-6 pr-0 pl-0'> <div class='phim_gioithieu'> <h2><a href='/tag.html?tag=11+tháng+5+ngày' target='_blank' title='Phim 11 tháng 5 ngày'>11 tháng 5 ngày</a></h2> <table class='theloaifiml'> <tr> <td><i class='fa fa-film' aria-hidden='true'></i>Tâm lý, Tình cảm</td><td><i class='fa fa-video-camera' aria-hidden='true'></i>60 phút</td></tr><tr> <td colspan='2'><i class='fa fa-clock-o' aria-hidden='true'></i>28/07/2021</td></tr><tr> <td colspan='2'><i class='fa fa-calendar-o' aria-hidden='true'></i>Thứ 2 đến thứ 4 trên VTV3</td></tr></table> <div class='tomtatfim'> 11 tháng 5 ngày là một bộ phim có đề tài về tuổi trẻ, là hành trình trưởng thành của nữ chính khoảng từ 25-26 tuổi, gặp rất nhiều vấn đề của tuổi trẻ. Câu chuyện phim sẽ xoay quanh khu xóm trọ mà cô nàng tiểu thư tên Tuệ Nhi (Khả Ngân) với những người bạn chưa từng quen biết ở chung. Nhiều tình huống dở khóc dở cười nảy sinh, thậm chí là có cả những lần 'đối đầu' giữa Tuệ Nhi cùng với những người ở cùng xóm. </div><table class='theloaifiml'> <tr> <td style='width:74px;'>Đạo diễn</td><td> Nguyễn Đức Hiếu </td></tr><tr> <td>Diễn viên</td><td> Vân Dung, Quang Thắng, Thanh Sơn, Khả Ngân, Tuấn Tú, Trung 'ruồi' </td></tr></table> </div></div></div>");
+        editor.insertHtml("<div style='background: #eee;border-top: 2px solid #009cd7;padding: 15px 20px 5px;'><p><a href='/tag.html?tag=11+tháng+5+ngày'>Lịch chiếu bộ phim 11 th&aacute;ng 5 ng&agrave;y</a></p><p>Phim 11 th&aacute;ng 5 ng&agrave;y được ph&aacute;t trực tiếp tr&ecirc;n k&ecirc;nh VTV3 tại c&aacute;c ứng dụng VTV Go - VTV - VTV Giải tr&iacute; v&agrave;o l&uacute;c 21h30 các ng&agrave;y thứ 2,3,4.</p><p><a href='/tag.html?tag=11+tháng+5+ngày'>Link xem trực tiếp phim 11 th&aacute;ng 5 ng&agrave;y</a></p><p>Kh&aacute;n giả c&oacute; thể thể đ&oacute;n xem phim 11 th&aacute;ng 5 ng&agrave;y tr&ecirc;n VTV3 trực tiếp ng&agrave;y 28/7/2021 tr&ecirc;n c&aacute;c link dưới đ&ây:</p><p>VTV Giải tr&iacute;: https://www.vtvgiaitri.vn/xem-tivi-truc-tuyen/vtv3</p><p>VTV: https://vtv.vn/truyen-hinh-truc-tuyen/vtv3.htm</p><p>VTV Go: https://vtvgo.vn/xem-truc-tuyen-kenh-vtv3-3.html</p><p>Link xem phim 11 th&aacute;ng 5 ng&agrave;y Full HD</p><p>Để xem to&agrave;n bộ c&aacute;c tập 11 th&aacute;ng 5 ng&agrave;y full hd, qu&yacute; độc gi&aacute; c&oacute; thể truy cập tại: https://www.vtvgiaitri.vn/title/11-thang-5-ngay</p></div><div style='background-color: #fef5c4;border:solid 1px #fbe4a2; margin:10px;padding:4px 10px; font-size:0.9em;'><p>Bộ <a href='/tag.html?tag=11+tháng+5+ngày'>phim 11 th&aacute;ng 5 ng&agrave;y</a>&nbsp;xoay quanh h&agrave;nh tr&igrave;nh của Nhi c&ugrave;ng những người bạn trong x&oacute;m trọ, lu&ocirc;n trẻ trung, s&ocirc;i nổi, t&iacute;ch cực d&ugrave; vẫn đang tự vật lộn với những &quot;non nớt&quot; của ch&iacute;nh m&igrave;nh bất kể tuổi t&aacute;c. Cuối c&ugrave;ng Nhi c&ugrave;ng những người bạn nhận ra rằng tuổi t&aacute;c kh&ocirc;ng đảm bảo độ trưởng th&agrave;nh m&agrave; trưởng th&agrave;nh l&agrave; khi ta sống v&igrave; người kh&aacute;c.</p><p>Bộ phim sẽ được ph&aacute;t s&oacute;ng trực tiếp tr&ecirc;n k&ecirc;nh&nbsp;VTV3&nbsp;v&agrave;o l&uacute;c 21h30 thứ 2,3,4 tại VTV Go - VTV - VTV Giải tr&iacute; từ ng&agrave;y 28/7/2021</p></div><p>11 tháng 5 ngày phát sóng lúc mấy giờ, chiếu trên kênh nào? Lịch phát sóng và link xem trực tiếp phim 11 tháng 5 ngày trên VTV3, VTV Go, VTV Giải trí.</p><div class='row thongtinfilm'> <div class='col-xs-12 col-sm-6 col-md-6 pr-0 pl-0'> <div class='phim_anh_cover'> <a href='/tag.html?tag=11+tháng+5+ngày' target='_blank' title='Phim 11 tháng 5 ngày'> <img src='https://cms.thuongtruong.com.vn/DATA/IMAGES/2021/08/25/20210825233535-111thang5ngay.jpg' alt='Phim 11 tháng 5 ngày'/></a> </div></div><div class='col-xs-12 col-sm-6 col-md-6 pr-0 pl-0'> <div class='phim_gioithieu'> <h2><a href='/tag.html?tag=11+tháng+5+ngày' target='_blank' title='Phim 11 tháng 5 ngày'>11 tháng 5 ngày</a></h2> <table class='theloaifiml'> <tr> <td><i class='fa fa-film' aria-hidden='true'></i>Tâm lý, Tình cảm</td><td><i class='fa fa-video-camera' aria-hidden='true'></i>60 phút</td></tr><tr> <td colspan='2'><i class='fa fa-clock-o' aria-hidden='true'></i>28/07/2021</td></tr><tr> <td colspan='2'><i class='fa fa-calendar-o' aria-hidden='true'></i>Thứ 2 đến thứ 4 trên VTV3</td></tr></table> <div class='tomtatfim'> 11 tháng 5 ngày là một bộ phim có đề tài về tuổi trẻ, là hành trình trưởng thành của nữ chính khoảng từ 25-26 tuổi, gặp rất nhiều vấn đề của tuổi trẻ. Câu chuyện phim sẽ xoay quanh khu xóm trọ mà cô nàng tiểu thư tên Tuệ Nhi (Khả Ngân) với những người bạn chưa từng quen biết ở chung. Nhiều tình huống dở khóc dở cười nảy sinh, thậm chí là có cả những lần 'đối đầu' giữa Tuệ Nhi cùng với những người ở cùng xóm. </div><table class='theloaifiml'> <tr> <td style='width:74px;'>Đạo diễn</td><td> Nguyễn Đức Hiếu </td></tr><tr> <td>Diễn viên</td><td> Vân Dung, Quang Thắng, Thanh Sơn, Khả Ngân, Tuấn Tú, Trung 'ruồi' </td></tr></table> </div></div></div>");
     });
     $(".chuyencongiap").click(function () {
         var editor = CKEDITOR.instances.<%=teContent.ClientID%>; //get a reference to the editor
@@ -1191,6 +1265,7 @@
     var arrdongtg = document.getElementById('<%=hdf_dongtg.ClientID %>').value;
     var luuy = '';
     var links = document.getElementById('<%=hdf_Related.ClientID %>').value;
+    var Lhdf_Schools = document.getElementById('<%=hdf_Schools.ClientID %>').value;
     var anhdd = document.getElementById('<%=txtImagePath.ClientID %>').value;
     var imgDD = '';
     var mediaList = '';
@@ -1243,6 +1318,7 @@
         mediaList = Base64.encode($('#<%=hdf_list_files.ClientID %>').val());
         imgList = Base64.encode($('#<%=hdf_IMG_files.ClientID %>').val());
         links = Base64.encode($('#<%=hdf_Related.ClientID %>').val());
+        Lhdf_Schools = Base64.encode($('#<%=hdf_Schools.ClientID %>').val());
 
         chkconfighotslide = (document.getElementById('<%=chkconfighotslide.ClientID %>')) ? document.getElementById('<%=chkconfighotslide.ClientID %>').checked : false;
         chkconfigtinnong = (document.getElementById('<%=chkHotCat.ClientID %>')) ? document.getElementById('<%=chkconfigtinnong.ClientID %>').checked : false;
@@ -1274,7 +1350,7 @@
                 FetchData();
                 data = Base64.encode(elEditor);
                 //console.log(elEditor);
-                AutoSave(sID + "~!@|" + title + "~!@|" + img + "~!@|" + bHotCat + "~!@|" + bHotSite + "~!@|" + category + "~!@|" + subcategory + "~!@|" + summary + "~!@|" + he + "~!@|" + data + "~!@|" + nguontin + "~!@|" + arrdongtg + "~!@|" + luuy + "~!@|" + links + "~!@|" + anhdd + "~!@|" + mediaList + "~!@|" + imgList + "~!@|" + bisVideo + "~!@|" + bisPhoto + "~!@|" + bisPR + "~!@|" + bisShowBaiMoi + "~!@|" + bisAMP + "~!@|" + bisHienQuangCao + "~!@|" + bisAnNoiDung + "~!@|" + bisAnLink + "~!@|" + keyword + "~!@|" + butdanh + "~!@|" + SourceText + "~!@|" + chkconfighotslide + "~!@|" + chkconfigtinnong + "~!@|" + chkconfigxuhuongdoc + "~!@|" + txtTags + "~!@|" + txtPublishedDate);
+                AutoSave(sID + "~!@|" + title + "~!@|" + img + "~!@|" + bHotCat + "~!@|" + bHotSite + "~!@|" + category + "~!@|" + subcategory + "~!@|" + summary + "~!@|" + he + "~!@|" + data + "~!@|" + nguontin + "~!@|" + arrdongtg + "~!@|" + luuy + "~!@|" + links + "~!@|" + Lhdf_Schools + "~!@|" + anhdd + "~!@|" + mediaList + "~!@|" + imgList + "~!@|" + bisVideo + "~!@|" + bisPhoto + "~!@|" + bisPR + "~!@|" + bisShowBaiMoi + "~!@|" + bisAMP + "~!@|" + bisHienQuangCao + "~!@|" + bisAnNoiDung + "~!@|" + bisAnLink + "~!@|" + keyword + "~!@|" + butdanh + "~!@|" + SourceText + "~!@|" + chkconfighotslide + "~!@|" + chkconfigtinnong + "~!@|" + chkconfigxuhuongdoc + "~!@|" + txtTags + "~!@|" + txtPublishedDate);
             }
         }
     }
@@ -1291,7 +1367,7 @@
         if (Page_ClientValidate("InputValidate")) {
             FetchData();
             data = Base64.encode(elEditor);
-            AutoSave(sID + "~!@|" + title + "~!@|" + img + "~!@|" + bHotCat + "~!@|" + bHotSite + "~!@|" + category + "~!@|" + subcategory + "~!@|" + summary + "~!@|" + he + "~!@|" + data + "~!@|" + nguontin + "~!@|" + arrdongtg + "~!@|" + luuy + "~!@|" + links + "~!@|" + anhdd + "~!@|" + mediaList + "~!@|" + imgList + "~!@|" + bisVideo + "~!@|" + bisPhoto + "~!@|" + bisPR + "~!@|" + bisShowBaiMoi + "~!@|" + bisAMP + "~!@|" + bisHienQuangCao + "~!@|" + bisAnNoiDung + "~!@|" + bisAnLink + "~!@|" + keyword + "~!@|" + butdanh + "~!@|" + SourceText + "~!@|" + chkconfighotslide + "~!@|" + chkconfigtinnong + "~!@|" + chkconfigxuhuongdoc + "~!@|" + txtTags + "~!@|" + txtPublishedDate);
+            AutoSave(sID + "~!@|" + title + "~!@|" + img + "~!@|" + bHotCat + "~!@|" + bHotSite + "~!@|" + category + "~!@|" + subcategory + "~!@|" + summary + "~!@|" + he + "~!@|" + data + "~!@|" + nguontin + "~!@|" + arrdongtg + "~!@|" + luuy + "~!@|" + links + "~!@|" + Lhdf_Schools + "~!@|" + anhdd + "~!@|" + mediaList + "~!@|" + imgList + "~!@|" + bisVideo + "~!@|" + bisPhoto + "~!@|" + bisPR + "~!@|" + bisShowBaiMoi + "~!@|" + bisAMP + "~!@|" + bisHienQuangCao + "~!@|" + bisAnNoiDung + "~!@|" + bisAnLink + "~!@|" + keyword + "~!@|" + butdanh + "~!@|" + SourceText + "~!@|" + chkconfighotslide + "~!@|" + chkconfigtinnong + "~!@|" + chkconfigxuhuongdoc + "~!@|" + txtTags + "~!@|" + txtPublishedDate);
         }
     }
     //Update all included media
@@ -1391,185 +1467,52 @@
     }--%>
 </script>
 <script type="text/javascript">
-    function OpenDialog() {
-        $("#dialog-modal").dialog({
-            width: 435,
-            height: 180,
-            modal: false,
-            position: { my: "top", at: "top", of: window }
-        });
-        $("#dialog-modal").parent().appendTo($("form:first"));
-
+    /* ========== TRƯỜNG LIÊN QUAN ========== */
+    function popupChonTruong(w, h) {
+        var left = (screen.width / 2) - (w / 2);
+        return window.open("/DesktopModules/NVCMS.TinTuc/Manager/controls/_chontruong.aspx", "Chon truong lien quan", 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=yes, resizable=no, copyhistory=no, width=' + w + ', height=' + h + ', top=20, left=' + left);
     }
-    function CloseDialog() {
-        //$("#dialog-modal").dialog("close");
-        $("#dialog-modal").dialog("destroy"); $("form:first").remove('#dialog-modal');
-    }
-    function OpenDALETDialog() {
-        $("#dialog-dalet").dialog({
-            width: 700,
-            height: 470,
-            modal: false,
-            position: { my: "top", at: "top", of: window }
-        });
-        $("#dialog-dalet").parent().appendTo($("form:first"));
-
-    }
-    function CloseDALETDialog() {
-        $("#dialog-dalet").dialog("close");
-        //$("#dialog-dalet").dialog("destroy"); $("form:first").remove('#dialog-dalet');
-    }
-    function OpenMSGDialog() {
-        $("#dialog-msg").dialog({
-            title: "Thông tin",
-            width: 700,
-            height: 250,
-            modal: false,
-            position: { my: "top", at: "top", of: window }
-        });
-        $("#dialog-msg").parent().appendTo($("form:first"));
-
-    }
-    function CloseMSGDialog() {
-        //$("#dialog-modal").dialog("close");
-        $("#dialog-msg").dialog("destroy"); $("form:first").remove('#dialog-msg');
-    }
-</script>
-<script language="javascript" type="text/javascript">
-    function checkvalidatexuatban() {
-        var ngayxuatban = document.getElementById('<%=txtPublishedDate.ClientID%>').value;
-        if (ngayxuatban == "" || ngayxuatban == '____/__/__ __:__') {
-            alert("Bạn chưa chọn ngày xuất bản!");
-            document.getElementById('<%=txtPublishedDate.ClientID%>').focus();
-            return false;
+    function HandleSchoolResult(id, name, logo) {
+        id = String(id);
+        logo = logo || '';
+        var hidSchool = document.getElementById('<%= hdf_Schools.ClientID %>');
+        var cur = hidSchool.value;
+        var arr = cur ? cur.split(',') : [];
+        // Tránh trùng
+        for (var i = 0; i < arr.length; i++) {
+            if (arr[i] === id) return;
         }
-        var txtCredit = document.getElementById('<%=txtCredit.ClientID%>').value;
-        if (txtCredit == "" || txtCredit == "0") {
-            alert("Bạn chưa chấm nhuận bút!");
-            document.getElementById('<%=txtCredit.ClientID%>').focus();
-            return false;
-        }
+        arr.push(id);
+        hidSchool.value = arr.join(',');
 
+        var safeName = $('<div/>').text(name).html();
+        var safeLogo = $('<div/>').text(logo).html();
+        // Render dòng mới vào danh sách
+        var li = '<li id="idtruonglqzzz' + id + '">'
+            + '<img class="truong-logo" src="' + safeLogo + '" alt="' + safeName + '" style="width:40px;height:26px;object-fit:cover;margin-right:8px;border-radius:3px;" />'
+            + '<span class="truong-name"><strong>' + safeName + '</strong></span>'
+            + ' <a class="delTruong" onclick="javascript:delTruong(this,' + id + ');" title="Xóa trường" style="cursor:pointer;margin-left:8px;"><em class="icon ni ni-trash-fill"></em></a>'
+            + '</li>';
+        $('#divTruongRelated ul').append(li);
     }
-    function checkvalidatenhuan() {
-        var ddlnhuanbuttype2 = document.getElementById('<%=ddlnhuanbuttype.ClientID%>').value;
-        if (ddlnhuanbuttype2 == 0) {
-            alert("Bạn chưa chọn thể loại bài!");
-            document.getElementById('<%=ddlnhuanbuttype.ClientID%>').focus();
-            return false;
-        }
-        var ddlnhuanbutuser2 = document.getElementById('<%=ddlnhuanbutuser.ClientID%>').value;
-        if (ddlnhuanbutuser2 == -1) {
-            alert("Bạn chưa chọn Tác giả!");
-            document.getElementById('<%=ddlnhuanbutuser.ClientID%>').focus();
-            return false;
-        }
-        $('#<%=hdf_nhuanbut.ClientID %>').val($('#<%=txtCredit.ClientID%>').val());
-    }
-    function Tongtiennhuanbut() {
-        var sum = 0;
-        $(".tiennhuanbutnha").each(function () {
-            //add only if the value is number
-            var res = this.value.replace(".", "");
-            if (!isNaN(res) && this.value.length != 0 && (!Number.isInteger(res))) {
-                sum += parseFloat(res);
+
+    function delTruong(sender, id) {
+        if (confirm('Bạn có chắc chắn muốn xóa trường này?')) {
+            var hidSchool = document.getElementById('<%= hdf_Schools.ClientID %>');
+            var cur = hidSchool.value;
+            var arr = cur ? cur.split(',') : [];
+            var result = [];
+            for (var i = 0; i < arr.length; i++) {
+                if (arr[i] && arr[i] != String(id)) {
+                    result.push(arr[i]);
+                }
             }
-        });
-        $("#<%=txtCredit.ClientID%>").val(sum);
-    }
-    $(function () {
-        var theTable = $('table.tablesorter');
-
-        $("#filter").keyup(function () {
-            //$.uiTableFilter(theTable, this.value);
-            refreshFiles();
-        });
-
-        //        $('#filter-form').submit(function () {
-        //            theTable.find("tbody > tr:visible > td:eq(1)").mousedown();
-        //            return false;
-        //        }).focus(); //Give focus to input field
-    });
-    var totalPage = 0;
-    var curpage = 1;
-    function onFetchSuccess(response, ctx) {
-        var xmlDoc = $.parseXML(response);
-        var xml = $(xmlDoc);
-        var tbfiles = xml.find("tblFiles");
-        var row = $(".tablesorter tr.TRgrid:last-child").clone(true);
-        $(".tablesorter tr.TRgrid:not(:last-child)").remove();
-        $.each(tbfiles, function () {
-            var file = $(this);
-            totalPage = $(this).find("TotalPage").text();
-
-            $("td", row).eq(0).html($(this).find("FileName").text());
-
-            $("td", row).eq(1).html($(this).find("DateModified").text());
-            $("td", row).eq(2).html($(this).find("FileSize").text());
-
-            row.addClass("TRgrid-Hover");
-            $(".tablesorter tr.TRgrid:last-child").before(row);
-
-            row = $(".tablesorter tr.TRgrid:last-child").clone(true);
-        });
-        $("#LoadingImage").hide();
-        //Pager
-        $('#lcurPage').html(curpage);
-        $('#ltotalPage').html(totalPage);
-
-        if ($('#sltType :selected').val() == 3) {
-            $('a[title="IMAGES"]').on('click', function () {
-                window.open($(this).attr("class") + "/" + $(this).attr("href"));
-                return false;
-            });
+            hidSchool.value = result.join(',');
+            $('#idtruonglqzzz' + id).remove();
         }
-        else {
-            $('a[title="Play"]').on('click', function () {
-                ViewMedia($(this).attr("class") + "/" + getDecodeString($(this).attr("href").match(/[^\/\\]+$/)));
-                return false;
-            });
-        }
-        $('a[title="Download"]').on('click', function () {
-            window.open($(this).attr("class") + "/" + getEncodedString($(this).attr("href").match(/[^\/\\]+$/)));
-            return false;
-        });
-    }
-    function onFetchError(result, ctx) { $("#LoadingImage").hide(); }
-
-    function refreshFiles() {
-        formModified = false;
-        $("#LoadingImage").show();
-        curpage = 1;
-        FetchFiles(curpage + "|" + $('#<%=drlSource.ClientID %> :selected').val() + "|" + $('#sltType :selected').val() + "|" + $('#filter').val());
-    }
-    function getPrevFiles() {
-        formModified = false;
-        if (curpage > 1) {
-            $("#LoadingImage").show();
-            curpage = curpage - 1;
-            FetchFiles(curpage + "|" + $('#<%=drlSource.ClientID %> :selected').val() + "|" + $('#sltType :selected').val() + "|" + $('#filter').val());
-        }
-    }
-    function getNextFiles() {
-        formModified = false;
-        if (curpage < totalPage) {
-            $("#LoadingImage").show();
-            curpage += 1;
-            FetchFiles(curpage + "|" + $('#<%=drlSource.ClientID %> :selected').val() + "|" + $('#sltType :selected').val() + "|" + $('#filter').val());
-        }
-    }
-    // Click 2 play
-    var storagePath = '<%= StorageFolder %>';
-    $('a[title="Play"]').on('click', function () {
-        ViewMedia(storagePath + "/" + getDecodeString($(this).attr("href").match(/[^\/\\]+$/)));
         return false;
-    });
-    $('a[title="Download"]').on('click', function () {
-        window.open(storagePath + "/" + getEncodedString($(this).attr("href").match(/[^\/\\]+$/)));
-        return false;
-    });
-</script>
-<script type="text/javascript">
+    }
+/* ========== TIN LIÊN QUAN ========== */
     function popupwindow(w, h) {
         var left = (screen.width / 2) - (w / 2);
         var top = (screen.height / 2) - (h / 2);
