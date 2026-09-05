@@ -25,7 +25,7 @@
                         <ul data-role="listview" data-inset="true" data-theme="d" id="sortable" class="to_do">
                             <asp:Repeater runat="server" ID="rptSettings">
                                 <ItemTemplate>
-                                    <li class="tinlienquanli" title="Xóa" data-id="<%# Eval("NewId")%>"><strong><%# Eval("Title")%> <%# Eval("NewId")%></strong><span class="removeSelected"><i class="fa fa-close "></i></span>
+                                    <li class="tinlienquanli" title="Xóa" data-id="<%# Eval("NewId")%>"><strong><%# Eval("Title")%> <%# Eval("NewId")%></strong><span class="removeSelected"><em class="icon ni ni-trash-alt"></em></span>
                                     </li>
                                 </ItemTemplate>
                             </asp:Repeater>
