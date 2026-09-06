@@ -58,6 +58,7 @@ Namespace DesktopModules.TinTuc.Configurations
             Next
             BindSettings()
             ClientAPI.RegisterStartUpScript(Me.Page, "UpdateSuccess", "<script>UpdateSuccess('Cập nhật cấu hình tin bài thành công!');</script>")
+            WebsiteClearCache.ClearCapstoneViewCache()
         End Sub
         Protected Sub lbtUpdate_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles lbtUpdate.Click
             Try
