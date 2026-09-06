@@ -52,7 +52,7 @@ Namespace NVCMS.Modules.TinTuc
                 If Not ViewState.Item("PageSize") Is Nothing Then
                     Return CInt(ViewState.Item("PageSize"))
                 Else
-                    ViewState.Add("PageSize", "5")
+                    ViewState.Add("PageSize", "50")
                     Return 5
                 End If
             End Get
@@ -229,6 +229,7 @@ Namespace NVCMS.Modules.TinTuc
         Private Sub BinddrgDataViewer()
             Try
                 Dim ctl As New NV_NewsController
+
                 KeySearch = txtTitle.Value
                 If IsDate(txtStartdate.Value) Then
                     Datefrom = txtStartdate.Value
@@ -239,10 +240,15 @@ Namespace NVCMS.Modules.TinTuc
                 CategoryId = ddlCategory.SelectedValue
                 CreatedUser = ddlUserPost.SelectedValue
 
+                TotalRecord = ctl.FindNews_Count(Datefrom, DateTo, KeySearch, CategoryId, False, PortalId, NewsStatus.DaXuatBan, CreatedUser, "")
+                ctlPagingControl.TotalRecords = TotalRecord
+                ctlPagingControl.PageSize = PageSize
+                ctlPagingControl.CurrentPage = CurrentPage
+                ctlPagingControl.TabID = TabId
+                ctlPagingControl.QuerystringParams = String.Empty
+
                 rpttinlienquan.DataSource = ctl.FindByPhongBanStatus_Index(Datefrom, DateTo, KeySearch, CategoryId, 0, NewsStatus.DaXuatBan, CreatedUser, "", CurrentPage, PageSize)
                 rpttinlienquan.DataBind()
-
-                'Me.lbTotalNewsCount.Text = TotalRecord.ToString()
             Catch ex As Exception
                 ProcessModuleLoadException(Me, ex)
             End Try

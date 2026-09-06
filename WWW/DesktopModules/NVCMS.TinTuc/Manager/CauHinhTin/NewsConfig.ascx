@@ -19,7 +19,7 @@
                         <asp:ListItem Value="3" Text="Xu Hướng Đọc"></asp:ListItem>
                     </asp:DropDownList>
                     <div id="select" runat="server">
-                        <a class="btn btn-primary" data-toggle="modal" data-target=".bs-example-modal-lg">Chọn Tin</a>
+                        <a class="btn btn-primary" href="javascript:void(0);" onclick="openTinLienQuanDrawer();">Chọn Tin</a>
                     </div>
                     <div class="list-lq col-sm-12" id="divrelated">
                         <ul data-role="listview" data-inset="true" data-theme="d" id="sortable" class="to_do">
@@ -51,96 +51,155 @@
         </div>
 
         <%--== Chèn tin liên quan vào bài ==--%>
-        <div id="boxtinlienquan" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">
-                            <span aria-hidden="true">×</span>
-                        </button>
-                        <h4 class="modal-title" id="myModalLabel">Chọn tin liên quan</h4>
-                    </div>
-                    <div class="modal-body">
-                        <uc1:tinlienquan runat="server" ID="tinlienquan" />
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
-                    </div>
+<style type="text/css">
+    .tlq-drawer-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.35);
+        z-index: 1050;
+        display: none;
+    }
 
-                </div>
-            </div>
-        </div>
-        <script type="text/javascript">
-            $(document).ready(function () {
-                $("#sortable").sortable({
-                    items: "li:not(.ui-li-divider)"
-                });
-                $("#sortable").sortable();
-                $("#sortable").disableSelection();
-                $("#sortable").bind("sortstop", function (event, ui) {
-                    $('#sortable').listview('refresh');
-                });
-            });
-            var arrList = [];
-            $(document).ready(function () {
-                $("body").on("click", '.themvao', function () {
-                    var id = $(this).attr("data-id");
-                    var title = $(this).attr("data-title");
-                    var image = $(this).attr("data-image");
-                    var summary = $(this).attr("data-sumary");
-                    var cat = $(this).attr("data-catid");
-                    var link = $(this).attr("data-link");
+    .tlq-drawer {
+        position: fixed;
+        top: 0;
+        right: 0;
+        height: 100vh;
+        width: min(920px, 92vw);
+        background: #fff;
+        box-shadow: -6px 0 24px rgba(0, 0, 0, 0.15);
+        z-index: 1060;
+        transform: translateX(100%);
+        transition: transform .25s ease;
+        display: flex;
+        flex-direction: column;
+    }
 
-                    var checkExistID = arrList.findIndex(x=>x.id == id);
-                    if (checkExistID == -1) {
-                        arrList.push({ id: id, title: title, image: image, summary: summary, cat: cat, link: link });
-                        $('ul.to_do').append('<li class="tinlienquanli" title="Xóa" data-id="' + id + '"><a href="javascript:void(0);"><strong>' + title + '</strong></a><span class="removeSelected"><i class="fa fa-close "></i></span></li>');
-                    }
-                    //remove
-                    $('.removeSelected').off();
-                    $('.removeSelected').on('click', function () {
-                        var _thisLI = $(this).closest("li");
-                        var _thisID = $(_thisLI).attr("data-id");
-                        var checkExistID = arrList.findIndex(x=>x.id == _thisID);
-                        if (checkExistID > -1) {
-                            arrList.splice(checkExistID, 1);
-                        }
-                        $(_thisLI).remove();
-                    });
-                });
-                //Mr Dòi phệt thằng này ra ngoài
-                //Xử ly đống tin liên quan đã có 
-                //remove
-                $('.removeSelected').off();
-                $('.removeSelected').on('click', function () {
-                    var _thisLI = $(this).closest("li");
+    .tlq-drawer.open {
+        transform: translateX(0);
+    }
 
-                    var _thisID = $(_thisLI).attr("data-id");
-                    console.log(_thisID);
-                    var checkExistID = arrList.findIndex(x=>x.id == _thisID);
-                    if (checkExistID > -1) {
-                        arrList.splice(checkExistID, 1);
-                    }
-                    $(_thisLI).remove();
-                });
+    .tlq-drawer-header,
+    .tlq-drawer-footer {
+        padding: 10px 14px;
+        border-bottom: 1px solid #eef0f2;
+    }
 
-            });
-            function updateFormValues() {
-                $('#<%= hdf_Value.ClientID %>').val("");
-                $("#sortable li").each(function (index) {
-                    addValue('<%= hdf_Value.ClientID %>', $(this).attr("data-id"));
+    .tlq-drawer-footer {
+        border-top: 1px solid #eef0f2;
+        border-bottom: 0;
+        text-align: right;
+    }
+
+    .tlq-drawer-body {
+        padding: 10px 14px;
+        overflow: auto;
+        flex: 1;
+    }
+
+    .tlq-drawer-title {
+        margin: 0;
+        font-size: 16px;
+        font-weight: 600;
+    }
+</style>
+
+<div id="boxtinlienquanOverlay" class="tlq-drawer-overlay" onclick="closeTinLienQuanDrawer();"></div>
+<div id="boxtinlienquan" class="tlq-drawer" role="dialog" aria-hidden="true" aria-labelledby="myModalLabel">
+    <div class="tlq-drawer-header d-flex align-items-center justify-content-between">
+        <h4 class="tlq-drawer-title" id="myModalLabel">Chọn tin liên quan</h4>
+        <button type="button" class="close" onclick="closeTinLienQuanDrawer();" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="tlq-drawer-body">
+        <uc1:tinlienquan runat="server" ID="tinlienquan" />
+    </div>
+    <div class="tlq-drawer-footer">
+        <button type="button" class="btn btn-default" onclick="closeTinLienQuanDrawer();">Đóng</button>
+    </div>
+</div>
+<script type="text/javascript">
+    function openTinLienQuanDrawer() {
+        $('#boxtinlienquanOverlay').show();
+        $('#boxtinlienquan').addClass('open').attr('aria-hidden', 'false');
+        $('body').css('overflow', 'hidden');
+    }
+
+    function closeTinLienQuanDrawer() {
+        $('#boxtinlienquan').removeClass('open').attr('aria-hidden', 'true');
+        $('#boxtinlienquanOverlay').hide();
+        $('body').css('overflow', '');
+    }
+
+    $(document).ready(function () {
+        $("#sortable").sortable({
+            items: "li:not(.ui-li-divider)"
         });
-        }
-        function addValue(id, value) {
-            if ($('#' + id).val().indexOf(value) == -1) {
-                if ($('#' + id).val() == '' || $('#' + id).val() == null)
-                    $('#' + id).val(value);
-                else
-                    $('#' + id).val($('#' + id).val() + ',' + value);
-            }
+        $("#sortable").sortable();
+        $("#sortable").disableSelection();
+        $("#sortable").bind("sortstop", function (event, ui) {
+            $('#sortable').listview('refresh');
+        });
+    });
+    var arrList = [];
+    $(document).ready(function () {
+        $("body").on("click", '.themvao', function () {
+            var id = $(this).attr("data-id");
+            var title = $(this).attr("data-title");
+            var image = $(this).attr("data-image");
+            var summary = $(this).attr("data-sumary");
+            var cat = $(this).attr("data-catid");
+            var link = $(this).attr("data-link");
 
-        }
-        </script>
+            var checkExistID = arrList.findIndex(x=>x.id == id);
+            if (checkExistID == -1) {
+                arrList.push({ id: id, title: title, image: image, summary: summary, cat: cat, link: link });
+                $('ul.to_do').append('<li class="tinlienquanli" title="Xóa" data-id="' + id + '"><a href="javascript:void(0);"><strong>' + title + '</strong></a><span class="removeSelected"><i class="fa fa-close "></i></span></li>');
+            }
+            //remove
+            $('.removeSelected').off();
+            $('.removeSelected').on('click', function () {
+                var _thisLI = $(this).closest("li");
+                var _thisID = $(_thisLI).attr("data-id");
+                var checkExistID = arrList.findIndex(x=>x.id == _thisID);
+                if (checkExistID > -1) {
+                    arrList.splice(checkExistID, 1);
+                }
+                $(_thisLI).remove();
+            });
+        });
+        //Mr Dòi phệt thằng này ra ngoài
+        //Xử ly đống tin liên quan đã có 
+        //remove
+        $('.removeSelected').off();
+        $('.removeSelected').on('click', function () {
+            var _thisLI = $(this).closest("li");
+
+            var _thisID = $(_thisLI).attr("data-id");
+            console.log(_thisID);
+            var checkExistID = arrList.findIndex(x=>x.id == _thisID);
+            if (checkExistID > -1) {
+                arrList.splice(checkExistID, 1);
+            }
+            $(_thisLI).remove();
+        });
+
+    });
+    function updateFormValues() {
+        $('#<%= hdf_Value.ClientID %>').val("");
+        $("#sortable li").each(function (index) {
+            addValue('<%= hdf_Value.ClientID %>', $(this).attr("data-id"));
+});
+}
+function addValue(id, value) {
+    if ($('#' + id).val().indexOf(value) == -1) {
+        if ($('#' + id).val() == '' || $('#' + id).val() == null)
+            $('#' + id).val(value);
+        else
+            $('#' + id).val($('#' + id).val() + ',' + value);
+    }
+
+}
+</script>
         <%--== Chèn tin liên quan vào bài ==--%>
 <%--    </ContentTemplate>
 </asp:UpdatePanel>

@@ -1,66 +1,92 @@
 ﻿<%@ Control Language="VB" AutoEventWireup="false" CodeFile="tinlienquan.ascx.vb" Inherits="NVCMS.Modules.TinTuc.newsedittinleinquan" %>
 <%@ Register TagPrefix="dnn" Assembly="DotNetNuke" Namespace="DotNetNuke.UI.WebControls" %>
 
-<ul class="to_do" style="display:none;">
+<style>
+    .tlq-popup-toolbar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        align-items: flex-end;
+        margin-bottom: 8px;
+    }
+
+        .tlq-popup-toolbar .tlq-field {
+            min-width: 130px;
+            margin: 0;
+        }
+
+        .tlq-popup-toolbar .tlq-field-title {
+            flex: 1 1 260px;
+        }
+
+        .tlq-popup-toolbar .tlq-field-date {
+            width: 140px;
+        }
+
+        .tlq-popup-toolbar label {
+            margin-bottom: 4px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .tlq-popup-toolbar .form-control,
+        .tlq-popup-toolbar .select2 {
+            height: 32px;
+            font-size: 12px;
+            padding: 4px 8px;
+        }
+
+    .tlq-popup-search {
+        width: 34px;
+        height: 34px;
+        padding: 0;
+        border: 0;
+        background: transparent;
+    }
+
+        .tlq-popup-search img {
+            width: 24px;
+            height: 24px;
+        }
+</style>
+
+<ul class="to_do" style="display: none;">
 </ul>
 <asp:UpdatePanel ID="tinleinquan" runat="server">
     <ContentTemplate>
-        <div class="col-md-12 ">
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label>Tiêu đề</label>
-                    <input class="form-control" id="txtTitle" runat="server" style="width: 100%;" />
-                </div>
+        <div class="tlq-popup-toolbar">
+            <div class="form-group tlq-field tlq-field-title">
+                <label>Tiêu đề</label>
+                <input class="form-control" id="txtTitle" runat="server" />
             </div>
-            <!-- /.col -->
-            <div class="col-md-2 col-sm-12">
-                <div class="form-group">
-                    <label>Chuyên mục</label>
-                    <asp:DropDownList ID="ddlCategory" runat="server" AutoPostBack="true" CssClass="form-control select2"></asp:DropDownList>
-                </div>
-                <!-- /.form-group -->
-                <!-- /.form-group -->
+
+            <div class="form-group tlq-field">
+                <label>Chuyên mục</label>
+                <asp:DropDownList ID="ddlCategory" runat="server" AutoPostBack="true" CssClass="form-control select2"></asp:DropDownList>
             </div>
-            <div class="col-md-2 col-sm-12">
-                <div class="form-group">
-                    <label>Tác giả</label>
-                    <asp:DropDownList ID="ddlUserPost" runat="server" AutoPostBack="true" CssClass="form-control select2"></asp:DropDownList>
-                </div>
-                <!-- /.form-group -->
-                <!-- /.form-group -->
+
+            <div class="form-group tlq-field">
+                <label>Tác giả</label>
+                <asp:DropDownList ID="ddlUserPost" runat="server" AutoPostBack="true" CssClass="form-control select2"></asp:DropDownList>
             </div>
-            <div class="col-md-3 col-sm-12">
-                <div class="form-group">
-                    <div class="col-md-6 pdf0">
-                        <label>Từ ngày </label>
-                        <div class="input-group date">
-                            <div class="input-group-addon">
-                                <i class="fa fa-calendar"></i>
-                            </div>
-                            <input type="text" id="txtStartdate" runat="server" class="form-control pull-right datepicker">
-                        </div>
-                    </div>
-                    <div class="col-md-5">
-                        <label>Đến ngày</label>
-                        <div class="input-group date">
-                            <div class="input-group-addon">
-                                <i class="fa fa-calendar"></i>
-                            </div>
-                            <input type="text" id="txtEndDate" runat="server" class="form-control pull-right datepicker">
-                        </div>
-                    </div>
-                </div>
-                <!-- /.form-group -->
-                <!-- /.form-group -->
+
+            <div class="form-group tlq-field tlq-field-date">
+                <label>Từ ngày</label>
+                <input type="text" id="txtStartdate" runat="server" class="form-control datepicker" />
             </div>
-            <div class="col-md-1">
+
+            <div class="form-group tlq-field tlq-field-date">
+                <label>Đến ngày</label>
+                <input type="text" id="txtEndDate" runat="server" class="form-control datepicker" />
+            </div>
+
+            <div class="form-group tlq-field" style="min-width: 34px;">
                 <label>&nbsp;</label>
-                <asp:ImageButton ID="lbtFind" runat="server" Font-Bold="true" CssClass="toolbar_btn" ImageUrl="/images/icons/magnifier32.png" ToolTip="Tìm kiếm"></asp:ImageButton>
+                <asp:ImageButton ID="lbtFind" runat="server" Font-Bold="true" CssClass="tlq-popup-search" ImageUrl="/images/icons/magnifier32.png" ToolTip="Tìm kiếm"></asp:ImageButton>
             </div>
         </div>
-        <!-- /.col -->
-        <!-- /.row -->
-        <div class="ln_solid"></div>
+
+        <div class="ln_solid" style="margin: 8px 0;"></div>
         <div class="col-md-12">
             <table id="datatable-checkboxtinlienquan" class="table table-striped table-bordered bulk_action">
                 <thead>
@@ -97,9 +123,11 @@
                 </tbody>
             </table>
         </div>
-        <div class="col-md-12"><a class="btn btn-danger" href="#!" onclick="tinlienquanxemtiep()"><span class="load-more">Xem thêm</span></a></div>
-        <div id="tinlienquanloadimage" style="display: none;" class="text-center mr-10">
-            <img src="/static/nvcms/img/load.gif" height="80px" />
+        <div class="g">
+            <ul class="pagination justify-content-center justify-content-md-start">
+                <dnn:PagingControl ID="ctlPagingControl" runat="server" EnableViewState="true" Mode="PostBack" PageLinksPerPage="50" />
+            </ul>
+            <!-- .pagination -->
         </div>
     </ContentTemplate>
     <Triggers>
@@ -122,29 +150,6 @@
     var uid = document.getElementById('<%=ddlUserPost.ClientID%>').value;
     var from = document.getElementById('<%=txtStartdate.ClientID%>').value;
     var to = document.getElementById('<%=txtEndDate.ClientID%>').value;
-    var tinlienquanclick = 1;
-    var tinlienquantotalpage = 10;
-    function tinlienquanxemtiep() {
-        if (tinlienquanclick == 0 || tinlienquanclick == tinlienquantotalpage) {
-            return false;
-        }
-        else {
-            tinlienquanclick += 1;
-            tinlienquanloaddata();
-        }
-    }
-    function tinlienquanloaddata() {
-        $('div#tinlienquanloadimage').show();
-        $.ajax({
-            url: "/DesktopModules/NVCMS.TinTuc/Manager/control/tinlienquanLoadMore.aspx?key=" + txtTitle + "&catid=" + danhmuc + "&uid=" + uid + "&from=" + from + "&to=" + to + "&trang=" + tinlienquanclick,
-            success: function (data) {
-                $('div#tinlienquanloadimage').hide();
-                $('#datatable-checkboxtinlienquan tbody').append(data);
-            }
-        });
-    }
-
-
 
 </script>
 
