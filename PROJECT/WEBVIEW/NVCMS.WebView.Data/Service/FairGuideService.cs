@@ -47,7 +47,8 @@ public class FairGuideService : IFairGuideService
             {
                 Id          = m.Id,
                 Title       = !string.IsNullOrWhiteSpace(m.Title) ? m.Title : m.FileName,
-                MediaUrl    = _rewriter.ResolveUrl(m.MediaUrl),
+                //'MediaUrl    = _rewriter.ResolveUrl(m.MediaUrl),
+                MediaUrl    = m.MediaUrl,
                 OrderNumber = m.OrderNumber
             }).ToList()
         };
