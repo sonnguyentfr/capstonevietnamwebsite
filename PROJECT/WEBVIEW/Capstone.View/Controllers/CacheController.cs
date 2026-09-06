@@ -63,7 +63,7 @@ public class CacheController : ControllerBase
             {
                 success = true,
                 message = "All memory cache entries have been cleared.",
-                clearedAtUtc = DateTime.UtcNow
+                clearedAtUtc = DateTime.Now
             });
         }
 
