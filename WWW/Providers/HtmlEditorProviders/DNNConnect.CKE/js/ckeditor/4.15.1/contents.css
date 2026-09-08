@@ -1,4 +1,4 @@
-/*
+﻿/*
 Copyright (c) 2003-2020, CKSource - Frederico Knabben. All rights reserved.
 For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
 */
@@ -218,7 +218,7 @@ a > img {
 	max-height: 1080px;
 	margin:0 auto;
 }
-/*Tin lienq uan strong b�i*/
+/*Tin lienq uan strong bài*/
 table.tinlienquantrongbai {
     background: #f7f7f7;
     border: solid 1px #cccc;
@@ -369,4 +369,224 @@ table.tinlienquantrongbaidocphai {
 
     .signartilces iframe {
         max-width: 100%;
+    }
+/* ==========================================================================
+   CSS CHO CONTAINER: .cke_editable
+   ========================================================================== */
+
+/* Thẻ bao ngoài nội dung chính */
+.cke_editable {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    color: #334155;
+    line-height: 1.7;
+    font-size: 1rem;
+    word-break: break-word;
+}
+
+    /* Các thẻ tiêu đề (Headings) */
+    .cke_editable h1 {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #0f172a;
+        margin-top: 1.5em;
+        margin-bottom: 0.75em;
+        line-height: 1.25;
+    }
+
+    .cke_editable h2 {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #1e293b;
+        margin-top: 1.5em;
+        margin-bottom: 0.75em;
+        line-height: 1.35;
+    }
+
+        .cke_editable h2::after {
+            content: '';
+            display: block;
+            width: 50px;
+            height: 3px;
+            background-color: #0284c7;
+            margin-top: 0.5rem;
+        }
+
+    .cke_editable h3 {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #334155;
+        margin-top: 1.25em;
+        margin-bottom: 0.5em;
+    }
+
+    .cke_editable h4 {
+        font-size: 1.1em;
+        font-weight: 600;
+        color: #475569;
+        margin-top: 1em;
+        margin-bottom: 0.5em;
+    }
+
+    .cke_editable h5 {
+        font-size: 1em;
+        font-weight: 600;
+        color: #475569;
+        margin-top: 1em;
+        margin-bottom: 0.5em;
+    }
+
+    .cke_editable h6 {
+        font-size: 0.875em;
+        font-weight: 600;
+        color: #64748b;
+        margin-top: 1em;
+        margin-bottom: 0.5em;
+    }
+
+    /* Văn bản & Liên kết */
+    .cke_editable p {
+        margin-top: 0;
+        margin-bottom: 1.25em;
+        line-height: 1.7;
+    }
+
+    .cke_editable strong {
+        font-weight: 600;
+        color: #0f172a;
+    }
+
+    .cke_editable em {
+        font-style: italic;
+    }
+
+    .cke_editable a {
+        color: #0284c7;
+        text-decoration: underline;
+        text-underline-offset: 2px;
+        transition: color 0.2s ease;
+    }
+
+        .cke_editable a:hover {
+            color: #0369a1;
+            text-decoration: none;
+        }
+
+    /* Danh sách (Lists) */
+    .cke_editable ul {
+        padding-left: 1.5rem;
+        margin-top: 0;
+        margin-bottom: 1.25em;
+        list-style-type: disc;
+    }
+
+    .cke_editable ol {
+        padding-left: 1.5rem;
+        margin-top: 0;
+        margin-bottom: 1.25em;
+        list-style-type: decimal;
+    }
+
+    .cke_editable li {
+        margin-bottom: 0.5em;
+    }
+
+    /* Trích dẫn (Blockquote) */
+    .cke_editable blockquote {
+        border-left: 4px solid #0284c7;
+        margin: 1.5rem 0;
+        color: #475569;
+        font-style: italic;
+        background-color: #f8fafc;
+        padding: 0.75rem 1rem;
+        border-radius: 0 0.375rem 0.375rem 0;
+    }
+
+        .cke_editable blockquote::before {
+            content: '“';
+            font-size: 2rem;
+            color: #94a3b8;
+            line-height: 0;
+            vertical-align: -0.4em;
+            margin-right: 0.25em;
+        }
+
+    /* Bảng dữ liệu (Tables) */
+    .cke_editable table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 1.5rem;
+        font-size: 0.95rem;
+    }
+
+    .cke_editable th {
+        background-color: #f1f5f9;
+        color: #1e293b;
+        font-weight: 600;
+        text-align: left;
+        padding: 0.75rem 1rem;
+        border: 1px solid #e2e8f0;
+    }
+
+    .cke_editable td {
+        padding: 0.75rem 1rem;
+        border: 1px solid #e2e8f0;
+        color: #334155;
+    }
+
+    .cke_editable tr:nth-child(even) td {
+        background-color: #f8fafc;
+    }
+
+    .cke_editable tr:hover td {
+        background-color: #f1f5f9;
+    }
+
+    /* Mã nguồn (Code & Pre) */
+    .cke_editable pre {
+        background-color: #0f172a;
+        color: #f8fafc;
+        padding: 1rem;
+        border-radius: 0.375rem;
+        overflow-x: auto;
+        margin-bottom: 1.5rem;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    }
+
+    .cke_editable code {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        background-color: #f1f5f9;
+        color: #0f172a;
+        padding: 0.2rem 0.4rem;
+        border-radius: 0.25rem;
+        font-size: 0.875em;
+    }
+
+    .cke_editable pre code {
+        background-color: transparent;
+        color: inherit;
+        padding: 0;
+        font-size: 1em;
+    }
+
+    /* Hình ảnh & Đường phân cách */
+    .cke_editable img {
+        max-width: 100%;
+        height: auto;
+        display: block;
+        margin: 1.5rem auto;
+        border-radius: 0.375rem;
+    }
+
+    .cke_editable hr {
+        border: 0;
+        height: 1px;
+        background-color: #e2e8f0;
+        margin: 2rem 0;
+    }
+
+    /* Heading Anchors */
+    .cke_editable h1:hover .nd-heading-anchor,
+    .cke_editable h2:hover .nd-heading-anchor,
+    .cke_editable h3:hover .nd-heading-anchor {
+        opacity: 1;
     }
