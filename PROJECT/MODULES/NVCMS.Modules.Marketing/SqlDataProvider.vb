@@ -349,6 +349,74 @@ Namespace NVCMS.Modules.Marketing
         '------------------------------------------'
 
 #End Region
+#Region "Marketing_Zalo_Campaign"
+
+        Public Overrides Function Marketing_Zalo_Campaign_Insert(ByVal Title As String, ByVal Description As String, ByVal Status As Integer, ByVal CreatedDate As DateTime, ByVal UserId As Integer, ByVal PortalId As Integer) As IDataReader
+            Return CType(SqlHelper.ExecuteReader(ConnectionString, "Marketing_Zalo_Campaign_Insert", Title, Description, CByte(Status), CreatedDate, UserId, PortalId), IDataReader)
+        End Function
+
+        '------------------------------------------'
+        Public Overrides Sub Marketing_Zalo_Campaign_Update(ByVal Id As Integer, ByVal Title As String, ByVal Description As String, ByVal Status As Integer, ByVal UserId As Integer, ByVal PortalId As Integer)
+            SqlHelper.ExecuteNonQuery(ConnectionString, "Marketing_Zalo_Campaign_Update", Id, Title, Description, CByte(Status), UserId, PortalId)
+        End Sub
+
+        '------------------------------------------'
+        Public Overrides Sub Marketing_Zalo_Campaign_Delete(ByVal Id As Integer)
+            SqlHelper.ExecuteNonQuery(ConnectionString, "Marketing_Zalo_Campaign_Delete", Id)
+        End Sub
+
+        '------------------------------------------'
+        Public Overrides Function Marketing_Zalo_Campaign_GetByID(ByVal Id As Integer) As IDataReader
+            Return CType(SqlHelper.ExecuteReader(ConnectionString, "Marketing_Zalo_Campaign_SelectByID", Id), IDataReader)
+        End Function
+
+        '------------------------------------------'
+        Public Overrides Function Marketing_Zalo_Campaign_GetAll(ByVal PortalId As Integer) As IDataReader
+            Return CType(SqlHelper.ExecuteReader(ConnectionString, "Marketing_Zalo_Campaign_SelectAll", PortalId), IDataReader)
+        End Function
+
+        '------------------------------------------'
+
+#End Region
+#Region "Marketing_Zalo_ListSdt"
+
+        Public Overrides Function Marketing_Zalo_ListSdt_Insert(ByVal Marketing_Zalo_CampaignId As Integer, ByVal PhoneRaw As String, ByVal Phone As String, ByVal Status As Integer, ByVal CreatedDate As DateTime, ByVal UserId As Integer, ByVal PortalId As Integer) As IDataReader
+            Return CType(SqlHelper.ExecuteReader(ConnectionString, "Marketing_Zalo_ListSdt_Insert", Marketing_Zalo_CampaignId, PhoneRaw, Phone, CByte(Status), CreatedDate, UserId, PortalId), IDataReader)
+        End Function
+
+        '------------------------------------------'
+        Public Overrides Function Marketing_Zalo_ListSdt_InsertBulk(ByVal Marketing_Zalo_CampaignId As Integer, ByVal PhoneList As String, ByVal UserId As Integer, ByVal PortalId As Integer) As IDataReader
+            Return CType(SqlHelper.ExecuteReader(ConnectionString, "Marketing_Zalo_ListSdt_InsertBulk", Marketing_Zalo_CampaignId, PhoneList, UserId, PortalId), IDataReader)
+        End Function
+
+        '------------------------------------------'
+        Public Overrides Sub Marketing_Zalo_ListSdt_Delete(ByVal Id As Integer)
+            SqlHelper.ExecuteNonQuery(ConnectionString, "Marketing_Zalo_ListSdt_Delete", Id)
+        End Sub
+
+        '------------------------------------------'
+        Public Overrides Sub Marketing_Zalo_ListSdt_DeleteByCampaignId(ByVal Marketing_Zalo_CampaignId As Integer)
+            SqlHelper.ExecuteNonQuery(ConnectionString, "Marketing_Zalo_ListSdt_DeleteByCampaignId", Marketing_Zalo_CampaignId)
+        End Sub
+
+        '------------------------------------------'
+        Public Overrides Function Marketing_Zalo_ListSdt_GetByID(ByVal Id As Integer) As IDataReader
+            Return CType(SqlHelper.ExecuteReader(ConnectionString, "Marketing_Zalo_ListSdt_SelectByID", Id), IDataReader)
+        End Function
+
+        '------------------------------------------'
+        Public Overrides Function Marketing_Zalo_ListSdt_GetAll(ByVal Marketing_Zalo_CampaignId As Integer, ByVal KeySearch As String, ByVal Status As Integer, ByVal PageIndex As Integer, ByVal PageSize As Integer) As IDataReader
+            Return CType(SqlHelper.ExecuteReader(ConnectionString, "Marketing_Zalo_ListSdt_SelectAll", Marketing_Zalo_CampaignId, KeySearch, Status, PageIndex, PageSize), IDataReader)
+        End Function
+
+        '------------------------------------------'
+        Public Overrides Sub Marketing_Zalo_ListSdt_UpdateStatus(ByVal Id As Integer, ByVal Status As Integer)
+            SqlHelper.ExecuteNonQuery(ConnectionString, "Marketing_Zalo_ListSdt_UpdateStatus", Id, CByte(Status))
+        End Sub
+
+        '------------------------------------------'
+
+#End Region
 #End Region
 
 

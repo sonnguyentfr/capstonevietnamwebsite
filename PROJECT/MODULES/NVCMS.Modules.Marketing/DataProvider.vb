@@ -138,6 +138,38 @@ Namespace NVCMS.Modules.Marketing
 
 
 #End Region
+#Region "Marketing_Zalo_Campaign"
+
+        Public MustOverride Function Marketing_Zalo_Campaign_Insert(ByVal Title As String, ByVal Description As String, ByVal Status As Integer, ByVal CreatedDate As DateTime, ByVal UserId As Integer, ByVal PortalId As Integer) As IDataReader
+
+        Public MustOverride Sub Marketing_Zalo_Campaign_Update(ByVal Id As Integer, ByVal Title As String, ByVal Description As String, ByVal Status As Integer, ByVal UserId As Integer, ByVal PortalId As Integer)
+
+        Public MustOverride Sub Marketing_Zalo_Campaign_Delete(ByVal Id As Integer)
+
+        Public MustOverride Function Marketing_Zalo_Campaign_GetByID(ByVal Id As Integer) As IDataReader
+
+        Public MustOverride Function Marketing_Zalo_Campaign_GetAll(ByVal PortalId As Integer) As IDataReader
+
+#End Region
+
+#Region "Marketing_Zalo_ListSdt"
+
+        Public MustOverride Function Marketing_Zalo_ListSdt_Insert(ByVal Marketing_Zalo_CampaignId As Integer, ByVal PhoneRaw As String, ByVal Phone As String, ByVal Status As Integer, ByVal CreatedDate As DateTime, ByVal UserId As Integer, ByVal PortalId As Integer) As IDataReader
+
+        Public MustOverride Function Marketing_Zalo_ListSdt_InsertBulk(ByVal Marketing_Zalo_CampaignId As Integer, ByVal PhoneList As String, ByVal UserId As Integer, ByVal PortalId As Integer) As IDataReader
+
+        Public MustOverride Sub Marketing_Zalo_ListSdt_Delete(ByVal Id As Integer)
+
+        Public MustOverride Sub Marketing_Zalo_ListSdt_DeleteByCampaignId(ByVal Marketing_Zalo_CampaignId As Integer)
+
+        Public MustOverride Function Marketing_Zalo_ListSdt_GetByID(ByVal Id As Integer) As IDataReader
+
+        Public MustOverride Function Marketing_Zalo_ListSdt_GetAll(ByVal Marketing_Zalo_CampaignId As Integer, ByVal KeySearch As String, ByVal Status As Integer, ByVal PageIndex As Integer, ByVal PageSize As Integer) As IDataReader
+
+        Public MustOverride Sub Marketing_Zalo_ListSdt_UpdateStatus(ByVal Id As Integer, ByVal Status As Integer)
+
+#End Region
+
 #End Region
 
 

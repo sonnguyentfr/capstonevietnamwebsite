@@ -6,48 +6,71 @@ NVCMS.Modules.Marketing
 </name>
 </assembly>
 <members>
-<member name="T:My.Resources.Resources">
-<summary>
-  A strongly-typed resource class, for looking up localized strings, etc.
-</summary>
-</member>
-<member name="P:My.Resources.Resources.ResourceManager">
-<summary>
-  Returns the cached ResourceManager instance used by this class.
-</summary>
-</member>
-<member name="P:My.Resources.Resources.Culture">
-<summary>
-  Overrides the current thread's CurrentUICulture property for all
-  resource lookups using this strongly typed resource class.
-</summary>
-</member>
-<member name="M:NVCMS.Modules.Marketing.MarketingMailAnalyticsService.GetCampaignAnalytics(System.Int32)">
- <summary>
- Xử lý nghiệp vụ và map dữ liệu từ IDataReader vào Models
- </summary>
-</member>
-<member name="T:NVCMS.Modules.Marketing.DataProvider">
- -----------------------------------------------------------------------------
- <summary>
- An abstract class for the data access layer
- </summary>
- <remarks>
- </remarks>
- <history>
- </history>
- -----------------------------------------------------------------------------
-</member>
 <member name="T:NVCMS.Modules.Marketing.SqlDataProvider">
  -----------------------------------------------------------------------------
  <summary>
  SQL Server implementation of the abstract DataProvider class
  </summary>
- <remarks>
- </remarks>
- <history>
- </history>
+	<remarks>
+	</remarks>
+	<history>
+	</history>
  -----------------------------------------------------------------------------
+
+</member><member name="T:NVCMS.Modules.Marketing.DataProvider">
+ -----------------------------------------------------------------------------
+ <summary>
+ An abstract class for the data access layer
+ </summary>
+	<remarks>
+	</remarks>
+	<history>
+	</history>
+ -----------------------------------------------------------------------------
+
+</member><member name="P:My.Resources.Resources.ResourceManager">
+	<summary>
+  Returns the cached ResourceManager instance used by this class.
+</summary>
+</member><member name="P:My.Resources.Resources.Culture">
+	<summary>
+  Overrides the current thread's CurrentUICulture property for all
+  resource lookups using this strongly typed resource class.
+</summary>
+</member><member name="T:My.Resources.Resources">
+	<summary>
+  A strongly-typed resource class, for looking up localized strings, etc.
+</summary>
+</member><member name="M:NVCMS.Modules.Marketing.ZaloPhoneHelper.NormalizePhone(System.String)">
+	<summary>
+ Chuyen so dien thoai sang dinh dang quoc te 84xxx
+ </summary>
+</member><member name="M:NVCMS.Modules.Marketing.ZaloPhoneHelper.IsValidPhone(System.String)">
+	<summary>
+ Kiem tra so dien thoai Viet Nam hop le (sau khi chuan hoa)
+ </summary>
+</member><member name="M:NVCMS.Modules.Marketing.ZaloPhoneHelper.ValidateAndNormalize(System.String,System.String@)">
+	<summary>
+ Kiem tra va chuan hoa, tra ve Nothing neu sdt khong hop le
+ </summary>
+</member><member name="M:NVCMS.Modules.Marketing.ZaloPhoneHelper.ProcessPhoneList(System.String,System.Collections.Generic.List{System.String}@,System.Collections.Generic.List{System.String}@)">
+	<summary>
+ Xu ly danh sach sdt (nhieu dong hoac cach nhau dau phay)
+ Tra ve (danhSachHopLe, danhSachLoi)
+ </summary>
+</member><member name="M:NVCMS.Modules.Marketing.ZaloPhoneHelper.IsValidVietnamPrefix(System.String)">
+	<summary>
+ Kiem tra prefix 4 so (84xx) co thuoc mang VN khong
+ </summary>
+</member><member name="T:NVCMS.Modules.Marketing.ZaloPhoneHelper">
+	<summary>
+ Xu ly va chuan hoa so dien thoai Viet Nam cho Zalo
+ Chuyen tu 09x/03x/07x/08x -&gt; 849x/843x/847x/848x
+ </summary>
+</member><member name="M:NVCMS.Modules.Marketing.MarketingMailAnalyticsService.GetCampaignAnalytics(System.Int32)">
+	<summary>
+ Xử lý nghiệp vụ và map dữ liệu từ IDataReader vào Models
+ </summary>
 </member>
 </members>
 </doc>

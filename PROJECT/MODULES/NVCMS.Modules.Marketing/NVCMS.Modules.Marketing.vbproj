@@ -111,6 +111,12 @@
     <Compile Include="Static\Marketing_Mail_CampaignAnalyticsResult.vb" />
     <Compile Include="Template\Template_Controller.vb" />
     <Compile Include="Template\Template_Info.vb" />
+    <Compile Include="ZaloCampaign\ZaloCampaign_Info.vb" />
+    <Compile Include="ZaloCampaign\ZaloCampaign_Controller.vb" />
+    <Compile Include="ZaloCampaign\ZaloPhoneHelper.vb" />
+    <Compile Include="ZaloListSdt\ZaloListSdt_Info.vb" />
+    <Compile Include="ZaloListSdt\ZaloListSdt_Controller.vb" />
+
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
