@@ -13,389 +13,327 @@
                                 <a href="<%=BackUrl%>" class="btn btn-icon btn-sm btn-outline-light mr-2" title="Quay lại">
                                     <em class="icon ni ni-arrow-left"></em>
                                 </a>
-                                Danh sách SĐT - <span id="spnCampaignTitle">...</span>
+                                Danh sách SĐT &mdash; <b><asp:Literal ID="ltrCampaignTitle" runat="server"></asp:Literal></b>
                             </h3>
-                            <div class="nk-block-des text-soft">
-                                Tổng: <b><span id="spnTotal">0</span></b> số &nbsp;|&nbsp;
-                                Hợp lệ đã thêm: <b><span id="spnInserted">0</span></b> &nbsp;|&nbsp;
-                                Trùng bỏ qua: <b><span id="spnDup">0</span></b>
-                            </div>
-                        </div>
-                        <div class="nk-block-head-content">
-                            <ul class="nk-block-tools g-2">
-                                <li>
-                                    <a href="javascript:void(0);" onclick="openAddSingle()" class="btn btn-sm btn-outline-primary">
-                                        <em class="icon ni ni-plus"></em> Thêm 1 SĐT
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="javascript:void(0);" onclick="openAddBulk()" class="btn btn-sm btn-primary">
-                                        <em class="icon ni ni-upload"></em> Thêm nhiều SĐT
-                                    </a>
-                                </li>
-                            </ul>
                         </div>
                     </div>
                 </div>
 
-                <!-- Filter bar -->
-                <div class="card card-bordered mb-3">
-                    <div class="card-inner py-2">
-                        <div class="row g-2 align-items-center">
-                            <div class="col-md-4">
-                                <input type="text" id="txtSearch" class="form-control form-control-sm" placeholder="Tìm SĐT..." />
-                            </div>
-                            <div class="col-md-3">
-                                <select id="selStatusFilter" class="form-control form-control-sm">
-                                    <option value="-1">-- Tất cả trạng thái --</option>
-                                    <option value="0">Chờ gửi</option>
-                                    <option value="1">Đã gửi</option>
-                                    <option value="2">Lỗi</option>
-                                </select>
-                            </div>
-                            <div class="col-auto">
-                                <button class="btn btn-sm btn-primary" onclick="loadSdtList(0)"><em class="icon ni ni-search"></em> Tìm</button>
-                                <button class="btn btn-sm btn-outline-danger ml-1" onclick="confirmDeleteAll()"><em class="icon ni ni-trash"></em> Xóa hết</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <asp:UpdatePanel runat="server" ID="upnlMain">
+                    <ContentTemplate>
+                        <div class="row g-gs">
 
-                <!-- Table -->
-                <div class="nk-block">
-                    <div class="card card-bordered">
-                        <div class="card-inner p-0">
-                            <div class="table-responsive">
-                                <table class="table table-sm table-hover" id="tblSdt">
-                                    <thead class="table-light">
-                                        <tr>
-                                            <th style="width:50px">#</th>
-                                            <th>SĐT gốc</th>
-                                            <th>SĐT chuẩn hóa (84...)</th>
-                                            <th>Trạng thái</th>
-                                            <th>Số lần gửi</th>
-                                            <th>Ngày thêm</th>
-                                            <th style="width:80px">Thao tác</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="sdtBody">
-                                        <tr><td colspan="7" class="text-center">Đang tải...</td></tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
+                            <!-- LEFT: Import panel -->
+                            <div class="col-md-7">
+                                <div class="card card-preview">
+                                    <div class="card-inner">
+                                        <ul class="nav nav-tabs mt-n3">
+                                            <li class="nav-item">
+                                                <a class="nav-link active" data-toggle="tab" href="#tabEvent">
+                                                    <em class="icon ni ni-calendar"></em><span>Lọc theo sự kiện</span>
+                                                </a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link" data-toggle="tab" href="#tabManual">
+                                                    <em class="icon ni ni-edit"></em><span>Nhập thủ công</span>
+                                                </a>
+                                            </li>
+                                        </ul>
 
-                    <!-- Paging -->
-                    <div class="d-flex justify-content-between align-items-center mt-2" id="pagingArea" style="display:none!important;">
-                        <div class="text-muted small">Hiển thị <span id="spnFrom">0</span>-<span id="spnTo">0</span> / <span id="spnTotal2">0</span></div>
-                        <ul class="pagination pagination-sm" id="paging"></ul>
-                    </div>
-                </div>
+                                        <div class="tab-content mt-2">
 
-            </div>
-        </div>
-    </div>
-</div>
+                                            <!-- TAB 1: Lọc theo sự kiện -->
+                                            <div class="tab-pane active" id="tabEvent">
+                                                <div class="form-group">
+                                                    <label class="form-label"><b>TÊN SỰ KIỆN:</b></label>
+                                                    <asp:DropDownList ID="ddlEventCat" runat="server"
+                                                        CssClass="form-select form-control"
+                                                        data-search="on"
+                                                        AutoPostBack="true"
+                                                        OnSelectedIndexChanged="ddlEventCat_SelectedIndexChanged">
+                                                    </asp:DropDownList>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="form-label"><b>ĐỊA ĐIỂM (chính xác):</b></label>
+                                                    <asp:DropDownList ID="ddlEvent" runat="server"
+                                                        CssClass="form-select form-control"
+                                                        data-search="on">
+                                                    </asp:DropDownList>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="form-label"><b>TRẠNG THÁI CHECK-IN:</b></label>
+                                                    <asp:DropDownList ID="ddlCheckin" runat="server" CssClass="form-select form-control">
+                                                    </asp:DropDownList>
+                                                </div>
+                                                <asp:LinkButton ID="lbtXemDanhSach" runat="server"
+                                                    Font-Bold="True"
+                                                    CssClass="btn btn-outline-primary mr-1"
+                                                    OnClientClick="return ValidateAndShowLoading();">
+                                                    <em class="icon ni ni-eye"></em> XEM DANH SÁCH
+                                                </asp:LinkButton>
+                                                <asp:LinkButton ID="lbtImportFromEvent" runat="server"
+                                                    Font-Bold="True"
+                                                    CssClass="btn btn-primary"
+                                                    Visible="false"
+                                                    OnClientClick="return confirm('Thêm toàn bộ SĐT hợp lệ vào chiến dịch?');">
+                                                    <em class="icon ni ni-upload"></em> THÊM VÀO DANH SÁCH
+                                                </asp:LinkButton>
+                                            </div>
 
-<!-- Modal thêm 1 SĐT -->
-<div class="modal fade" tabindex="-1" id="modalSingle">
-    <div class="modal-dialog modal-sm" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Thêm số điện thoại</h5>
-                <a href="#" class="close" data-dismiss="modal"><em class="icon ni ni-cross"></em></a>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label class="form-label">Số điện thoại <span class="text-danger">*</span></label>
-                    <input type="text" id="txtPhone" class="form-control" placeholder="Vd: 0901234567" />
-                    <div class="form-note text-warning" id="phoneNote" style="display:none;"></div>
-                    <div class="form-note text-soft mt-1">Hỗ trợ: 09x, 03x, 07x, 08x, +849x, 849x...</div>
-                </div>
-            </div>
-            <div class="modal-footer bg-light">
-                <button class="btn btn-primary" onclick="saveSinglePhone()">Thêm</button>
-                <a href="javascript:void(0);" class="btn btn-secondary" data-dismiss="modal">Hủy</a>
-            </div>
-        </div>
-    </div>
-</div>
+                                            <!-- TAB 2: Nhập thủ công -->
+                                            <div class="tab-pane" id="tabManual">
+                                                <p class="text-soft mb-1">Nhập danh sách SĐT, mỗi số một dòng hoặc cách nhau bằng dấu <mark>;</mark></p>
+                                                <p class="text-info small mb-2">
+                                                    Hệ thống tự động chuẩn hóa:
+                                                    <b>09x→849x</b>, <b>03x→843x</b>, <b>07x→847x</b>, <b>08x→848x</b>
+                                                </p>
+                                                <asp:TextBox ID="txtSdt" runat="server"
+                                                    TextMode="MultiLine"
+                                                    Height="250px"
+                                                    CssClass="form-control no-resize"
+                                                    placeholder="Ví dụ:&#13;&#10;0901234567&#13;&#10;0912345678&#13;&#10;+84987654321">
+                                                </asp:TextBox>
+                                                <div class="mt-2">
+                                                    <asp:LinkButton ID="lbtImportManual" runat="server"
+                                                        Font-Bold="True"
+                                                        CssClass="btn btn-primary"
+                                                        OnClientClick="return ValidateManual();">
+                                                        <em class="icon ni ni-upload"></em> CẬP NHẬT VÀO DANH SÁCH
+                                                    </asp:LinkButton>
+                                                </div>
+                                            </div>
 
-<!-- Modal thêm nhiều SĐT -->
-<div class="modal fade" tabindex="-1" id="modalBulk">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Thêm nhiều số điện thoại</h5>
-                <a href="#" class="close" data-dismiss="modal"><em class="icon ni ni-cross"></em></a>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label class="form-label">Danh sách SĐT <span class="text-danger">*</span></label>
-                    <textarea id="txtBulkPhones" class="form-control" rows="10"
-                        placeholder="Nhập mỗi SĐT trên 1 dòng, hoặc cách nhau bằng dấu phẩy.&#10;Ví dụ:&#10;0901234567&#10;0912345678&#10;+84987654321"></textarea>
-                    <div class="form-note text-soft mt-1">
-                        Hệ thống sẽ tự động:
-                        <ul class="mt-1 mb-0" style="padding-left:16px;">
-                            <li>Chuẩn hóa định dạng: <b>09x → 849x</b>, <b>03x → 843x</b>, <b>07x → 847x</b>, <b>08x → 848x</b></li>
-                            <li>Bỏ qua số trùng và số không hợp lệ</li>
-                        </ul>
-                    </div>
-                </div>
-                <div id="bulkPreview" style="display:none;">
-                    <hr />
-                    <div class="row g-2">
-                        <div class="col-4">
-                            <div class="info-card info-card-bordered">
-                                <div class="info-card-inner">
-                                    <div class="info-card-name text-success">Hợp lệ</div>
-                                    <div class="info-card-count" id="preValidCount">0</div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-4">
-                            <div class="info-card info-card-bordered">
-                                <div class="info-card-inner">
-                                    <div class="info-card-name text-danger">Không hợp lệ</div>
-                                    <div class="info-card-count" id="preInvalidCount">0</div>
+
+                            <!-- RIGHT: Preview kết quả import -->
+                            <div class="col-md-5">
+                                <div class="card card-bordered h-100" style="position:relative;">
+
+                                    <!-- Loading overlay cho panel preview -->
+                                    <div id="previewLoadingOverlay" style="display:none; position:absolute; top:0; left:0; width:100%; height:100%; background:rgba(255,255,255,0.85); z-index:10; border-radius:4px;">
+                                        <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); text-align:center;">
+                                            <div class="spinner-border text-primary" role="status" style="width:2rem;height:2rem;">
+                                                <span class="sr-only">Loading...</span>
+                                            </div>
+                                            <p class="mt-2 text-primary small mb-0"><b>Đang lấy dữ liệu...</b></p>
+                                        </div>
+                                    </div>
+
+                                    <div class="card-header border-bottom">
+                                        <div>
+                                            <b>Kết quả kiểm tra SĐT</b>
+                                        </div>
+                                        <div class="mt-1">
+                                            <span class="badge badge-success mr-1">
+                                                Hợp lệ: <b><asp:Literal ID="ltrOK" runat="server">0</asp:Literal></b>
+                                            </span>
+                                            <span class="badge badge-danger mr-1">
+                                                Lỗi: <b><asp:Literal ID="ltrLoi" runat="server">0</asp:Literal></b>
+                                            </span>
+                                            <span class="badge badge-warning">
+                                                Trùng: <b><asp:Literal ID="ltrTrung" runat="server">0</asp:Literal></b>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="card-inner p-0">
+                                        <div data-simplebar style="max-height: 400px; overflow-y: auto;">
+                                            <div class="nk-tb-list is-compact">
+                                                <div class="nk-tb-item nk-tb-head">
+                                                    <div class="nk-tb-col" style="width:40%"><span>Họ tên</span></div>
+                                                    <div class="nk-tb-col" style="width:35%"><span>SĐT</span></div>
+                                                    <div class="nk-tb-col text-right"><span>Trạng thái</span></div>
+                                                </div>
+                                                <!-- Từ sự kiện: SĐT sinh viên -->
+                                                <asp:Repeater ID="rptPreviewEvent" runat="server">
+                                                    <ItemTemplate>
+                                                        <div class="nk-tb-item" style="<%# IIf(Eval("SdtStatus") = "LỖI", "background:#fff3cd;", IIf(Eval("SdtStatus") = "TRÙNG", "background:#e2e3e5;", "")) %>">
+                                                            <div class="nk-tb-col">
+                                                                <span class="tb-sub small"><%# Eval("StudentFullname") %></span>
+                                                            </div>
+                                                            <div class="nk-tb-col">
+                                                                <span class="tb-sub small"><b><%# Eval("SdtNormalized") %></b></span>
+                                                                <span class="text-muted" style="font-size:11px"> (<%# Eval("SdtRaw") %>)</span>
+                                                            </div>
+                                                            <div class="nk-tb-col text-right">
+                                                                <span class="badge <%# IIf(Eval("SdtStatus") = "OK", "badge-success", IIf(Eval("SdtStatus") = "TRÙNG", "badge-warning", "badge-danger")) %>">
+                                                                    <%# Eval("SdtStatus") %>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </ItemTemplate>
+                                                </asp:Repeater>
+                                                <!-- Từ nhập tay: chỉ có SĐT -->
+                                                <asp:Repeater ID="rptPreviewManual" runat="server">
+                                                    <ItemTemplate>
+                                                        <div class="nk-tb-item" style="<%# IIf(Eval("SdtStatus") = "LỖI", "background:#fff3cd;", IIf(Eval("SdtStatus") = "TRÙNG", "background:#e2e3e5;", "")) %>">
+                                                            <div class="nk-tb-col">
+                                                                <span class="text-muted small">—</span>
+                                                            </div>
+                                                            <div class="nk-tb-col">
+                                                                <span class="tb-sub small"><b><%# Eval("SdtNormalized") %></b></span>
+                                                                <span class="text-muted" style="font-size:11px"> (<%# Eval("SdtRaw") %>)</span>
+                                                            </div>
+                                                            <div class="nk-tb-col text-right">
+                                                                <span class="badge <%# IIf(Eval("SdtStatus") = "OK", "badge-success", IIf(Eval("SdtStatus") = "TRÙNG", "badge-warning", "badge-danger")) %>">
+                                                                    <%# Eval("SdtStatus") %>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </ItemTemplate>
+                                                </asp:Repeater>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-4">
-                            <div class="info-card info-card-bordered">
-                                <div class="info-card-inner">
-                                    <div class="info-card-name text-warning">Trùng trong batch</div>
-                                    <div class="info-card-count" id="preDupCount">0</div>
+
+                            <!-- BOTTOM: Danh sách SĐT đã lưu trong campaign -->
+                            <div class="col-md-12">
+                                <div class="card card-bordered">
+                                    <div class="card-inner">
+                                        <div class="card-title-group align-start pb-2">
+                                            <div class="card-title">
+                                                <h5>DANH SÁCH SĐT TRONG CHIẾN DỊCH</h5>
+                                                <p class="text-soft">
+                                                    Tổng số: <b><asp:Literal ID="ltrTotal" runat="server">0</asp:Literal></b> số điện thoại
+                                                </p>
+                                            </div>
+                                            <div class="card-tools">
+                                                <asp:LinkButton ID="lbtDeleteAll" runat="server"
+                                                    CssClass="btn btn-sm btn-outline-danger"
+                                                    OnClientClick="return confirm('Xóa TẤT CẢ số điện thoại trong chiến dịch này?');">
+                                                    <em class="icon ni ni-trash"></em> Xóa hết
+                                                </asp:LinkButton>
+                                            </div>
+                                        </div>
+
+                                        <!-- Filter bar -->
+                                        <div class="row g-2 mb-3 align-items-end">
+                                            <div class="col-md-4">
+                                                <label class="form-label form-label-sm">Tìm SĐT</label>
+                                                <asp:TextBox ID="txtSearch" runat="server" CssClass="form-control form-control-sm" placeholder="Tìm số điện thoại..."></asp:TextBox>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label class="form-label form-label-sm">Trạng thái</label>
+                                                <asp:DropDownList ID="ddlStatusFilter" runat="server" CssClass="form-control form-control-sm">
+                                                    <asp:ListItem Value="-1">-- Tất cả --</asp:ListItem>
+                                                    <asp:ListItem Value="0">Chờ gửi</asp:ListItem>
+                                                    <asp:ListItem Value="1">Đã gửi</asp:ListItem>
+                                                    <asp:ListItem Value="2">Lỗi</asp:ListItem>
+                                                </asp:DropDownList>
+                                            </div>
+                                            <div class="col-auto">
+                                                <asp:LinkButton ID="lbtSearch" runat="server" CssClass="btn btn-sm btn-primary">
+                                                    <em class="icon ni ni-search"></em> Tìm
+                                                </asp:LinkButton>
+                                            </div>
+                                        </div>
+
+                                        <div class="table-responsive">
+                                            <table class="table table-sm table-hover">
+                                                <thead class="table-light">
+                                                    <tr>
+                                                        <th style="width:45px">#</th>
+                                                        <th>SĐT gốc</th>
+                                                        <th>SĐT chuẩn hóa (84...)</th>
+                                                        <th>Trạng thái</th>
+                                                        <th>Số lần gửi</th>
+                                                        <th>Ngày thêm</th>
+                                                        <th style="width:70px"></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <asp:Repeater ID="rptListSdt" runat="server">
+                                                        <ItemTemplate>
+                                                            <tr>
+                                                                <td><%# Container.ItemIndex + 1 %></td>
+                                                                <td class="text-muted small"><%# Eval("PhoneRaw") %></td>
+                                                                <td><b><%# Eval("Phone") %></b></td>
+                                                                <td>
+                                                                    <span class="badge <%# GetStatusBadge(CInt(Eval("Status"))) %>">
+                                                                        <%# GetStatusLabel(CInt(Eval("Status"))) %>
+                                                                    </span>
+                                                                </td>
+                                                                <td><%# Eval("SendCount") %></td>
+                                                                <td class="small"><%# String.Format("{0:dd/MM/yyyy}", Eval("CreatedDate")) %></td>
+                                                                <td>
+                                                                    <asp:LinkButton ID="btnDeleteSdt"
+                                                                        CommandArgument='<%# Eval("Id") %>'
+                                                                        CommandName="DeleteSdt"
+                                                                        runat="server"
+                                                                        CssClass="btn btn-sm btn-icon btn-outline-danger"
+                                                                        OnClientClick="return confirm('Xóa số điện thoại này?');"
+                                                                        title="Xóa">
+                                                                        <em class="icon ni ni-trash"></em>
+                                                                    </asp:LinkButton>
+                                                                </td>
+                                                            </tr>
+                                                        </ItemTemplate>
+                                                        <FooterTemplate>
+                                                            <asp:Literal ID="ltrEmpty" Visible='<%# rptListSdt.Items.Count = 0 %>' runat="server">
+                                                                <tr><td colspan="7" class="text-center text-muted py-3">Chưa có số điện thoại nào.</td></tr>
+                                                            </asp:Literal>
+                                                        </FooterTemplate>
+                                                    </asp:Repeater>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    <div id="preInvalidList" class="mt-2" style="display:none;">
-                        <p class="text-danger small mb-1">Số không hợp lệ:</p>
-                        <ul id="ulInvalid" class="text-danger small" style="max-height:100px;overflow-y:auto;"></ul>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer bg-light">
-                <button class="btn btn-outline-info" onclick="previewBulk()"><em class="icon ni ni-eye"></em> Kiểm tra trước</button>
-                <button class="btn btn-primary" onclick="saveBulkPhones()"><em class="icon ni ni-upload"></em> Thêm vào danh sách</button>
-                <a href="javascript:void(0);" class="btn btn-secondary" data-dismiss="modal">Hủy</a>
+
+                        </div><!-- end row -->
+                    </ContentTemplate>
+                </asp:UpdatePanel>
+
+                <asp:UpdateProgress runat="server" ID="upProgress" AssociatedUpdatePanelID="upnlMain" DisplayAfter="0">
+                    <ProgressTemplate>
+                        <%-- Trigger JS khi UpdatePanel bắt đầu xử lý --%>
+                    </ProgressTemplate>
+                </asp:UpdateProgress>
+
             </div>
         </div>
     </div>
 </div>
 
 <script type="text/javascript">
-    var moduleId = <%= ModuleId %>;
-    var sf = $.ServicesFramework(moduleId);
-    var serviceRoot = "/DesktopModules/NVCMS/API/ZaloCampaign/";
-    var campaignId = parseInt("<%=CampaignId%>") || 0;
-    var currentPage = 0;
-    var pageSize = 50;
-    var totalRecordsGlobal = 0;
-
-    $(document).ready(function () {
-        if (campaignId > 0) {
-            loadCampaignInfo();
-            loadSdtList(0);
-        } else {
-            $("#sdtBody").html('<tr><td colspan="7" class="text-center text-danger">Không tìm thấy chiến dịch!</td></tr>');
+    function ValidateEvent() {
+        var ddl = document.getElementById('<%=ddlEventCat.ClientID%>').value;
+        if (ddl == 0) {
+            alert("Vui lòng chọn sự kiện!");
+            return false;
         }
-
-        $("#txtSearch").keypress(function (e) {
-            if (e.which === 13) loadSdtList(0);
-        });
-    });
-
-    function loadCampaignInfo() {
-        $.ajax({
-            type: "GET", url: serviceRoot + "GetByID",
-            data: { id: campaignId },
-            beforeSend: sf.setModuleHeaders,
-            success: function (res) {
-                if (res.Success && res.Data) {
-                    $("#spnCampaignTitle").text(res.Data.Title);
-                }
-            }
-        });
+        return true;
     }
 
-    function loadSdtList(page) {
-        currentPage = page;
-        $.ajax({
-            type: "GET", url: serviceRoot + "GetSdtList",
-            data: {
-                campaignId: campaignId,
-                keySearch: $("#txtSearch").val(),
-                status: $("#selStatusFilter").val(),
-                pageIndex: page,
-                pageSize: pageSize
-            },
-            beforeSend: sf.setModuleHeaders,
-            success: function (res) {
-                if (res.Success) {
-                    renderSdtTable(res.Data, page);
-                    totalRecordsGlobal = res.TotalRecords;
-                    $("#spnTotal").text(res.TotalRecords);
-                    renderPaging(res.TotalRecords, page);
-                } else {
-                    NioApp.Toast(res.Message, 'danger', { position: 'top-right' });
-                }
-            }
-        });
+    function ValidateAndShowLoading() {
+        if (!ValidateEvent()) return false;
+        showPreviewLoading(true);
+        return true;
     }
 
-    function renderSdtTable(data, page) {
-        if (!data || data.length === 0) {
-            $("#sdtBody").html('<tr><td colspan="7" class="text-center text-muted">Chưa có số điện thoại nào.</td></tr>');
-            return;
+    function ValidateManual() {
+        var txt = document.getElementById('<%=txtSdt.ClientID%>').value;
+        if (txt.trim() == "") {
+            alert("Vui lòng nhập danh sách SĐT!");
+            return false;
         }
-        var html = '';
-        $.each(data, function (i, r) {
-            var statusBadge = '<span class="badge ' + getSdtStatusBadge(r.Status) + '">' + getSdtStatusLabel(r.Status) + '</span>';
-            var dt = r.CreatedDate ? new Date(parseInt(r.CreatedDate.replace(/\/Date\((\d+)\)\//, '$1'))).toLocaleDateString('vi-VN') : '';
-            html += '<tr>';
-            html += '<td>' + (page * pageSize + i + 1) + '</td>';
-            html += '<td>' + escapeHtml(r.PhoneRaw || r.Phone) + '</td>';
-            html += '<td><b>' + escapeHtml(r.Phone) + '</b></td>';
-            html += '<td>' + statusBadge + '</td>';
-            html += '<td>' + (r.SendCount || 0) + '</td>';
-            html += '<td>' + dt + '</td>';
-            html += '<td><a href="javascript:void(0);" onclick="deleteSdt(' + r.Id + ')" class="btn btn-sm btn-icon btn-outline-danger" title="Xóa"><em class="icon ni ni-trash"></em></a></td>';
-            html += '</tr>';
-        });
-        $("#sdtBody").html(html);
+        return true;
     }
 
-    function renderPaging(total, current) {
-        var pages = Math.ceil(total / pageSize);
-        if (pages <= 1) { $("#pagingArea").hide(); return; }
-        $("#pagingArea").show();
-        var html = '';
-        if (current > 0) html += '<li class="page-item"><a class="page-link" href="javascript:void(0);" onclick="loadSdtList(' + (current - 1) + ')">‹</a></li>';
-        for (var p = 0; p < pages; p++) {
-            html += '<li class="page-item' + (p === current ? ' active' : '') + '"><a class="page-link" href="javascript:void(0);" onclick="loadSdtList(' + p + ')">' + (p + 1) + '</a></li>';
-        }
-        if (current < pages - 1) html += '<li class="page-item"><a class="page-link" href="javascript:void(0);" onclick="loadSdtList(' + (current + 1) + ')">›</a></li>';
-        $("#paging").html(html);
-        var from = current * pageSize + 1;
-        var to = Math.min((current + 1) * pageSize, total);
-        $("#spnFrom").text(from); $("#spnTo").text(to); $("#spnTotal2").text(total);
+    function showPreviewLoading(show) {
+        var overlay = document.getElementById('previewLoadingOverlay');
+        if (overlay) overlay.style.display = show ? 'block' : 'none';
     }
 
-    // ===== Single phone =====
-    function openAddSingle() {
-        $("#txtPhone").val(''); $("#phoneNote").hide();
-        $("#modalSingle").modal('show');
-        setTimeout(function () { $("#txtPhone").focus(); }, 400);
-    }
-
-    function saveSinglePhone() {
-        var phone = $.trim($("#txtPhone").val());
-        if (!phone) { alert('Nhập SĐT!'); return; }
-        $.ajax({
-            type: "POST", url: serviceRoot + "AddPhone",
-            contentType: "application/json",
-            data: JSON.stringify({ CampaignId: campaignId, PhoneRaw: phone }),
-            beforeSend: sf.setModuleHeaders,
-            success: function (res) {
-                if (res.Success) {
-                    $("#modalSingle").modal('hide');
-                    loadSdtList(0);
-                    var msg = 'Đã thêm: ' + res.Data.Phone;
-                    NioApp.Toast(msg, 'success', { position: 'top-right' });
-                } else {
-                    $("#phoneNote").text(res.Message).show();
-                }
-            }
+    // Ẩn loading khi UpdatePanel hoàn thành
+    if (typeof Sys !== 'undefined') {
+        Sys.WebForms.PageRequestManager.getInstance().add_endRequest(function () {
+            showPreviewLoading(false);
         });
     }
-
-    // ===== Bulk phone =====
-    function openAddBulk() {
-        $("#txtBulkPhones").val(''); $("#bulkPreview").hide();
-        $("#modalBulk").modal('show');
-    }
-
-    function previewBulk() {
-        var raw = $("#txtBulkPhones").val();
-        $.ajax({
-            type: "POST", url: serviceRoot + "ValidatePhoneList",
-            contentType: "application/json",
-            data: JSON.stringify({ PhoneList: raw }),
-            beforeSend: sf.setModuleHeaders,
-            success: function (res) {
-                if (res.Success) {
-                    $("#preValidCount").text(res.Data.ValidCount);
-                    $("#preInvalidCount").text(res.Data.InvalidCount);
-                    $("#preDupCount").text(res.Data.DupCount);
-                    if (res.Data.InvalidList && res.Data.InvalidList.length > 0) {
-                        var ul = '';
-                        $.each(res.Data.InvalidList, function (i, v) { ul += '<li>' + escapeHtml(v) + '</li>'; });
-                        $("#ulInvalid").html(ul); $("#preInvalidList").show();
-                    } else { $("#preInvalidList").hide(); }
-                    $("#bulkPreview").show();
-                }
-            }
-        });
-    }
-
-    function saveBulkPhones() {
-        var raw = $("#txtBulkPhones").val();
-        if (!raw.trim()) { alert('Nhập danh sách SĐT!'); return; }
-        $.ajax({
-            type: "POST", url: serviceRoot + "AddPhoneBulk",
-            contentType: "application/json",
-            data: JSON.stringify({ CampaignId: campaignId, PhoneList: raw }),
-            beforeSend: sf.setModuleHeaders,
-            success: function (res) {
-                if (res.Success) {
-                    $("#modalBulk").modal('hide');
-                    loadSdtList(0);
-                    $("#spnInserted").text(res.Data.InsertCount);
-                    $("#spnDup").text(res.Data.DupCount);
-                    NioApp.Toast('Đã thêm ' + res.Data.InsertCount + ' SĐT. Trùng bỏ qua: ' + res.Data.DupCount, 'success', { position: 'top-right' });
-                } else {
-                    NioApp.Toast(res.Message, 'danger', { position: 'top-right' });
-                }
-            }
-        });
-    }
-
-    function deleteSdt(id) {
-        if (!confirm('Xóa số điện thoại này?')) return;
-        $.ajax({
-            type: "POST", url: serviceRoot + "DeletePhone",
-            contentType: "application/json",
-            data: JSON.stringify({ Id: id }),
-            beforeSend: sf.setModuleHeaders,
-            success: function (res) {
-                loadSdtList(currentPage);
-                NioApp.Toast('Đã xóa!', 'success', { position: 'top-right' });
-            }
-        });
-    }
-
-    function confirmDeleteAll() {
-        if (!confirm('Xóa TẤT CẢ số điện thoại trong chiến dịch này?')) return;
-        $.ajax({
-            type: "POST", url: serviceRoot + "DeleteAllPhone",
-            contentType: "application/json",
-            data: JSON.stringify({ CampaignId: campaignId }),
-            beforeSend: sf.setModuleHeaders,
-            success: function (res) {
-                loadSdtList(0);
-                NioApp.Toast('Đã xóa hết!', 'success', { position: 'top-right' });
-            }
-        });
-    }
-
-    function getSdtStatusLabel(s) {
-        switch (parseInt(s)) { case 0: return 'Chờ gửi'; case 1: return 'Đã gửi'; case 2: return 'Lỗi'; default: return 'N/A'; }
-    }
-    function getSdtStatusBadge(s) {
-        switch (parseInt(s)) { case 0: return 'badge-warning'; case 1: return 'badge-success'; case 2: return 'badge-danger'; default: return 'badge-light'; }
-    }
-    function escapeHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 </script>

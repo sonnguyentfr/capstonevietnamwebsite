@@ -87,6 +87,7 @@
   <ItemGroup>
     <Compile Include="Controller\Marketing\CampaignController.cs" />
     <Compile Include="Controller\Marketing\ReportController.cs" />
+    <Compile Include="Controller\Marketing\ZaloCampaignController.cs" />
     <Compile Include="Model\Response\ApiResponse.cs" />
     <Compile Include="Model\Response\ResponseExtensions.cs" />
     <Compile Include="Model\Response\ResponseHelper.cs" />
@@ -95,6 +96,7 @@
     <Compile Include="Services\Marketing\CampaignServices.cs" />
     <Compile Include="Services\Marketing\AccountServices.cs" />
     <Compile Include="Services\Marketing\ReportServices.cs" />
+    <Compile Include="Services\Marketing\ZaloCampaignServices.cs" />
     <Compile Include="WebApi\RouteMapper.cs" />
   </ItemGroup>
   <ItemGroup>
