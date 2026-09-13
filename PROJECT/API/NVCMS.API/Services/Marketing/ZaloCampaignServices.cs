@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using NVCMS.API.Model.Marketing;
 using NVCMS.Modules.Marketing;
 
 namespace NVCMS.API.Marketing.Services.Marketing
@@ -38,6 +39,52 @@ namespace NVCMS.API.Marketing.Services.Marketing
             var ctl = new Marketing_Zalo_Campaign_Controller();
             ctl._Delete(id);
         }
+
+        public static List<ZnsTemplateInfoDto> GetZnsTemplates()
+        {
+            var ctl = new Marketing_ZNS_TemplateController();
+            var templates = ctl._GetAll();
+
+            if (templates == null || templates.Count == 0)
+                return new List<ZnsTemplateInfoDto>();
+
+            var result = new List<ZnsTemplateInfoDto>(templates.Count);
+            foreach (var item in templates.Cast<Marketing_ZNS_TemplateInfo>())
+            {
+                if (item == null) continue;
+
+                result.Add(new ZnsTemplateInfoDto
+                {
+                    Id = item.Id,
+                    TemplateId = item.TemplateId,
+                    TemplateName = item.TemplateName,
+                    Status = item.Status,
+                    PreviewUrl = item.PreviewUrl,
+                    IsActive = item.IsActive,
+                    UpdatedAt = item.UpdatedAt
+                });
+            }
+
+            return result;
+        }
+
+        public static ZnsTemplateInfoDto GetZnsTemplateByTemplateId(long templateId)
+        {
+            var ctl = new Marketing_ZNS_TemplateController();
+            var item = ctl._GetByTemplateId(templateId);
+            if (item == null) return null;
+
+            return new ZnsTemplateInfoDto
+            {
+                Id = item.Id,
+                TemplateId = item.TemplateId,
+                TemplateName = item.TemplateName,
+                Status = item.Status,
+                PreviewUrl = item.PreviewUrl,
+                IsActive = item.IsActive,
+                UpdatedAt = item.UpdatedAt
+            };
+        }
     }
 
     public static class ZaloListSdtServices
@@ -45,7 +92,7 @@ namespace NVCMS.API.Marketing.Services.Marketing
         public static string NormalizePhone(string raw) => ZaloPhoneHelper.NormalizePhone(raw);
         public static bool IsValidPhone(string phone) => ZaloPhoneHelper.IsValidPhone(phone);
 
-        public static int AddPhone(int campaignId, string phoneRaw, int userId, int portalId, out string errorMsg)
+        public static int AddPhone(int campaignId, string fullname, string phoneRaw, int userId, int portalId, out string errorMsg)
         {
             errorMsg = string.Empty;
             string normalized = null;
@@ -53,7 +100,7 @@ namespace NVCMS.API.Marketing.Services.Marketing
             if (normalized == null) return -2;
 
             var ctl = new Marketing_Zalo_ListSdt_Controller();
-            return ctl._Insert(campaignId, phoneRaw, normalized, 0, DateTime.Now, userId, portalId);
+            return ctl._Insert(campaignId, fullname, phoneRaw, normalized, 0, DateTime.Now, userId, portalId);
         }
 
         public static Marketing_Zalo_ListSdt_BulkResult AddBulk(int campaignId, string rawPhoneList, int userId, int portalId)
@@ -106,14 +153,5 @@ namespace NVCMS.API.Marketing.Services.Marketing
         {
             new Marketing_Zalo_ListSdt_Controller()._DeleteByCampaignId(campaignId);
         }
-    }
-
-    public class ZaloPhoneValidateResult
-    {
-        public int ValidCount { get; set; }
-        public int InvalidCount { get; set; }
-        public int DupCount { get; set; }
-        public List<string> ValidList { get; set; }
-        public List<string> InvalidList { get; set; }
     }
 }

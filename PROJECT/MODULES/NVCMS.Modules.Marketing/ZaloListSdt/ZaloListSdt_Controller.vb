@@ -1,8 +1,8 @@
 ﻿Imports DotNetNuke.Common.Utilities
 Namespace NVCMS.Modules.Marketing
     Public Class Marketing_Zalo_ListSdt_Controller
-        Public Function _Insert(ByVal CampaignId As Integer, ByVal PhoneRaw As String, ByVal Phone As String, ByVal Status As Integer, ByVal CreatedDate As DateTime, ByVal UserId As Integer, ByVal PortalId As Integer) As Integer
-            Using dr As System.Data.IDataReader = DataProvider.Instance.Marketing_Zalo_ListSdt_Insert(CampaignId, PhoneRaw, Phone, Status, CreatedDate, UserId, PortalId)
+        Public Function _Insert(ByVal CampaignId As Integer, ByVal FullName As String, ByVal PhoneRaw As String, ByVal Phone As String, ByVal Status As Integer, ByVal CreatedDate As DateTime, ByVal UserId As Integer, ByVal PortalId As Integer) As Integer
+            Using dr As System.Data.IDataReader = DataProvider.Instance.Marketing_Zalo_ListSdt_Insert(CampaignId, FullName, PhoneRaw, Phone, Status, CreatedDate, UserId, PortalId)
                 If dr.Read() Then
                     Return CInt(dr("Result"))
                 End If

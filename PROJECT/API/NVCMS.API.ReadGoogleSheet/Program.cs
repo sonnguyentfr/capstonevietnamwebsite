@@ -103,6 +103,7 @@ builder.Services.AddAuthorization();
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddScoped<ICrmDataLadingRepository, CrmDataLadingRepository>();
 builder.Services.AddScoped<IZaloTokenRepository, ZaloTokenRepository>();
+builder.Services.AddScoped<IZaloMessageLogRepository, ZaloMessageLogRepository>();
 builder.Services.AddScoped<IZaloZnsClient, ZaloZnsClient>();
 builder.Services.AddScoped<IZnsTemplateRepository, ZnsTemplateRepository>();
 builder.Services.AddScoped<IZnsSendQueueRepository, ZnsSendQueueRepository>();

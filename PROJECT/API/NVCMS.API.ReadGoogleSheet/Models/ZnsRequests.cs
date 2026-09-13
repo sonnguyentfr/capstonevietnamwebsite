@@ -7,12 +7,12 @@ public class ZnsSendRequest
     [Required]
     public long TemplateId { get; set; }
 
-    [Required]
-    public string Phone { get; set; } = string.Empty;
+    public string? Phone { get; set; }
 
     [Required]
     public Dictionary<string, object?> TemplateData { get; set; } = new(StringComparer.OrdinalIgnoreCase);
 
+    public string? Type { get; set; }
     public int? CampaignId { get; set; }
     public int? EventCatId { get; set; }
     public int? EventId { get; set; }

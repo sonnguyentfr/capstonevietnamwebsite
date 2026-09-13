@@ -13,6 +13,7 @@ public class ZnsSendService : IZnsSendService
     private readonly IZaloZnsClient _zaloClient;
     private readonly IZnsSendLogRepository _sendLogRepo;
     private readonly IZnsSendQueueRepository _queueRepo;
+    private readonly IRepository<Zalo_Message_Log> _messageLogRepo;
     private readonly IBackgroundJobClient _jobClient;
     private readonly ILogger<ZnsSendService> _logger;
 
@@ -21,6 +22,7 @@ public class ZnsSendService : IZnsSendService
         IZaloZnsClient zaloClient,
         IZnsSendLogRepository sendLogRepo,
         IZnsSendQueueRepository queueRepo,
+        IRepository<Zalo_Message_Log> messageLogRepo,
         IBackgroundJobClient jobClient,
         ILogger<ZnsSendService> logger)
     {
@@ -28,24 +30,24 @@ public class ZnsSendService : IZnsSendService
         _zaloClient = zaloClient;
         _sendLogRepo = sendLogRepo;
         _queueRepo = queueRepo;
+        _messageLogRepo = messageLogRepo;
         _jobClient = jobClient;
         _logger = logger;
     }
 
     public async Task<ZnsSendResult> SendNowAsync(ZnsSendRequest request, CancellationToken cancellationToken = default)
-    {
-        return await SendCoreAsync(request, queueId: null, cancellationToken);
-    }
+        => await SendCoreAsync(request, queueId: null, cancellationToken);
 
     public async Task<(long queueId, string jobId)> EnqueueAsync(ZnsSendRequest request, CancellationToken cancellationToken = default)
     {
-        var queue = new ZnsSendQueue
+        var queue = await _queueRepo.AddAsync(new ZnsSendQueue
         {
             TemplateId = request.TemplateId,
-            Phone = request.Phone,
+            Phone = request.Phone ?? string.Empty,
             TemplateDataJson = JsonSerializer.Serialize(request.TemplateData),
             Status = ZnsSendStatus.Queued,
             ScheduledAt = DateTime.UtcNow,
+            Type = request.Type,
             CampaignId = request.CampaignId,
             EventCatId = request.EventCatId,
             EventId = request.EventId,
@@ -53,14 +55,11 @@ public class ZnsSendService : IZnsSendService
             CreatedBy = request.CreatedBy,
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = DateTime.UtcNow
-        };
-
-        queue = await _queueRepo.AddAsync(queue);
+        });
 
         var jobId = _jobClient.Enqueue<ZnsSendJob>(x => x.ExecuteAsync(queue.Id, CancellationToken.None));
-
-        _logger.LogInformation("ZNS enqueued queueId={QueueId}, jobId={JobId}, templateId={TemplateId}, phone={Phone}",
-            queue.Id, jobId, request.TemplateId, MaskPhone(request.Phone));
+        _logger.LogInformation("ZNS enqueued queueId={QueueId}, jobId={JobId}, templateId={TemplateId}, phone={Phone}, campaignId={CampaignId}",
+            queue.Id, jobId, request.TemplateId, MaskPhone(request.Phone), request.CampaignId);
 
         return (queue.Id, jobId);
     }
@@ -72,15 +71,7 @@ public class ZnsSendService : IZnsSendService
             return new ZnsSendResult { Success = false, Message = "Queue not found", ErrorCode = -1 };
 
         if (queue.Status == ZnsSendStatus.Sent)
-        {
-            return new ZnsSendResult
-            {
-                Success = true,
-                Message = "Already sent",
-                MsgId = queue.MsgId,
-                QueueId = queue.Id
-            };
-        }
+            return new ZnsSendResult { Success = true, Message = "Already sent", MsgId = queue.MsgId, QueueId = queue.Id };
 
         queue.Status = ZnsSendStatus.Processing;
         queue.StartedAt = DateTime.UtcNow;
@@ -97,6 +88,7 @@ public class ZnsSendService : IZnsSendService
                 TemplateId = queue.TemplateId,
                 Phone = queue.Phone,
                 TemplateData = data,
+                Type = queue.Type,
                 CampaignId = queue.CampaignId,
                 EventCatId = queue.EventCatId,
                 EventId = queue.EventId,
@@ -123,7 +115,6 @@ public class ZnsSendService : IZnsSendService
             queue.ErrorMessage = ex.Message;
             queue.UpdatedAt = DateTime.UtcNow;
             await _queueRepo.UpdateAsync(queue);
-
             _logger.LogError(ex, "ZNS queue processing exception queueId={QueueId}", queueId);
             throw;
         }
@@ -131,8 +122,6 @@ public class ZnsSendService : IZnsSendService
 
     private async Task<ZnsSendResult> SendCoreAsync(ZnsSendRequest request, long? queueId, CancellationToken cancellationToken)
     {
-        var started = DateTime.UtcNow;
-
         if (!IsValidPhone(request.Phone))
             return new ZnsSendResult { Success = false, ErrorCode = -108, Message = "Phone number invalid", QueueId = queueId };
 
@@ -154,17 +143,21 @@ public class ZnsSendService : IZnsSendService
             templateId = request.TemplateId,
             phone = request.Phone,
             templateData = normalizedData,
-            trackingId
+            trackingId,
+            eventId = request.EventId,
+            eventCatId = request.EventCatId,
+            campaignId = request.CampaignId
         });
 
         var sendLog = await _sendLogRepo.AddAsync(new ZnsSendLog
         {
             ZnsTemplateId = template.Id,
             ZaloTemplateId = template.TemplateId,
-            Phone = request.Phone,
+            Phone = request.Phone!,
             ParamsJson = JsonSerializer.Serialize(normalizedData),
             RequestJson = requestJson,
             Status = ZnsSendStatus.Processing,
+            Type = request.Type,
             CampaignId = request.CampaignId,
             EventCatId = request.EventCatId,
             EventId = request.EventId,
@@ -174,10 +167,47 @@ public class ZnsSendService : IZnsSendService
             UpdatedAt = DateTime.UtcNow
         });
 
-        var envelope = await _zaloClient.SendMessageAsync(request.TemplateId, request.Phone, normalizedData, trackingId, cancellationToken);
-        sendLog.ResponseJson = JsonSerializer.Serialize(envelope);
+        var fullName = ExtractFullName(normalizedData);
+        var messageLog = await _messageLogRepo.AddAsync(new Zalo_Message_Log
+        {
+            Phone = request.Phone!,
+            FullName = fullName,
+            TemplateId = request.TemplateId,
+            TrackingId = trackingId,
+            Status = 0,
+            Message = string.Empty,
+            RequestJson = requestJson,
+            ResponseJson = string.Empty,
+            CreatedTime = DateTime.Now
+        });
 
-        if (envelope.Error == 0)
+        ZaloApiEnvelope<ZaloSendResponseData>? envelope = null;
+        try
+        {
+            envelope = await _zaloClient.SendMessageAsync(request.TemplateId, request.Phone!, normalizedData, trackingId, cancellationToken);
+        }
+        catch (Exception ex)
+        {
+            sendLog.Status = ZnsSendStatus.Failed;
+            sendLog.ErrorCode = -500;
+            sendLog.ErrorMessage = ex.Message;
+            sendLog.ResponseJson = JsonSerializer.Serialize(new { exception = ex.Message });
+            sendLog.UpdatedAt = DateTime.UtcNow;
+            await _sendLogRepo.UpdateAsync(sendLog);
+
+            messageLog.Status = -500;
+            messageLog.Message = ex.Message;
+            messageLog.ResponseJson = JsonSerializer.Serialize(new { exception = ex.Message });
+            messageLog.CreatedTime = DateTime.Now;
+            await _messageLogRepo.UpdateAsync(messageLog);
+
+            return new ZnsSendResult { Success = false, ErrorCode = -500, Message = ex.Message, QueueId = queueId };
+        }
+
+        sendLog.ResponseJson = JsonSerializer.Serialize(envelope);
+        messageLog.ResponseJson = sendLog.ResponseJson;
+
+        if (envelope is not null && envelope.Error == 0)
         {
             sendLog.Status = ZnsSendStatus.Sent;
             sendLog.ZaloMessageId = envelope.Data?.MsgId;
@@ -188,9 +218,12 @@ public class ZnsSendService : IZnsSendService
             sendLog.UpdatedAt = DateTime.UtcNow;
             await _sendLogRepo.UpdateAsync(sendLog);
 
-            var duration = (DateTime.UtcNow - started).TotalMilliseconds;
-            _logger.LogInformation("ZNS sent success templateId={TemplateId}, phone={Phone}, msgId={MsgId}, queueId={QueueId}, durationMs={Duration}",
-                request.TemplateId, MaskPhone(request.Phone), sendLog.ZaloMessageId, queueId, duration);
+            messageLog.Status = 1;
+            messageLog.Message = envelope.Message;
+            await _messageLogRepo.UpdateAsync(messageLog);
+
+            _logger.LogInformation("ZNS sent success templateId={TemplateId}, phone={Phone}, msgId={MsgId}, queueId={QueueId}",
+                request.TemplateId, MaskPhone(request.Phone), sendLog.ZaloMessageId, queueId);
 
             return new ZnsSendResult
             {
@@ -206,19 +239,23 @@ public class ZnsSendService : IZnsSendService
         }
 
         sendLog.Status = ZnsSendStatus.Failed;
-        sendLog.ErrorCode = envelope.Error;
-        sendLog.ErrorMessage = envelope.Message;
+        sendLog.ErrorCode = envelope?.Error;
+        sendLog.ErrorMessage = envelope?.Message;
         sendLog.UpdatedAt = DateTime.UtcNow;
         await _sendLogRepo.UpdateAsync(sendLog);
 
+        messageLog.Status = envelope?.Error ?? -1;
+        messageLog.Message = envelope?.Message ?? "Unknown ZNS error";
+        await _messageLogRepo.UpdateAsync(messageLog);
+
         _logger.LogWarning("ZNS sent failed templateId={TemplateId}, phone={Phone}, errorCode={ErrorCode}, queueId={QueueId}, message={Message}",
-            request.TemplateId, MaskPhone(request.Phone), envelope.Error, queueId, envelope.Message);
+            request.TemplateId, MaskPhone(request.Phone), envelope?.Error, queueId, envelope?.Message);
 
         return new ZnsSendResult
         {
             Success = false,
-            ErrorCode = envelope.Error,
-            Message = envelope.Message,
+            ErrorCode = envelope?.Error ?? -1,
+            Message = envelope?.Message ?? "Unknown ZNS error",
             QueueId = queueId
         };
     }
@@ -235,7 +272,6 @@ public class ZnsSendService : IZnsSendService
                 continue;
 
             var value = ToValueString(rawValue);
-
             if (!p.AcceptNull && string.IsNullOrWhiteSpace(value))
                 return $"Parameter {p.ParamName} cannot be null or empty";
 
@@ -254,6 +290,16 @@ public class ZnsSendService : IZnsSendService
         }
 
         return null;
+    }
+
+    private static string ExtractFullName(Dictionary<string, object?> data)
+    {
+        foreach (var key in new[] { "Fullname", "FullName", "full_name", "student_fullname", "Name" })
+        {
+            if (data.TryGetValue(key, out var raw) && raw is not null)
+                return raw.ToString() ?? string.Empty;
+        }
+        return string.Empty;
     }
 
     private static string ToValueString(object? raw)
@@ -277,19 +323,12 @@ public class ZnsSendService : IZnsSendService
 
     private static bool IsDateLike(string value)
     {
-        if (DateTime.TryParse(value, out _))
-            return true;
-
+        if (DateTime.TryParse(value, out _)) return true;
         if (long.TryParse(value, out var epoch))
         {
-            try
-            {
-                _ = DateTimeOffset.FromUnixTimeMilliseconds(epoch);
-                return true;
-            }
+            try { _ = DateTimeOffset.FromUnixTimeMilliseconds(epoch); return true; }
             catch { }
         }
-
         return false;
     }
 

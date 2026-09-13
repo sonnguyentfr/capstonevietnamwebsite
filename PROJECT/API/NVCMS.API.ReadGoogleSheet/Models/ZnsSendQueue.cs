@@ -15,6 +15,7 @@ public class ZnsSendQueue
     public string? ErrorMessage { get; set; }
     public string? MsgId { get; set; }
 
+    public string? Type { get; set; }
     public int? CampaignId { get; set; }
     public int? EventCatId { get; set; }
     public int? EventId { get; set; }

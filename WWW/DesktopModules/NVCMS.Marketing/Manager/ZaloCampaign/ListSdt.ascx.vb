@@ -1,5 +1,7 @@
 Imports DotNetNuke.UI.Utilities
+Imports Lucene.Net.Analysis.De
 Imports NVCMS.Modules.EventsWebsite
+Imports NVCMS.Modules.Student
 
 Namespace NVCMS.Modules.Marketing
 
@@ -12,6 +14,7 @@ Namespace NVCMS.Modules.Marketing
         Private _eventsCatCtl As New EventsWebsite_CatController()
         Private _eventsCtl As New EventsWebsiteController()
         Private _eventsStudentCtl As New EventsStudentWebsiteController()
+        Private _studentInfoController As New StudentInfoController
 #End Region
 
 #Region "Helper class"
@@ -192,7 +195,7 @@ Namespace NVCMS.Modules.Marketing
 
             If arrStudents IsNot Nothing Then
                 For Each sv As EventsStudentWebsiteInfo In arrStudents
-                    Dim rawSdt As String = sv.StudentSodienthoai
+                    Dim rawSdt As String = sv.StudentSodienthoai.Trim()
                     Dim pi As New SdtPreviewItem()
                     pi.StudentFullname = sv.StudentFullname
                     pi.SdtRaw = rawSdt
@@ -256,6 +259,7 @@ Namespace NVCMS.Modules.Marketing
             Dim insertCount As Integer = 0
             If arrStudents IsNot Nothing Then
                 For Each sv As EventsStudentWebsiteInfo In arrStudents
+                    Dim fullname As String = sv.StudentFullname
                     Dim rawSdt As String = sv.StudentSodienthoai
                     If String.IsNullOrWhiteSpace(rawSdt) Then Continue For
 
@@ -264,7 +268,7 @@ Namespace NVCMS.Modules.Marketing
                     If normalized Is Nothing Then Continue For
                     If existingPhones.Contains(normalized) Then Continue For
 
-                    _listSdtCtl._Insert(CampaignId, rawSdt, normalized, 0, DateTime.Now, UserId, 50)
+                    _listSdtCtl._Insert(CampaignId, fullname, rawSdt, normalized, 0, DateTime.Now, UserId, 50)
                     existingPhones.Add(normalized)
                     insertCount += 1
                 Next
@@ -304,8 +308,8 @@ Namespace NVCMS.Modules.Marketing
                 Dim rawSdt As String = token.Trim()
                 If String.IsNullOrEmpty(rawSdt) Then Continue For
 
+
                 Dim pi As New SdtPreviewItem()
-                pi.StudentFullname = ""
                 pi.SdtRaw = rawSdt
 
                 Dim errMsg As String = String.Empty
@@ -320,11 +324,22 @@ Namespace NVCMS.Modules.Marketing
                     pi.SdtStatus = "TRÙNG"
                     dupCount += 1
                 Else
+
+
+                    Dim studentname As String = "Khách hàng"
+                    Dim objStudent As StudentInfoInfo
+                    objStudent = _studentInfoController._Info_GetBySodienthoai(normalized)
+                    If Not objStudent Is Nothing Then
+                        With objStudent
+                            studentname = .Fullname
+                        End With
+                    End If
+
                     pi.SdtNormalized = normalized
                     pi.SdtStatus = "OK"
                     okCount += 1
                     seenInBatch.Add(normalized)
-                    _listSdtCtl._Insert(CampaignId, rawSdt, normalized, 0, DateTime.Now, UserId, 50)
+                    _listSdtCtl._Insert(CampaignId, studentname, rawSdt, normalized, 0, DateTime.Now, UserId, 50)
                     existingPhones.Add(normalized)
                     insertCount += 1
                 End If

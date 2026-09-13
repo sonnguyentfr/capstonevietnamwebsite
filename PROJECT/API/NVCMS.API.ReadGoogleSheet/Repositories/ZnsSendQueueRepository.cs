@@ -6,9 +6,9 @@ namespace NVCMS.API.ReadGoogleSheet.Repositories;
 
 public class ZnsSendQueueRepository : IZnsSendQueueRepository
 {
-    private readonly ApplicationDbContext _db;
+    private readonly CRMDbContext _db;
 
-    public ZnsSendQueueRepository(ApplicationDbContext db)
+    public ZnsSendQueueRepository(CRMDbContext db)
     {
         _db = db;
     }

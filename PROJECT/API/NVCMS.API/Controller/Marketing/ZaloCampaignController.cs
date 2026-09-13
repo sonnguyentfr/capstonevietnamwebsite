@@ -1,6 +1,7 @@
 using DotNetNuke.Web.Api;
 using NVCMS.API.Marketing.Services.Marketing;
 using NVCMS.API.Model;
+using NVCMS.API.Model.Marketing;
 using NVCMS.Modules.Marketing;
 using System;
 using System.Collections.Generic;
@@ -130,6 +131,48 @@ namespace NVCMS.API.Controller
             }
         }
 
+        /// <summary>GET /api/ZaloCampaign/GetZnsTemplates?</summary>
+        [HttpGet]
+        public HttpResponseMessage GetZnsTemplates()
+        {
+            try
+            {
+                var data = ZaloCampaignServices.GetZnsTemplates();
+                return Request.CreateResponse(HttpStatusCode.OK,
+                    ApiResponse<List<ZnsTemplateInfoDto>>.SuccessResponse(data, "OK", data.Count));
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError,
+                    ApiResponse<object>.ErrorResponse(ex.Message));
+            }
+        }
+
+        /// <summary>GET /api/ZaloCampaign/GetZnsTemplateById?templateId=1</summary>
+        [HttpGet]
+        public HttpResponseMessage GetZnsTemplateById(long templateId)
+        {
+            try
+            {
+                if (templateId <= 0)
+                    return Request.CreateResponse(HttpStatusCode.BadRequest,
+                        ApiResponse<object>.ErrorResponse("TemplateId không hợp lệ"));
+
+                var data = ZaloCampaignServices.GetZnsTemplateByTemplateId(templateId);
+                if (data == null)
+                    return Request.CreateResponse(HttpStatusCode.NotFound,
+                        ApiResponse<object>.ErrorResponse("Không tìm thấy template"));
+
+                return Request.CreateResponse(HttpStatusCode.OK,
+                    ApiResponse<ZnsTemplateInfoDto>.SuccessResponse(data, "OK"));
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError,
+                    ApiResponse<object>.ErrorResponse(ex.Message));
+            }
+        }
+
         // ============================================================
         // PHONE LIST ENDPOINTS
         // ============================================================
@@ -165,7 +208,7 @@ namespace NVCMS.API.Controller
                         ApiResponse<object>.ErrorResponse("Dữ liệu không hợp lệ"));
 
                 string errorMsg;
-                int result = ZaloListSdtServices.AddPhone(req.CampaignId, req.PhoneRaw, UserInfo.UserID, PortalSettings.PortalId, out errorMsg);
+                int result = ZaloListSdtServices.AddPhone(req.CampaignId,req.FullName, req.PhoneRaw, UserInfo.UserID, PortalSettings.PortalId, out errorMsg);
 
                 if (result == -2)
                     return Request.CreateResponse(HttpStatusCode.BadRequest,
@@ -271,35 +314,5 @@ namespace NVCMS.API.Controller
                     ApiResponse<object>.ErrorResponse(ex.Message));
             }
         }
-    }
-
-    // ============================================================
-    // Request Models
-    // ============================================================
-    public class AddPhoneRequest
-    {
-        public int CampaignId { get; set; }
-        public string PhoneRaw { get; set; }
-    }
-
-    public class AddPhoneBulkRequest
-    {
-        public int CampaignId { get; set; }
-        public string PhoneList { get; set; }
-    }
-
-    public class ValidatePhoneRequest
-    {
-        public string PhoneList { get; set; }
-    }
-
-    public class DeletePhoneRequest
-    {
-        public int Id { get; set; }
-    }
-
-    public class DeleteAllPhoneRequest
-    {
-        public int CampaignId { get; set; }
     }
 }

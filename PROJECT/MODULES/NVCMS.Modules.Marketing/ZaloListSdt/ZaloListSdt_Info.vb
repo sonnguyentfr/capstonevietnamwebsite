@@ -3,6 +3,7 @@
     Public Class Marketing_Zalo_ListSdtInfo
         Public Property Id() As Integer
         Public Property Marketing_Zalo_CampaignId() As Integer
+        Public Property FullName() As String
         Public Property PhoneRaw() As String
         Public Property Phone() As String
         Public Property Status() As Integer

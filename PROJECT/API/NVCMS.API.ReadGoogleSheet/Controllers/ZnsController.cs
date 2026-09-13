@@ -23,26 +23,23 @@ public class ZnsController : ControllerBase
         if (!ModelState.IsValid)
             return BadRequest(ApiResponse<object>.ErrorResponse("Invalid request"));
 
-        var result = await _sendService.SendNowAsync(request, cancellationToken);
-
-        if (!result.Success)
-            return BadRequest(new { success = false, errorCode = result.ErrorCode, message = result.Message });
+        var enqueueResult = await _sendService.EnqueueAsync(request, cancellationToken);
 
         return Ok(new
         {
             success = true,
-            message = result.Message,
+            message = "ZNS queued successfully",
             data = new
             {
+                queueId = enqueueResult.queueId,
+                jobId = enqueueResult.jobId,
                 templateId = request.TemplateId,
-                msgId = result.MsgId,
-                sentTime = result.SentTime,
-                sendingMode = result.SendingMode,
-                quota = new
-                {
-                    remainingQuota = result.RemainingQuota,
-                    dailyQuota = result.DailyQuota
-                }
+                phone = request.Phone,
+                campaignId = request.CampaignId,
+                eventCatId = request.EventCatId,
+                eventId = request.EventId,
+                contextType = request.ContextType,
+                createdBy = request.CreatedBy
             }
         });
     }

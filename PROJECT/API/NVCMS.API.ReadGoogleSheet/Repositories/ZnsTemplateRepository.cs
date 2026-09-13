@@ -1,15 +1,14 @@
 using Microsoft.EntityFrameworkCore;
 using NVCMS.API.ReadGoogleSheet.Data;
 using NVCMS.API.ReadGoogleSheet.Models;
-using System.Text.Json;
 
 namespace NVCMS.API.ReadGoogleSheet.Repositories;
 
 public class ZnsTemplateRepository : IZnsTemplateRepository
 {
-    private readonly ApplicationDbContext _db;
+    private readonly CRMDbContext _db;
 
-    public ZnsTemplateRepository(ApplicationDbContext db)
+    public ZnsTemplateRepository(CRMDbContext db)
     {
         _db = db;
     }

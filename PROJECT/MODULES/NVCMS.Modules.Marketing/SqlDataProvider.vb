@@ -380,8 +380,8 @@ Namespace NVCMS.Modules.Marketing
 #End Region
 #Region "Marketing_Zalo_ListSdt"
 
-        Public Overrides Function Marketing_Zalo_ListSdt_Insert(ByVal Marketing_Zalo_CampaignId As Integer, ByVal PhoneRaw As String, ByVal Phone As String, ByVal Status As Integer, ByVal CreatedDate As DateTime, ByVal UserId As Integer, ByVal PortalId As Integer) As IDataReader
-            Return CType(SqlHelper.ExecuteReader(ConnectionString, "Marketing_Zalo_ListSdt_Insert", Marketing_Zalo_CampaignId, PhoneRaw, Phone, CByte(Status), CreatedDate, UserId, PortalId), IDataReader)
+        Public Overrides Function Marketing_Zalo_ListSdt_Insert(ByVal Marketing_Zalo_CampaignId As Integer, ByVal FullName As String, ByVal PhoneRaw As String, ByVal Phone As String, ByVal Status As Integer, ByVal CreatedDate As DateTime, ByVal UserId As Integer, ByVal PortalId As Integer) As IDataReader
+            Return CType(SqlHelper.ExecuteReader(ConnectionString, "Marketing_Zalo_ListSdt_Insert", Marketing_Zalo_CampaignId, FullName, PhoneRaw, Phone, CByte(Status), CreatedDate, UserId, PortalId), IDataReader)
         End Function
 
         '------------------------------------------'
@@ -413,6 +413,20 @@ Namespace NVCMS.Modules.Marketing
         Public Overrides Sub Marketing_Zalo_ListSdt_UpdateStatus(ByVal Id As Integer, ByVal Status As Integer)
             SqlHelper.ExecuteNonQuery(ConnectionString, "Marketing_Zalo_ListSdt_UpdateStatus", Id, CByte(Status))
         End Sub
+
+        '------------------------------------------'
+
+#End Region
+#Region "Marketing_ZNS_Template"
+
+        Public Overrides Function Marketing_ZNS_Template_GetByTemplateId(ByVal TemplateId As Long) As IDataReader
+            Return CType(SqlHelper.ExecuteReader(ConnectionString, "Marketing_ZNS_Template_SelectByTemplateId", TemplateId), IDataReader)
+        End Function
+
+        '------------------------------------------'
+        Public Overrides Function Marketing_ZNS_Template_SelectAll() As IDataReader
+            Return CType(SqlHelper.ExecuteReader(ConnectionString, "Marketing_ZNS_Template_SelectAll"), IDataReader)
+        End Function
 
         '------------------------------------------'
 

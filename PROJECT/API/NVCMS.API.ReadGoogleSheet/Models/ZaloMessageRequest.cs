@@ -9,6 +9,11 @@ namespace NVCMS.API.ReadGoogleSheet.Models
         public T template_data { get; set; }
 
         public string tracking_id { get; set; } = Guid.NewGuid().ToString();
+        public string type { get; set; }
+        public string userId { get; set; }
+        public int campaingId { get; set; }
+        public int eventCatId { get; set; }
+        public int eventId { get; set; }
     }
     public class ZaloMessage_DangKyThanhCongSK_Request
     {
@@ -27,5 +32,8 @@ namespace NVCMS.API.ReadGoogleSheet.Models
         public string event_cat_shortlink { get; set; }
 
         public string hotline { get; set; }
+        public string qr { get; set; }
+        public string event_location { get; set; }
+        
     }
 }

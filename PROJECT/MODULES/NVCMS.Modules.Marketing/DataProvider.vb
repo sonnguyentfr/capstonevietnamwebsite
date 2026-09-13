@@ -154,7 +154,7 @@ Namespace NVCMS.Modules.Marketing
 
 #Region "Marketing_Zalo_ListSdt"
 
-        Public MustOverride Function Marketing_Zalo_ListSdt_Insert(ByVal Marketing_Zalo_CampaignId As Integer, ByVal PhoneRaw As String, ByVal Phone As String, ByVal Status As Integer, ByVal CreatedDate As DateTime, ByVal UserId As Integer, ByVal PortalId As Integer) As IDataReader
+        Public MustOverride Function Marketing_Zalo_ListSdt_Insert(ByVal Marketing_Zalo_CampaignId As Integer, ByVal FullName As String, ByVal PhoneRaw As String, ByVal Phone As String, ByVal Status As Integer, ByVal CreatedDate As DateTime, ByVal UserId As Integer, ByVal PortalId As Integer) As IDataReader
 
         Public MustOverride Function Marketing_Zalo_ListSdt_InsertBulk(ByVal Marketing_Zalo_CampaignId As Integer, ByVal PhoneList As String, ByVal UserId As Integer, ByVal PortalId As Integer) As IDataReader
 
@@ -167,6 +167,13 @@ Namespace NVCMS.Modules.Marketing
         Public MustOverride Function Marketing_Zalo_ListSdt_GetAll(ByVal Marketing_Zalo_CampaignId As Integer, ByVal KeySearch As String, ByVal Status As Integer, ByVal PageIndex As Integer, ByVal PageSize As Integer) As IDataReader
 
         Public MustOverride Sub Marketing_Zalo_ListSdt_UpdateStatus(ByVal Id As Integer, ByVal Status As Integer)
+
+#End Region
+#Region "Marketing_ZNS_Template"
+
+        Public MustOverride Function Marketing_ZNS_Template_GetByTemplateId(ByVal TemplateId As Long) As IDataReader
+
+        Public MustOverride Function Marketing_ZNS_Template_SelectAll() As IDataReader
 
 #End Region
 

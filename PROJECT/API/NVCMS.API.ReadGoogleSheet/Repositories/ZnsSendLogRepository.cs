@@ -5,9 +5,9 @@ namespace NVCMS.API.ReadGoogleSheet.Repositories;
 
 public class ZnsSendLogRepository : IZnsSendLogRepository
 {
-    private readonly ApplicationDbContext _db;
+    private readonly CRMDbContext _db;
 
-    public ZnsSendLogRepository(ApplicationDbContext db)
+    public ZnsSendLogRepository(CRMDbContext db)
     {
         _db = db;
     }
