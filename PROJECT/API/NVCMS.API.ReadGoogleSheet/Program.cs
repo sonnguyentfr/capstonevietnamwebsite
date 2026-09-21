@@ -100,7 +100,7 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddAuthorization();
 
 // Register Repositories
-builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+builder.Services.AddScoped(typeof(IRepository<>), typeof(MarketingRepository<>));
 builder.Services.AddScoped<ICrmDataLadingRepository, CrmDataLadingRepository>();
 builder.Services.AddScoped<IZaloTokenRepository, ZaloTokenRepository>();
 builder.Services.AddScoped<IZaloMessageLogRepository, ZaloMessageLogRepository>();

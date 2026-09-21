@@ -27,14 +27,13 @@ public class ZnsController : ControllerBase
 
         return Ok(new
         {
-            success = true,
-            message = "ZNS queued successfully",
+            success = enqueueResult.Success,
+            message = enqueueResult.Message,
             data = new
             {
-                queueId = enqueueResult.queueId,
-                jobId = enqueueResult.jobId,
+                totalRecipients = enqueueResult.TotalRecipients,
+                items = enqueueResult.Items,
                 templateId = request.TemplateId,
-                phone = request.Phone,
                 campaignId = request.CampaignId,
                 eventCatId = request.EventCatId,
                 eventId = request.EventId,

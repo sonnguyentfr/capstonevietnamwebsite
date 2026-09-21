@@ -28,8 +28,8 @@ Namespace NVCMS.Modules.Marketing
 
         Private Class SendZnsRequest
             Public Property TemplateId As Long
-            Public Property Phone As String
-            Public Property TemplateData As Dictionary(Of String, Object)
+            'Public Property Phone As String
+            'Public Property TemplateData As Dictionary(Of String, Object)
             Public Property Type As String
             Public Property CampaignId As Integer?
             Public Property EventCatId As Integer?
@@ -167,12 +167,13 @@ Namespace NVCMS.Modules.Marketing
             End If
         End Sub
 
-        Private Shared Function SendZns(request As SendZnsRequest) As SendZnsResponse
+        Private Shared Function SendZns(request As SendZnsRequest) As SendCampaignResponse
             Dim apiPath As String = ConfigurationManager.AppSettings("cap_api_url_sendzns")
             If String.IsNullOrWhiteSpace(apiPath) Then
                 apiPath = "/api/zns/send-job"
             End If
-            Return CapApiClient.Post(Of SendZnsResponse)(apiPath, request)
+            Dim result = UltiCapApiClient.Post(Of SendCampaignResponse)(apiPath, request)
+            Return result
         End Function
 
         Private Sub lbtSendZalo_Click(ByVal sender As Object, ByVal e As EventArgs) Handles lbtSendZalo.Click
@@ -228,51 +229,24 @@ Namespace NVCMS.Modules.Marketing
                     Return
                 End If
 
-                Dim successCount As Integer = 0
-                Dim failCount As Integer = 0
-                Dim totalQueued As Integer = 0
+                Dim request As New SendZnsRequest With {
+                    .EventCatId = eventCatId,
+                    .EventId = eventId,
+                    .TemplateId = templateId,
+                    .Type = "Marketing",
+                    .CampaignId = campaignId,
+                    .CreatedBy = UserId
+                }
 
-                For Each item As Marketing_Zalo_ListSdtInfo In validPhones
-                    Try
-                        Dim errMsg As String = String.Empty
-                        Dim normalized As String = ZaloPhoneHelper.ValidateAndNormalize(If(item.Phone, String.Empty), errMsg)
-                        If String.IsNullOrWhiteSpace(normalized) Then
-                            failCount += 1
-                            Continue For
-                        End If
-
-                        Dim req As New SendZnsRequest With {
-                            .TemplateId = templateId,
-                            .Phone = normalized,
-                            .TemplateData = New Dictionary(Of String, Object) From {
-                                {"Fullname", item.FullName},
-                                {"Phone", normalized},
-                                {"EventCatId", eventCatId},
-                                {"EventId", eventId},
-                                {"ZaloCampainId", campaignId},
-                                {"TemplateZaloId", templateId}
-                            },
-                            .Type = "marketing",
-                            .CampaignId = campaignId,
-                            .EventCatId = eventCatId,
-                            .EventId = eventId,
-                            .ContextType = "zalo_campaign",
-                            .CreatedBy = UserId.ToString()
-                        }
-
-                        Dim result = SendZns(req)
-                        If result IsNot Nothing AndAlso result.success Then
-                            successCount += 1
-                            totalQueued += 1
-                        Else
-                            failCount += 1
-                        End If
-                    Catch
-                        failCount += 1
-                    End Try
-                Next
-
-                ClientAPI.RegisterStartUpScript(Me.Page, "UpdateSuccess", "<script>UpdateSuccess('Đã đưa " & totalQueued.ToString() & " số điện thoại vào job gửi Zalo. Thành công: " & successCount.ToString() & ", lỗi: " & failCount.ToString() & "');</script>")
+                Dim result As SendCampaignResponse = SendZns(request)
+                If result IsNot Nothing AndAlso result.Success Then
+                    BindPhoneList(campaignId)
+                    'UpdateSuccess("Đã đưa " & result.TotalRecipient.ToString() & " email vào hàng đợi gửi.")
+                    ClientAPI.RegisterStartUpScript(Me.Page, "UpdateSuccess", "<script>UpdateSuccess('Đã đưa " & result.TotalRecipient.ToString() & " email vào hàng đợi gửi.');</script>")
+                Else
+                    'UpdateError(If(result Is Nothing, "Không nhận được phản hồi từ API.", result.Message))
+                    ClientAPI.RegisterStartUpScript(Me.Page, "UpdateError", "<script>UpdateError('Không nhận được phản hồi từ API.');</script>")
+                End If
             Catch ex As Exception
                 DotNetNuke.Services.Exceptions.Exceptions.LogException(ex)
                 ClientAPI.RegisterStartUpScript(Me.Page, "UpdateError", "<script>UpdateError('" & ex.Message.Replace("'", "") & "');</script>")

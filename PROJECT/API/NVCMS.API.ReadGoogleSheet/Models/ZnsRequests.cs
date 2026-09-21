@@ -7,17 +7,37 @@ public class ZnsSendRequest
     [Required]
     public long TemplateId { get; set; }
 
+    [Required]
+    public int CampaignId { get; set; }
+
     public string? Phone { get; set; }
 
-    [Required]
     public Dictionary<string, object?> TemplateData { get; set; } = new(StringComparer.OrdinalIgnoreCase);
 
+    public string? TrackingId { get; set; }
+    public string? Qr { get; set; }
+
     public string? Type { get; set; }
-    public int? CampaignId { get; set; }
     public int? EventCatId { get; set; }
     public int? EventId { get; set; }
     public string? ContextType { get; set; }
     public string? CreatedBy { get; set; }
+}
+
+public class ZnsEnqueueItemResult
+{
+    public long QueueId { get; set; }
+    public string JobId { get; set; } = string.Empty;
+    public string Phone { get; set; } = string.Empty;
+    public string TrackingId { get; set; } = string.Empty;
+}
+
+public class ZnsEnqueueResult
+{
+    public bool Success { get; set; }
+    public string Message { get; set; } = string.Empty;
+    public int TotalRecipients { get; set; }
+    public List<ZnsEnqueueItemResult> Items { get; set; } = [];
 }
 
 public class ZnsSendResult

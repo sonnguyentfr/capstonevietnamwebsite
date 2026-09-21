@@ -131,21 +131,33 @@ public class ZnsTemplateRepository : IZnsTemplateRepository
 
     public async Task MarkMissingAsInactiveAsync(IReadOnlyCollection<long> currentTemplateIds)
     {
-        var now = DateTime.UtcNow;
-        var missing = await _db.ZnsTemplates
-            .Where(x => !currentTemplateIds.Contains(x.TemplateId) && x.IsActive)
-            .ToListAsync();
-
-        foreach (var item in missing)
+        try
         {
-            item.IsActive = false;
-            item.Status = "MISSING";
-            item.LastSyncedAt = now;
-            item.UpdatedAt = now;
-        }
+            var now = DateTime.UtcNow;
+            var currentTemplateIdSet = currentTemplateIds.Count == 0
+                ? new HashSet<long>()
+                : currentTemplateIds.ToHashSet();
 
-        if (missing.Count > 0)
-            await _db.SaveChangesAsync();
+            var activeTemplates = await _db.ZnsTemplates
+                .Where(x => x.IsActive)
+                .ToListAsync();
+
+            var missing = activeTemplates
+                .Where(x => !currentTemplateIdSet.Contains(x.TemplateId))
+                .ToList();
+
+            foreach (var item in missing)
+            {
+                item.IsActive = false;
+                item.Status = "MISSING";
+                item.LastSyncedAt = now;
+                item.UpdatedAt = now;
+            }
+
+            if (missing.Count > 0)
+                await _db.SaveChangesAsync();
+        }
+     catch (Exception ex) { throw ex; }
     }
 
     private static decimal? ParseDecimal(string? s)

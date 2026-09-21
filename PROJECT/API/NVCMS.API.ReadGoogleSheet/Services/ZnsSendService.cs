@@ -1,5 +1,7 @@
 using Hangfire;
+using Microsoft.EntityFrameworkCore;
 using NVCMS.API.ReadGoogleSheet.Common;
+using NVCMS.API.ReadGoogleSheet.Data;
 using NVCMS.API.ReadGoogleSheet.Jobs;
 using NVCMS.API.ReadGoogleSheet.Models;
 using NVCMS.API.ReadGoogleSheet.Repositories;
@@ -13,8 +15,9 @@ public class ZnsSendService : IZnsSendService
     private readonly IZaloZnsClient _zaloClient;
     private readonly IZnsSendLogRepository _sendLogRepo;
     private readonly IZnsSendQueueRepository _queueRepo;
-    private readonly IRepository<Zalo_Message_Log> _messageLogRepo;
+    private readonly IZaloMessageLogRepository _messageLogRepo;
     private readonly IBackgroundJobClient _jobClient;
+    private readonly CRMDbContext _crmDb;
     private readonly ILogger<ZnsSendService> _logger;
 
     public ZnsSendService(
@@ -22,8 +25,9 @@ public class ZnsSendService : IZnsSendService
         IZaloZnsClient zaloClient,
         IZnsSendLogRepository sendLogRepo,
         IZnsSendQueueRepository queueRepo,
-        IRepository<Zalo_Message_Log> messageLogRepo,
+        IZaloMessageLogRepository messageLogRepo,
         IBackgroundJobClient jobClient,
+        CRMDbContext crmDb,
         ILogger<ZnsSendService> logger)
     {
         _templateRepo = templateRepo;
@@ -32,36 +36,63 @@ public class ZnsSendService : IZnsSendService
         _queueRepo = queueRepo;
         _messageLogRepo = messageLogRepo;
         _jobClient = jobClient;
+        _crmDb = crmDb;
         _logger = logger;
     }
 
     public async Task<ZnsSendResult> SendNowAsync(ZnsSendRequest request, CancellationToken cancellationToken = default)
         => await SendCoreAsync(request, queueId: null, cancellationToken);
 
-    public async Task<(long queueId, string jobId)> EnqueueAsync(ZnsSendRequest request, CancellationToken cancellationToken = default)
+    public async Task<ZnsEnqueueResult> EnqueueAsync(ZnsSendRequest request, CancellationToken cancellationToken = default)
     {
-        var queue = await _queueRepo.AddAsync(new ZnsSendQueue
+        var template = await _templateRepo.GetByTemplateIdAsync(request.TemplateId);
+        if (template is null)
+            return new ZnsEnqueueResult { Success = false, Message = "Template not found" };
+
+        var recipients = await GetCampaignRecipientsAsync(request, cancellationToken);
+        if (recipients.Count == 0)
+            return new ZnsEnqueueResult { Success = false, Message = "No recipients found for campaign" };
+
+        var items = new List<ZnsEnqueueItemResult>(recipients.Count);
+        foreach (var recipient in recipients)
         {
-            TemplateId = request.TemplateId,
-            Phone = request.Phone ?? string.Empty,
-            TemplateDataJson = JsonSerializer.Serialize(request.TemplateData),
-            Status = ZnsSendStatus.Queued,
-            ScheduledAt = DateTime.UtcNow,
-            Type = request.Type,
-            CampaignId = request.CampaignId,
-            EventCatId = request.EventCatId,
-            EventId = request.EventId,
-            ContextType = request.ContextType,
-            CreatedBy = request.CreatedBy,
-            CreatedAt = DateTime.UtcNow,
-            UpdatedAt = DateTime.UtcNow
-        });
+            var resolvedData = await BuildTemplateDataAsync(template, request, recipient, cancellationToken);
+            var queue = await _queueRepo.AddAsync(new ZnsSendQueue
+            {
+                TemplateId = request.TemplateId,
+                Phone = recipient.Phone,
+                TemplateDataJson = JsonSerializer.Serialize(resolvedData),
+                Status = ZnsSendStatus.Queued,
+                ScheduledAt = DateTime.UtcNow.AddHours(7),
+                CampaignId = request.CampaignId,
+                EventCatId = recipient.EventCatId,
+                EventId = recipient.EventId,
+                ContextType = request.ContextType,
+                CreatedBy = request.CreatedBy,
+                CreatedAt = DateTime.UtcNow.AddHours(7),
+                UpdatedAt = DateTime.UtcNow.AddHours(7)
+            });
 
-        var jobId = _jobClient.Enqueue<ZnsSendJob>(x => x.ExecuteAsync(queue.Id, CancellationToken.None));
-        _logger.LogInformation("ZNS enqueued queueId={QueueId}, jobId={JobId}, templateId={TemplateId}, phone={Phone}, campaignId={CampaignId}",
-            queue.Id, jobId, request.TemplateId, MaskPhone(request.Phone), request.CampaignId);
+            var jobId = _jobClient.Enqueue<ZnsSendJob>(x => x.ExecuteAsync(queue.Id, CancellationToken.None));
+            items.Add(new ZnsEnqueueItemResult
+            {
+                QueueId = queue.Id,
+                JobId = jobId,
+                Phone = recipient.Phone,
+                TrackingId = recipient.TrackingId
+            });
 
-        return (queue.Id, jobId);
+            _logger.LogInformation("ZNS enqueued queueId={QueueId}, jobId={JobId}, templateId={TemplateId}, phone={Phone}, campaignId={CampaignId}",
+                queue.Id, jobId, request.TemplateId, MaskPhone(recipient.Phone), request.CampaignId);
+        }
+
+        return new ZnsEnqueueResult
+        {
+            Success = true,
+            Message = "ZNS queued successfully",
+            TotalRecipients = items.Count,
+            Items = items
+        };
     }
 
     public async Task<ZnsSendResult> SendFromQueueAsync(long queueId, CancellationToken cancellationToken = default)
@@ -74,8 +105,8 @@ public class ZnsSendService : IZnsSendService
             return new ZnsSendResult { Success = true, Message = "Already sent", MsgId = queue.MsgId, QueueId = queue.Id };
 
         queue.Status = ZnsSendStatus.Processing;
-        queue.StartedAt = DateTime.UtcNow;
-        queue.UpdatedAt = DateTime.UtcNow;
+        queue.StartedAt = DateTime.UtcNow.AddHours(7);
+        queue.UpdatedAt = DateTime.UtcNow.AddHours(7);
         await _queueRepo.UpdateAsync(queue);
 
         try
@@ -86,10 +117,10 @@ public class ZnsSendService : IZnsSendService
             var request = new ZnsSendRequest
             {
                 TemplateId = queue.TemplateId,
+                CampaignId = queue.CampaignId ?? 0,
                 Phone = queue.Phone,
                 TemplateData = data,
                 Type = queue.Type,
-                CampaignId = queue.CampaignId,
                 EventCatId = queue.EventCatId,
                 EventId = queue.EventId,
                 ContextType = queue.ContextType,
@@ -99,11 +130,11 @@ public class ZnsSendService : IZnsSendService
             var result = await SendCoreAsync(request, queue.Id, cancellationToken);
 
             queue.Status = result.Success ? ZnsSendStatus.Sent : ZnsSendStatus.Failed;
-            queue.CompletedAt = DateTime.UtcNow;
+            queue.CompletedAt = DateTime.UtcNow.AddHours(7);
             queue.ErrorCode = result.Success ? null : result.ErrorCode;
             queue.ErrorMessage = result.Success ? null : result.Message;
             queue.MsgId = result.MsgId;
-            queue.UpdatedAt = DateTime.UtcNow;
+            queue.UpdatedAt = DateTime.UtcNow.AddHours(7);
             await _queueRepo.UpdateAsync(queue);
 
             return result;
@@ -113,7 +144,7 @@ public class ZnsSendService : IZnsSendService
             queue.RetryCount += 1;
             queue.Status = queue.RetryCount >= 3 ? ZnsSendStatus.Failed : ZnsSendStatus.Retry;
             queue.ErrorMessage = ex.Message;
-            queue.UpdatedAt = DateTime.UtcNow;
+            queue.UpdatedAt = DateTime.UtcNow.AddHours(7);
             await _queueRepo.UpdateAsync(queue);
             _logger.LogError(ex, "ZNS queue processing exception queueId={QueueId}", queueId);
             throw;
@@ -137,16 +168,15 @@ public class ZnsSendService : IZnsSendService
         if (validationError is not null)
             return new ZnsSendResult { Success = false, ErrorCode = -1121, Message = validationError, QueueId = queueId };
 
-        var trackingId = Guid.NewGuid().ToString("N");
+        var trackingId = string.IsNullOrWhiteSpace(request.TrackingId) ? Guid.NewGuid().ToString("N") : request.TrackingId!;
+        normalizedData["tracking_id"] = trackingId;
+
         var requestJson = JsonSerializer.Serialize(new
         {
-            templateId = request.TemplateId,
             phone = request.Phone,
-            templateData = normalizedData,
-            trackingId,
-            eventId = request.EventId,
-            eventCatId = request.EventCatId,
-            campaignId = request.CampaignId
+            template_id = request.TemplateId,
+            template_data = normalizedData,
+            tracking_id = trackingId
         });
 
         var sendLog = await _sendLogRepo.AddAsync(new ZnsSendLog
@@ -163,8 +193,8 @@ public class ZnsSendService : IZnsSendService
             EventId = request.EventId,
             ContextType = request.ContextType,
             CreatedBy = request.CreatedBy,
-            CreatedAt = DateTime.UtcNow,
-            UpdatedAt = DateTime.UtcNow
+            CreatedAt = DateTime.UtcNow.AddHours(7),
+            UpdatedAt = DateTime.UtcNow.AddHours(7)
         });
 
         var fullName = ExtractFullName(normalizedData);
@@ -192,7 +222,7 @@ public class ZnsSendService : IZnsSendService
             sendLog.ErrorCode = -500;
             sendLog.ErrorMessage = ex.Message;
             sendLog.ResponseJson = JsonSerializer.Serialize(new { exception = ex.Message });
-            sendLog.UpdatedAt = DateTime.UtcNow;
+            sendLog.UpdatedAt = DateTime.UtcNow.AddHours(7);
             await _sendLogRepo.UpdateAsync(sendLog);
 
             messageLog.Status = -500;
@@ -212,10 +242,10 @@ public class ZnsSendService : IZnsSendService
             sendLog.Status = ZnsSendStatus.Sent;
             sendLog.ZaloMessageId = envelope.Data?.MsgId;
             sendLog.SendingMode = envelope.Data?.SendingMode;
-            sendLog.SentTime = ParseDateTimeFromMs(envelope.Data?.SentTime) ?? DateTime.UtcNow;
+            sendLog.SentTime = ParseDateTimeFromMs(envelope.Data?.SentTime) ?? DateTime.UtcNow.AddHours(7);
             sendLog.RemainingQuota = ParseInt(envelope.Data?.Quota?.RemainingQuota);
             sendLog.DailyQuota = ParseInt(envelope.Data?.Quota?.DailyQuota);
-            sendLog.UpdatedAt = DateTime.UtcNow;
+            sendLog.UpdatedAt = DateTime.UtcNow.AddHours(7);
             await _sendLogRepo.UpdateAsync(sendLog);
 
             messageLog.Status = 1;
@@ -241,7 +271,7 @@ public class ZnsSendService : IZnsSendService
         sendLog.Status = ZnsSendStatus.Failed;
         sendLog.ErrorCode = envelope?.Error;
         sendLog.ErrorMessage = envelope?.Message;
-        sendLog.UpdatedAt = DateTime.UtcNow;
+        sendLog.UpdatedAt = DateTime.UtcNow.AddHours(7);
         await _sendLogRepo.UpdateAsync(sendLog);
 
         messageLog.Status = envelope?.Error ?? -1;
@@ -259,6 +289,171 @@ public class ZnsSendService : IZnsSendService
             QueueId = queueId
         };
     }
+
+    private async Task<List<CampaignRecipient>> GetCampaignRecipientsAsync(ZnsSendRequest request, CancellationToken cancellationToken)
+    {
+        var query = _crmDb.Set<Marketing_Zalo_ListSdt>()
+            .AsNoTracking()
+            .Where(x => x.Marketing_Zalo_CampaignId == request.CampaignId);
+
+        var phones = await query
+            .OrderBy(x => x.Id)
+            .Select(x => x.Phone)
+            .Where(x => x != null && x != string.Empty)
+            .Distinct()
+            .ToListAsync(cancellationToken);
+
+        var result = new List<CampaignRecipient>(phones.Count);
+        foreach (var phone in phones)
+        {
+            result.Add(await BuildRecipientAsync(phone, request, cancellationToken));
+        }
+
+        return result;
+    }
+
+    private async Task<CampaignRecipient> BuildRecipientAsync(string phone, ZnsSendRequest request, CancellationToken cancellationToken)
+    {
+        var normalizedPhone = phone.Trim();
+        var student = await FindStudentAsync(normalizedPhone, cancellationToken);
+        var eventInfo = await GetEventInfoAsync(request, cancellationToken);
+        var trackingId = !string.IsNullOrWhiteSpace(request.TrackingId)
+            ? request.TrackingId!
+            : BuildTrackingId(eventInfo.EventId, student?.Id, normalizedPhone);
+
+        return new CampaignRecipient
+        {
+            Phone = normalizedPhone,
+            TrackingId = trackingId,
+            StudentCode = student?.Code,
+            StudentFullName = student is null ? null : $"{student.Hotendem} {student.Ten}".Trim(),
+            EventName = eventInfo.EventName,
+            EventLocation = eventInfo.EventLocation,
+            EventTime = eventInfo.EventTime,
+            EventCatName = eventInfo.EventCatName,
+            EventCatDescription = eventInfo.EventCatDescription,
+            Qr = request.TemplateId == 627608
+                ? BuildCheckinQr(student?.Code)
+                : student?.Code,
+            EventId = eventInfo.EventId,
+            EventCatId = eventInfo.EventCatId,
+            CampaignId = request.CampaignId
+        };
+    }
+
+    private static string BuildCheckinQr(string? studentCode)
+    {
+        var code = string.IsNullOrWhiteSpace(studentCode) ? "NA" : studentCode.Trim();
+        return $"http://crm.capstonevietnam.com/quantri/partner/checkin-eventm.html?studentcode={code}";
+    }
+
+    private async Task<Dictionary<string, object?>> BuildTemplateDataAsync(ZnsTemplate template, ZnsSendRequest request, CampaignRecipient recipient, CancellationToken cancellationToken)
+    {
+        var data = new Dictionary<string, object?>(request.TemplateData, StringComparer.OrdinalIgnoreCase);
+        var sourceValues = new Dictionary<string, object?>(StringComparer.OrdinalIgnoreCase)
+        {
+            ["phone"] = recipient.Phone,
+            ["tracking_id"] = recipient.TrackingId,
+            ["student_code"] = recipient.StudentCode ?? "NA",
+            ["student_fullname"] = recipient.StudentFullName ?? "Quý Khách hàng",
+            ["event_name"] = recipient.EventName ?? "NA",
+            ["event_location"] = recipient.EventLocation ?? "NA",
+            ["event_time"] = recipient.EventTime ?? "NA",
+            ["time_date_list"] = recipient.EventTime ?? "NA",
+            ["event_cat_name"] = recipient.EventCatName ?? "NA",
+            ["event_cat_description"] = recipient.EventCatDescription ?? "NA",
+            ["qr"] = recipient.Qr ?? "NA",
+            ["campaign_id"] = recipient.CampaignId,
+            ["event_cat_id"] = recipient.EventCatId,
+            ["event_id"] = recipient.EventId
+        };
+
+        foreach (var param in template.Params.OrderBy(x => x.SortOrder))
+        {
+            if (data.ContainsKey(param.ParamName))
+                continue;
+
+            data[param.ParamName] = ResolveTemplateValue(param.ParamName, sourceValues);
+        }
+
+        data["tracking_id"] = recipient.TrackingId;
+        data["phone"] = recipient.Phone;
+        data["student_code"] = recipient.StudentCode ?? "NA";
+        data["student_fullname"] = recipient.StudentFullName ?? "Quý Khách hàng";
+        data["event_name"] = recipient.EventName ?? "NA";
+        data["event_location"] = recipient.EventLocation ?? "NA";
+        data["event_time"] = recipient.EventTime ?? "NA";
+        data["time_date_list"] = recipient.EventTime ?? "NA";
+        data["event_cat_name"] = recipient.EventCatName ?? "NA";
+        data["event_cat_description"] = recipient.EventCatDescription ?? "NA";
+        data["qr"] = recipient.Qr ?? "NA";
+
+        return data;
+    }
+
+    private static object? ResolveTemplateValue(string paramName, IReadOnlyDictionary<string, object?> values)
+    {
+        var key = paramName.Trim().ToLowerInvariant();
+        return key switch
+        {
+            "phone" => values["phone"],
+            "tracking_id" => values["tracking_id"],
+            "student_code" => values["student_code"],
+            "student_fullname" => values["student_fullname"],
+            "event_name" => values["event_name"],
+            "event_location" => values["event_location"],
+            "event_time" => values["event_time"],
+            "time_date_list" => values["time_date_list"],
+            "event_cat_name" => values["event_cat_name"],
+            "event_cat_description" => values["event_cat_description"],
+            "qr" => values["qr"],
+            _ => null
+        };
+    }
+
+    private async Task<(int? EventId, int? EventCatId, string? EventName, string? EventLocation, string? EventTime, string? EventCatName, string? EventCatDescription)> GetEventInfoAsync(ZnsSendRequest request, CancellationToken cancellationToken)
+    {
+        var eventQuery = _crmDb.Set<NV_Event>().AsNoTracking().Where(x => x.Isactive == true);
+        var eventRow = request.EventId.HasValue
+            ? await eventQuery.FirstOrDefaultAsync(x => x.Id == request.EventId.Value, cancellationToken)
+            : await eventQuery.OrderByDescending(x => x.Id).FirstOrDefaultAsync(cancellationToken);
+
+        if (eventRow is null)
+            return (request.EventId, request.EventCatId, null, null, null, null, null);
+
+        var catId = request.EventCatId ?? eventRow.CatId;
+        var catRow = catId.HasValue
+            ? await _crmDb.Set<NV_Events_Cat>().AsNoTracking().FirstOrDefaultAsync(x => x.Id == catId.Value, cancellationToken)
+            : null;
+
+        var eventName = eventRow.Title ?? catRow?.CatName;
+        var eventLocation = eventRow.Diadiem ?? catRow?.FairOrg;
+        var eventTime = eventRow.Fromdatetime?.ToString("HH:mm dd/MM/yyyy") ?? catRow?.DateShow;
+        var eventCatName = catRow?.CatName;
+        var eventCatDescription = Truncate(catRow?.sendzalo_content ?? string.Empty, 200);
+
+        return (eventRow.Id, catId, eventName, eventLocation, eventTime, eventCatName, eventCatDescription);
+    }
+
+    private static string Truncate(string value, int maxLength)
+    {
+        if (string.IsNullOrEmpty(value) || value.Length <= maxLength)
+            return value;
+
+        return value[..maxLength];
+    }
+
+    private async Task<Student_Info?> FindStudentAsync(string phone, CancellationToken cancellationToken)
+    {
+        var normalized = phone.Replace(" ", string.Empty);
+        return await _crmDb.Set<Student_Info>()
+            .AsNoTracking()
+            .Where(x => x.Sodienthoai != null)
+            .FirstOrDefaultAsync(x => x.Sodienthoai == normalized || x.Sodienthoai!.Replace(" ", string.Empty) == normalized, cancellationToken);
+    }
+
+    private static string BuildTrackingId(int? eventId, int? studentId, string phone)
+        => $"event_{eventId ?? 0}_student_{studentId ?? 0}_{phone}";
 
     private static string? ValidateTemplateData(ZnsTemplate template, Dictionary<string, object?> data)
     {
@@ -352,5 +547,22 @@ public class ZnsSendService : IZnsSendService
     {
         if (string.IsNullOrWhiteSpace(phone) || phone.Length < 4) return "****";
         return new string('*', Math.Max(0, phone.Length - 4)) + phone[^4..];
+    }
+
+    private sealed class CampaignRecipient
+    {
+        public string Phone { get; set; } = string.Empty;
+        public string TrackingId { get; set; } = string.Empty;
+        public string? StudentCode { get; set; }
+        public string? StudentFullName { get; set; }
+        public string? EventName { get; set; }
+        public string? EventLocation { get; set; }
+        public string? EventTime { get; set; }
+        public string? EventCatName { get; set; }
+        public string? EventCatDescription { get; set; }
+        public string? Qr { get; set; }
+        public int? EventId { get; set; }
+        public int? EventCatId { get; set; }
+        public int CampaignId { get; set; }
     }
 }

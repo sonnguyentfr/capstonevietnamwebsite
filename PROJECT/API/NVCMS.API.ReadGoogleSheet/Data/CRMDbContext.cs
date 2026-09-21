@@ -23,6 +23,10 @@ namespace NVCMS.API.ReadGoogleSheet.Data
         public DbSet<Zalo_Message_Log>           ZaloMessageLogs    { get; set; }
         public DbSet<ZnsSendLog>                 ZnsSendLogs        { get; set; }
         public DbSet<ZnsSendQueue>               ZnsSendQueues      { get; set; }
+        public DbSet<Marketing_Zalo_ListSdt>     MarketingZaloListSdts { get; set; }
+        public DbSet<NV_Event>                   NV_Events          { get; set; }
+        public DbSet<NV_Events_Cat>              NV_EventsCats      { get; set; }
+        public DbSet<Student_Info>               StudentInfos       { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -237,7 +241,7 @@ namespace NVCMS.API.ReadGoogleSheet.Data
                 e.Property(x => x.ErrorCode).HasColumnName("ErrorCode");
                 e.Property(x => x.ErrorMessage).HasColumnName("ErrorMessage").HasMaxLength(2000);
                 e.Property(x => x.MsgId).HasColumnName("MsgId").HasMaxLength(200);
-                e.Property(x => x.Type).HasColumnName("Type").HasMaxLength(50);
+                e.Ignore(x => x.Type);
                 e.Property(x => x.CampaignId).HasColumnName("CampaignId");
                 e.Property(x => x.EventCatId).HasColumnName("EventCatId");
                 e.Property(x => x.EventId).HasColumnName("EventId");
@@ -247,28 +251,64 @@ namespace NVCMS.API.ReadGoogleSheet.Data
                 e.Property(x => x.UpdatedAt).HasColumnName("UpdatedAt").HasColumnType("datetime");
             });
 
-            modelBuilder.Entity<student_from_ladipage>(entity =>
+            modelBuilder.Entity<Marketing_Zalo_ListSdt>(e =>
             {
-                entity.ToTable("student_from_ladipage");
-                entity.HasKey(e => e.id);
-                entity.Property(e => e.id).HasColumnName("id");
-                entity.Property(e => e.hotendem).HasColumnName("hotendem").HasMaxLength(200);
-                entity.Property(e => e.ten).HasColumnName("ten").HasMaxLength(50);
-                entity.Property(e => e.gioi_tinh).HasColumnName("gioi_tinh");
-                entity.Property(e => e.ngay_sinh).HasColumnName("ngay_sinh").HasColumnType("date");
-                entity.Property(e => e.so_dien_thoai).HasColumnName("so_dien_thoai").HasMaxLength(30);
-                entity.Property(e => e.email).HasColumnName("email").HasMaxLength(50);
-                entity.Property(e => e.truong_dang_hoc).HasColumnName("truong_dang_hoc").HasMaxLength(500);
-                entity.Property(e => e.event_dia_diem).HasColumnName("event_dia_diem").HasMaxLength(500);
-                entity.Property(e => e.event_id).HasColumnName("event_id");
-                entity.Property(e => e.event_dia_diem_id).HasColumnName("event_dia_diem_id");
-                entity.Property(e => e.source).HasColumnName("source").HasMaxLength(500);
-                entity.Property(e => e.medium).HasColumnName("medium").HasMaxLength(500);
-                entity.Property(e => e.link).HasColumnName("link").HasMaxLength(500);
-                entity.Property(e => e.ladi_page_id).HasColumnName("ladi_page_id").HasMaxLength(500);
-                entity.Property(e => e.client_ip).HasColumnName("client_ip").HasMaxLength(50);
-                entity.Property(e => e.thong_tin_khac).HasColumnName("thong_tin_khac").HasMaxLength(50);
-                entity.Property(e => e.created_date).HasColumnName("created_date").HasColumnType("datetime");
+                e.ToTable("Marketing_Zalo_ListSdt");
+                e.HasKey(x => x.Id);
+                e.Property(x => x.Id).HasColumnName("Id").UseIdentityColumn();
+                e.Property(x => x.Marketing_Zalo_CampaignId).HasColumnName("Marketing_Zalo_CampaignId");
+                e.Property(x => x.PhoneRaw).HasColumnName("PhoneRaw").HasMaxLength(20);
+                e.Property(x => x.Phone).HasColumnName("Phone").HasMaxLength(20).IsRequired();
+                e.Property(x => x.Status).HasColumnName("Status");
+                e.Property(x => x.SendCount).HasColumnName("SendCount");
+                e.Property(x => x.CreatedDate).HasColumnName("CreatedDate").HasColumnType("datetime");
+                e.Property(x => x.UserId).HasColumnName("UserId");
+                e.Property(x => x.PortalId).HasColumnName("PortalId");
+            });
+
+            modelBuilder.Entity<NV_Event>(e =>
+            {
+                e.ToTable("NV_Events");
+                e.HasKey(x => x.Id);
+                e.Property(x => x.Id).HasColumnName("Id");
+                e.Property(x => x.Title).HasColumnName("Title").HasMaxLength(500);
+                e.Property(x => x.Diadiem).HasColumnName("Diadiem").HasMaxLength(1000);
+                e.Property(x => x.Fromdatetime).HasColumnName("Fromdatetime").HasColumnType("datetime");
+                e.Property(x => x.Enddatetime).HasColumnName("Enddatetime").HasColumnType("datetime");
+                e.Property(x => x.CatId).HasColumnName("CatId");
+                e.Property(x => x.Isactive).HasColumnName("Isactive");
+                e.Property(x => x.Portalid).HasColumnName("Portalid");
+            });
+
+            modelBuilder.Entity<NV_Events_Cat>(e =>
+            {
+                e.ToTable("NV_Events_Cat");
+                e.HasKey(x => x.Id);
+                e.Property(x => x.Id).HasColumnName("Id");
+                e.Property(x => x.CatName).HasColumnName("CatName").HasMaxLength(500);
+                e.Property(x => x.FairOrg).HasColumnName("FairOrg").HasMaxLength(500);
+                e.Property(x => x.DateShow).HasColumnName("DateShow").HasMaxLength(100);
+                e.Property(x => x.Desception).HasColumnName("Desception").HasMaxLength(2000);
+                e.Property(x => x.sendzalo_content).HasColumnName("sendzalo_content").HasMaxLength(200);
+                e.Property(x => x.ContentMail).HasColumnName("ContentMail").HasMaxLength(4000);
+                e.Property(x => x.FairDiengia).HasColumnName("FairDiengia").HasMaxLength(4000);
+                e.Property(x => x.FromDate).HasColumnName("FromDate").HasColumnType("datetime");
+                e.Property(x => x.EndDate).HasColumnName("EndDate").HasColumnType("datetime");
+                e.Property(x => x.Isactive).HasColumnName("Isactive");
+                e.Property(x => x.PortalId).HasColumnName("PortalId");
+                e.Property(x => x.is_show_website).HasColumnName("is_show_website");
+            });
+
+            modelBuilder.Entity<Student_Info>(e =>
+            {
+                e.ToTable("Student_Info");
+                e.HasKey(x => x.Id);
+                e.Property(x => x.Id).HasColumnName("Id");
+                e.Property(x => x.Code).HasColumnName("Code").HasMaxLength(100);
+                e.Property(x => x.Hotendem).HasColumnName("Hotendem").HasMaxLength(200);
+                e.Property(x => x.Ten).HasColumnName("Ten").HasMaxLength(100);
+                e.Property(x => x.Sodienthoai).HasColumnName("Sodienthoai").HasMaxLength(30);
+                e.Property(x => x.PortalId).HasColumnName("PortalId");
             });
         }
     }

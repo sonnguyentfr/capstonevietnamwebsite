@@ -18,21 +18,22 @@ public class ZnsJobController : ControllerBase
     }
 
     [HttpPost("send-job")]
+    [Authorize]
     public async Task<IActionResult> SendJob([FromBody] ZnsSendRequest request, CancellationToken cancellationToken)
     {
         if (!ModelState.IsValid)
             return BadRequest(ApiResponse<object>.ErrorResponse("Invalid request"));
 
-        var (queueId, jobId) = await _sendService.EnqueueAsync(request, cancellationToken);
+        var enqueueResult = await _sendService.EnqueueAsync(request, cancellationToken);
 
         return Ok(new
         {
-            success = true,
-            message = "ZNS queued successfully",
+            success = enqueueResult.Success,
+            message = enqueueResult.Message,
             data = new
             {
-                queueId,
-                jobId
+                totalRecipients = enqueueResult.TotalRecipients,
+                items = enqueueResult.Items
             }
         });
     }

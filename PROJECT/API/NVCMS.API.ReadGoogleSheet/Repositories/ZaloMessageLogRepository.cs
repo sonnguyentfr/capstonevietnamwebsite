@@ -18,4 +18,10 @@ public class ZaloMessageLogRepository : IZaloMessageLogRepository
         await _db.SaveChangesAsync();
         return entity;
     }
+
+    public async Task UpdateAsync(Zalo_Message_Log entity)
+    {
+        _db.Set<Zalo_Message_Log>().Update(entity);
+        await _db.SaveChangesAsync();
+    }
 }
