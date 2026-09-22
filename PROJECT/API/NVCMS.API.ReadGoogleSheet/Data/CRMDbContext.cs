@@ -310,6 +310,33 @@ namespace NVCMS.API.ReadGoogleSheet.Data
                 e.Property(x => x.Sodienthoai).HasColumnName("Sodienthoai").HasMaxLength(30);
                 e.Property(x => x.PortalId).HasColumnName("PortalId");
             });
+
+            modelBuilder.Entity<student_from_ladipage>(e =>
+            {
+                // Thiếu mapping này EF lấy tên bảng theo tên DbSet ("CrmDataLadings")
+                // → SqlException: Invalid object name 'CrmDataLadings'.
+                e.ToTable("student_from_ladipage");
+                e.HasKey(x => x.id);
+                e.Property(x => x.id).HasColumnName("id").UseIdentityColumn();
+                e.Property(x => x.hotendem).HasColumnName("hotendem").HasMaxLength(200);
+                e.Property(x => x.ten).HasColumnName("ten").HasMaxLength(50);
+                e.Property(x => x.gioi_tinh).HasColumnName("gioi_tinh");
+                e.Property(x => x.ngay_sinh).HasColumnName("ngay_sinh").HasColumnType("date");
+                e.Property(x => x.so_dien_thoai).HasColumnName("so_dien_thoai").HasMaxLength(30);
+                e.Property(x => x.email).HasColumnName("email").HasMaxLength(50);
+                e.Property(x => x.truong_dang_hoc).HasColumnName("truong_dang_hoc").HasMaxLength(500);
+                e.Property(x => x.event_dia_diem).HasColumnName("event_dia_diem").HasMaxLength(500);
+                e.Property(x => x.event_id).HasColumnName("event_id");
+                e.Property(x => x.event_dia_diem_id).HasColumnName("event_dia_diem_id");
+                e.Property(x => x.source).HasColumnName("source").HasMaxLength(500);
+                e.Property(x => x.medium).HasColumnName("medium").HasMaxLength(500);
+                e.Property(x => x.link).HasColumnName("link").HasMaxLength(500);
+                e.Property(x => x.ladi_page_id).HasColumnName("ladi_page_id").HasMaxLength(500);
+                e.Property(x => x.client_ip).HasColumnName("client_ip").HasMaxLength(50);
+                e.Property(x => x.thong_tin_khac).HasColumnName("thong_tin_khac");
+                e.Property(x => x.is_update_crm).HasColumnName("is_update_crm");
+                e.Property(x => x.created_date).HasColumnName("created_date").HasColumnType("datetime");
+            });
         }
     }
 }

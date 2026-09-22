@@ -28,6 +28,8 @@ builder.Services.Configure<SesSettings>(builder.Configuration.GetSection("SesSet
 builder.Services.Configure<ZaloSettings>(builder.Configuration.GetSection("ZaloSettings"));
 // Configure HangfireJobs
 builder.Services.Configure<HangfireJobSettings>(builder.Configuration.GetSection("HangfireJobs"));
+// Configure CRM sync jobs (thay 2 job DNN Scheduler cũ)
+builder.Services.Configure<CrmSyncSettings>(builder.Configuration.GetSection("CrmSync"));
 
 // Configure Swagger with JWT
 builder.Services.AddSwaggerGen(c =>
@@ -108,6 +110,7 @@ builder.Services.AddScoped<IZaloZnsClient, ZaloZnsClient>();
 builder.Services.AddScoped<IZnsTemplateRepository, ZnsTemplateRepository>();
 builder.Services.AddScoped<IZnsSendQueueRepository, ZnsSendQueueRepository>();
 builder.Services.AddScoped<IZnsSendLogRepository, ZnsSendLogRepository>();
+builder.Services.AddScoped<ICrmSyncRepository, CrmSyncRepository>();
 
 // Register Services
 builder.Services.AddScoped<IGoogleSheetService, GoogleSheetService>();
@@ -118,6 +121,7 @@ builder.Services.AddSingleton<EmailTemplateRenderer>();
 builder.Services.AddScoped<IZaloService, ZaloService>();
 builder.Services.AddScoped<IZnsTemplateService, ZnsTemplateService>();
 builder.Services.AddScoped<IZnsSendService, ZnsSendService>();
+builder.Services.AddScoped<IJobAlertService, JobAlertService>();
 
 // Marketing DbContext (DefaultCRMConnection)
 builder.Services.AddDbContext<CRMDbContext>(options =>
@@ -162,6 +166,9 @@ builder.Services.AddTransient<ZnsTemplateSyncJob>();
 builder.Services.AddTransient<ZnsSendJob>();
 // Event registration confirmation emails (enqueued by Capstone.View)
 builder.Services.AddTransient<EventRegistrationEmailJob>();
+// CRM sync - thay cho NVCMS.Modules.Scheduler (DNN)
+builder.Services.AddTransient<ImportCrmDataJob>();
+builder.Services.AddTransient<CopyStudentFromLadiJob>();
 
 // Add CORS if needed
 builder.Services.AddCors(options =>
