@@ -27,6 +27,47 @@ NVCMS.Modules.Marketing
  Xử lý nghiệp vụ và map dữ liệu từ IDataReader vào Models
  </summary>
 </member>
+<member name="T:NVCMS.Modules.Marketing.MarketingZaloAnalyticsService">
+ <summary>
+ Doc 10 result set cua sp_Marketing_Zalo_Campaign_Analytics va map sang Models.
+ </summary>
+</member>
+<member name="T:NVCMS.Modules.Marketing.Marketing_Zalo_CampaignAnalyticsResult">
+ <summary>
+ Ket qua phan tich chien dich Zalo ZNS - anh xa 10 result set cua
+ sp_Marketing_Zalo_Campaign_Analytics.
+ </summary>
+</member>
+<member name="P:NVCMS.Modules.Marketing.Marketing_Zalo_CampaignAnalyticsResult.Summary">
+ <summary>RS1 - KPI tong quan</summary>
+</member>
+<member name="P:NVCMS.Modules.Marketing.Marketing_Zalo_CampaignAnalyticsResult.StatusDistribution">
+ <summary>RS2 - Phan bo trang thai hang doi</summary>
+</member>
+<member name="P:NVCMS.Modules.Marketing.Marketing_Zalo_CampaignAnalyticsResult.Templates">
+ <summary>RS3 - Thong ke theo template ZNS</summary>
+</member>
+<member name="P:NVCMS.Modules.Marketing.Marketing_Zalo_CampaignAnalyticsResult.EventCats">
+ <summary>RS4 - Thong ke theo nhom su kien</summary>
+</member>
+<member name="P:NVCMS.Modules.Marketing.Marketing_Zalo_CampaignAnalyticsResult.Events">
+ <summary>RS5 - Thong ke theo su kien / dia diem</summary>
+</member>
+<member name="P:NVCMS.Modules.Marketing.Marketing_Zalo_CampaignAnalyticsResult.Phones">
+ <summary>RS6 - So luot gui theo so dien thoai</summary>
+</member>
+<member name="P:NVCMS.Modules.Marketing.Marketing_Zalo_CampaignAnalyticsResult.Timeline">
+ <summary>RS7 - Dien bien theo ngay</summary>
+</member>
+<member name="P:NVCMS.Modules.Marketing.Marketing_Zalo_CampaignAnalyticsResult.Hours">
+ <summary>RS8 - Phan bo theo khung gio</summary>
+</member>
+<member name="P:NVCMS.Modules.Marketing.Marketing_Zalo_CampaignAnalyticsResult.Errors">
+ <summary>RS9 - Phan tich nguyen nhan loi</summary>
+</member>
+<member name="P:NVCMS.Modules.Marketing.Marketing_Zalo_CampaignAnalyticsResult.Details">
+ <summary>RS10 - Chi tiet tung luot gui</summary>
+</member>
 <member name="T:NVCMS.Modules.Marketing.ZaloPhoneHelper">
  <summary>
  Xu ly va chuan hoa so dien thoai Viet Nam cho Zalo

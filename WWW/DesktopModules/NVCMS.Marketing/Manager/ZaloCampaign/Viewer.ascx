@@ -122,6 +122,7 @@
             $.each(data, function (i, c) {
                 var statusBadge = '<span class="badge ' + getStatusBadge(c.Status) + '">' + getStatusLabel(c.Status) + '</span>';
                 var listUrl = tabUrl + (tabUrl.indexOf('?') >= 0 ? '&' : '?') + 'view=listSdt&campaignId=' + c.Id;
+                var statUrl = tabUrl + (tabUrl.indexOf('?') >= 0 ? '&' : '?') + 'view=static&campaignId=' + c.Id;
                 html += '<div class="col-md-4">';
                 html += '  <div class="card card-bordered h-100">';
                 html += '    <div class="card-inner">';
@@ -134,6 +135,7 @@
                 html += '        <span class="text-muted small"><em class="icon ni ni-phone"></em> ' + (c.TotalSdt || 0) + ' số ĐT</span>';
                 html += '        <div>';
                 html += '          <a href="' + listUrl + '" class="btn btn-sm btn-outline-primary mr-1" title="Quản lý số ĐT"><em class="icon ni ni-list"></em></a>';
+                html += '          <a href="' + statUrl + '" class="btn btn-sm btn-outline-info mr-1" title="Thống kê chiến dịch"><em class="icon ni ni-bar-chart"></em></a>';
                 html += '          <a href="javascript:void(0);" onclick="editCampaign(' + c.Id + ')" class="btn btn-sm btn-outline-warning mr-1" title="Sửa"><em class="icon ni ni-edit"></em></a>';
                 html += '          <a href="javascript:void(0);" onclick="confirmDelete(' + c.Id + ')" class="btn btn-sm btn-outline-danger" title="Xoá"><em class="icon ni ni-trash"></em></a>';
                 html += '        </div>';

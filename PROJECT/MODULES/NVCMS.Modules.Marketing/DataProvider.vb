@@ -1,5 +1,5 @@
 '
-' DotNetNuke® - http://www.dotnetnuke.com
+' DotNetNukeï¿½ - http://www.dotnetnuke.com
 ' Copyright (c) 2002-2006
 
 Imports DotNetNuke
@@ -133,6 +133,10 @@ Namespace NVCMS.Modules.Marketing
 #Region "Marketing_Static"
 
         Public MustOverride Function Marketing_Mail_Campaign_Analytics(
+            CampaignId As Integer
+            ) As IDataReader
+
+        Public MustOverride Function Marketing_Zalo_Campaign_Analytics(
             CampaignId As Integer
             ) As IDataReader
 

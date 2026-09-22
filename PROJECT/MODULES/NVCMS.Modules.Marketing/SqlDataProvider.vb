@@ -347,6 +347,11 @@ Namespace NVCMS.Modules.Marketing
         End Function
 
         '------------------------------------------'
+        Public Overrides Function Marketing_Zalo_Campaign_Analytics(CampaignId As Integer) As IDataReader
+            Return CType(SqlHelper.ExecuteReader(ConnectionString, "sp_Marketing_Zalo_Campaign_Analytics", CampaignId), IDataReader)
+        End Function
+
+        '------------------------------------------'
 
 #End Region
 #Region "Marketing_Zalo_Campaign"

@@ -86,6 +86,8 @@
     <Compile Include="Controller\Marketing\CampaignController.cs" />
     <Compile Include="Controller\Marketing\ReportController.cs" />
     <Compile Include="Controller\Marketing\ZaloCampaignController.cs" />
+    <Compile Include="Controller\Marketing\ZaloReportController.cs" />
+    <Compile Include="Services\Marketing\ZaloReportServices.cs" />
     <Compile Include="Model\Marketing\ZaloCampaignModels.cs" />
     <Compile Include="Model\Response\ApiResponse.cs" />
     <Compile Include="Model\Response\ResponseExtensions.cs" />

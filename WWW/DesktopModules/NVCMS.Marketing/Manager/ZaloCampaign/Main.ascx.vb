@@ -7,6 +7,8 @@
                 Select Case Request.Item("view")
                     Case "listSdt"
                         DynamicPage = DotNetNuke.Common.ResolveUrl(Me.TemplateSourceDirectory & "/ListSdt.ascx")
+                    Case "static"
+                        DynamicPage = DotNetNuke.Common.ResolveUrl(Me.TemplateSourceDirectory & "/Static.ascx")
                     Case Else
                         DynamicPage = DotNetNuke.Common.ResolveUrl(Me.TemplateSourceDirectory & "/Viewer.ascx")
                 End Select
