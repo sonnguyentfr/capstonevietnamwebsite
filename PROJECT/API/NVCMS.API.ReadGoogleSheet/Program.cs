@@ -125,7 +125,9 @@ builder.Services.AddScoped<IJobAlertService, JobAlertService>();
 
 // Marketing DbContext (DefaultCRMConnection)
 builder.Services.AddDbContext<CRMDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultCRMConnection")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultCRMConnection"),
+        // DB CRM có compatibility level < 130 (không hỗ trợ OPENJSON) → EF sinh IN (...) cho list.Contains
+        sql => sql.UseCompatibilityLevel(120)));
 
 // Marketing Repositories
 builder.Services.AddScoped<IMarketingCampaignRepository, MarketingCampaignRepository>();
@@ -164,6 +166,7 @@ builder.Services.AddTransient<CampaignBatchJob>();
 builder.Services.AddTransient<ZnsRefreshTokenJob>();
 builder.Services.AddTransient<ZnsTemplateSyncJob>();
 builder.Services.AddTransient<ZnsSendJob>();
+builder.Services.AddTransient<ZnsCampaignEnqueueJob>();
 // Event registration confirmation emails (enqueued by Capstone.View)
 builder.Services.AddTransient<EventRegistrationEmailJob>();
 // CRM sync - thay cho NVCMS.Modules.Scheduler (DNN)

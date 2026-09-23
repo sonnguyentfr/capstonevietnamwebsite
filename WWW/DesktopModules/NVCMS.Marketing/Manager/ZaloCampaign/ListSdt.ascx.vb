@@ -123,7 +123,7 @@ Namespace NVCMS.Modules.Marketing
         Private Sub BindListSdt()
             Dim keySearch As String = txtSearch.Text.Trim()
             Dim statusFilter As Integer = CInt(ddlStatusFilter.SelectedValue)
-            Dim arr As ArrayList = _listSdtCtl._GetAll(CampaignId, keySearch, statusFilter, 0, 500)
+            Dim arr As ArrayList = _listSdtCtl._GetAll(CampaignId, keySearch, statusFilter, 0, 100000)
             rptListSdt.DataSource = arr
             rptListSdt.DataBind()
             ltrTotal.Text = arr.Count.ToString()

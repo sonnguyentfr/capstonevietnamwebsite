@@ -53,3 +53,22 @@ public class ZnsSendResult
     public long? QueueId { get; set; }
     public string? JobId { get; set; }
 }
+
+/// <summary>
+/// Tham số cho job ZnsCampaignEnqueueJob (Hangfire serialize bằng Newtonsoft,
+/// nên TemplateData giữ dạng JSON string để tránh lệch kiểu giữa 2 serializer).
+/// </summary>
+public class ZnsCampaignEnqueueArgs
+{
+    public long TemplateId { get; set; }
+    public int CampaignId { get; set; }
+    public string TemplateDataJson { get; set; } = "{}";
+    public string? TrackingId { get; set; }
+    public string? Type { get; set; }
+    public int? EventCatId { get; set; }
+    public int? EventId { get; set; }
+    public string? ContextType { get; set; }
+    public string? CreatedBy { get; set; }
+    /// <summary>Thời điểm gọi API — dùng để bỏ qua SĐT đã enqueue khi job retry.</summary>
+    public DateTime RequestedAt { get; set; }
+}
