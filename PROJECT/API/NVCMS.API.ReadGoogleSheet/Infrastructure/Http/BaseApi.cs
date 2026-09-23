@@ -33,7 +33,7 @@ namespace NVCMS.API.ReadGoogleSheet.Infrastructure.Http
             var response = await _client.SendAsync(request);
             var json = await response.Content.ReadAsStringAsync();
 
-            _logger.LogInformation(json);
+            LogResponse(request, response, json);
 
             if (!response.IsSuccessStatusCode)
                 throw new Exception(json);
@@ -70,7 +70,7 @@ namespace NVCMS.API.ReadGoogleSheet.Infrastructure.Http
 
             var json = await response.Content.ReadAsStringAsync();
 
-            _logger.LogInformation(json);
+            LogResponse(request, response, json);
 
             if (!response.IsSuccessStatusCode)
                 throw new Exception(json);
@@ -81,6 +81,58 @@ namespace NVCMS.API.ReadGoogleSheet.Infrastructure.Http
                 {
                     PropertyNameCaseInsensitive = true
                 })!;
+        }
+
+        /// <summary>POST multipart/form-data (upload file). Stream do caller quản lý.</summary>
+        public async Task<TResponse> PostMultipartAsync<TResponse>(
+            string url,
+            string fieldName,
+            Stream fileStream,
+            string fileName,
+            string contentType,
+            Dictionary<string, string>? headers = null)
+        {
+            var request = new HttpRequestMessage(HttpMethod.Post, url);
+
+            if (headers != null)
+            {
+                foreach (var item in headers)
+                {
+                    request.Headers.TryAddWithoutValidation(item.Key, item.Value);
+                }
+            }
+
+            var fileContent = new StreamContent(fileStream);
+            fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(contentType);
+            request.Content = new MultipartFormDataContent { { fileContent, fieldName, fileName } };
+
+            var response = await _client.SendAsync(request);
+
+            var json = await response.Content.ReadAsStringAsync();
+
+            LogResponse(request, response, json);
+
+            if (!response.IsSuccessStatusCode)
+                throw new Exception(json);
+
+            return JsonSerializer.Deserialize<TResponse>(
+                json,
+                new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                })!;
+        }
+
+        /// <summary>
+        /// Chỉ log method, URL (không query string), status, độ dài.
+        /// KHÔNG log body: response OAuth chứa access/refresh token.
+        /// </summary>
+        private void LogResponse(HttpRequestMessage request, HttpResponseMessage response, string body)
+        {
+            var uri = request.RequestUri;
+            var path = uri == null ? "" : uri.GetLeftPart(UriPartial.Path);
+            _logger.LogInformation("HTTP {Method} {Url} -> {StatusCode} ({Length} chars)",
+                request.Method.Method, path, (int)response.StatusCode, body?.Length ?? 0);
         }
 
         public async Task<TResponse> PostFormAsync<TResponse>(
@@ -104,7 +156,7 @@ namespace NVCMS.API.ReadGoogleSheet.Infrastructure.Http
 
             var json = await response.Content.ReadAsStringAsync();
 
-            _logger.LogInformation(json);
+            LogResponse(request, response, json);
 
             if (!response.IsSuccessStatusCode)
                 throw new Exception(json);

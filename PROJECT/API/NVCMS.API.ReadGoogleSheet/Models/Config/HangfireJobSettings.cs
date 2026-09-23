@@ -13,6 +13,14 @@
 
         /// <summary>student_from_ladipage → Student_Info / NV_Events_Student (thay DNN CopyDataStudentFromLadiScheduledJob).</summary>
         public JobSetting CopyStudentFromLadi { get; set; } = new();
+
+        /// <summary>Xử lý lại webhook Zalo OA bị lỗi / bị kẹt PENDING. Mặc định bật, 5 phút/lần.</summary>
+        public JobSetting ZaloOAWebhookReprocess { get; set; } = new()
+        {
+            Enabled = true,
+            Cron = "*/5 * * * *",
+            TimeZone = "SE Asia Standard Time"
+        };
     }
 
     public class JobSetting

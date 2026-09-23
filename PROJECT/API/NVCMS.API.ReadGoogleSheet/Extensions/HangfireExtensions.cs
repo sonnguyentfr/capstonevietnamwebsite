@@ -1,4 +1,4 @@
-using Hangfire;
+﻿using Hangfire;
 using Microsoft.Extensions.Options;
 using NVCMS.API.ReadGoogleSheet.Jobs;
 using NVCMS.API.ReadGoogleSheet.Models.Config;
@@ -9,6 +9,7 @@ namespace NVCMS.API.ReadGoogleSheet.Infrastructure
     {
         public const string ImportCrmDataJobId = "import-crm-data";
         public const string CopyStudentFromLadiJobId = "copy-student-from-ladi";
+        public const string ZaloOAWebhookReprocessJobId = "zalo-oa-webhook-reprocess";
 
         public static void RegisterRecurringJobs(this WebApplication app)
         {
@@ -25,6 +26,28 @@ namespace NVCMS.API.ReadGoogleSheet.Infrastructure
             // Copy chạy phút 10 để dữ liệu vừa nạp được xử lý ngay trong cùng giờ.
             RegisterImportCrmData(settings);
             RegisterCopyStudentFromLadi(settings);
+
+            RegisterZaloOAWebhookReprocess(settings);
+        }
+
+        private static void RegisterZaloOAWebhookReprocess(HangfireJobSettings settings)
+        {
+            var cfg = settings.ZaloOAWebhookReprocess;
+
+            if (!cfg.Enabled)
+            {
+                RecurringJob.RemoveIfExists(ZaloOAWebhookReprocessJobId);
+                return;
+            }
+
+            RecurringJob.AddOrUpdate<ZaloOAWebhookReprocessJob>(
+                ZaloOAWebhookReprocessJobId,
+                x => x.ExecuteAsync(CancellationToken.None),
+                cfg.Cron,
+                new RecurringJobOptions
+                {
+                    TimeZone = ResolveTimeZone(cfg.TimeZone)
+                });
         }
 
         private static void RegisterZnsRefreshToken(HangfireJobSettings settings)

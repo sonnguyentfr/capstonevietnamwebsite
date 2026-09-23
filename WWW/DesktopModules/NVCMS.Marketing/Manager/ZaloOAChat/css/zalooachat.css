@@ -1,0 +1,177 @@
+/* Zalo OA Chat - bổ sung cho DashLite (.nk-chat*) đã được skin _admin nạp sẵn */
+
+.zoa-chat .nk-chat-aside,
+.zoa-chat .nk-chat-body {
+    height: calc(100vh - 230px);
+    min-height: 520px;
+    max-height: none;
+}
+
+.zoa-chat .nk-chat-body {
+    display: flex;
+    flex-direction: column;
+}
+
+.zoa-chat .nk-chat-panel {
+    flex: 1 1 auto;
+    min-height: 0;
+    height: auto;
+}
+
+.zoa-chat .nk-chat-blank {
+    flex: 1 1 auto;
+}
+
+.zoa-chat .nk-chat-aside-body {
+    flex: 1 1 auto;
+    min-height: 0;
+}
+
+.zoa-chat .nk-chat-aside-search {
+    margin-bottom: .75rem;
+}
+
+.zoa-filter {
+    margin-top: .5rem;
+    flex-wrap: nowrap;
+    font-size: 12px;
+}
+
+.zoa-filter .nav-link {
+    padding: .5rem 0;
+}
+
+.zoa-chat .chat-item.current .chat-link {
+    background: #ebeef2;
+}
+
+.zoa-chat .chat-item.is-unread .chat-from .name,
+.zoa-chat .chat-item.is-unread .chat-context .text {
+    font-weight: 700;
+    color: #364a63;
+}
+
+.zoa-chat .chat-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.zoa-badge-unread {
+    min-width: 20px;
+    height: 20px;
+    padding: 0 6px;
+    border-radius: 10px;
+    background: #e85347;
+    color: #fff;
+    font-size: 11px;
+    line-height: 20px;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.zoa-status-closed {
+    font-size: 10px;
+    padding: 0 6px;
+    border-radius: 3px;
+    background: #8094ae;
+    color: #fff;
+    margin-left: 6px;
+}
+
+.zoa-chat .chat-msg {
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.zoa-chat .chat-msg a {
+    color: inherit;
+    text-decoration: underline;
+}
+
+.zoa-chat .zoa-img {
+    max-width: 260px;
+    max-height: 260px;
+    border-radius: 8px;
+    display: block;
+    cursor: zoom-in;
+}
+
+.zoa-chat .zoa-sticker {
+    max-width: 120px;
+    max-height: 120px;
+}
+
+.zoa-chat .zoa-system {
+    text-align: center;
+    color: #8094ae;
+    font-size: 12px;
+    padding: .5rem 0;
+}
+
+.zoa-chat .zoa-failed .chat-msg {
+    background: #fbe2e0 !important;
+    color: #8b2a22 !important;
+}
+
+.zoa-chat .zoa-pending {
+    opacity: .7;
+}
+
+.zoa-chat .zoa-meta-status .icon {
+    font-size: 13px;
+}
+
+.zoa-chat .zoa-retry {
+    color: #e85347;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.zoa-warning {
+    border-radius: 0;
+    font-size: 12px;
+    padding: .5rem 1.25rem;
+}
+
+.zoa-profile-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    font-size: 13px;
+}
+
+.zoa-profile-list li {
+    display: flex;
+    justify-content: space-between;
+    gap: .75rem;
+    padding: .35rem 0;
+    border-bottom: 1px dashed #e5e9f2;
+}
+
+.zoa-profile-list li span:first-child {
+    color: #8094ae;
+    flex-shrink: 0;
+}
+
+.zoa-profile-list li span:last-child {
+    text-align: right;
+    word-break: break-word;
+}
+
+.zoa-chat .nk-chat-profile {
+    overflow-y: auto;
+    padding: 0 1.5rem 1.5rem;
+    border-left: 1px solid #e5e9f2;
+}
+
+.zoa-chat .nk-chat-profile.visible {
+    transform: none;
+}
+
+@media (max-width: 859px) {
+    .zoa-chat .nk-chat-aside {
+        height: calc(100vh - 200px);
+    }
+}

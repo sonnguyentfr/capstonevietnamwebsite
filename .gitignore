@@ -423,3 +423,7 @@ WWW_VIEW/appsettings.json
 /WWW_VIEW/appsettings.Development.json
 /WWW/web.config
 /PROJECT/API/NVCMS.API/app.config
+
+# Zalo OA Chat - key Data Protection mã hoá Zalo token (KHÔNG commit, phải giữ khi deploy)
+/PROJECT/API/NVCMS.API.ReadGoogleSheet/App_Data/
+WWW_API/App_Data/

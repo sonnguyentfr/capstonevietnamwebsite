@@ -1,12 +1,15 @@
-using Hangfire;
+﻿using Hangfire;
 using Hangfire.SqlServer;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using NVCMS.API.ReadGoogleSheet.Data;
 using NVCMS.API.ReadGoogleSheet.Infrastructure;
 using NVCMS.API.ReadGoogleSheet.Infrastructure.Http;
+using NVCMS.API.ReadGoogleSheet.Infrastructure.Locking;
+using NVCMS.API.ReadGoogleSheet.Infrastructure.Security;
 using NVCMS.API.ReadGoogleSheet.Jobs;
 using NVCMS.API.ReadGoogleSheet.Models;
 using NVCMS.API.ReadGoogleSheet.Models.Config;
@@ -26,6 +29,15 @@ builder.Services.Configure<SmtpSettings>(builder.Configuration.GetSection("SmtpS
 builder.Services.Configure<SesSettings>(builder.Configuration.GetSection("SesSettings"));
 // Configure Zalo
 builder.Services.Configure<ZaloSettings>(builder.Configuration.GetSection("ZaloSettings"));
+builder.Services.Configure<ZaloOAChatSettings>(builder.Configuration.GetSection("ZaloOAChat"));
+
+// Data Protection - mã hoá Zalo token trong DB. Key ring phải được giữ nguyên giữa các lần deploy.
+var dataProtectionKeysPath = builder.Configuration["DataProtection:KeysPath"];
+if (string.IsNullOrWhiteSpace(dataProtectionKeysPath))
+    dataProtectionKeysPath = Path.Combine(builder.Environment.ContentRootPath, "App_Data", "DataProtection-Keys");
+builder.Services.AddDataProtection()
+    .SetApplicationName("NVCMS.API.ReadGoogleSheet")
+    .PersistKeysToFileSystem(new DirectoryInfo(dataProtectionKeysPath));
 // Configure HangfireJobs
 builder.Services.Configure<HangfireJobSettings>(builder.Configuration.GetSection("HangfireJobs"));
 // Configure CRM sync jobs (thay 2 job DNN Scheduler cũ)
@@ -72,7 +84,9 @@ builder.Logging.AddConsole();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
-    options.EnableSensitiveDataLogging(); // dev only
+    // Chỉ bật khi Development: log giá trị tham số SQL sẽ làm lộ Zalo token khi INSERT Zalo_Token
+    if (builder.Environment.IsDevelopment())
+        options.EnableSensitiveDataLogging();
     options.LogTo(Console.WriteLine, Microsoft.Extensions.Logging.LogLevel.Information);
 });
 
@@ -123,6 +137,19 @@ builder.Services.AddScoped<IZnsTemplateService, ZnsTemplateService>();
 builder.Services.AddScoped<IZnsSendService, ZnsSendService>();
 builder.Services.AddScoped<IJobAlertService, JobAlertService>();
 
+// Zalo token: mã hoá + khoá chống refresh song song
+builder.Services.AddSingleton<IZaloTokenProtector, ZaloTokenProtector>();
+builder.Services.AddSingleton<IZaloTokenRefreshLock, SqlZaloTokenRefreshLock>();
+builder.Services.AddSingleton<IZaloTokenColumnInspector, ZaloTokenColumnInspector>();
+
+// Zalo OA Chat
+builder.Services.AddScoped<IZaloOAClient, ZaloOAClient>();
+builder.Services.AddScoped<IZaloOAChatRepository, ZaloOAChatRepository>();
+builder.Services.AddScoped<IZaloOACustomerService, ZaloOACustomerService>();
+builder.Services.AddScoped<IZaloOAWebhookService, ZaloOAWebhookService>();
+builder.Services.AddScoped<IZaloOAChatService, ZaloOAChatService>();
+builder.Services.AddScoped<IZaloOAHistoryImportService, ZaloOAHistoryImportService>();
+
 // Marketing DbContext (DefaultCRMConnection)
 builder.Services.AddDbContext<CRMDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultCRMConnection"),
@@ -172,6 +199,10 @@ builder.Services.AddTransient<EventRegistrationEmailJob>();
 // CRM sync - thay cho NVCMS.Modules.Scheduler (DNN)
 builder.Services.AddTransient<ImportCrmDataJob>();
 builder.Services.AddTransient<CopyStudentFromLadiJob>();
+// Zalo OA Chat
+builder.Services.AddTransient<ZaloOAWebhookProcessJob>();
+builder.Services.AddTransient<ZaloOAWebhookReprocessJob>();
+builder.Services.AddTransient<ZaloOAHistoryImportJob>();
 
 // Add CORS if needed
 builder.Services.AddCors(options =>

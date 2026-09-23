@@ -18,7 +18,8 @@ namespace NVCMS.API.ReadGoogleSheet.Controllers
             _zaloService = zaloTokenService;
         }
         /// <summary>
-        /// get Access Token from Zalo API and save to database
+        /// get Access Token from Zalo API and save to database.
+        /// Không trả giá trị token về client - chỉ trả trạng thái.
         /// </summary>
         /// <param name="code"></param>
         /// <returns></returns>
@@ -26,10 +27,11 @@ namespace NVCMS.API.ReadGoogleSheet.Controllers
         public async Task<IActionResult> GetAccessToken([FromForm] string code)
         {
             var result = await _zaloService.GetAndSaveTokenAsync(code);
-            return Ok(result);
+            return Ok(ToSafeResult(result));
         }
         /// <summary>
-        /// refresh token from Zalo API and save to database
+        /// refresh token from Zalo API and save to database.
+        /// Không trả giá trị token về client - chỉ trả trạng thái.
         /// </summary>
         /// <param name="code"></param>
         /// <returns></returns>
@@ -41,15 +43,18 @@ namespace NVCMS.API.ReadGoogleSheet.Controllers
                 return NotFound("No token found to refresh");
 
             var result = await _zaloService.RefreshAndSaveTokenAsync(token.RefreshToken);
-            return Ok(result);
+            return Ok(ToSafeResult(result));
         }
+        /// <summary>
+        /// Trạng thái token mới nhất (Id, CreatedAt, ExpiresAt, IsExpired, IsEncrypted) - KHÔNG kèm giá trị token.
+        /// </summary>
         [HttpGet("last")]
-        public async Task<ActionResult<Zalo_Token>> GetLastZaloToken()
+        public async Task<ActionResult<ZaloTokenStatus>> GetLastZaloToken()
         {
-            var token = await _zaloService.GetLastTokenAsync();
-            if (token == null)
+            var status = await _zaloService.GetTokenStatusAsync();
+            if (status == null)
                 return NotFound();
-            return token;
+            return status;
         }
         /// <summary>
         /// Gửi tin nhắn Zalo theo template đã tạo sẵn
@@ -63,5 +68,14 @@ namespace NVCMS.API.ReadGoogleSheet.Controllers
 
             return Ok(result);
         }
+
+        private static object ToSafeResult(ZaloTokenResponse? result) => new
+        {
+            success = !string.IsNullOrWhiteSpace(result?.access_token),
+            expires_in = result?.expires_in,
+            error = result?.error,
+            error_name = result?.error_name,
+            error_description = result?.error_description
+        };
     }
 }
