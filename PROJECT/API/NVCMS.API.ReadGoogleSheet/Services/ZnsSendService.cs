@@ -354,8 +354,8 @@ public class ZnsSendService : IZnsSendService
         {
             ["phone"] = recipient.Phone,
             ["tracking_id"] = recipient.TrackingId,
-            ["student_code"] = recipient.StudentCode ?? "NA",
-            ["student_fullname"] = recipient.StudentFullName ?? "Quý Khách hàng",
+            ["student_code"] = recipient.StudentCode ?? recipient.Phone,
+            ["student_fullname"] = recipient.StudentFullName ?? "Có số điện thoại " + recipient.Phone,
             ["event_name"] = recipient.EventName ?? "NA",
             ["event_location"] = recipient.EventLocation ?? "NA",
             ["event_time"] = recipient.EventTime ?? "NA",
@@ -378,8 +378,8 @@ public class ZnsSendService : IZnsSendService
 
         data["tracking_id"] = recipient.TrackingId;
         data["phone"] = recipient.Phone;
-        data["student_code"] = recipient.StudentCode ?? "NA";
-        data["student_fullname"] = recipient.StudentFullName ?? "Quý Khách hàng";
+        data["student_code"] = recipient.StudentCode ?? recipient.Phone;
+        data["student_fullname"] = recipient.StudentFullName ?? "Có số điện thoại " + recipient.Phone;
         data["event_name"] = recipient.EventName ?? "NA";
         data["event_location"] = recipient.EventLocation ?? "NA";
         data["event_time"] = recipient.EventTime ?? "NA";
