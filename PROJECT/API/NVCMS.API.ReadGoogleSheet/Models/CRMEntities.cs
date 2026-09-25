@@ -41,6 +41,7 @@ public class NV_Events_Cat
     public int? PortalId { get; set; }
     public bool? is_show_website { get; set; }
     public string? Link_pr { get; set; }
+    public string? TitleMail { get; set; }
 }
 
 public class NV_Events_Student
@@ -59,5 +60,6 @@ public class Student_Info
     public string? Hotendem { get; set; }
     public string? Ten { get; set; }
     public string? Sodienthoai { get; set; }
+    public string? Email { get; set; }
     public int? PortalId { get; set; }
 }

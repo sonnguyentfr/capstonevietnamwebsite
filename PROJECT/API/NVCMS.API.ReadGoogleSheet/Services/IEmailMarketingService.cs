@@ -10,6 +10,12 @@ namespace NVCMS.API.ReadGoogleSheet.Services
         /// </summary>
         Task<SendCampaignResult> SendCampaignAsync(SendCampaignBodyRequest request);
 
+        /// <summary>
+        /// Gửi mail xác nhận (EmailTemplates/event-register-succes.html) cho danh sách NV_Events_Student:
+        /// lọc hợp lệ, insert Campaign_Send + Queued send-logs, enqueue EventDetailStaticEmailJob.
+        /// </summary>
+        Task<SendEventDetailStaticResult> SendEventDetailStaticAsync(SendEventDetailStaticRequest request);
+
         /// <summary>Tạo campaign mới trong Marketing_Mail_Campaing.</summary>
         Task<CampaignStatusResponse> CreateCampaignAsync(CreateCampaignRequest request);
 

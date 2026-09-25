@@ -189,6 +189,7 @@ builder.Services.AddHangfireServer(options =>
 
 // Register Jobs as transient (Hangfire activator tự resolve qua DI)
 builder.Services.AddTransient<CampaignBatchJob>();
+builder.Services.AddTransient<EventDetailStaticEmailJob>();
 // ZNS refresh token
 builder.Services.AddTransient<ZnsRefreshTokenJob>();
 builder.Services.AddTransient<ZnsTemplateSyncJob>();

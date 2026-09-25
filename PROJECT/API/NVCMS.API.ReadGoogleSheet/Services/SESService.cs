@@ -34,7 +34,8 @@ namespace NVCMS.API.ReadGoogleSheet.Services
             string toEmail,
             string toName,
             string subject,
-            string htmlBody)
+            string htmlBody,
+            string? bccEmail = null)
         {
             var messageId = Guid.NewGuid().ToString("N");
 
@@ -47,7 +48,7 @@ namespace NVCMS.API.ReadGoogleSheet.Services
                 string.IsNullOrWhiteSpace(fromEmail) ? _sesSettings.FromEmail : fromEmail, 
                 toEmail,
                 ccEmail:  null,
-                bccEmail: null,
+                bccEmail: string.IsNullOrWhiteSpace(bccEmail) ? null : bccEmail,
                 subject,
                 htmlBody,
                 isBodyHtml: true,

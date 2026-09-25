@@ -13,7 +13,8 @@ namespace NVCMS.API.ReadGoogleSheet.Services
             string toEmail,
             string toName,
             string subject,
-            string htmlBody);
+            string htmlBody,
+            string? bccEmail = null);
 
         /// <summary>
         /// Đọc HTML từ Marketing_Mail_Template.FilePath, replace placeholder, gửi qua SES.

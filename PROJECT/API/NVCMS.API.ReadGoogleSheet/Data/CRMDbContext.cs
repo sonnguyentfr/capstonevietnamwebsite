@@ -299,6 +299,7 @@ namespace NVCMS.API.ReadGoogleSheet.Data
                 e.Property(x => x.PortalId).HasColumnName("PortalId");
                 e.Property(x => x.is_show_website).HasColumnName("is_show_website");
                 e.Property(x => x.Link_pr).HasColumnName("Link_pr");
+                e.Property(x => x.TitleMail).HasColumnName("TitleMail");
             });
 
             modelBuilder.Entity<NV_Events_Student>(e =>
@@ -321,6 +322,7 @@ namespace NVCMS.API.ReadGoogleSheet.Data
                 e.Property(x => x.Hotendem).HasColumnName("Hotendem").HasMaxLength(200);
                 e.Property(x => x.Ten).HasColumnName("Ten").HasMaxLength(100);
                 e.Property(x => x.Sodienthoai).HasColumnName("Sodienthoai").HasMaxLength(30);
+                e.Property(x => x.Email).HasColumnName("Email");
                 e.Property(x => x.PortalId).HasColumnName("PortalId");
             });
 

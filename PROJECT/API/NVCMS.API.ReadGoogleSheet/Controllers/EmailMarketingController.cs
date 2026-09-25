@@ -59,6 +59,27 @@ namespace NVCMS.API.ReadGoogleSheet.Controllers
             }
         }
 
+        // -- POST /api/emailmarketing/send-event-detail-static -----------------
+        // Gui mail xac nhan (EmailTemplates/event-register-succes.html) cho danh sach NV_Events_Student.
+        [HttpPost("send-event-detail-static")]
+        [Authorize]
+        public async Task<IActionResult> SendEventDetailStatic([FromBody] SendEventDetailStaticRequest request)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ApiResponse<object>.ErrorResponse("Invalid request"));
+
+            try
+            {
+                var result = await _marketingService.SendEventDetailStaticAsync(request);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in SendEventDetailStatic eventId={EventId}", request.EventId);
+                return StatusCode(500, new { error = ex.Message });
+            }
+        }
+
         // -- POST /api/emailmarketing/campaign ---------------------------------
         [HttpPost("campaign")]
         [Authorize]

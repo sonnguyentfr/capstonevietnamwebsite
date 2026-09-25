@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="x-apple-disable-message-reformatting">
+    <title>Xác nhận đăng ký tham dự - {{EVENT_CAT_NAME}}</title>
+    <!--
+        Template: EventDetailStaticEmailJob (POST /api/emailmarketing/send-event-detail-static)
+        Placeholder dạng "{{...}}" được thay trong EventDetailStaticEmailJob.RenderBody.
+        Các *_SECTION là HTML dựng sẵn trong code (rỗng nếu không có dữ liệu).
+    -->
+    <style type="text/css">
+        body { margin: 0 !important; padding: 0 !important; width: 100% !important; background-color: #eef2f7; }
+        table { border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
+        img { border: 0; line-height: 100%; outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; }
+        a { color: #0b5cad; }
+        @media only screen and (max-width: 620px) {
+            .container { width: 100% !important; }
+            .px { padding-left: 20px !important; padding-right: 20px !important; }
+            .stack { display: block !important; width: 100% !important; }
+            .stack-pad { padding-top: 16px !important; padding-left: 0 !important; }
+            .hero-title { font-size: 22px !important; line-height: 30px !important; }
+        }
+    </style>
+</head>
+<body style="margin:0; padding:0; background-color:#eef2f7;">
+
+    <!-- Preheader (hiện ở dòng xem trước trong hộp thư) -->
+    <div style="display:none; max-height:0; overflow:hidden; mso-hide:all; font-size:1px; line-height:1px; color:#eef2f7;">
+        {{TITLE_MAIL}}
+    </div>
+
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#eef2f7;">
+        <tr>
+            <td align="center" style="padding:24px 12px;">
+
+                <table role="presentation" class="container" width="600" cellpadding="0" cellspacing="0" border="0" style="width:600px; max-width:600px; background-color:#ffffff; border-radius:10px; overflow:hidden; font-family:'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+
+                    <!-- ═══ HEADER ═══ -->
+                    <tr>
+                        <td class="px" style="padding:20px 32px; background-color:#ffffff; border-bottom:3px solid #0b5cad;">
+                            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                                <tr>
+                                    <td valign="middle">
+                                        <a href="https://{{CAPSTONE_WEBSITE}}" target="_blank">
+                                            <img src="http://fair.capstonevietnam.com/LogoCapstonemail.png" alt="Capstone Vietnam" height="44" style="display:block; height:44px; width:auto;">
+                                        </a>
+                                    </td>
+                                    <td valign="middle" align="right" style="font-size:13px; color:#5b6b7f;">
+                                        Hotline<br>
+                                        <a href="tel:{{HOTLINE}}" style="font-size:16px; font-weight:700; color:#c8102e; text-decoration:none;">{{HOTLINE}}</a>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+
+                    <!-- ═══ HERO ═══ -->
+                    <tr>
+                        <td class="px" align="center" style="padding:36px 32px 28px; background-color:#0b5cad; background-image:linear-gradient(135deg,#0b5cad 0%,#083d75 100%);">
+                            <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+                                <tr>
+                                    <td style="padding:6px 16px; background-color:#2eb872; border-radius:20px; font-size:12px; font-weight:700; letter-spacing:1px; color:#ffffff;">
+                                        &#10003;&nbsp; ĐĂNG KÝ THÀNH CÔNG
+                                    </td>
+                                </tr>
+                            </table>
+                            <p style="margin:18px 0 6px; font-size:16px; color:#d6e6f7;">Xin chào <strong style="color:#ffffff;">{{STUDENT_FULLNAME}}</strong>,</p>
+                            <p style="margin:0 0 14px; font-size:15px; line-height:22px; color:#d6e6f7;">Cảm ơn bạn đã đăng ký tham dự chương trình</p>
+                            <h1 class="hero-title" style="margin:0; font-size:26px; line-height:34px; font-weight:700; color:#ffffff;">{{EVENT_CAT_NAME}}</h1>
+                            <p style="margin:10px 0 0; font-size:14px; color:#d6e6f7;">do <strong style="color:#ffffff;">Capstone Education</strong> tổ chức</p>
+                        </td>
+                    </tr>
+
+                    <!-- ═══ THÔNG TIN SỰ KIỆN ═══ -->
+                    <tr>
+                        <td class="px" style="padding:28px 32px 8px;">
+                            <h2 style="margin:0 0 14px; font-size:13px; font-weight:700; letter-spacing:1.2px; text-transform:uppercase; color:#0b5cad;">Thông tin sự kiện</h2>
+                            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border:1px solid #e3e8ef; border-radius:8px; background-color:#f8fafc;">
+                                <tr>
+                                    <td style="padding:14px 18px; border-bottom:1px solid #e3e8ef;">
+                                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
+                                            <td width="32" valign="top" style="font-size:18px; line-height:22px;">&#128204;</td>
+                                            <td valign="top">
+                                                <div style="font-size:12px; color:#7a8799; text-transform:uppercase; letter-spacing:.5px;">Sự kiện</div>
+                                                <div style="font-size:15px; font-weight:600; color:#1f2d3d; line-height:22px;">{{EVENT_NAME}}</div>
+                                            </td>
+                                        </tr></table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:14px 18px; border-bottom:1px solid #e3e8ef;">
+                                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
+                                            <td width="32" valign="top" style="font-size:18px; line-height:22px;">&#128197;</td>
+                                            <td valign="top">
+                                                <div style="font-size:12px; color:#7a8799; text-transform:uppercase; letter-spacing:.5px;">Thời gian</div>
+                                                <div style="font-size:15px; font-weight:600; color:#1f2d3d; line-height:22px;">{{EVENT_TIME}}</div>
+                                            </td>
+                                        </tr></table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:14px 18px;">
+                                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
+                                            <td width="32" valign="top" style="font-size:18px; line-height:22px;">&#128205;</td>
+                                            <td valign="top">
+                                                <div style="font-size:12px; color:#7a8799; text-transform:uppercase; letter-spacing:.5px;">Địa điểm</div>
+                                                <div style="font-size:15px; font-weight:600; color:#1f2d3d; line-height:22px;">{{EVENT_LOCATION}}</div>
+                                            </td>
+                                        </tr></table>
+                                    </td>
+                                </tr>
+                            </table>
+                            {{SHORTLINK_SECTION}}
+                        </td>
+                    </tr>
+
+                    <!-- ═══ MÃ CHECK-IN (QR + barcode) ═══ -->
+                    {{QR_SECTION}}
+
+                    <!-- ═══ HỒ SƠ ĐĂNG KÝ ═══ -->
+                    <tr>
+                        <td class="px" style="padding:24px 32px 8px;">
+                            <h2 style="margin:0 0 14px; font-size:13px; font-weight:700; letter-spacing:1.2px; text-transform:uppercase; color:#0b5cad;">Hồ sơ đăng ký của bạn</h2>
+                            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border:1px solid #e3e8ef; border-radius:8px; font-size:14px;">
+                                <tr>
+                                    <td width="38%" style="padding:12px 18px; border-bottom:1px solid #e3e8ef; color:#7a8799;">Họ và tên</td>
+                                    <td style="padding:12px 18px; border-bottom:1px solid #e3e8ef; color:#1f2d3d; font-weight:600;">{{STUDENT_FULLNAME}}</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:12px 18px; border-bottom:1px solid #e3e8ef; color:#7a8799;">Mã đăng ký</td>
+                                    <td style="padding:12px 18px; border-bottom:1px solid #e3e8ef; color:#c8102e; font-weight:700; letter-spacing:.5px;">{{STUDENT_CODE}}</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:12px 18px; border-bottom:1px solid #e3e8ef; color:#7a8799;">Số điện thoại</td>
+                                    <td style="padding:12px 18px; border-bottom:1px solid #e3e8ef; color:#1f2d3d; font-weight:600;">{{STUDENT_PHONE}}</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:12px 18px; color:#7a8799;">Email</td>
+                                    <td style="padding:12px 18px; color:#1f2d3d; font-weight:600; word-break:break-all;">{{STUDENT_EMAIL}}</td>
+                                </tr>
+                            </table>
+                            <p style="margin:10px 0 0; font-size:12px; line-height:18px; color:#7a8799;">
+                                Nếu thông tin chưa chính xác, vui lòng liên hệ hotline <a href="tel:{{HOTLINE}}" style="color:#c8102e; font-weight:600; text-decoration:none;">{{HOTLINE}}</a> để được cập nhật.
+                            </p>
+                        </td>
+                    </tr>
+
+                    <!-- ═══ LƯU Ý / NỘI DUNG CHƯƠNG TRÌNH (NV_Events_Cat.ContentMail) ═══ -->
+                    {{CONTENT_SECTION}}
+
+                    <!-- ═══ HỖ TRỢ ═══ -->
+                    <tr>
+                        <td class="px" style="padding:24px 32px 32px;">
+                            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#fff5f6; border:1px solid #f6d3d8; border-radius:8px;">
+                                <tr>
+                                    <td align="center" style="padding:18px 20px; font-size:14px; line-height:22px; color:#1f2d3d;">
+                                        Cần hỗ trợ? Gọi ngay hotline
+                                        <a href="tel:{{HOTLINE}}" style="font-size:18px; font-weight:700; color:#c8102e; text-decoration:none;">{{HOTLINE}}</a><br>
+                                        hoặc email <a href="mailto:{{CAPSTONE_EMAIL}}" style="color:#0b5cad; font-weight:600;">{{CAPSTONE_EMAIL}}</a>
+                                    </td>
+                                </tr>
+                            </table>
+                            <p style="margin:22px 0 0; font-size:14px; line-height:22px; color:#1f2d3d;">
+                                Hẹn gặp bạn tại sự kiện!<br>
+                                <strong>Capstone Vietnam</strong>
+                            </p>
+                        </td>
+                    </tr>
+
+                    <!-- ═══ FOOTER ═══ -->
+                    <tr>
+                        <td class="px" style="padding:26px 32px; background-color:#0f2340; font-size:13px; line-height:20px; color:#aebbd0;">
+                            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                                <tr>
+                                    <td class="stack" width="50%" valign="top" style="padding-right:12px;">
+                                        <div style="font-size:12px; font-weight:700; letter-spacing:1px; color:#ffffff; margin-bottom:6px;">VĂN PHÒNG HÀ NỘI</div>
+                                        {{CAPSTONE_HANOI_ADDRESS}}<br>
+                                        {{CAPSTONE_HANOI_PHONE}}
+                                    </td>
+                                    <td class="stack stack-pad" width="50%" valign="top" style="padding-left:12px;">
+                                        <div style="font-size:12px; font-weight:700; letter-spacing:1px; color:#ffffff; margin-bottom:6px;">VĂN PHÒNG HỒ CHÍ MINH</div>
+                                        {{CAPSTONE_HCM_ADDRESS}}<br>
+                                        {{CAPSTONE_HCM_PHONE}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2" style="padding-top:18px; border-bottom:1px solid #243b5e;"></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2" align="center" style="padding-top:16px; font-size:13px;">
+                                        <a href="https://{{CAPSTONE_WEBSITE}}" target="_blank" style="color:#ffffff; text-decoration:none;">{{CAPSTONE_WEBSITE}}</a>
+                                        &nbsp;&nbsp;|&nbsp;&nbsp;
+                                        <a href="mailto:{{CAPSTONE_EMAIL}}" style="color:#ffffff; text-decoration:none;">{{CAPSTONE_EMAIL}}</a>
+                                        &nbsp;&nbsp;|&nbsp;&nbsp;
+                                        <a href="https://{{CAPSTONE_FACEBOOK}}" target="_blank" style="color:#ffffff; text-decoration:none;">Facebook</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2" align="center" style="padding-top:10px; font-size:11px; color:#7f8fa8;">
+                                        Bạn nhận được email này vì đã đăng ký tham dự sự kiện của Capstone Vietnam.
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+
+                </table>
+
+            </td>
+        </tr>
+    </table>
+</body>
+</html>
