@@ -181,16 +181,11 @@ builder.Services.AddHangfire(config => config
         DisableGlobalLocks = true
     }));
 
-// Storage Hangfire dùng chung với server → máy dev tắt worker (HangfireServer:Enabled=false)
-// để không "giành" job của server (vd zns-refresh-token làm đứt chuỗi token Zalo).
-if (builder.Configuration.GetValue("HangfireServer:Enabled", true))
+builder.Services.AddHangfireServer(options =>
 {
-    builder.Services.AddHangfireServer(options =>
-    {
-        options.WorkerCount = Environment.ProcessorCount * 2;
-        options.Queues = ["default"];
-    });
-}
+    options.WorkerCount = Environment.ProcessorCount * 2;
+    options.Queues = ["default"];
+});
 
 // Register Jobs as transient (Hangfire activator tự resolve qua DI)
 builder.Services.AddTransient<CampaignBatchJob>();

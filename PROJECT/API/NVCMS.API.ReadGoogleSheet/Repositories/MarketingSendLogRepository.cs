@@ -40,7 +40,7 @@ namespace NVCMS.API.ReadGoogleSheet.Repositories
 
             record.Status = status;
 
-            var now = DateTime.UtcNow;
+            var now = DateTime.UtcNow.AddHours(7);
             switch (status)
             {
                 case MailSendStatus.Sent:       record.SentTime       = now; break;

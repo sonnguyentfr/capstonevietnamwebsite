@@ -199,7 +199,7 @@ namespace NVCMS.API.ReadGoogleSheet.Controllers
                             {
                                 Email        = sendLog.Email,
                                 reason       = 6,
-                                created_date = DateTime.UtcNow
+                                created_date = DateTime.UtcNow.AddHours(7)
                             });
                         }
                     }

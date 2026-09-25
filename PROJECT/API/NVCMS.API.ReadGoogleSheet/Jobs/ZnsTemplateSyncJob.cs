@@ -17,7 +17,7 @@ public class ZnsTemplateSyncJob
     [AutomaticRetry(Attempts = 3, DelaysInSeconds = new[] { 60, 300, 600 })]
     public async Task Execute(CancellationToken cancellationToken = default)
     {
-        _logger.LogInformation("ZNS template sync job started at {Now}", DateTime.UtcNow);
+        _logger.LogInformation("ZNS template sync job started at {Now}", DateTime.UtcNow.AddHours(7));
         var changed = await _templateService.SyncTemplatesAsync(cancellationToken);
         _logger.LogInformation("ZNS template sync job done, changed={Changed}", changed);
     }

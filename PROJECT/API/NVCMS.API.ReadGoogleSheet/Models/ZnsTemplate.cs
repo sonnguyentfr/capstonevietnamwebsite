@@ -19,8 +19,8 @@ public class ZnsTemplate
     public bool IsActive { get; set; } = true;
     public string? DetailJson { get; set; }
     public DateTime? LastSyncedAt { get; set; }
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-    public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow.AddHours(7);
+    public DateTime UpdatedAt { get; set; } = DateTime.UtcNow.AddHours(7);
 
     public ICollection<ZnsTemplateParam> Params { get; set; } = new List<ZnsTemplateParam>();
     public ICollection<ZnsTemplateButton> Buttons { get; set; } = new List<ZnsTemplateButton>();

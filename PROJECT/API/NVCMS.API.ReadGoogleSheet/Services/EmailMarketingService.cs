@@ -131,7 +131,7 @@ namespace NVCMS.API.ReadGoogleSheet.Services
                 Description = request.Description,
                 PortalId    = request.PortalId,
                 UserId      = request.UserId,
-                CreatedDate = DateTime.UtcNow
+                CreatedDate = DateTime.UtcNow.AddHours(7)
             };
 
             await _campaignRepo.AddAsync(campaign);

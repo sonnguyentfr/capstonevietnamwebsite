@@ -36,7 +36,7 @@ public class ZnsTemplateRepository : IZnsTemplateRepository
 
     public async Task<ZnsTemplate> UpsertShallowAsync(ZaloTemplateListItemDto dto)
     {
-        var now = DateTime.UtcNow;
+        var now = DateTime.UtcNow.AddHours(7);
         var entity = await _db.ZnsTemplates.FirstOrDefaultAsync(x => x.TemplateId == dto.TemplateId);
         if (entity is null)
         {
@@ -72,7 +72,7 @@ public class ZnsTemplateRepository : IZnsTemplateRepository
     public async Task ReplaceDetailAsync(long templateDbId, ZaloTemplateDetailDto detail, string detailJson)
     {
         await using var tx = await _db.Database.BeginTransactionAsync();
-        var now = DateTime.UtcNow;
+        var now = DateTime.UtcNow.AddHours(7);
 
         var entity = await _db.ZnsTemplates.FirstAsync(x => x.Id == templateDbId);
         entity.TemplateName = detail.TemplateName;
@@ -133,7 +133,7 @@ public class ZnsTemplateRepository : IZnsTemplateRepository
     {
         try
         {
-            var now = DateTime.UtcNow;
+            var now = DateTime.UtcNow.AddHours(7);
             var currentTemplateIdSet = currentTemplateIds.Count == 0
                 ? new HashSet<long>()
                 : currentTemplateIds.ToHashSet();

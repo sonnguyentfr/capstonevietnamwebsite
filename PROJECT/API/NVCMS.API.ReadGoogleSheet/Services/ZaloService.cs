@@ -107,9 +107,14 @@ namespace NVCMS.API.ReadGoogleSheet.Services
             // (nếu sửa, lần SaveChanges sau sẽ ghi plaintext đè lên dòng cũ).
             return new Zalo_Token
             {
+                //Id = stored.Id,
+                //AccessToken = _protector.Unprotect(stored.AccessToken),
+                //RefreshToken = _protector.Unprotect(stored.RefreshToken),
+                //ExpiresIn = stored.ExpiresIn,
+                //CreatedAt = stored.CreatedAt
                 Id = stored.Id,
-                AccessToken = _protector.Unprotect(stored.AccessToken),
-                RefreshToken = _protector.Unprotect(stored.RefreshToken),
+                AccessToken = stored.AccessToken,
+                RefreshToken = stored.RefreshToken,
                 ExpiresIn = stored.ExpiresIn,
                 CreatedAt = stored.CreatedAt
             };
@@ -160,24 +165,24 @@ namespace NVCMS.API.ReadGoogleSheet.Services
             return new ZaloTokenStatus
             {
                 Id = stored.Id,
-                CreatedAt = DateTime.SpecifyKind(stored.CreatedAt, DateTimeKind.Utc),
+                CreatedAt = stored.CreatedAt,
                 ExpiresAt = expiresAt,
-                IsExpired = DateTime.UtcNow >= expiresAt,
+                IsExpired = DateTime.UtcNow.AddHours(7) >= expiresAt,
                 IsEncrypted = _protector.IsProtected(stored.AccessToken)
             };
         }
 
-        /// <summary>Hết hạn = CreatedAt (UTC, xem SaveToken) + expires_in giây.</summary>
+        /// <summary>Hết hạn = CreatedAt (giờ VN = UtcNow+7, xem SaveToken) + expires_in giây.</summary>
         public static DateTime GetExpiresAt(Zalo_Token token)
         {
             var seconds = int.TryParse(token.ExpiresIn, out var s) && s > 0 ? s : DefaultExpiresInSeconds;
-            return DateTime.SpecifyKind(token.CreatedAt, DateTimeKind.Utc).AddSeconds(seconds);
+            return token.CreatedAt.AddSeconds(seconds);
         }
 
         private bool NeedsRefresh(Zalo_Token token)
         {
             var margin = TimeSpan.FromMinutes(Math.Max(0, _config.TokenRefreshMarginMinutes));
-            return DateTime.UtcNow >= GetExpiresAt(token) - margin;
+            return DateTime.UtcNow.AddHours(7) >= GetExpiresAt(token) - margin;
         }
 
         private async Task<Zalo_Token?> TryGetLastTokenAsync()
@@ -234,10 +239,14 @@ namespace NVCMS.API.ReadGoogleSheet.Services
 
             var entity = new Zalo_Token
             {
-                AccessToken = await ProtectForColumnAsync(token.access_token, "AccessToken"),
-                RefreshToken = await ProtectForColumnAsync(token.refresh_token, "RefreshToken"),
+                //AccessToken = await ProtectForColumnAsync(token.access_token, "AccessToken"),
+                //RefreshToken = await ProtectForColumnAsync(token.refresh_token, "RefreshToken"),
+                //ExpiresIn = token.expires_in,
+                //CreatedAt = DateTime.UtcNow
+                AccessToken = token.access_token,
+                RefreshToken = token.refresh_token,
                 ExpiresIn = token.expires_in,
-                CreatedAt = DateTime.UtcNow
+                CreatedAt = DateTime.UtcNow.AddHours(7)
             };
 
             // Zalo đã xoay vòng refresh token: nếu không lưu được thì mất chuỗi token → thử lại 1 lần.
@@ -368,7 +377,7 @@ namespace NVCMS.API.ReadGoogleSheet.Services
                 ResponseJson = JsonSerializer.Serialize(response),
                 Status = isSuccess ? ZnsSendStatus.Sent : ZnsSendStatus.Failed,
                 ZaloMessageId = response.Data?.MsgId,
-                SentTime = isSuccess ? (sentTime ?? DateTime.UtcNow) : null,
+                SentTime = isSuccess ? (sentTime ?? DateTime.UtcNow.AddHours(7)) : null,
                 SendingMode = response.Data?.SendingMode,
                 RemainingQuota = remainingQuota,
                 DailyQuota = dailyQuota,
@@ -388,7 +397,7 @@ namespace NVCMS.API.ReadGoogleSheet.Services
         private static DateTime? ParseDateTimeFromMs(string? ms)
         {
             if (!long.TryParse(ms, out var v)) return null;
-            try { return DateTimeOffset.FromUnixTimeMilliseconds(v).UtcDateTime; }
+            try { return DateTimeOffset.FromUnixTimeMilliseconds(v).UtcDateTime.AddHours(7); }
             catch { return null; }
         }
 

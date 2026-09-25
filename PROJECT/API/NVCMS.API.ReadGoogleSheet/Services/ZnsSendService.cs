@@ -1,3 +1,5 @@
+using Amazon.SimpleEmailV2;
+using Amazon.SimpleEmailV2.Model;
 using Hangfire;
 using Microsoft.EntityFrameworkCore;
 using NVCMS.API.ReadGoogleSheet.Common;
@@ -5,6 +7,7 @@ using NVCMS.API.ReadGoogleSheet.Data;
 using NVCMS.API.ReadGoogleSheet.Jobs;
 using NVCMS.API.ReadGoogleSheet.Models;
 using NVCMS.API.ReadGoogleSheet.Repositories;
+using System.Numerics;
 using System.Text.Json;
 
 namespace NVCMS.API.ReadGoogleSheet.Services;
@@ -195,193 +198,239 @@ public class ZnsSendService : IZnsSendService
     /// </summary>
     public async Task<ZnsEventStudentEnqueueResult> EnqueueEventStudentsAsync(ZnsEventStudentSendRequest request, CancellationToken cancellationToken = default)
     {
-        const string type = "eventStatic";
-        const int batchSize = 500;
-
-        var ids = request.Ids.Where(x => x > 0).Distinct().ToList();
-        var result = new ZnsEventStudentEnqueueResult { TotalRequested = ids.Count };
-        if (ids.Count == 0)
-            return Fail(result, "Ids is empty");
-
-        var template = await _templateRepo.GetByTemplateIdAsync(request.TemplateId);
-        if (template is null)
-            return Fail(result, "Template not found");
-        if (!template.IsActive || !string.Equals(template.Status, "ENABLE", StringComparison.OrdinalIgnoreCase))
-            return Fail(result, "Template is disabled");
-
-        var eventRow = await _crmDb.NV_Events.AsNoTracking().FirstOrDefaultAsync(x => x.Id == request.EventId, cancellationToken);
-        if (eventRow is null)
-            return Fail(result, $"Event {request.EventId} not found");
-        if (eventRow.CatId.HasValue && eventRow.CatId.Value != request.EventCatId)
-            return Fail(result, $"Event {request.EventId} does not belong to eventCat {request.EventCatId}");
-
-        var catRow = await _crmDb.NV_EventsCats.AsNoTracking().FirstOrDefaultAsync(x => x.Id == request.EventCatId, cancellationToken);
-        if (catRow is null)
-            return Fail(result, $"EventCat {request.EventCatId} not found");
-
-        var isCheckinTemplate = request.TemplateId == CheckinQrTemplateId;
-        var hotline = _configuration["CapstoneInfo:Hotline"] ?? string.Empty;
-        var eventName = eventRow.Title ?? catRow.CatName ?? "NA";
-        var eventInfo = new Dictionary<string, object?>(StringComparer.OrdinalIgnoreCase)
+        try
         {
-            ["event_name"] = eventName,
-            ["event_location"] = eventRow.Diadiem ?? eventName,
-            ["event_cat_name"] = catRow.CatName ?? "NA",
-            ["event_cat_description"] = Truncate(catRow.sendzalo_content ?? string.Empty, 200),
-            ["event_time"] = catRow.FromDate?.ToString("HH:mm dd/MM/yyyy") ?? catRow.DateShow ?? "NA",
-            ["event_cat_shortlink"] = catRow.Link_pr ?? string.Empty,
-            ["hotline"] = hotline
-        };
+            const string type = "eventStatic";
+            const int batchSize = 500;
 
-        var seenPhones = new HashSet<string>();
-        foreach (var chunk in ids.Chunk(batchSize))
-        {
-            cancellationToken.ThrowIfCancellationRequested();
+            var ids = request.Ids.Where(x => x > 0).Distinct().ToList();
+            var result = new ZnsEventStudentEnqueueResult { TotalRequested = ids.Count };
+            if (ids.Count == 0)
+                return Fail(result, "Ids is empty");
 
-            var eventStudents = await _crmDb.NV_EventsStudents
-                .AsNoTracking()
-                .Where(x => chunk.Contains(x.Id))
-                .ToDictionaryAsync(x => x.Id, cancellationToken);
+            var template = await _templateRepo.GetByTemplateIdAsync(request.TemplateId);
+            if (template is null)
+                return Fail(result, "Template not found");
+            if (!template.IsActive || !string.Equals(template.Status, "ENABLE", StringComparison.OrdinalIgnoreCase))
+                return Fail(result, "Template is disabled");
 
-            var studentIds = eventStudents.Values.Where(x => x.StudentId.HasValue).Select(x => x.StudentId!.Value).Distinct().ToList();
-            var students = await _crmDb.StudentInfos
-                .AsNoTracking()
-                .Where(x => studentIds.Contains(x.Id))
-                .ToDictionaryAsync(x => x.Id, cancellationToken);
+            var eventRow = await _crmDb.NV_Events.AsNoTracking().FirstOrDefaultAsync(x => x.Id == request.EventId, cancellationToken);
+            if (eventRow is null)
+                return Fail(result, $"Event {request.EventId} not found");
+            if (eventRow.CatId.HasValue && eventRow.CatId.Value != request.EventCatId)
+                return Fail(result, $"Event {request.EventId} does not belong to eventCat {request.EventCatId}");
 
-            // Lọc hợp lệ trước, SĐT chuẩn hoá về dạng 84xxx
-            var candidates = new List<(int Id, string Phone, Student_Info Student, string? Code)>();
-            foreach (var id in chunk)
+            var catRow = await _crmDb.NV_EventsCats.AsNoTracking().FirstOrDefaultAsync(x => x.Id == request.EventCatId, cancellationToken);
+            if (catRow is null)
+                return Fail(result, $"EventCat {request.EventCatId} not found");
+
+            var isCheckinTemplate = request.TemplateId == CheckinQrTemplateId;
+            var hotline = _configuration["CapstoneInfo:Hotline"] ?? string.Empty;
+            var eventName = eventRow.Title ?? catRow.CatName ?? "NA";
+            var eventTime = catRow.FromDate?.ToString("HH:mm dd/MM/yyyy") ?? catRow.DateShow ?? "NA";
+            var eventInfo = new Dictionary<string, object?>(StringComparer.OrdinalIgnoreCase)
             {
-                if (!eventStudents.TryGetValue(id, out var es))
-                {
-                    result.Skipped.Add(new ZnsEventStudentSkipped { EventStudentId = id, Reason = "NV_Events_Student not found" });
-                    continue;
-                }
-                if (es.EventId != request.EventId)
-                {
-                    result.Skipped.Add(new ZnsEventStudentSkipped { EventStudentId = id, Reason = $"Belongs to event {es.EventId}, not {request.EventId}" });
-                    continue;
-                }
-                if (!es.StudentId.HasValue || !students.TryGetValue(es.StudentId.Value, out var student))
-                {
-                    result.Skipped.Add(new ZnsEventStudentSkipped { EventStudentId = id, Reason = "Student_Info not found" });
-                    continue;
-                }
+                ["event_name"] = eventName,
+                ["event_location"] = eventRow.Diadiem ?? eventName,
+                ["event_cat_name"] = catRow.CatName ?? "NA",
+                ["event_cat_description"] = Truncate(catRow.sendzalo_content ?? string.Empty, 200),
+                ["event_time"] = eventTime,
+                ["time_date_list"] = eventTime,
+                ["event_cat_shortlink"] = catRow.Link_pr ?? string.Empty,
+                ["hotline"] = hotline
+            };
 
-                var phone = CopyStudentFromLadiJob.NormalizeVnPhone(student.Sodienthoai);
-                if (!IsValidPhone(phone))
-                {
-                    result.Skipped.Add(new ZnsEventStudentSkipped { EventStudentId = id, Phone = student.Sodienthoai, Reason = "Phone number invalid" });
-                    continue;
-                }
-                if (!seenPhones.Add(phone))
-                {
-                    result.Skipped.Add(new ZnsEventStudentSkipped { EventStudentId = id, Phone = phone, Reason = "Duplicate phone in request" });
-                    continue;
-                }
-
-                var code = string.IsNullOrWhiteSpace(student.Code) ? es.StudentCode?.Trim() : student.Code.Trim();
-                if (isCheckinTemplate && string.IsNullOrWhiteSpace(code))
-                {
-                    result.Skipped.Add(new ZnsEventStudentSkipped { EventStudentId = id, Phone = phone, Reason = "Missing student code for check-in QR" });
-                    continue;
-                }
-
-                candidates.Add((id, phone, student, code));
-            }
-
-            if (!request.AllowResend && candidates.Count > 0)
+            // Lọc trùng theo học sinh, không theo SĐT: phụ huynh có thể đăng ký nhiều con cùng 1 số, mỗi con cần tin/QR riêng
+            var seenStudents = new HashSet<int>();
+            foreach (var chunk in ids.Chunk(batchSize))
             {
-                var phones = candidates.Select(x => x.Phone).ToList();
-                var alreadyQueued = (await _crmDb.ZnsSendQueues
+                cancellationToken.ThrowIfCancellationRequested();
+
+                var eventStudents = await _crmDb.NV_EventsStudents
                     .AsNoTracking()
-                    .Where(x => x.EventId == request.EventId
-                                && x.TemplateId == request.TemplateId
-                                && phones.Contains(x.Phone)
-                                && (x.Status == ZnsSendStatus.Queued || x.Status == ZnsSendStatus.Processing
-                                    || x.Status == ZnsSendStatus.Retry || x.Status == ZnsSendStatus.Sent))
-                    .Select(x => x.Phone)
-                    .Distinct()
-                    .ToListAsync(cancellationToken)).ToHashSet();
+                    .Where(x => chunk.Contains(x.Id))
+                    .ToDictionaryAsync(x => x.Id, cancellationToken);
 
-                foreach (var c in candidates.Where(c => alreadyQueued.Contains(c.Phone)))
-                    result.Skipped.Add(new ZnsEventStudentSkipped { EventStudentId = c.Id, Phone = c.Phone, Reason = "Already queued/sent for this event and template" });
-                candidates.RemoveAll(c => alreadyQueued.Contains(c.Phone));
-            }
+                var studentIds = eventStudents.Values.Where(x => x.StudentId.HasValue).Select(x => x.StudentId!.Value).Distinct().ToList();
+                var students = await _crmDb.StudentInfos
+                    .AsNoTracking()
+                    .Where(x => studentIds.Contains(x.Id))
+                    .ToDictionaryAsync(x => x.Id, cancellationToken);
 
-            var now = DateTime.UtcNow.AddHours(7);
-            var queues = new List<ZnsSendQueue>(candidates.Count);
-            foreach (var c in candidates)
-            {
-                var data = new Dictionary<string, object?>(eventInfo, StringComparer.OrdinalIgnoreCase)
+                // Lọc hợp lệ trước, SĐT chuẩn hoá về dạng 84xxx
+                var candidates = new List<(int Id, string Phone, Student_Info Student, string? Code)>();
+                foreach (var id in chunk)
                 {
-                    ["student_fullname"] = $"{c.Student.Hotendem} {c.Student.Ten}".Trim() is { Length: > 0 } name ? name : "Có số điện thoại " + c.Phone,
-                    ["student_code"] = c.Code ?? c.Phone,
-                    ["phone"] = c.Phone,
-                    ["qr"] = isCheckinTemplate ? BuildCheckinQr(c.Code) : c.Code ?? "NA"
-                };
+                    if (!eventStudents.TryGetValue(id, out var es))
+                    {
+                        result.Skipped.Add(new ZnsEventStudentSkipped { EventStudentId = id, Reason = "NV_Events_Student not found" });
+                        continue;
+                    }
+                    if (es.EventId != request.EventId)
+                    {
+                        result.Skipped.Add(new ZnsEventStudentSkipped { EventStudentId = id, Reason = $"Belongs to event {es.EventId}, not {request.EventId}" });
+                        continue;
+                    }
+                    if (!es.StudentId.HasValue || !students.TryGetValue(es.StudentId.Value, out var student))
+                    {
+                        result.Skipped.Add(new ZnsEventStudentSkipped { EventStudentId = id, Reason = "Student_Info not found" });
+                        continue;
+                    }
 
-                // Chỉ gửi đúng các param template khai báo (nếu đã đồng bộ param)
-                if (template.Params.Count > 0)
+                    var phone = CopyStudentFromLadiJob.NormalizeVnPhone(student.Sodienthoai);
+                    if (!IsValidPhone(phone))
+                    {
+                        result.Skipped.Add(new ZnsEventStudentSkipped { EventStudentId = id, Phone = student.Sodienthoai, Reason = "Phone number invalid" });
+                        continue;
+                    }
+                    if (!seenStudents.Add(student.Id))
+                    {
+                        result.Skipped.Add(new ZnsEventStudentSkipped { EventStudentId = id, Phone = phone, Reason = $"Duplicate student {student.Id} in request" });
+                        continue;
+                    }
+
+                    var code = string.IsNullOrWhiteSpace(student.Code) ? es.StudentCode?.Trim() : student.Code.Trim();
+                    if (isCheckinTemplate && string.IsNullOrWhiteSpace(code))
+                    {
+                        result.Skipped.Add(new ZnsEventStudentSkipped { EventStudentId = id, Phone = phone, Reason = "Missing student code for check-in QR" });
+                        continue;
+                    }
+
+                    candidates.Add((id, phone, student, code));
+                }
+                //Dòng 301–310, lấy queue cũ. Query bảng ZNS_Send_Queue tìm các dòng thỏa cả 4 điều kiện: cùng EventId,cùng TemplateId,Phone thuộc danh sách số của 3 candidate, Status là Queued, Processing, Retry hoặc Sent, tức là đã gửi hoặc đang chờ gửi.Failed thì không tính, cho gửi lại.
+                //Dòng 312–320, tạo "khóa" cho từng queue cũ. Đọc student_code trong TemplateDataJson của queue đó.
+                // - Có student_code thì thêm khóa "SĐT|mã HS" vào sentKeys. Nghĩa là học sinh này, với số này, đã gửi rồi.
+                //- Không có student_code thì thêm SĐT vào sentPhoneOnly.Nghĩa là không biết đã gửi cho học sinh nào, nên chặn cả số điện thoại đó.
+                //3.Dòng 322–327, loại candidate đã gửi. Candidate bị loại nếu số của nó nằm trong sentPhoneOnly, hoặc khóa "SĐT|mã HS" của nó nằm trong sentKeys.Mỗi dòng bị loại được ghi vào Skipped với lý do Already queued/ sent....
+                //==================================================
+
+                //if (!request.AllowResend && candidates.Count > 0)
+                //{
+                //    var phones = candidates.Select(x => x.Phone).Distinct().ToList();
+                //    var existing = await _crmDb.ZnsSendQueues
+                //        .AsNoTracking()
+                //        .Where(x => x.EventId == request.EventId
+                //                    && x.TemplateId == request.TemplateId
+                //                    && phones.Contains(x.Phone)
+                //                    && (x.Status == ZnsSendStatus.Queued || x.Status == ZnsSendStatus.Processing
+                //                        || x.Status == ZnsSendStatus.Retry || x.Status == ZnsSendStatus.Sent))
+                //        .Select(x => new { x.Phone, x.TemplateDataJson })
+                //        .ToListAsync(cancellationToken);
+
+                //    // Khoá = SĐT + student_code trong TemplateDataJson; queue cũ không có student_code → chặn theo SĐT
+                //    var sentKeys = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+                //    var sentPhoneOnly = new HashSet<string>();
+                //    foreach (var q in existing)
+                //    {
+                //        var sentCode = ReadStudentCode(q.TemplateDataJson);
+                //        if (sentCode is null) sentPhoneOnly.Add(q.Phone);
+                //        else sentKeys.Add($"{q.Phone}|{sentCode}");
+                //    }
+
+                //    bool AlreadySent((int Id, string Phone, Student_Info Student, string? Code) c)
+                //        => sentPhoneOnly.Contains(c.Phone) || sentKeys.Contains($"{c.Phone}|{c.Code ?? c.Phone}");
+
+                //    foreach (var c in candidates.Where(AlreadySent))
+                //        result.Skipped.Add(new ZnsEventStudentSkipped { EventStudentId = c.Id, Phone = c.Phone, Reason = "Already queued/sent for this student, event and template" });
+                //    candidates.RemoveAll(c => AlreadySent(c));
+                //}
+
+                var now = DateTime.UtcNow.AddHours(7);
+                var queues = new List<ZnsSendQueue>(candidates.Count);
+                foreach (var c in candidates)
                 {
-                    var paramNames = template.Params.Select(p => p.ParamName).ToHashSet(StringComparer.OrdinalIgnoreCase);
-                    data = data.Where(kv => paramNames.Contains(kv.Key))
-                               .ToDictionary(kv => kv.Key, kv => kv.Value, StringComparer.OrdinalIgnoreCase);
+                    var data = new Dictionary<string, object?>(eventInfo, StringComparer.OrdinalIgnoreCase)
+                    {
+                        ["student_fullname"] = $"{c.Student.Hotendem} {c.Student.Ten}".Trim() is { Length: > 0 } name ? name : "Có số điện thoại " + c.Phone,
+                        ["student_code"] = c.Code ?? c.Phone,
+                        ["phone"] = c.Phone,
+                        ["qr"] = isCheckinTemplate ? BuildCheckinQr(c.Code) : c.Code ?? "NA"
+                    };
+
+                    // Chỉ gửi đúng các param template khai báo (nếu đã đồng bộ param),
+                    // key giữ nguyên tên trong template (Zalo phân biệt hoa thường, vd "Time_date_list")
+                    if (template.Params.Count > 0)
+                    {
+                        var filtered = new Dictionary<string, object?>(StringComparer.OrdinalIgnoreCase);
+                        foreach (var p in template.Params.OrderBy(x => x.SortOrder))
+                        {
+                            if (data.TryGetValue(p.ParamName, out var value))
+                                filtered[p.ParamName] = value;
+                        }
+                        data = filtered;
+                    }
+
+                    var validationError = ValidateTemplateData(template, data);
+                    if (validationError is not null)
+                    {
+                        result.Skipped.Add(new ZnsEventStudentSkipped { EventStudentId = c.Id, Phone = c.Phone, Reason = validationError });
+                        continue;
+                    }
+
+                    queues.Add(new ZnsSendQueue
+                    {
+                        TemplateId = request.TemplateId,
+                        Phone = c.Phone,
+                        TemplateDataJson = JsonSerializer.Serialize(data),
+                        Status = ZnsSendStatus.Queued,
+                        ScheduledAt = now,
+                        Type = type,
+                        CampaignId = 0,
+                        EventCatId = request.EventCatId,
+                        EventId = request.EventId,
+                        ContextType = type,
+                        CreatedBy = request.CreatedBy,
+                        CreatedAt = now,
+                        UpdatedAt = now
+                    });
                 }
 
-                var validationError = ValidateTemplateData(template, data);
-                if (validationError is not null)
-                {
-                    result.Skipped.Add(new ZnsEventStudentSkipped { EventStudentId = c.Id, Phone = c.Phone, Reason = validationError });
-                    continue;
-                }
+                await _queueRepo.AddRangeAsync(queues, cancellationToken);
 
-                queues.Add(new ZnsSendQueue
+                foreach (var queue in queues)
                 {
-                    TemplateId = request.TemplateId,
-                    Phone = c.Phone,
-                    TemplateDataJson = JsonSerializer.Serialize(data),
-                    Status = ZnsSendStatus.Queued,
-                    ScheduledAt = now,
-                    Type = type,
-                    CampaignId = 0,
-                    EventCatId = request.EventCatId,
-                    EventId = request.EventId,
-                    ContextType = type,
-                    CreatedBy = request.CreatedBy,
-                    CreatedAt = now,
-                    UpdatedAt = now
-                });
+                    var queueId = queue.Id;
+                    var jobId = _jobClient.Enqueue<ZnsSendJob>(x => x.ExecuteAsync(queueId, CancellationToken.None));
+                    result.Items.Add(new ZnsEnqueueItemResult { QueueId = queueId, JobId = jobId, Phone = queue.Phone });
+                }
             }
 
-            await _queueRepo.AddRangeAsync(queues, cancellationToken);
+            result.TotalQueued = result.Items.Count;
+            result.Success = result.TotalQueued > 0;
+            result.Message = result.Success
+                ? $"Queued {result.TotalQueued}/{result.TotalRequested}, skipped {result.Skipped.Count}"
+                : "No valid recipients to queue";
 
-            foreach (var queue in queues)
+            _logger.LogInformation("ZNS eventStatic enqueue eventId={EventId}, eventCatId={EventCatId}, templateId={TemplateId}, queued={Queued}, skipped={Skipped}",
+                request.EventId, request.EventCatId, request.TemplateId, result.TotalQueued, result.Skipped.Count);
+
+            return result;
+
+            static ZnsEventStudentEnqueueResult Fail(ZnsEventStudentEnqueueResult r, string message)
             {
-                var queueId = queue.Id;
-                var jobId = _jobClient.Enqueue<ZnsSendJob>(x => x.ExecuteAsync(queueId, CancellationToken.None));
-                result.Items.Add(new ZnsEnqueueItemResult { QueueId = queueId, JobId = jobId, Phone = queue.Phone });
+                r.Success = false;
+                r.Message = message;
+                return r;
             }
         }
+        catch (Exception ex) { throw ex; }
+    }
 
-        result.TotalQueued = result.Items.Count;
-        result.Success = result.TotalQueued > 0;
-        result.Message = result.Success
-            ? $"Queued {result.TotalQueued}/{result.TotalRequested}, skipped {result.Skipped.Count}"
-            : "No valid recipients to queue";
-
-        _logger.LogInformation("ZNS eventStatic enqueue eventId={EventId}, eventCatId={EventCatId}, templateId={TemplateId}, queued={Queued}, skipped={Skipped}",
-            request.EventId, request.EventCatId, request.TemplateId, result.TotalQueued, result.Skipped.Count);
-
-        return result;
-
-        static ZnsEventStudentEnqueueResult Fail(ZnsEventStudentEnqueueResult r, string message)
+    private static string? ReadStudentCode(string? templateDataJson)
+    {
+        if (string.IsNullOrWhiteSpace(templateDataJson)) return null;
+        try
         {
-            r.Success = false;
-            r.Message = message;
-            return r;
+            using var doc = JsonDocument.Parse(templateDataJson);
+            foreach (var prop in doc.RootElement.EnumerateObject())
+            {
+                if (string.Equals(prop.Name, "student_code", StringComparison.OrdinalIgnoreCase))
+                    return prop.Value.ValueKind == JsonValueKind.String ? prop.Value.GetString() : prop.Value.GetRawText();
+            }
         }
+        catch (JsonException) { }
+        return null;
     }
 
     public async Task<ZnsSendResult> SendFromQueueAsync(long queueId, CancellationToken cancellationToken = default)
@@ -828,7 +877,7 @@ public class ZnsSendService : IZnsSendService
     private static DateTime? ParseDateTimeFromMs(string? ms)
     {
         if (!long.TryParse(ms, out var v)) return null;
-        try { return DateTimeOffset.FromUnixTimeMilliseconds(v).UtcDateTime; }
+        try { return DateTimeOffset.FromUnixTimeMilliseconds(v).UtcDateTime.AddHours(7); }
         catch { return null; }
     }
 

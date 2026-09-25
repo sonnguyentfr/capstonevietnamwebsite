@@ -27,7 +27,7 @@ namespace NVCMS.API.ReadGoogleSheet.Infrastructure
             RegisterImportCrmData(settings);
             RegisterCopyStudentFromLadi(settings);
 
-            RegisterZaloOAWebhookReprocess(settings);
+            //RegisterZaloOAWebhookReprocess(settings);
         }
 
         private static void RegisterZaloOAWebhookReprocess(HangfireJobSettings settings)

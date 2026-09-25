@@ -22,6 +22,6 @@ public class ZnsSendQueue
     public string? ContextType { get; set; }
     public string? CreatedBy { get; set; }
 
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-    public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow.AddHours(7);
+    public DateTime UpdatedAt { get; set; } = DateTime.UtcNow.AddHours(7);
 }
