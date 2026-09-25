@@ -27,6 +27,7 @@ namespace NVCMS.API.ReadGoogleSheet.Data
         public DbSet<NV_Event>                   NV_Events          { get; set; }
         public DbSet<NV_Events_Cat>              NV_EventsCats      { get; set; }
         public DbSet<Student_Info>               StudentInfos       { get; set; }
+        public DbSet<NV_Events_Student>          NV_EventsStudents  { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -297,6 +298,18 @@ namespace NVCMS.API.ReadGoogleSheet.Data
                 e.Property(x => x.Isactive).HasColumnName("Isactive");
                 e.Property(x => x.PortalId).HasColumnName("PortalId");
                 e.Property(x => x.is_show_website).HasColumnName("is_show_website");
+                e.Property(x => x.Link_pr).HasColumnName("Link_pr");
+            });
+
+            modelBuilder.Entity<NV_Events_Student>(e =>
+            {
+                e.ToTable("NV_Events_Student");
+                e.HasKey(x => x.Id);
+                e.Property(x => x.Id).HasColumnName("Id");
+                e.Property(x => x.EventId).HasColumnName("EventId");
+                e.Property(x => x.EventCatId).HasColumnName("EventCatId");
+                e.Property(x => x.StudentId).HasColumnName("StudentId");
+                e.Property(x => x.StudentCode).HasColumnName("StudentCode");
             });
 
             modelBuilder.Entity<Student_Info>(e =>

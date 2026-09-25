@@ -12,10 +12,12 @@ namespace NVCMS.API.ReadGoogleSheet.Controllers
     public class ZaloController : ControllerBase
     {
         private readonly IZaloService _zaloService;
+        private readonly IZnsSendService _znsSendService;
 
-        public ZaloController(IZaloService zaloTokenService)
+        public ZaloController(IZaloService zaloTokenService, IZnsSendService znsSendService)
         {
             _zaloService = zaloTokenService;
+            _znsSendService = znsSendService;
         }
         /// <summary>
         /// get Access Token from Zalo API and save to database.
@@ -57,7 +59,7 @@ namespace NVCMS.API.ReadGoogleSheet.Controllers
             return status;
         }
         /// <summary>
-        /// Gửi tin nhắn Zalo theo template đã tạo sẵn
+        /// Gửi tin nhắn Zalo theo template - MÀN HÌNH THỐNG KÊ SỰ KIỆN
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
@@ -77,5 +79,31 @@ namespace NVCMS.API.ReadGoogleSheet.Controllers
             error_name = result?.error_name,
             error_description = result?.error_description
         };
+        /// <summary>
+        /// Gửi tin nhắn Zalo theo template - MÀN HÌNH THỐNG KÊ SỰ KIỆN (chạy qua job Hangfire).
+        /// Mỗi NV_Events_Student hợp lệ → 1 ZnsSendQueue + 1 ZnsSendJob; dòng không hợp lệ trả về trong skipped.
+        /// </summary>
+        [HttpPost("send-event-job")]
+        public async Task<IActionResult> Send_DangKySuKien_Job([FromBody] ZnsEventStudentSendRequest request, CancellationToken cancellationToken)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ApiResponse<object>.ErrorResponse("Invalid request"));
+
+            var result = await _znsSendService.EnqueueEventStudentsAsync(request, cancellationToken);
+
+            return Ok(new
+            {
+                success = result.Success,
+                message = result.Message,
+                data = new
+                {
+                    totalRequested = result.TotalRequested,
+                    totalQueued = result.TotalQueued,
+                    items = result.Items,
+                    skipped = result.Skipped
+                }
+            });
+        }
+
     }
 }

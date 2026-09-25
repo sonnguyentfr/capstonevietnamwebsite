@@ -40,6 +40,16 @@ public class NV_Events_Cat
     public bool? Isactive { get; set; }
     public int? PortalId { get; set; }
     public bool? is_show_website { get; set; }
+    public string? Link_pr { get; set; }
+}
+
+public class NV_Events_Student
+{
+    public int Id { get; set; }
+    public int? EventId { get; set; }
+    public int? EventCatId { get; set; }
+    public int? StudentId { get; set; }
+    public string? StudentCode { get; set; }
 }
 
 public class Student_Info

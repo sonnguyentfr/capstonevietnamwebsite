@@ -72,3 +72,42 @@ public class ZnsCampaignEnqueueArgs
     /// <summary>Thời điểm gọi API — dùng để bỏ qua SĐT đã enqueue khi job retry.</summary>
     public DateTime RequestedAt { get; set; }
 }
+
+/// <summary>Body cho POST /api/zalo/send-event-job: gửi ZNS cho danh sách NV_Events_Student đã chọn.</summary>
+public class ZnsEventStudentSendRequest
+{
+    /// <summary>Danh sách NV_Events_Student.Id</summary>
+    [Required, MinLength(1)]
+    public List<int> Ids { get; set; } = [];
+
+    [Range(1, int.MaxValue)]
+    public int EventId { get; set; }
+
+    [Range(1, int.MaxValue)]
+    public int EventCatId { get; set; }
+
+    [Range(1, long.MaxValue)]
+    public long TemplateId { get; set; }
+
+    /// <summary>false (mặc định): bỏ qua SĐT đã có queue Queued/Processing/Sent cho cùng event + template.</summary>
+    public bool AllowResend { get; set; }
+
+    public string? CreatedBy { get; set; }
+}
+
+public class ZnsEventStudentSkipped
+{
+    public int EventStudentId { get; set; }
+    public string? Phone { get; set; }
+    public string Reason { get; set; } = string.Empty;
+}
+
+public class ZnsEventStudentEnqueueResult
+{
+    public bool Success { get; set; }
+    public string Message { get; set; } = string.Empty;
+    public int TotalRequested { get; set; }
+    public int TotalQueued { get; set; }
+    public List<ZnsEnqueueItemResult> Items { get; set; } = [];
+    public List<ZnsEventStudentSkipped> Skipped { get; set; } = [];
+}
