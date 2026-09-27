@@ -65,8 +65,9 @@
                                                         </span></span>
                                                     </div>
                                                     <div class="nk-tb-col">
-                                                        <span class="tb-sub <%#IIf(CBool(DataBinder.Eval(Container.DataItem, "isUnsub")) = True, "", "unsubmail") %>"><span>
-                                                            <asp:Label ID="StudentEmail" Text='<%#Eval("Email") %>' runat="server"></asp:Label>
+                                                        <span class="tb-sub <%#IIf(CBool(DataBinder.Eval(Container.DataItem, "isUnsub")) = False, "", "unsubmail") %>"><span>
+                                                            <%--Nếu đã có trong sanh sách unbusb thì gạch ngang, không gửi mail được.--%>
+                                                            <%#Eval("Email") %> 
                                                         </span></span>
                                                     </div>
                                                     <div class="nk-tb-col text-right">
