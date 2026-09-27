@@ -134,14 +134,61 @@ Namespace NVCMS.Modules.Marketing
         End Sub
 
         Public Sub ddlCampaign_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ddlCampaign.SelectedIndexChanged
+            PageIndex = 0
             BindPhoneList(CInt(ddlCampaign.SelectedValue))
         End Sub
 
+        ' Danh sách SĐT có thể lên tới hàng chục nghìn dòng => SP phân trang (OFFSET/FETCH), chỉ render 1 trang.
+        Private Const PAGE_SIZE As Integer = 100
+
+        Public Property PageIndex() As Integer
+            Get
+                If ViewState("PageIndex") Is Nothing Then Return 0
+                Return CInt(ViewState("PageIndex"))
+            End Get
+            Set(ByVal Value As Integer)
+                ViewState("PageIndex") = Value
+            End Set
+        End Property
+
+        ' Số thứ tự bắt đầu của trang hiện tại (dùng trong Repeater)
+        Protected ReadOnly Property RowOffset() As Integer
+            Get
+                Return PageIndex * PAGE_SIZE
+            End Get
+        End Property
+
         Private Sub BindPhoneList(ByVal campaignId As Integer)
-            Dim arr As ArrayList = _zaloListSdtCtl._GetAll(campaignId, "", -1, 0, 100000)
+            If PageIndex < 0 Then PageIndex = 0
+            Dim arr As ArrayList = _zaloListSdtCtl._GetAll(campaignId, "", -1, PageIndex, PAGE_SIZE)
+            ' Trang vượt quá số trang (vd: danh sách bị thu hẹp) => quay về trang đầu
+            If arr.Count = 0 AndAlso PageIndex > 0 Then
+                PageIndex = 0
+                arr = _zaloListSdtCtl._GetAll(campaignId, "", -1, PageIndex, PAGE_SIZE)
+            End If
+
+            ' SP trả TotalRecords = COUNT(*) OVER() trên mỗi dòng
+            Dim total As Integer = If(arr.Count > 0, CType(arr(0), Marketing_Zalo_ListSdtInfo).TotalRecords, 0)
+            Dim pageCount As Integer = Math.Max(1, CInt(Math.Ceiling(total / PAGE_SIZE)))
+
             rptListPhone.DataSource = arr
             rptListPhone.DataBind()
-            ltrTotalPhone.Text = arr.Count.ToString()
+            ltrTotalPhone.Text = total.ToString()
+
+            pnlPager.Visible = pageCount > 1
+            ltrPage.Text = (PageIndex + 1).ToString() & " / " & pageCount.ToString()
+            lbtPrev.Enabled = PageIndex > 0
+            lbtNext.Enabled = PageIndex < pageCount - 1
+        End Sub
+
+        Private Sub lbtPrev_Click(sender As Object, e As EventArgs) Handles lbtPrev.Click
+            PageIndex -= 1
+            BindPhoneList(CInt(ddlCampaign.SelectedValue))
+        End Sub
+
+        Private Sub lbtNext_Click(sender As Object, e As EventArgs) Handles lbtNext.Click
+            PageIndex += 1
+            BindPhoneList(CInt(ddlCampaign.SelectedValue))
         End Sub
 
         Public Sub ddlTemplate_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ddlTemplate.SelectedIndexChanged

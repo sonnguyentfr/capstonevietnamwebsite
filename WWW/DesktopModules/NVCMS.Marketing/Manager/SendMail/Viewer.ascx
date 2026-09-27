@@ -55,13 +55,14 @@
                                             <div class="nk-tb-col"><span>Email</span></div>
                                             <div class="nk-tb-col text-right"><span>Send</span></div>
                                         </div>
+                                        <%--Chỉ bind 1 trang (PAGE_SIZE) để tránh render/ViewState hàng chục nghìn dòng.
+                                            Giữ ViewState để postback từ dropdown khác không làm mất danh sách.--%>
                                         <asp:Repeater ID="rptlistEmailStudent" runat="server">
                                             <ItemTemplate>
                                                 <div class="nk-tb-item">
                                                     <div class="nk-tb-col">
                                                         <span class="tb-sub"><span>
-                                                            <%# DataBinder.Eval(Container, "ItemIndex", "") + 1%>
-                                                            <asp:Label ID="lblid" Text='<%#Eval("id") %>' runat="server" Visible="false"></asp:Label>
+                                                            <%# RowOffset + Container.ItemIndex + 1%>
                                                         </span></span>
                                                     </div>
                                                     <div class="nk-tb-col">
@@ -81,6 +82,11 @@
                                     </div>
                                 </div>
                             </div>
+                            <asp:Panel ID="pnlPager" runat="server" CssClass="d-flex justify-content-between align-items-center pt-2" Visible="false">
+                                <asp:LinkButton ID="lbtPrev" runat="server" CssClass="btn btn-sm btn-outline-light">&laquo; Trước</asp:LinkButton>
+                                <span class="tb-sub">Trang <asp:Literal ID="ltrPage" runat="server"></asp:Literal></span>
+                                <asp:LinkButton ID="lbtNext" runat="server" CssClass="btn btn-sm btn-outline-light">Sau &raquo;</asp:LinkButton>
+                            </asp:Panel>
                         </div>
                         <div class="card-inner">
                             <div class="form-group">

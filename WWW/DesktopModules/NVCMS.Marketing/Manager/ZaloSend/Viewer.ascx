@@ -57,11 +57,13 @@
                                             <div class="nk-tb-col"><span>Số điện thoại</span></div>
                                             <div class="nk-tb-col text-right"><span>Send</span></div>
                                         </div>
+                                        <%--Phân trang SQL (PAGE_SIZE) để tránh render/ViewState hàng chục nghìn dòng.
+                                            Giữ ViewState để postback từ dropdown khác không làm mất danh sách.--%>
                                         <asp:Repeater ID="rptListPhone" runat="server">
                                             <ItemTemplate>
                                                 <div class="nk-tb-item">
                                                     <div class="nk-tb-col">
-                                                        <span class="tb-sub"><span><%# DataBinder.Eval(Container, "ItemIndex", "") + 1%></span></span>
+                                                        <span class="tb-sub"><span><%# RowOffset + Container.ItemIndex + 1%></span></span>
                                                     </div>
                                                     <div class="nk-tb-col">
                                                         <span class="tb-sub"><span><%# Eval("Phone") %></span></span>
@@ -75,6 +77,11 @@
                                     </div>
                                 </div>
                             </div>
+                            <asp:Panel ID="pnlPager" runat="server" CssClass="d-flex justify-content-between align-items-center pt-2" Visible="false">
+                                <asp:LinkButton ID="lbtPrev" runat="server" CssClass="btn btn-sm btn-outline-light" CausesValidation="false">&laquo; Trước</asp:LinkButton>
+                                <span class="tb-sub">Trang <asp:Literal ID="ltrPage" runat="server"></asp:Literal></span>
+                                <asp:LinkButton ID="lbtNext" runat="server" CssClass="btn btn-sm btn-outline-light" CausesValidation="false">Sau &raquo;</asp:LinkButton>
+                            </asp:Panel>
                         </div>
 
                         <div class="card-inner">
