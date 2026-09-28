@@ -148,6 +148,9 @@ public class TruongFilterSidebarViewModel
 
 public class TruongAdmis4YearViewModel
 {
+    // Tiền tệ (Cap_Currency) – currency = 0 thì mặc định USD / $
+    public string CurrencyKyHieu { get; set; } = "$";
+    public string CurrencyVietTat { get; set; } = "USD";
     public int? TuitionUnder { get; set; }
     public int? TuitionGrad { get; set; }
     public int? TuitionAss { get; set; }
@@ -194,6 +197,9 @@ public class TruongAdmis4YearViewModel
 
 public class TruongAdmisBFViewModel
 {
+    // Tiền tệ (Cap_Currency) – currency = 0 thì mặc định USD / $
+    public string CurrencyKyHieu { get; set; } = "$";
+    public string CurrencyVietTat { get; set; } = "USD";
     public int? GradesFrom { get; set; }
     public int? GradesTo { get; set; }
     public bool? ESL { get; set; }
@@ -219,6 +225,9 @@ public class TruongAdmisBFViewModel
 
 public class TruongAdmisESLViewModel
 {
+    // Tiền tệ (Cap_Currency) – currency = 0 thì mặc định USD / $
+    public string CurrencyKyHieu { get; set; } = "$";
+    public string CurrencyVietTat { get; set; } = "USD";
     public string? TypeOfCourse { get; set; }
     public string? LCName { get; set; }
     public string? LCCost { get; set; }

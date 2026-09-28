@@ -4,6 +4,9 @@ public class TruongAdmis4YearModel
 {
     public int Id { get; set; }
     public int? currency { get; set; }
+    public string? currencyKyHieu { get; set; }
+    public string? currencyVietTat { get; set; }
+    public string? currencyName { get; set; }
     public int? COSTuitionfeeESL { get; set; }
     public int? COSTuitionfeeUnder { get; set; }
     public int? COSTuitionfeeGrad { get; set; }

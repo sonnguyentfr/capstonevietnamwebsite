@@ -4,6 +4,9 @@ public class TruongAdmisESLModel
 {
     public int Id { get; set; }
     public int? currency { get; set; }
+    public string? currencyKyHieu { get; set; }
+    public string? currencyVietTat { get; set; }
+    public string? currencyName { get; set; }
     public string? TypeOfCourse { get; set; }
     public string? LCName { get; set; }
     public string? LCLenght { get; set; }

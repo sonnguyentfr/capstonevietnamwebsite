@@ -398,6 +398,9 @@ public class TruongService : ITruongService
 
         return new TruongAdmis4YearViewModel
         {
+            CurrencyKyHieu = CurrencyOrDefault(a.currency, a.currencyKyHieu, "$"),
+            CurrencyVietTat = CurrencyOrDefault(a.currency, a.currencyVietTat, "USD"),
+
             TuitionUnder = a.COSTuitionfeeUnder,
             TuitionGrad = a.COSTuitionfeeGrad,
             TuitionAss = a.COSTuitionfeeAss,
@@ -438,8 +441,14 @@ public class TruongService : ITruongService
         };
     }
 
+    /// <summary>currency = 0/null (hoặc Cap_Currency thiếu dữ liệu) → giá trị mặc định (USD / $).</summary>
+    private static string CurrencyOrDefault(int? currency, string? value, string fallback)
+        => currency is > 0 && !string.IsNullOrWhiteSpace(value) ? value.Trim() : fallback;
+
     private static TruongAdmisBFViewModel MapBF(TruongAdmisBFModel a) => new()
     {
+        CurrencyKyHieu = CurrencyOrDefault(a.currency, a.currencyKyHieu, "$"),
+        CurrencyVietTat = CurrencyOrDefault(a.currency, a.currencyVietTat, "USD"),
         GradesFrom = a.Gradesfrom,
         GradesTo = a.Gradesto,
         ESL = a.ESL,
@@ -465,6 +474,8 @@ public class TruongService : ITruongService
 
     private static TruongAdmisESLViewModel MapESL(TruongAdmisESLModel a) => new()
     {
+        CurrencyKyHieu = CurrencyOrDefault(a.currency, a.currencyKyHieu, "$"),
+        CurrencyVietTat = CurrencyOrDefault(a.currency, a.currencyVietTat, "USD"),
         TypeOfCourse = a.TypeOfCourse,
         LCName = a.LCName,
         LCCost = a.LCCost,

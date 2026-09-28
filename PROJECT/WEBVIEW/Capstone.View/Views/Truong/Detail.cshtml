@@ -230,23 +230,23 @@
                     {
                         <div class="cost-table">
                             <table>
-                                <thead><tr><th>Bậc học</th><th>Học phí/năm (USD)</th></tr></thead>
+                                <thead><tr><th>Bậc học</th><th>Học phí/năm (@a.CurrencyVietTat)</th></tr></thead>
                                 <tbody>
                                     @if (a.TuitionUnder.HasValue)
                                     {
-                                        <tr><td><span class="badge badge--level-sm">Đại học</span></td><td><strong>$@a.TuitionUnder.Value.ToString("N0")</strong></td></tr>
+                                        <tr><td><span class="badge badge--level-sm">Đại học</span></td><td><strong>@a.CurrencyKyHieu@a.TuitionUnder.Value.ToString("N0")</strong></td></tr>
                                     }
                                     @if (a.TuitionGrad.HasValue)
                                     {
-                                        <tr><td><span class="badge badge--level-sm">Sau đại học</span></td><td><strong>$@a.TuitionGrad.Value.ToString("N0")</strong></td></tr>
+                                        <tr><td><span class="badge badge--level-sm">Sau đại học</span></td><td><strong>@a.CurrencyKyHieu@a.TuitionGrad.Value.ToString("N0")</strong></td></tr>
                                     }
                                     @if (a.TuitionAss.HasValue)
                                     {
-                                        <tr><td><span class="badge badge--level-sm">Cao đẳng</span></td><td><strong>$@a.TuitionAss.Value.ToString("N0")</strong></td></tr>
+                                        <tr><td><span class="badge badge--level-sm">Cao đẳng</span></td><td><strong>@a.CurrencyKyHieu@a.TuitionAss.Value.ToString("N0")</strong></td></tr>
                                     }
                                     @if (a.TuitionESL.HasValue)
                                     {
-                                        <tr><td><span class="badge badge--level-sm">ESL</span></td><td><strong>$@a.TuitionESL.Value.ToString("N0")</strong></td></tr>
+                                        <tr><td><span class="badge badge--level-sm">ESL</span></td><td><strong>@a.CurrencyKyHieu@a.TuitionESL.Value.ToString("N0")</strong></td></tr>
                                     }
                                 </tbody>
                             </table>
@@ -257,19 +257,19 @@
                         <h3 class="truong-subsection__title">Chi phí khác ước tính/năm</h3>
                         <div class="cost-table">
                             <table>
-                                <thead><tr><th>Khoản</th><th>USD/năm</th></tr></thead>
+                                <thead><tr><th>Khoản</th><th>@a.CurrencyVietTat/năm</th></tr></thead>
                                 <tbody>
                                     @if (a.LivingCost.HasValue)
                                     {
-                                        <tr><td><i class="fa-solid fa-house"></i> Chi phí sinh hoạt</td><td>$@a.LivingCost.Value.ToString("N0")</td></tr>
+                                        <tr><td><i class="fa-solid fa-house"></i> Chi phí sinh hoạt</td><td>@a.CurrencyKyHieu@a.LivingCost.Value.ToString("N0")</td></tr>
                                     }
                                     @if (a.InsuranceCost.HasValue)
                                     {
-                                        <tr><td><i class="fa-solid fa-shield-heart"></i> Bảo hiểm</td><td>$@a.InsuranceCost.Value.ToString("N0")</td></tr>
+                                        <tr><td><i class="fa-solid fa-shield-heart"></i> Bảo hiểm</td><td>@a.CurrencyKyHieu@a.InsuranceCost.Value.ToString("N0")</td></tr>
                                     }
                                     @if (a.OtherCost.HasValue)
                                     {
-                                        <tr><td><i class="fa-solid fa-ellipsis"></i> Chi phí khác</td><td>$@a.OtherCost.Value.ToString("N0")</td></tr>
+                                        <tr><td><i class="fa-solid fa-ellipsis"></i> Chi phí khác</td><td>@a.CurrencyKyHieu@a.OtherCost.Value.ToString("N0")</td></tr>
                                     }
                                 </tbody>
                             </table>
@@ -425,15 +425,15 @@
                     <h2 class="truong-section__title">Học phí & Chi phí</h2>
                     <div class="cost-table">
                         <table>
-                            <thead><tr><th>Khoản</th><th>USD/năm</th></tr></thead>
+                            <thead><tr><th>Khoản</th><th>@b.CurrencyVietTat/năm</th></tr></thead>
                             <tbody>
                                 @if (b.Tuition.HasValue)
                                 {
-                                    <tr><td>Học phí</td><td>@b.Tuition.Value.ToString("N0")</td></tr>
+                                    <tr><td>Học phí</td><td>@b.CurrencyKyHieu@b.Tuition.Value.ToString("N0")</td></tr>
                                 }
                                 @if (b.COSRoom.HasValue)
                                 {
-                                    <tr><td>Ký túc xá / Ăn</td><td>@b.COSRoom.Value.ToString("N0")</td></tr>
+                                    <tr><td>Ký túc xá / Ăn</td><td>@b.CurrencyKyHieu@b.COSRoom.Value.ToString("N0")</td></tr>
                                 }
                             </tbody>
                         </table>
@@ -518,15 +518,15 @@
                     <h2 class="truong-section__title">Học phí & Chi phí</h2>
                     <div class="cost-table">
                         <table>
-                            <thead><tr><th>Khoản</th><th>USD</th></tr></thead>
+                            <thead><tr><th>Khoản</th><th>@e.CurrencyVietTat</th></tr></thead>
                             <tbody>
                                 @if (e.Tuition.HasValue)
                                 {
-                                    <tr><td>Học phí</td><td>@e.Tuition.Value.ToString("N0")</td></tr>
+                                    <tr><td>Học phí</td><td>@e.CurrencyKyHieu@e.Tuition.Value.ToString("N0")</td></tr>
                                 }
                                 @if (e.COSRoom.HasValue)
                                 {
-                                    <tr><td>Ký túc xá</td><td>@e.COSRoom.Value.ToString("N0")</td></tr>
+                                    <tr><td>Ký túc xá</td><td>@e.CurrencyKyHieu@e.COSRoom.Value.ToString("N0")</td></tr>
                                 }
                             </tbody>
                         </table>

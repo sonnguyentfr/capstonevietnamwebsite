@@ -4,6 +4,9 @@ public class TruongAdmisBFModel
 {
     public int Id { get; set; }
     public int? currency { get; set; }
+    public string? currencyKyHieu { get; set; }
+    public string? currencyVietTat { get; set; }
+    public string? currencyName { get; set; }
     public int? Gradesfrom { get; set; }
     public int? Gradesto { get; set; }
     public bool? ESL { get; set; }
