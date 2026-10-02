@@ -1,0 +1,674 @@
+@using NVCMS.WebView.Data.ViewModels
+@model TuVanDangKyPageViewModel
+
+@{
+    ViewData["Title"] = "Đăng ký tư vấn du học";
+    ViewData["Description"] = "Đăng ký nhận tư vấn du học miễn phí cùng đội ngũ cố vấn Capstone Vietnam.";
+    var recaptchaKey = (ViewBag.RecaptchaSiteKey as string) ?? string.Empty;
+    var input = Model.Input;
+    var cat = Model.Catalogs;
+    var selectedTinh = cat.Provinces.FirstOrDefault(x => x.Id == input.TinhId);
+    var serverErrors = ViewData.ModelState.Values.SelectMany(v => v.Errors)
+        .Select(e => e.ErrorMessage).Where(m => !string.IsNullOrWhiteSpace(m)).Distinct().ToList();
+}
+
+@section Styles {
+    <link rel="stylesheet" href="/static/css/event-registration.css">
+    <link rel="stylesheet" href="/static/css/tuvan-dang-ky.css">
+}
+
+@* ===== HERO ===== *@
+<section class="er-hero">
+    <div class="er-hero__overlay"></div>
+    <div class="er-hero__pattern"></div>
+    <div class="container er-hero__inner">
+        <div class="breadcrumb er-hero__breadcrumb" data-aos="fade-up">
+            <a href="/">Trang chủ</a>
+            <i class="fa-solid fa-chevron-right"></i>
+            <span>Đăng ký tư vấn</span>
+        </div>
+        <div class="er-hero__body" data-aos="fade-up" data-aos-delay="80">
+            <div class="er-hero__badge">
+                <i class="fa-solid fa-comments"></i>
+                <span>Tư vấn miễn phí</span>
+            </div>
+            <h1 class="er-hero__title">Đăng ký tư vấn du học</h1>
+        </div>
+    </div>
+</section>
+
+@* ===== MAIN ===== *@
+<section class="er-section section-large">
+    <div class="container">
+        <div class="er-layout">
+
+            <div class="er-main" data-aos="fade-up">
+
+                <form asp-controller="TuVanDangKy" asp-action="Index"
+                      method="post" id="tv-form" novalidate autocomplete="off">
+                    @Html.AntiForgeryToken()
+
+                    <div id="tv-val-summary" class="er-alert er-alert--danger" role="alert"
+                         style="@(serverErrors.Any() ? "" : "display:none")">
+                        <i class="fa-solid fa-circle-xmark"></i>
+                        <div id="tv-val-summary-body">
+                            @if (serverErrors.Any())
+                            {
+                                <ul>
+                                    @foreach (var err in serverErrors)
+                                    {
+                                        <li>@err</li>
+                                    }
+                                </ul>
+                            }
+                        </div>
+                    </div>
+
+                    @* ─────────────────────────────────────
+                       BLOCK 1 - Thông tin cá nhân
+                    ───────────────────────────────────── *@
+                    <div class="er-card">
+                        <div class="er-card-head">
+                            <span class="er-card-icon"><i class="fa-solid fa-user-graduate"></i></span>
+                            <h2 class="er-card-title">Thông tin cá nhân</h2>
+                        </div>
+
+                        <div class="er-field">
+                            <label class="er-label" for="inp-hoten">Họ và tên <span class="er-required">*</span></label>
+                            <input name="Input.HoVaTen" id="inp-hoten" type="text" value="@input.HoVaTen"
+                                   class="er-control" placeholder="Ví dụ: Nguyễn Văn An" maxlength="150"
+                                   autocomplete="name" />
+                            <span id="tv-err-hoten" class="er-error" style="display:none"></span>
+                        </div>
+
+                        <div class="er-row-2">
+                            <div class="er-field">
+                                <label class="er-label">Ngày sinh <span class="er-required">*</span></label>
+                                <div class="er-dob-row">
+                                    <div class="er-select-wrap">
+                                        <select name="Input.NgaySinhNgay" class="er-control er-select" id="dob-day">
+                                            <option value="">Ngày</option>
+                                            @for (int d = 1; d <= 31; d++)
+                                            {
+                                                <option value="@d" selected="@(input.NgaySinhNgay == d)">@d</option>
+                                            }
+                                        </select>
+                                        <i class="fa-solid fa-chevron-down er-select-arrow"></i>
+                                    </div>
+                                    <div class="er-select-wrap">
+                                        <select name="Input.NgaySinhThang" class="er-control er-select" id="dob-month">
+                                            <option value="">Tháng</option>
+                                            @for (int m = 1; m <= 12; m++)
+                                            {
+                                                <option value="@m" selected="@(input.NgaySinhThang == m)">Tháng @m</option>
+                                            }
+                                        </select>
+                                        <i class="fa-solid fa-chevron-down er-select-arrow"></i>
+                                    </div>
+                                    <div class="er-select-wrap">
+                                        <select name="Input.NgaySinhNam" class="er-control er-select" id="dob-year">
+                                            <option value="">Năm</option>
+                                            @for (int y = DateTime.Now.Year - 3; y >= 1960; y--)
+                                            {
+                                                <option value="@y" selected="@(input.NgaySinhNam == y)">@y</option>
+                                            }
+                                        </select>
+                                        <i class="fa-solid fa-chevron-down er-select-arrow"></i>
+                                    </div>
+                                </div>
+                                <span id="tv-err-dob" class="er-error" style="display:none"></span>
+                            </div>
+
+                            <div class="er-field">
+                                <label class="er-label">Giới tính <span class="er-required">*</span></label>
+                                <div class="er-radio-group tv-radio-inline">
+                                    <label class="er-radio-item">
+                                        <input type="radio" name="Input.GioiTinh" value="1" checked="@(input.GioiTinh == "1")" />
+                                        <span class="er-radio-box"></span>
+                                        <span class="er-radio-label"><i class="fa-solid fa-mars"></i> Nam</span>
+                                    </label>
+                                    <label class="er-radio-item">
+                                        <input type="radio" name="Input.GioiTinh" value="0" checked="@(input.GioiTinh == "0")" />
+                                        <span class="er-radio-box"></span>
+                                        <span class="er-radio-label"><i class="fa-solid fa-venus"></i> Nữ</span>
+                                    </label>
+                                </div>
+                                <span id="tv-err-gioitinh" class="er-error" style="display:none"></span>
+                            </div>
+                        </div>
+
+                        <div class="er-row-2">
+                            <div class="er-field">
+                                <label class="er-label" for="inp-email">Email <span class="er-required">*</span></label>
+                                <input name="Input.Email" id="inp-email" type="text" value="@input.Email"
+                                       class="er-control" placeholder="Địa chỉ email" maxlength="200"
+                                       autocomplete="email" inputmode="email" />
+                                <p class="er-hint">
+                                    <i class="fa-regular fa-circle-info"></i>
+                                    Không có email thì nhập <b>NA</b> (khi đó bắt buộc nhập số điện thoại).
+                                </p>
+                                <span id="tv-err-email" class="er-error" style="display:none"></span>
+                            </div>
+                            <div class="er-field">
+                                <label class="er-label" for="inp-phone">Số điện thoại <span class="er-required">*</span></label>
+                                <input name="Input.SoDienThoai" id="inp-phone" type="tel" value="@input.SoDienThoai"
+                                       class="er-control" placeholder="Số điện thoại" maxlength="20"
+                                       autocomplete="tel" />
+                                <p class="er-hint">
+                                    <i class="fa-regular fa-circle-info"></i>
+                                    Không có số điện thoại thì nhập <b>0</b> (khi đó bắt buộc nhập email).
+                                </p>
+                                <span id="tv-err-phone" class="er-error" style="display:none"></span>
+                            </div>
+                        </div>
+
+                        <div class="er-field">
+                            <label class="er-label">Tỉnh / Thành phố <span class="er-required">*</span></label>
+                            <input name="Input.TinhId" id="inp-tinh" type="hidden" value="@(input.TinhId > 0 ? input.TinhId : "")" />
+                            <div class="er-province-picker" id="province-picker">
+                                <div class="er-province-display" id="province-display" tabindex="0"
+                                     aria-haspopup="listbox" aria-expanded="false" role="combobox"
+                                     aria-controls="province-list" aria-label="Tỉnh / Thành phố">
+                                    <span id="province-display-text" class="er-province-display-text">@(selectedTinh?.Title ?? "-- Chọn tỉnh/thành --")</span>
+                                    <i class="fa-solid fa-chevron-down er-province-arrow" id="province-arrow"></i>
+                                </div>
+                                <div class="er-province-dropdown" id="province-dropdown" style="display:none">
+                                    <div class="er-province-search-wrap">
+                                        <i class="fa-solid fa-magnifying-glass"></i>
+                                        <input type="text" id="province-search" class="er-province-search"
+                                               placeholder="Tìm tỉnh/thành..." autocomplete="off" />
+                                    </div>
+                                    <ul class="er-province-list" id="province-list" role="listbox">
+                                        @foreach (var t in cat.Provinces)
+                                        {
+                                            <li class="er-province-opt @(t.Id == input.TinhId ? "er-province-opt--selected" : "")"
+                                                data-value="@t.Id" role="option">@t.Title</li>
+                                        }
+                                    </ul>
+                                </div>
+                            </div>
+                            <span id="tv-err-tinh" class="er-error" style="display:none"></span>
+                        </div>
+                    </div>
+
+                    @* ─────────────────────────────────────
+                       BLOCK 2 - Nhu cầu du học
+                    ───────────────────────────────────── *@
+                    <div class="er-card">
+                        <div class="er-card-head">
+                            <span class="er-card-icon"><i class="fa-solid fa-earth-asia"></i></span>
+                            <h2 class="er-card-title">Nhu cầu du học</h2>
+                        </div>
+
+                        <div class="er-field">
+                            <label class="er-label">Quốc gia quan tâm <span class="er-required">*</span></label>
+
+                            @if (Model.PopularQuocGia.Any())
+                            {
+                                <div class="tv-chip-group" id="country-popular">
+                                    @foreach (var c in Model.PopularQuocGia)
+                                    {
+                                        <button type="button" class="tv-chip @(input.QuocGiaIds.Contains(c.Id) ? "tv-chip--on" : "")"
+                                                data-id="@c.Id">@c.Title</button>
+                                    }
+                                </div>
+                            }
+
+                            <div class="er-province-picker tv-multi" id="country-picker">
+                                <div class="er-province-display" id="country-display" tabindex="0"
+                                     aria-haspopup="listbox" aria-expanded="false" role="combobox"
+                                     aria-controls="country-list" aria-label="Quốc gia khác">
+                                    <span class="er-province-display-text" id="country-display-text">Chọn quốc gia khác...</span>
+                                    <i class="fa-solid fa-chevron-down er-province-arrow" id="country-arrow"></i>
+                                </div>
+                                <div class="er-province-dropdown" id="country-dropdown" style="display:none">
+                                    <div class="er-province-search-wrap">
+                                        <i class="fa-solid fa-magnifying-glass"></i>
+                                        <input type="text" id="country-search" class="er-province-search"
+                                               placeholder="Tìm quốc gia..." autocomplete="off" />
+                                    </div>
+                                    <ul class="er-province-list" id="country-list" role="listbox" aria-multiselectable="true">
+                                        @foreach (var c in cat.QuocGia)
+                                        {
+                                            <li class="tv-multi-opt" data-name="@c.Title.ToLowerInvariant()">
+                                                <label class="er-checkbox-item">
+                                                    <input type="checkbox" class="er-checkbox tv-country-cb" name="Input.QuocGiaIds"
+                                                           value="@c.Id" data-title="@c.Title" checked="@input.QuocGiaIds.Contains(c.Id)" />
+                                                    <span class="er-checkbox-box"><i class="fa-solid fa-check"></i></span>
+                                                    <span class="er-checkbox-label">@c.Title</span>
+                                                </label>
+                                            </li>
+                                        }
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="tv-selected" id="country-selected"></div>
+                            <p class="er-hint">
+                                <i class="fa-regular fa-circle-info"></i>
+                                Có thể chọn nhiều quốc gia (tối đa @TuVanDangKyInputViewModel.MaxQuocGia).
+                            </p>
+                            <span id="tv-err-quocgia" class="er-error" style="display:none"></span>
+                        </div>
+
+                        @if (cat.BacHoc.Any())
+                        {
+                            <div class="er-field">
+                                <label class="er-label">Bậc học mong muốn</label>
+                                <div class="tv-check-grid">
+                                    @foreach (var b in cat.BacHoc)
+                                    {
+                                        <label class="er-checkbox-item">
+                                            <input type="checkbox" class="er-checkbox" name="Input.BacHocIds"
+                                                   value="@b.Id" checked="@input.BacHocIds.Contains(b.Id)" />
+                                            <span class="er-checkbox-box"><i class="fa-solid fa-check"></i></span>
+                                            <span class="er-checkbox-label">@b.Title</span>
+                                        </label>
+                                    }
+                                </div>
+                            </div>
+                        }
+
+                        <div class="er-row-2">
+                            <div class="er-field">
+                                <label class="er-label" for="inp-namdi">Năm dự định đi <span class="er-required">*</span></label>
+                                <div class="er-select-wrap">
+                                    <select name="Input.NamDuDinhDi" id="inp-namdi" class="er-control er-select">
+                                        <option value="">-- Chọn năm --</option>
+                                        @foreach (var y in Model.NamDiOptions)
+                                        {
+                                            <option value="@y" selected="@(input.NamDuDinhDi == y)">@y</option>
+                                        }
+                                    </select>
+                                    <i class="fa-solid fa-chevron-down er-select-arrow"></i>
+                                </div>
+                                <span id="tv-err-namdi" class="er-error" style="display:none"></span>
+                            </div>
+
+                            <div class="er-field">
+                                <label class="er-label" for="inp-chitra">Khả năng chi trả / năm</label>
+                                <div class="er-select-wrap">
+                                    <select name="Input.KhaNangChiTra" id="inp-chitra" class="er-control er-select">
+                                        <option value="0">-- Chưa xác định --</option>
+                                        @foreach (var c in cat.KhaNangChiTra)
+                                        {
+                                            <option value="@c.Id" selected="@(input.KhaNangChiTra == c.Id)">@c.Title</option>
+                                        }
+                                    </select>
+                                    <i class="fa-solid fa-chevron-down er-select-arrow"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="er-field">
+                            <label class="er-label">Ngành học dự kiến</label>
+                            <div class="er-province-picker tv-multi tv-multi--grid" id="major-picker">
+                                <div class="er-province-display" id="major-display" tabindex="0"
+                                     aria-haspopup="listbox" aria-expanded="false" role="combobox"
+                                     aria-controls="major-list" aria-label="Ngành học dự kiến">
+                                    <span class="er-province-display-text">Bấm để chọn ngành học...</span>
+                                    <i class="fa-solid fa-chevron-down er-province-arrow" id="major-arrow"></i>
+                                </div>
+                                <div class="er-province-dropdown" id="major-dropdown" style="display:none">
+                                    <div class="er-province-search-wrap">
+                                        <i class="fa-solid fa-magnifying-glass"></i>
+                                        <input type="text" id="major-search" class="er-province-search"
+                                               placeholder="Tìm ngành học..." autocomplete="off" />
+                                    </div>
+                                    <ul class="er-province-list" id="major-list" role="listbox" aria-multiselectable="true">
+                                        @foreach (var n in cat.NganhHoc)
+                                        {
+                                            <li class="tv-multi-opt" data-name="@n.ToLowerInvariant()">
+                                                <label class="er-checkbox-item">
+                                                    <input type="checkbox" class="er-checkbox tv-major-cb" name="Input.NganhHocChon"
+                                                           value="@n" data-title="@n" checked="@input.NganhHocChon.Contains(n)" />
+                                                    <span class="er-checkbox-box"><i class="fa-solid fa-check"></i></span>
+                                                    <span class="er-checkbox-label">@n</span>
+                                                </label>
+                                            </li>
+                                        }
+                                    </ul>
+                                    <div class="tv-multi-foot">
+                                        <button type="button" class="tv-chip tv-chip--on" id="major-done">Xong</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tv-selected" id="major-selected"></div>
+                            <input name="Input.NganhHoc" id="inp-nganh" type="text" value="@input.NganhHoc"
+                                   class="er-control tv-other-input" maxlength="200" autocomplete="off"
+                                   placeholder="Ngành khác (không có trong danh sách) – tự nhập tại đây" />
+                            <p class="er-hint">
+                                <i class="fa-regular fa-circle-info"></i>
+                                Có thể chọn nhiều ngành (tối đa @TuVanDangKyInputViewModel.MaxNganhHoc) và nhập thêm ngành khác.
+                            </p>
+                            <span id="tv-err-nganh" class="er-error" style="display:none"></span>
+                        </div>
+
+                        <div class="er-field">
+                            <label class="er-label" for="inp-tuvankhac">Nội dung cần tư vấn thêm</label>
+                            <textarea name="Input.TuVanKhac" id="inp-tuvankhac" rows="4" maxlength="800"
+                                      class="er-control er-textarea"
+                                      placeholder="Bạn muốn Capstone tư vấn thêm điều gì?">@input.TuVanKhac</textarea>
+                        </div>
+                    </div>
+
+                    @* ─────────────────────────────────────
+                       Terms + Submit
+                    ───────────────────────────────────── *@
+                    <div class="er-card er-card--terms">
+                        <label class="er-checkbox-item">
+                            <input name="Input.DongYDieuKhoan" id="inp-terms" type="checkbox" value="true"
+                                   class="er-checkbox" checked="@input.DongYDieuKhoan" />
+                            <span class="er-checkbox-box"><i class="fa-solid fa-check"></i></span>
+                            <span class="er-checkbox-label">
+                                Tôi đồng ý với các điều khoản bảo mật thông tin của Capstone Vietnam. <span class="er-required">*</span>
+                            </span>
+                        </label>
+                        <input type="hidden" name="Input.DongYDieuKhoan" value="false" />
+                        <span id="tv-err-terms" class="er-error" style="display:none"></span>
+
+                        @if (!string.IsNullOrEmpty(recaptchaKey))
+                        {
+                            <div class="er-recaptcha-note">
+                                <i class="fa-brands fa-google"></i>
+                                Trang này được bảo vệ bởi reCAPTCHA
+                            </div>
+                        }
+
+                        <button type="submit" class="er-submit-btn" id="tv-submit">
+                            <span class="er-submit-text">Gửi đăng ký</span>
+                            <span class="er-submit-spinner" aria-hidden="true"></span>
+                            <i class="fa-solid fa-arrow-right er-submit-icon"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            @* ── SIDEBAR ── *@
+            <aside class="er-sidebar" data-aos="fade-left">
+                <div class="er-sidebar-box er-sidebar-tips">
+                    <div class="er-sidebar-box-head">
+                        <i class="fa-solid fa-lightbulb"></i>
+                        <h3>Capstone sẽ hỗ trợ bạn</h3>
+                    </div>
+                    <ul class="er-tips-list">
+                        <li><i class="fa-solid fa-check"></i> Tư vấn hoàn toàn miễn phí.</li>
+                        <li><i class="fa-solid fa-check"></i> Định hướng quốc gia, trường và ngành học phù hợp.</li>
+                        <li><i class="fa-solid fa-check"></i> Cố vấn sẽ liên hệ lại với bạn trong thời gian sớm nhất.</li>
+                        <li><i class="fa-solid fa-check"></i> Thông tin của bạn được bảo mật, không chia sẻ cho bên thứ ba.</li>
+                    </ul>
+                </div>
+            </aside>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    @if (!string.IsNullOrEmpty(recaptchaKey))
+    {
+        <script src="https://www.google.com/recaptcha/api.js?render=@recaptchaKey"></script>
+    }
+    <script>
+        (function () {
+            var MAX_COUNTRY = @TuVanDangKyInputViewModel.MaxQuocGia;
+            var MAX_MAJOR = @TuVanDangKyInputViewModel.MaxNganhHoc;
+            var RECAPTCHA_KEY = '@recaptchaKey';
+
+            var form      = document.getElementById('tv-form');
+            var submitBtn = document.getElementById('tv-submit');
+            var summary   = document.getElementById('tv-val-summary');
+            var summaryBd = document.getElementById('tv-val-summary-body');
+            var emailInp  = document.getElementById('inp-email');
+            var phoneInp  = document.getElementById('inp-phone');
+
+            function showErr(id, msg) {
+                var el = document.getElementById(id);
+                if (!el) return;
+                el.textContent = msg || '';
+                el.style.display = msg ? '' : 'none';
+            }
+            function setInvalid(el, bad) {
+                if (el) el.classList.toggle('er-control--invalid', !!bad);
+            }
+            function isValidEmail(v) { return /^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/.test(v); }
+            function isValidPhone(v) {
+                var p = v.replace(/[\s\-\.\(\)]/g, '');
+                return /^(0|\+?84)(3|5|7|8|9|2)[0-9]{8}$/.test(p);
+            }
+            function isNoEmail(v) { return !v || v.toUpperCase() === 'NA'; }
+            function isNoPhone(v) { return !v || v === '0'; }
+
+            // ── Searchable dropdown (dùng chung cho tỉnh & quốc gia) ─────────
+            function setupDropdown(prefix, onPick) {
+                var picker   = document.getElementById(prefix + '-picker');
+                var display  = document.getElementById(prefix + '-display');
+                var dropdown = document.getElementById(prefix + '-dropdown');
+                var arrow    = document.getElementById(prefix + '-arrow');
+                var search   = document.getElementById(prefix + '-search');
+                var list     = document.getElementById(prefix + '-list');
+                if (!picker) return;
+
+                function open() {
+                    dropdown.style.display = '';
+                    display.setAttribute('aria-expanded', 'true');
+                    arrow.style.transform = 'rotate(180deg)';
+                    search.value = '';
+                    filter('');
+                    search.focus();
+                }
+                function close() {
+                    dropdown.style.display = 'none';
+                    display.setAttribute('aria-expanded', 'false');
+                    arrow.style.transform = '';
+                }
+                function filter(q) {
+                    q = q.toLowerCase();
+                    Array.prototype.forEach.call(list.children, function (li) {
+                        var t = (li.getAttribute('data-name') || li.textContent || '').toLowerCase();
+                        li.style.display = (!q || t.indexOf(q) !== -1) ? '' : 'none';
+                    });
+                }
+
+                display.addEventListener('click', function () { dropdown.style.display === 'none' ? open() : close(); });
+                display.addEventListener('keydown', function (e) {
+                    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); }
+                    if (e.key === 'Escape') close();
+                });
+                search.addEventListener('input', function () { filter(this.value); });
+                search.addEventListener('keydown', function (e) { if (e.key === 'Escape') { close(); display.focus(); } });
+                document.addEventListener('click', function (e) { if (!picker.contains(e.target)) close(); });
+
+                if (onPick) list.addEventListener('click', function (e) { onPick(e, close); });
+            }
+
+            // ── Tỉnh ─────────────────────────────────────────────────────────
+            setupDropdown('province', function (e, close) {
+                var li = e.target.closest('.er-province-opt');
+                if (!li) return;
+                document.getElementById('inp-tinh').value = li.getAttribute('data-value');
+                document.getElementById('province-display-text').textContent = li.textContent;
+                document.querySelectorAll('#province-list .er-province-opt').forEach(function (o) {
+                    o.classList.toggle('er-province-opt--selected', o === li);
+                });
+                showErr('tv-err-tinh', '');
+                setInvalid(document.getElementById('province-display'), false);
+                close();
+            });
+
+            // ── Chọn nhiều (dùng chung cho quốc gia & ngành học) ────────────
+            function setupMulti(o) {
+                setupDropdown(o.prefix);
+                var cbs = Array.prototype.slice.call(document.querySelectorAll(o.cbSelector));
+                var box = document.getElementById(o.prefix + '-selected');
+                var chips = o.chipSelector ? document.querySelectorAll(o.chipSelector) : [];
+
+                function checked() { return cbs.filter(function (cb) { return cb.checked; }); }
+                function byValue(v) { return cbs.filter(function (cb) { return cb.value === String(v); })[0]; }
+                function limitMsg() { showErr(o.errId, 'Chỉ chọn tối đa ' + o.max + ' ' + o.label + '.'); }
+
+                function render() {
+                    box.innerHTML = '';
+                    checked().forEach(function (cb) {
+                        var tag = document.createElement('span');
+                        tag.className = 'tv-tag';
+                        tag.textContent = cb.getAttribute('data-title');
+                        var x = document.createElement('button');
+                        x.type = 'button';
+                        x.setAttribute('aria-label', 'Bỏ chọn ' + cb.getAttribute('data-title'));
+                        x.innerHTML = '<i class="fa-solid fa-xmark"></i>';
+                        x.addEventListener('click', function () { cb.checked = false; render(); });
+                        tag.appendChild(x);
+                        box.appendChild(tag);
+                    });
+                    Array.prototype.forEach.call(chips, function (b) {
+                        var cb = byValue(b.getAttribute('data-id'));
+                        b.classList.toggle('tv-chip--on', !!(cb && cb.checked));
+                    });
+                    if (checked().length) showErr(o.errId, '');
+                }
+
+                cbs.forEach(function (cb) {
+                    cb.addEventListener('change', function () {
+                        if (cb.checked && checked().length > o.max) { cb.checked = false; limitMsg(); return; }
+                        render();
+                    });
+                });
+                Array.prototype.forEach.call(chips, function (b) {
+                    b.addEventListener('click', function () {
+                        var cb = byValue(b.getAttribute('data-id'));
+                        if (!cb) return;
+                        if (!cb.checked && checked().length >= o.max) { limitMsg(); return; }
+                        cb.checked = !cb.checked;
+                        render();
+                    });
+                });
+                render();
+                return { count: function () { return checked().length; } };
+            }
+
+            var countries = setupMulti({
+                prefix: 'country', cbSelector: '.tv-country-cb', chipSelector: '#country-popular .tv-chip',
+                max: MAX_COUNTRY, label: 'quốc gia', errId: 'tv-err-quocgia'
+            });
+            setupMulti({
+                prefix: 'major', cbSelector: '.tv-major-cb',
+                max: MAX_MAJOR, label: 'ngành học', errId: 'tv-err-nganh'
+            });
+            document.getElementById('major-done').addEventListener('click', function () {
+                document.getElementById('major-dropdown').style.display = 'none';
+                document.getElementById('major-display').setAttribute('aria-expanded', 'false');
+                document.getElementById('major-arrow').style.transform = '';
+            });
+
+            // ── Validation ───────────────────────────────────────────────────
+            function validate() {
+                var errors = [];
+                var first = null;
+                function fail(errId, msg, el) {
+                    errors.push(msg);
+                    showErr(errId, msg);
+                    setInvalid(el, true);
+                    if (!first) first = el;
+                }
+                function ok(errId, el) { showErr(errId, ''); setInvalid(el, false); }
+
+                var hoten = document.getElementById('inp-hoten');
+                if (!hoten.value.trim()) fail('tv-err-hoten', 'Vui lòng nhập họ và tên.', hoten);
+                else ok('tv-err-hoten', hoten);
+
+                var d = document.getElementById('dob-day'), m = document.getElementById('dob-month'), y = document.getElementById('dob-year');
+                if (!d.value || !m.value || !y.value) {
+                    fail('tv-err-dob', 'Vui lòng chọn ngày, tháng, năm sinh.', d);
+                } else {
+                    var dt = new Date(+y.value, +m.value - 1, +d.value);
+                    if (dt.getDate() !== +d.value || dt.getMonth() !== +m.value - 1) fail('tv-err-dob', 'Ngày sinh không hợp lệ.', d);
+                    else ok('tv-err-dob', d);
+                }
+
+                var gt = document.querySelector('input[name="Input.GioiTinh"]:checked');
+                if (!gt) { errors.push('Vui lòng chọn giới tính.'); showErr('tv-err-gioitinh', 'Vui lòng chọn giới tính.'); }
+                else showErr('tv-err-gioitinh', '');
+
+                var email = emailInp.value.trim(), phone = phoneInp.value.trim();
+                var noEmail = isNoEmail(email), noPhone = isNoPhone(phone);
+                ok('tv-err-email', emailInp); ok('tv-err-phone', phoneInp);
+                if (noEmail && noPhone) {
+                    fail('tv-err-email', 'Vui lòng nhập Email hoặc Số điện thoại.', emailInp);
+                    showErr('tv-err-phone', 'Không có email thì bắt buộc nhập số điện thoại.');
+                    setInvalid(phoneInp, true);
+                } else {
+                    if (!email) fail('tv-err-email', 'Không có email thì nhập NA.', emailInp);
+                    else if (!noEmail && !isValidEmail(email)) fail('tv-err-email', 'Email không đúng định dạng.', emailInp);
+                    if (!phone) fail('tv-err-phone', 'Không có số điện thoại thì nhập 0.', phoneInp);
+                    else if (!noPhone && !isValidPhone(phone)) fail('tv-err-phone', 'Số điện thoại không hợp lệ.', phoneInp);
+                }
+
+                var tinh = document.getElementById('inp-tinh'), tinhDisp = document.getElementById('province-display');
+                if (!tinh.value) fail('tv-err-tinh', 'Vui lòng chọn tỉnh/thành.', tinhDisp);
+                else ok('tv-err-tinh', tinhDisp);
+
+                var countryCount = countries.count();
+                var countryDisp = document.getElementById('country-display');
+                if (!countryCount) fail('tv-err-quocgia', 'Vui lòng chọn ít nhất một quốc gia.', countryDisp);
+                else ok('tv-err-quocgia', countryDisp);
+
+                var namdi = document.getElementById('inp-namdi');
+                if (!namdi.value) fail('tv-err-namdi', 'Vui lòng chọn năm dự định đi.', namdi);
+                else ok('tv-err-namdi', namdi);
+
+                var terms = document.getElementById('inp-terms');
+                if (!terms.checked) { errors.push('Bạn phải đồng ý điều khoản bảo mật.'); showErr('tv-err-terms', 'Bạn phải đồng ý điều khoản bảo mật.'); if (!first) first = terms.closest('label'); }
+                else showErr('tv-err-terms', '');
+
+                if (errors.length) {
+                    summaryBd.innerHTML = '';
+                    var ul = document.createElement('ul');
+                    errors.forEach(function (msg) { var li = document.createElement('li'); li.textContent = msg; ul.appendChild(li); });
+                    summaryBd.appendChild(ul);
+                    summary.style.display = '';
+                    if (first) {
+                        first.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        if (first.focus) setTimeout(function () { first.focus(); }, 300);
+                    }
+                    return false;
+                }
+                summary.style.display = 'none';
+                return true;
+            }
+
+            ['input', 'change'].forEach(function (evt) {
+                form.addEventListener(evt, function (e) {
+                    if (e.target.classList && e.target.classList.contains('er-control')) setInvalid(e.target, false);
+                });
+            });
+
+            // ── Submit + reCAPTCHA v3 ────────────────────────────────────────
+            form.addEventListener('submit', function (e) {
+                e.preventDefault();
+                if (!validate()) return;
+                submitBtn.disabled = true;
+                submitBtn.classList.add('er-submit-btn--loading');
+
+                if (!RECAPTCHA_KEY || typeof grecaptcha === 'undefined') { form.submit(); return; }
+
+                grecaptcha.ready(function () {
+                    grecaptcha.execute(RECAPTCHA_KEY, { action: 'dang_ky_tu_van' }).then(function (token) {
+                        var inp = form.querySelector('input[name="g-recaptcha-response"]');
+                        if (!inp) {
+                            inp = document.createElement('input');
+                            inp.type = 'hidden';
+                            inp.name = 'g-recaptcha-response';
+                            form.appendChild(inp);
+                        }
+                        inp.value = token;
+                        form.submit();
+                    }, function () {
+                        submitBtn.disabled = false;
+                        submitBtn.classList.remove('er-submit-btn--loading');
+                        summaryBd.textContent = 'Không xác thực được reCAPTCHA. Vui lòng thử lại.';
+                        summary.style.display = '';
+                    });
+                });
+            });
+        })();
+    </script>
+}

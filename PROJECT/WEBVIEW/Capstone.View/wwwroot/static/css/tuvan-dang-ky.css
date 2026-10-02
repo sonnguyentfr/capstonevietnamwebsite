@@ -1,0 +1,132 @@
+/* ============================================================
+   ĐĂNG KÝ TƯ VẤN  –  /dang-ky-tu-van
+   Bổ sung cho event-registration.css (dùng chung các class er-*)
+   ============================================================ */
+
+.tv-radio-inline { min-height: 42px; align-items: center; }
+
+/* ── Quốc gia phổ biến ───────────────────────────────────── */
+.tv-chip-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem;
+    margin-bottom: .75rem;
+}
+.tv-chip {
+    border: 1.5px solid #d1d5db;
+    background: #fff;
+    color: #374151;
+    border-radius: 999px;
+    padding: .35rem .9rem;
+    font-size: .85rem;
+    cursor: pointer;
+    transition: border-color .18s, background .18s, color .18s;
+}
+.tv-chip:hover { border-color: var(--primary, #0e6fad); }
+.tv-chip--on {
+    background: var(--primary, #0e6fad);
+    border-color: var(--primary, #0e6fad);
+    color: #fff;
+}
+
+/* ── Dropdown chọn nhiều ─────────────────────────────────── */
+.tv-multi .er-province-list { max-height: 260px; }
+.tv-multi-opt { list-style: none; padding: .3rem .75rem; }
+.tv-multi-opt:hover { background: #f3f4f6; }
+.tv-multi-opt .er-checkbox-item { margin-bottom: 0; }
+
+.tv-selected {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .4rem;
+    margin-top: .6rem;
+}
+.tv-selected:empty { display: none; }
+.tv-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: .35rem;
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    color: #1e40af;
+    border-radius: 999px;
+    padding: .2rem .35rem .2rem .75rem;
+    font-size: .82rem;
+}
+.tv-tag button {
+    border: 0;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+.tv-tag button:hover { background: #dbeafe; }
+
+/* ── Bậc học ─────────────────────────────────────────────── */
+.tv-check-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: .25rem 1rem;
+}
+@media (max-width: 640px) {
+    .tv-check-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* ── Trang thành công ────────────────────────────────────── */
+.tv-success {
+    max-width: 640px;
+    margin: 0 auto;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    box-shadow: 0 8px 40px rgba(15,44,89,.08);
+    padding: 2.5rem 2rem;
+    text-align: center;
+}
+.tv-success__check {
+    width: 72px; height: 72px;
+    margin: 0 auto 1rem;
+    border-radius: 50%;
+    background: #059669;
+    color: #fff;
+    font-size: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.tv-success__title { font-size: 1.3rem; font-weight: 800; color: #0f2c59; margin: 0 0 .6rem; }
+.tv-success__msg { color: #374151; line-height: 1.7; margin: 0 0 1.5rem; }
+.tv-success__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .75rem;
+    justify-content: center;
+    align-items: center;
+}
+.tv-success__actions .er-submit-btn { width: auto; text-decoration: none; }
+.tv-success__actions .tv-chip { text-decoration: none; padding: .6rem 1.2rem; }
+
+/* ── Ngành học: grid tick chọn ───────────────────────────── */
+.tv-multi--grid .er-province-list {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0 .5rem;
+    max-height: 320px;
+}
+@media (max-width: 768px) {
+    .tv-multi--grid .er-province-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 420px) {
+    .tv-multi--grid .er-province-list { grid-template-columns: 1fr; }
+}
+.tv-multi-foot {
+    display: flex;
+    justify-content: flex-end;
+    padding: .5rem .75rem;
+    border-top: 1px solid #e5e7eb;
+}
+.tv-other-input { margin-top: .6rem; }

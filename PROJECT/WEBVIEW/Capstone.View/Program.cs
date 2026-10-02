@@ -46,6 +46,8 @@ builder.Services.AddScoped<ITuVanFormService>(sp =>
         sp.GetRequiredService<IHttpClientFactory>(),
         sp.GetRequiredService<ILogger<TuVanFormService>>()));
 builder.Services.AddScoped<EventRegistrationMailService>();
+builder.Services.Configure<TuVanDangKyOptions>(builder.Configuration.GetSection(TuVanDangKyOptions.SectionName));
+builder.Services.AddScoped<TuVanDangKyMailService>();
 
 builder.Services.AddHttpClient("ApiClient", client =>
 {
@@ -164,6 +166,14 @@ app.UseAuthorization();
 // ── Event Registration route ──────────────────────────────────────────────────
 app.MapControllerRoute(name: "event-registration", pattern: "dang-ky-su-kien",
     defaults: new { controller = "EventRegistration", action = "Index" });
+
+// ── Đăng ký tư vấn ────────────────────────────────────────────────────────────
+app.MapControllerRoute(name: "dang-ky-tu-van-thanh-cong", pattern: "dang-ky-tu-van/thanh-cong",
+    defaults: new { controller = "TuVanDangKy", action = "Success" });
+app.MapControllerRoute(name: "dang-ky-tu-van-nhanh", pattern: "dang-ky-tu-van/nhanh",
+    defaults: new { controller = "TuVanDangKy", action = "Nhanh" });
+app.MapControllerRoute(name: "dang-ky-tu-van", pattern: "dang-ky-tu-van",
+    defaults: new { controller = "TuVanDangKy", action = "Index" });
 
 app.MapControllerRoute(name: "gioi-thieu-ve-capstone", pattern: "gioi-thieu/ve-capstone", defaults: new { controller = "GioiThieu", action = "VeCapstone" });
 app.MapControllerRoute(name: "gioi-thieu", pattern: "gioi-thieu", defaults: new { controller = "GioiThieu", action = "Index" });

@@ -191,7 +191,7 @@ else if (!string.IsNullOrEmpty(Model.ImagePath))
             </div>
 
             @* ── CỘT PHẢI: sidebar ── *@
-            <aside class="nd-sidebar" id="nd-sidebar">
+            <aside class="nd-sidebar has-tvn-sticky" id="nd-sidebar">
                 <div class="nd-sidebar__sticky">
 
                     @* ───────────── SỰ KIỆN SẮP DIỄN RA ───────────── *@
@@ -402,6 +402,9 @@ else if (!string.IsNullOrEmpty(Model.ImagePath))
                         </a>
                     </div>
                 </div>
+
+                @* Form tư vấn nhanh – sticky theo scroll, mobile nằm cuối *@
+                @await Component.InvokeAsync("TuVanNhanh", new { nguonTrang = TuVanNguonTrang.TinTuc, nguonTieuDe = Model.Title })
             </aside>
 
         </div>@* /nd-body *@

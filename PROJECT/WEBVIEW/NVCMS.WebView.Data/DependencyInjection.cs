@@ -103,6 +103,15 @@ public static class DependencyInjection
                 sp.GetRequiredService<IDbContextFactory<LocationDbContext>>(),
                 sp.GetRequiredService<IMemoryCache>()));
 
+        // Đăng ký tư vấn (/dang-ky-tu-van) → Student_Info qua CRMConnection
+        services.AddScoped<ITuVanDangKyRepository>(_ =>
+            new TuVanDangKyRepository(crmConnectionString));
+        services.AddScoped<ITuVanDangKyService>(sp =>
+            new TuVanDangKyService(
+                sp.GetRequiredService<ITuVanDangKyRepository>(),
+                sp.GetRequiredService<ILocationService>(),
+                sp.GetRequiredService<IMemoryCache>()));
+
         return services;
     }
 }
