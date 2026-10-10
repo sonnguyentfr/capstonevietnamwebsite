@@ -279,7 +279,7 @@
                     {
                         <div class="no-data-notice">
                             <i class="fa-regular fa-clock"></i>
-                            <span>Thông tin học phí chưa được cập nhật. Vui lòng <a href="/dang-ky-tu-van">liên hệ Capstone</a> để được tư vấn.</span>
+                            <span>Thông tin học phí chưa được cập nhật. Vui lòng <a href="#tuvan-nhanh">để lại thông tin</a> để Capstone tư vấn.</span>
                         </div>
                     }
                 </div>
@@ -363,8 +363,7 @@
                 <div class="no-data-section">
                     <i class="fa-regular fa-clock fa-2x"></i>
                     <h3>Thông tin tuyển sinh đang được cập nhật</h3>
-                    <p>Capstone đang trong quá trình xác nhận thông tin chi tiết với trường. Vui lòng liên hệ để được tư vấn trực tiếp.</p>
-                    <a class="btn-solid active" href="/dang-ky-tu-van"><i class="fa-solid fa-paper-plane"></i> Đăng ký tư vấn</a>
+                    <p>Capstone đang trong quá trình xác nhận thông tin chi tiết với trường. Vui lòng <a href="#tuvan-nhanh">để lại thông tin</a> để được tư vấn trực tiếp.</p>
                 </div>
               }
             }
@@ -576,7 +575,7 @@
 
         </div><!-- end main -->
         <!-- Sidebar -->
-        <aside class="truong-layout__sidebar">
+        <aside class="truong-layout__sidebar has-tvn-sticky">
             <div class="sidebar-card">
                 <h3 class="sidebar-card__title">Thông tin liên hệ</h3>
                 @if (!string.IsNullOrEmpty(Model.ThanhPholongannhat))
@@ -664,14 +663,6 @@
                 </div>
             }
 
-            <div class="sidebar-card sidebar-card--cta">
-                <h3 class="sidebar-card__title">Tư vấn ngay</h3>
-                <p class="mb-4">Liên hệ Capstone để được tư vấn miễn phí về trường này</p>
-                <a class="btn-solid active w-full" href="/dang-ky-tu-van">
-                    <i class="fa-solid fa-paper-plane"></i> Đăng ký tư vấn
-                </a>
-            </div>
-
             @if (Model.RelatedNews.Any())
             {
                 <div class="sidebar-card">
@@ -696,6 +687,9 @@
                     </div>
                 </div>
             }
+
+            @* Form tư vấn nhanh – sticky theo scroll, mobile nằm cuối *@
+            @await Component.InvokeAsync("TuVanNhanh", new { nguonTrang = TuVanNguonTrang.Truong, nguonTieuDe = Model.NameofSchool })
         </aside>
     </div>
 </div>

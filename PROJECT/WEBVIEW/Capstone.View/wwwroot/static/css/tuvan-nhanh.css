@@ -1,0 +1,238 @@
+/* ============================================================
+   FORM TƯ VẤN NHANH – sidebar trang chi tiết (trường, tin tức)
+   Màu chủ đạo website: #A41034 / #8F0728
+   ============================================================ */
+.tvn {
+    --tvn-primary: #a41034;
+    --tvn-primary-dark: #8f0728;
+    --tvn-primary-soft: #fdf2f4;
+    --tvn-border: #e5e7eb;
+    --tvn-text: #1f2937;
+    --tvn-muted: #6b7280;
+
+    position: sticky;
+    top: 90px;
+    max-height: calc(100vh - 110px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+    background: #fff;
+    border: 2px solid var(--tvn-primary);
+    border-radius: 14px;
+    box-shadow: 0 12px 32px rgba(164, 16, 52, .16);
+    margin-top: 1.5rem;
+    color: var(--tvn-text);
+}
+
+/* ── Header ─────────────────────────────────────────────── */
+.tvn__head {
+    display: flex;
+    gap: .75rem;
+    align-items: flex-start;
+    padding: 1rem 1.1rem;
+    background: linear-gradient(135deg, var(--tvn-primary-dark) 0%, var(--tvn-primary) 100%);
+    color: #fff;
+}
+.tvn__icon {
+    flex-shrink: 0;
+    width: 42px; height: 42px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, .18);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.15rem;
+}
+.tvn__title {
+    font-size: 1.05rem;
+    font-weight: 800;
+    margin: 0 0 .2rem;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: .02em;
+}
+.tvn__sub {
+    font-size: .8rem;
+    line-height: 1.45;
+    margin: 0;
+    color: rgba(255, 255, 255, .9);
+}
+
+/* ── Form ───────────────────────────────────────────────── */
+.tvn__form { padding: 1rem 1.1rem 1.1rem; }
+.tvn__field { margin-bottom: .6rem; }
+.tvn__label {
+    display: block;
+    font-size: .76rem;
+    font-weight: 700;
+    color: var(--tvn-muted);
+    margin-bottom: .3rem;
+}
+.tvn__control {
+    display: block;
+    width: 100%;
+    padding: .5rem .7rem;
+    border: 1.5px solid #d1d5db;
+    border-radius: 8px;
+    font-size: .88rem;
+    line-height: 1.4;
+    color: var(--tvn-text);
+    background: #fff;
+    outline: none;
+    transition: border-color .15s, box-shadow .15s;
+}
+.tvn__control:focus {
+    border-color: var(--tvn-primary);
+    box-shadow: 0 0 0 3px rgba(164, 16, 52, .12);
+}
+.tvn__control.is-invalid {
+    border-color: #dc2626;
+    box-shadow: 0 0 0 3px rgba(220, 38, 38, .12);
+}
+.tvn__control--sm { padding: .4rem .6rem; font-size: .82rem; margin-top: .45rem; }
+textarea.tvn__control { resize: vertical; min-height: 58px; }
+
+.tvn__row3 {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr 1.2fr;
+    gap: .4rem;
+}
+
+/* Giới tính dạng segmented */
+.tvn__seg {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: .4rem;
+}
+.tvn__seg label { margin: 0; cursor: pointer; }
+.tvn__seg input { position: absolute; opacity: 0; width: 0; height: 0; }
+.tvn__seg span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: .35rem;
+    padding: .45rem;
+    border: 1.5px solid #d1d5db;
+    border-radius: 8px;
+    font-size: .86rem;
+    color: #374151;
+    transition: all .15s;
+}
+.tvn__seg input:checked + span {
+    border-color: var(--tvn-primary);
+    background: var(--tvn-primary-soft);
+    color: var(--tvn-primary);
+    font-weight: 700;
+}
+.tvn__seg input:focus-visible + span { box-shadow: 0 0 0 3px rgba(164, 16, 52, .2); }
+
+/* Quốc gia */
+.tvn__chips { display: flex; flex-wrap: wrap; gap: .35rem; }
+.tvn__chip {
+    border: 1.5px solid #d1d5db;
+    background: #fff;
+    color: #374151;
+    border-radius: 999px;
+    padding: .25rem .7rem;
+    font-size: .78rem;
+    cursor: pointer;
+    transition: all .15s;
+}
+.tvn__chip:hover { border-color: var(--tvn-primary); color: var(--tvn-primary); }
+.tvn__chip.is-on {
+    background: var(--tvn-primary);
+    border-color: var(--tvn-primary);
+    color: #fff;
+}
+
+/* Điều khoản */
+.tvn__terms {
+    display: flex;
+    gap: .45rem;
+    align-items: flex-start;
+    font-size: .78rem;
+    line-height: 1.45;
+    color: #4b5563;
+    margin: .2rem 0 .7rem;
+    cursor: pointer;
+}
+.tvn__terms input { margin-top: .15rem; accent-color: var(--tvn-primary); flex-shrink: 0; }
+
+/* Thông báo lỗi */
+.tvn__alert {
+    font-size: .8rem;
+    border-radius: 8px;
+    padding: .55rem .75rem;
+    margin-bottom: .7rem;
+}
+.tvn__alert--error { background: #fef2f2; border: 1px solid #fecaca; color: #b91c1c; }
+.tvn__alert ul { margin: 0; padding-left: 1rem; }
+
+/* Nút gửi */
+.tvn__submit {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: .5rem;
+    padding: .75rem 1rem;
+    border: 0;
+    border-radius: 10px;
+    background: var(--tvn-primary);
+    color: #fff;
+    font-size: .95rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: .03em;
+    cursor: pointer;
+    box-shadow: 0 6px 16px rgba(164, 16, 52, .3);
+    transition: background .15s, transform .15s;
+}
+.tvn__submit:hover { background: var(--tvn-primary-dark); transform: translateY(-1px); }
+.tvn__submit:disabled { opacity: .7; cursor: wait; transform: none; }
+.tvn__submit.is-loading i { animation: tvn-spin .8s linear infinite; }
+.tvn__submit.is-loading i::before { content: "\f110"; }
+@keyframes tvn-spin { to { transform: rotate(360deg); } }
+
+.tvn__note {
+    text-align: center;
+    font-size: .72rem;
+    color: var(--tvn-muted);
+    margin: .55rem 0 0;
+}
+
+/* Thành công */
+.tvn__done {
+    padding: 1.5rem 1.25rem;
+    text-align: center;
+    font-size: .9rem;
+    line-height: 1.6;
+    color: #374151;
+}
+.tvn__done-icon {
+    width: 56px; height: 56px;
+    margin: 0 auto .75rem;
+    border-radius: 50%;
+    background: #059669;
+    color: #fff;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.tvn__done p { margin: 0; }
+
+/* ── Sidebar chứa form: kéo dài theo cột nội dung để form sticky được ── */
+.has-tvn-sticky { align-self: stretch; }
+
+/* ── Mobile / tablet: form nằm cuối, không sticky ───────── */
+@media (max-width: 960px) {
+    .tvn {
+        position: static;
+        max-height: none;
+        overflow: visible;
+    }
+}
+
+/* Trang tin tức: khối sidebar cũ đang sticky cả cụm → chỉ để form sticky */
+.has-tvn-sticky .nd-sidebar__sticky { position: static; }

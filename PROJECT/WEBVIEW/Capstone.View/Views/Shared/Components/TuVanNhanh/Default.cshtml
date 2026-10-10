@@ -1,0 +1,130 @@
+@using NVCMS.WebView.Data.ViewModels
+@model TuVanNhanhInputViewModel
+
+@{
+    var recaptchaKey = (ViewBag.RecaptchaSiteKey as string) ?? string.Empty;
+    var catalogs = (ViewBag.Catalogs as TuVanCatalogs) ?? new TuVanCatalogs();
+    var popular = (ViewBag.PopularQuocGia as List<TuVanOption>) ?? [];
+    var popularIds = popular.Select(x => x.Id).ToHashSet();
+    var subtitle = Model.NguonTrang switch
+    {
+        TuVanNguonTrang.Truong => "Nhận tư vấn miễn phí về trường này cùng cố vấn Capstone",
+        TuVanNguonTrang.TinTuc => "Bạn quan tâm nội dung này? Để lại thông tin, Capstone sẽ liên hệ tư vấn miễn phí",
+        _ => "Để lại thông tin, Capstone sẽ liên hệ tư vấn miễn phí",
+    };
+}
+
+<link rel="stylesheet" href="/static/css/tuvan-nhanh.css" asp-append-version="true">
+
+<section class="tvn" id="tuvan-nhanh" aria-labelledby="tvn-title"
+         data-recaptcha="@recaptchaKey" data-max-country="@TuVanCoBanInputViewModel.MaxQuocGia">
+    <div class="tvn__head">
+        <span class="tvn__icon"><i class="fa-solid fa-headset"></i></span>
+        <div>
+            <h3 class="tvn__title" id="tvn-title">Đăng ký tư vấn miễn phí</h3>
+            <p class="tvn__sub">@subtitle</p>
+        </div>
+    </div>
+
+    <form class="tvn__form" id="tvn-form" action="/dang-ky-tu-van/nhanh" method="post" novalidate autocomplete="off">
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="NguonTrang" value="@((int)Model.NguonTrang)" />
+        <input type="hidden" name="NguonTieuDe" value="@Model.NguonTieuDe" />
+
+        <div class="tvn__field">
+            <input class="tvn__control" name="HoVaTen" type="text" maxlength="150"
+                   placeholder="Họ và tên *" autocomplete="name" data-err="Vui lòng nhập họ và tên." />
+        </div>
+
+        <div class="tvn__field">
+            <label class="tvn__label">Ngày sinh *</label>
+            <div class="tvn__row3">
+                <select class="tvn__control" name="NgaySinhNgay" aria-label="Ngày sinh">
+                    <option value="">Ngày</option>
+                    @for (int d = 1; d <= 31; d++) { <option value="@d">@d</option> }
+                </select>
+                <select class="tvn__control" name="NgaySinhThang" aria-label="Tháng sinh">
+                    <option value="">Tháng</option>
+                    @for (int m = 1; m <= 12; m++) { <option value="@m">Th @m</option> }
+                </select>
+                <select class="tvn__control" name="NgaySinhNam" aria-label="Năm sinh">
+                    <option value="">Năm</option>
+                    @for (int y = DateTime.Now.Year - 3; y >= 1960; y--) { <option value="@y">@y</option> }
+                </select>
+            </div>
+        </div>
+
+        <div class="tvn__field">
+            <div class="tvn__seg" role="radiogroup" aria-label="Giới tính">
+                <label><input type="radio" name="GioiTinh" value="1" /><span><i class="fa-solid fa-mars"></i> Nam</span></label>
+                <label><input type="radio" name="GioiTinh" value="0" /><span><i class="fa-solid fa-venus"></i> Nữ</span></label>
+            </div>
+        </div>
+
+        <div class="tvn__field">
+            <input class="tvn__control" name="Email" type="text" maxlength="200" inputmode="email"
+                   placeholder="Email * (không có nhập NA)" autocomplete="email" />
+        </div>
+        <div class="tvn__field">
+            <input class="tvn__control" name="SoDienThoai" type="tel" maxlength="20"
+                   placeholder="Số điện thoại * (không có nhập 0)" autocomplete="tel" />
+        </div>
+
+        <div class="tvn__field">
+            <select class="tvn__control" name="TinhId" aria-label="Tỉnh / Thành phố">
+                <option value="">Tỉnh / Thành phố *</option>
+                @foreach (var t in catalogs.Provinces)
+                {
+                    <option value="@t.Id">@t.Title</option>
+                }
+            </select>
+        </div>
+
+        <div class="tvn__field">
+            <label class="tvn__label">Quốc gia quan tâm *</label>
+            <div class="tvn__chips" id="tvn-countries">
+                @foreach (var c in popular)
+                {
+                    <button type="button" class="tvn__chip" data-id="@c.Id" aria-pressed="false">@c.Title</button>
+                }
+            </div>
+            <select class="tvn__control tvn__control--sm" id="tvn-country-more" aria-label="Thêm quốc gia khác">
+                <option value="">+ Thêm quốc gia khác...</option>
+                @foreach (var c in catalogs.QuocGia.Where(x => !popularIds.Contains(x.Id)))
+                {
+                    <option value="@c.Id">@c.Title</option>
+                }
+            </select>
+            <div id="tvn-country-inputs" hidden></div>
+        </div>
+
+        <div class="tvn__field">
+            <textarea class="tvn__control" name="TuVanKhac" rows="2" maxlength="800"
+                      placeholder="Bạn cần tư vấn thêm điều gì?"></textarea>
+        </div>
+
+        <label class="tvn__terms">
+            <input type="checkbox" name="DongYDieuKhoan" value="true" />
+            <span>Tôi đồng ý với điều khoản bảo mật thông tin của Capstone *</span>
+        </label>
+
+        <div class="tvn__alert" id="tvn-alert" role="alert" hidden></div>
+
+        <button type="submit" class="tvn__submit" id="tvn-submit">
+            <span class="tvn__submit-text">Nhận tư vấn ngay</span>
+            <i class="fa-solid fa-paper-plane"></i>
+        </button>
+
+        @if (!string.IsNullOrEmpty(recaptchaKey))
+        {
+            <p class="tvn__note"><i class="fa-brands fa-google"></i> Được bảo vệ bởi reCAPTCHA</p>
+        }
+    </form>
+
+    <div class="tvn__done" id="tvn-done" hidden>
+        <span class="tvn__done-icon"><i class="fa-solid fa-check"></i></span>
+        <p id="tvn-done-msg"></p>
+    </div>
+</section>
+
+<script src="/static/js/tuvan-nhanh.js" asp-append-version="true" defer></script>

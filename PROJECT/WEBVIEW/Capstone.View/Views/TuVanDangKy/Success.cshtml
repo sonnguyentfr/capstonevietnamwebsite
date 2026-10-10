@@ -1,0 +1,48 @@
+@{
+    ViewData["Title"] = "Đăng ký tư vấn thành công";
+    var name = TempData["TuVanName"] as string;
+}
+
+@section Styles {
+    <link rel="stylesheet" href="/static/css/event-registration.css">
+    <link rel="stylesheet" href="/static/css/tuvan-dang-ky.css">
+}
+
+<section class="er-hero">
+    <div class="er-hero__overlay"></div>
+    <div class="er-hero__pattern"></div>
+    <div class="container er-hero__inner">
+        <div class="breadcrumb er-hero__breadcrumb" data-aos="fade-up">
+            <a href="/">Trang chủ</a>
+            <i class="fa-solid fa-chevron-right"></i>
+            <a href="/dang-ky-tu-van">Đăng ký tư vấn</a>
+        </div>
+        <div class="er-hero__body" data-aos="fade-up" data-aos-delay="80">
+            <h1 class="er-hero__title">Đăng ký tư vấn thành công!</h1>
+        </div>
+    </div>
+</section>
+
+<section class="er-section section-large">
+    <div class="container">
+        <div class="tv-success" data-aos="fade-up">
+            <div class="tv-success__check"><i class="fa-solid fa-check"></i></div>
+            <h2 class="tv-success__title">
+                Cảm ơn @(string.IsNullOrWhiteSpace(name) ? "bạn" : name) đã đăng ký!
+            </h2>
+            <p class="tv-success__msg">
+                Capstone Vietnam đã nhận được thông tin của bạn.<br />
+                Cố vấn của chúng tôi sẽ liên hệ lại trong thời gian sớm nhất.
+            </p>
+            <div class="tv-success__actions">
+                <a href="/truong-doi-tac" class="er-submit-btn">
+                    <span class="er-submit-text">Tìm hiểu trường đối tác</span>
+                    <i class="fa-solid fa-arrow-right er-submit-icon"></i>
+                </a>
+                <a href="/" class="tv-chip">
+                    <i class="fa-solid fa-house"></i> Trang chủ
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
