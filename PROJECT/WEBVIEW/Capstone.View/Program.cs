@@ -3,7 +3,9 @@ using Capstone.View.Middleware;
 using Capstone.View.Options;
 using Capstone.View.Services;
 using Microsoft.AspNetCore.ResponseCompression;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Net.Http.Headers;
+using System.Threading.RateLimiting;
 using NVCMS.WebView.Data;
 using NVCMS.WebView.Data.Contracts.Service;
 using NVCMS.WebView.Data.Service;
@@ -52,6 +54,26 @@ builder.Services.AddHttpClient("ApiClient", client =>
     client.BaseAddress = new Uri(builder.Configuration["ApiBaseUrl"] ?? "http://localhost/");
 });
 builder.Services.AddMemoryCache();
+
+// ── Rate limit cho các trang tìm trường (chống bot/crawler quét URL lọc) ───────
+builder.Services.Configure<ForwardedHeadersOptions>(o =>
+{
+    o.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+    o.KnownNetworks.Clear();
+    o.KnownProxies.Clear();
+});
+builder.Services.AddRateLimiter(o =>
+{
+    o.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+    o.AddPolicy("search", ctx => RateLimitPartition.GetFixedWindowLimiter(
+        ctx.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+        _ => new FixedWindowRateLimiterOptions
+        {
+            PermitLimit = 60,
+            Window = TimeSpan.FromMinutes(1),
+            QueueLimit = 0
+        }));
+});
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowWebsite", policy =>
@@ -70,6 +92,7 @@ builder.Services.AddCors(options =>
 
 
 var app = builder.Build();
+app.UseForwardedHeaders();
 app.UseCors("AllowWebsite");
 // ── Response Compression — must be first ─────────────────────────────────────
 app.UseResponseCompression();
@@ -159,6 +182,7 @@ app.UseStaticFiles(new StaticFileOptions
 app.UseMiddleware<ShortUrlMiddleware>();
 
 app.UseRouting();
+app.UseRateLimiter();
 app.UseAuthorization();
 
 // ── Event Registration route ──────────────────────────────────────────────────

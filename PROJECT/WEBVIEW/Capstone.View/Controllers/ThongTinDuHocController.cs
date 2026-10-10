@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Capstone.View.Options;
 using NVCMS.WebView.Data.Contracts.Service;
@@ -154,6 +154,7 @@ public class ThongTinDuHocController : Controller
     }
 
     // GET /thong-tin-du-hoc/{countrySlug}/danh-sach-truong
+    [Microsoft.AspNetCore.RateLimiting.EnableRateLimiting("search")]
     public async Task<IActionResult> DanhSachTruong(string countrySlug, TruongSearchFilterViewModel filter)
     {
         if (!CountryMap.TryGetValue(countrySlug, out var country))
@@ -161,7 +162,8 @@ public class ThongTinDuHocController : Controller
 
         filter.QuocGia   = country.Id;
         filter.IsPartner = true;
-        if (filter.PageSize <= 0) filter.PageSize = 12;
+        filter.Page     = Math.Clamp(filter.Page, 1, 200);
+        filter.PageSize = filter.PageSize <= 0 ? 12 : Math.Min(filter.PageSize, 48);
 
         var vm = await _truongService.SearchAsync(filter);
 

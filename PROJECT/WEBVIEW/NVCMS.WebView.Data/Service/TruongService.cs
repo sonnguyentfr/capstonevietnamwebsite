@@ -1,4 +1,5 @@
-﻿using NVCMS.WebView.Data.Common;
+using Microsoft.Extensions.Caching.Memory;
+using NVCMS.WebView.Data.Common;
 using NVCMS.WebView.Data.Contracts.Repository;
 using NVCMS.WebView.Data.Contracts.Service;
 using NVCMS.WebView.Data.Models;
@@ -25,11 +26,23 @@ public class TruongService : ITruongService
         {401,"Ireland"},
     };
 
-    public TruongService(ITruongRepository repo, INewsRepository newsRepo, ContentUrlRewriter rewriter)
+    private readonly IMemoryCache _cache;
+
+    public TruongService(ITruongRepository repo, INewsRepository newsRepo, ContentUrlRewriter rewriter, IMemoryCache cache)
     {
         _repo     = repo;
         _newsRepo = newsRepo;
         _rewriter = rewriter;
+        _cache    = cache;
+    }
+
+    // Cache-aside: giảm tải SQL khi bot/crawler quét các URL lọc trường.
+    private async Task<T> CachedAsync<T>(string key, TimeSpan ttl, Func<Task<T>> load)
+    {
+        if (_cache.TryGetValue(key, out T? hit) && hit is not null) return hit;
+        var value = await load();
+        _cache.Set(key, value, ttl);
+        return value;
     }
 
     public async Task<TruongSearchResultViewModel> SearchAsync(TruongSearchFilterViewModel filter)
@@ -100,11 +113,15 @@ public class TruongService : ITruongService
                 Page = filter.Page,
                 PageSize = filter.PageSize
             };
-            (items, total) = await _repo.SearchAsync(repoFilter);
+            var searchKey = $"truong:search:{repoFilter.Ten}|{repoFilter.Letter}|{repoFilter.QuocGia}|{repoFilter.Loai}|{repoFilter.MajorId}|{repoFilter.TuitionMax}|{repoFilter.IsPartner}|{repoFilter.Page}|{repoFilter.PageSize}";
+            (items, total) = await CachedAsync(searchKey, TimeSpan.FromMinutes(5), () => _repo.SearchAsync(repoFilter));
         }
 
-        var majors = await _repo.GetAllMajorsAsync();
-        var countries = await _repo.GetCountriesWithCountAsync(filter.IsPartner == true ? true : null);
+        var majors = await CachedAsync("truong:majors", TimeSpan.FromHours(1),
+            async () => (await _repo.GetAllMajorsAsync()).ToList());
+        var partnerOnly = filter.IsPartner == true;
+        var countries = await CachedAsync($"truong:countries:{partnerOnly}", TimeSpan.FromHours(1),
+            async () => (await _repo.GetCountriesWithCountAsync(partnerOnly ? true : null)).ToList());
         return new TruongSearchResultViewModel
         {
             Items = items.Select(MapCard),
@@ -238,7 +255,8 @@ public class TruongService : ITruongService
         var rawLoaiIds = LoaiCodeToRawIds(loai);
         var rawLoai = rawLoaiIds.Count == 1 ? rawLoaiIds[0] : (rawLoaiIds.Count == 0 ? null : rawLoaiIds[0]);
         var majors = await _repo.GetMajorsWithCountAsync(quocGiaId, rawLoai);
-        var countries = await _repo.GetCountriesWithCountAsync();
+        var countries = await CachedAsync("truong:countries:False", TimeSpan.FromHours(1),
+            async () => (await _repo.GetCountriesWithCountAsync()).ToList());
 
         var list = majors.Select(m => new MajorViewModel { Id = m.Id, Title = m.Title, TitleVN = m.TitleVN })
                          .AsEnumerable();
@@ -259,7 +277,8 @@ public class TruongService : ITruongService
 
     public async Task<IEnumerable<QuocGiaViewModel>> GetCountriesAsync()
     {
-        var list = await _repo.GetCountriesWithCountAsync();
+        var list = await CachedAsync("truong:countries:False", TimeSpan.FromHours(1),
+            async () => (await _repo.GetCountriesWithCountAsync()).ToList());
         return list.Select(c => new QuocGiaViewModel { Id = c.Id, Ten = c.Ten, TruongCount = c.Count });
     }
 
@@ -271,11 +290,15 @@ public class TruongService : ITruongService
         // Filter in-memory after MapCard normalizes Loai — same pattern as GetByCountryAsync.
         var loaiSet = new HashSet<string>(loaiList, StringComparer.OrdinalIgnoreCase);
 
-        var (items, _) = await _repo.SearchAsync(new TruongSearchFilterViewModel
+        var items = await CachedAsync("truong:partners:all", TimeSpan.FromMinutes(10), async () =>
         {
-            IsPartner = true,
-            Page = 1,
-            PageSize = 10_000   // fetch all partner schools, filter in-memory
+            var (list, _) = await _repo.SearchAsync(new TruongSearchFilterViewModel
+            {
+                IsPartner = true,
+                Page = 1,
+                PageSize = 10_000   // fetch all partner schools, filter in-memory
+            });
+            return list.ToList();
         });
 
         return items

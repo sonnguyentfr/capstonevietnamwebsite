@@ -1,4 +1,4 @@
-﻿-- ============================================================
+-- ============================================================
 -- SP: WebView_Truong_SearchByLetter
 -- Loc truong theo chu cai dau ten (prefix LIKE 'X%')
 -- Tra ve 2 result set:
@@ -34,7 +34,8 @@ BEGIN
       AND  (@TuitionMax IS NULL OR
             t.ECUnder      <= @TuitionMax OR
             t.ECass        <= @TuitionMax OR
-            t.ECHighschool <= @TuitionMax);
+            t.ECHighschool <= @TuitionMax)
+    OPTION (RECOMPILE);
 
     -- Paged rows
     SELECT t.*
@@ -52,6 +53,7 @@ BEGIN
             t.ECass        <= @TuitionMax OR
             t.ECHighschool <= @TuitionMax)
     ORDER  BY t.NameofSchool
-    OFFSET @Offset ROWS FETCH NEXT @PageSize ROWS ONLY;
+    OFFSET @Offset ROWS FETCH NEXT @PageSize ROWS ONLY
+    OPTION (RECOMPILE);
 END;
 GO

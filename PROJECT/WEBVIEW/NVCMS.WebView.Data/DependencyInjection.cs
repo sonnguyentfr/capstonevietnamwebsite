@@ -78,7 +78,8 @@ public static class DependencyInjection
             new TruongService(
                 sp.GetRequiredService<ITruongRepository>(),
                 sp.GetRequiredService<INewsRepository>(),
-                rewriter));
+                rewriter,
+                sp.GetRequiredService<IMemoryCache>()));
         services.AddSingleton<IMenuService>(_ => new MenuService(webRootPath));
 
         // Event Registration

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.Extensions.Options;
 using Capstone.View.Options;
 using NVCMS.WebView.Data.Contracts.Service;
@@ -7,6 +8,7 @@ using NVCMS.WebView.Data.ViewModels;
 
 namespace Capstone.View.Controllers;
 
+[EnableRateLimiting("search")]
 public class TruongController : Controller
 {
     private readonly ITruongService _truongService;
@@ -47,6 +49,9 @@ public class TruongController : Controller
 
     private static void NormalizeFilter(TruongSearchFilterViewModel filter, string? majorids, string? quocgiaids)
     {
+        // Giới hạn đầu vào: bot hay gọi page rất sâu / pageSize rất lớn
+        filter.Page     = Math.Clamp(filter.Page, 1, 200);
+        filter.PageSize = filter.PageSize <= 0 ? 12 : Math.Min(filter.PageSize, 48);
         if (!string.IsNullOrWhiteSpace(majorids))
             filter.MajorIds = ParseIntList(majorids);
         if (!string.IsNullOrWhiteSpace(quocgiaids))
