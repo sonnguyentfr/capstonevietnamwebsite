@@ -122,6 +122,9 @@ public class ContentUrlHelper
 // cdn-src tu dong replace /DATA/... -> ServerFilesBaseUrl/DATA/...
 // Neu can ImageResizer them ?width=&height= thi dung cdn-src ket hop cdn-w / cdn-h:
 //   <img cdn-src="@banner.IMGLink" cdn-w="1900" cdn-h="850" alt="...">
+// cdn-mode (mac dinh "pad" – giu nguyen ti le, them vien, khong cat/meo anh):
+//   <img cdn-src="..." cdn-w="490" cdn-h="320" cdn-mode="crop">   // cat cho day khung
+//   mode hop le: pad | max | crop | stretch  (https://imageresizing.net/docs/v4/reference)
 // ─────────────────────────────────────────────────────────────────────────────
 
 [HtmlTargetElement("img",    Attributes = CdnSrcAttr)]
@@ -132,6 +135,10 @@ public class CdnSrcTagHelper : TagHelper
     private const string CdnSrcAttr = "cdn-src";
     private const string CdnWAttr   = "cdn-w";
     private const string CdnHAttr   = "cdn-h";
+    private const string CdnModeAttr = "cdn-mode";
+
+    private static readonly HashSet<string> ValidModes = new(StringComparer.OrdinalIgnoreCase)
+        { "pad", "max", "crop", "stretch", "carve" };
 
     private readonly string _baseUrl;
 
@@ -152,6 +159,10 @@ public class CdnSrcTagHelper : TagHelper
     [HtmlAttributeName(CdnHAttr)]
     public int CdnH { get; set; }
 
+    /// <summary>ImageResizer mode (tuy chon, mac dinh "pad"): pad | max | crop | stretch.</summary>
+    [HtmlAttributeName(CdnModeAttr)]
+    public string? CdnMode { get; set; }
+
     private const string NoPhotoUrl = "/static/img/no-photo.svg";
 
     public override void Process(TagHelperContext context, TagHelperOutput output)
@@ -163,6 +174,7 @@ public class CdnSrcTagHelper : TagHelper
             output.Attributes.RemoveAll(CdnSrcAttr);
             output.Attributes.RemoveAll(CdnWAttr);
             output.Attributes.RemoveAll(CdnHAttr);
+            output.Attributes.RemoveAll(CdnModeAttr);
             return;
         }
 
@@ -193,7 +205,12 @@ public class CdnSrcTagHelper : TagHelper
         {
             var w = CdnW > 0 ? CdnW : 1900;
             var h = CdnH > 0 ? CdnH : 850;
-            resolved += $"?width={w}&height={h}&mode=crop&anchor=middle";
+            var mode = !string.IsNullOrWhiteSpace(CdnMode) && ValidModes.Contains(CdnMode.Trim())
+                ? CdnMode.Trim().ToLowerInvariant()
+                : "pad";
+            resolved += $"?width={w}&height={h}&mode={mode}";
+            if (mode is "crop" or "pad")
+                resolved += "&anchor=middlecenter";
 
             if (!output.Attributes.ContainsName("width"))
                 output.Attributes.SetAttribute("width", w);
@@ -210,6 +227,7 @@ public class CdnSrcTagHelper : TagHelper
         output.Attributes.RemoveAll(CdnSrcAttr);
         output.Attributes.RemoveAll(CdnWAttr);
         output.Attributes.RemoveAll(CdnHAttr);
+        output.Attributes.RemoveAll(CdnModeAttr);
     }
     public static string Decrypt(string cipherText)
     {
