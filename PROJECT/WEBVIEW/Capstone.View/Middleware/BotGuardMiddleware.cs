@@ -72,10 +72,11 @@ public class BotGuardMiddleware
         }
 
         var ip = context.Connection.RemoteIpAddress;
-        context.Items[PartitionKeyItem] = PartitionKey(ip);
+        var key = PartitionKey(ip);
+        context.Items[PartitionKeyItem] = key;
 
-        // Loopback (health check, gọi nội bộ trên server) không chặn
-        if (ip is not null && IPAddress.IsLoopback(ip))
+        // Loopback (health check, gọi nội bộ trên server) và IP whitelist không chặn
+        if ((ip is not null && IPAddress.IsLoopback(ip)) || _opt.WhitelistIps.Contains(key))
         {
             context.Items[ExemptItem] = true;
             await _next(context);

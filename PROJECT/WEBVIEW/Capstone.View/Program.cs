@@ -167,6 +167,8 @@ app.UseRouting();
 // Chặn UA scrape / bot giả mạo, gán khoá IP → rồi mới rate limit
 // (UseRateLimiter phải sau UseRouting để đọc được [EnableRateLimiting] trên action)
 app.UseMiddleware<BotGuardMiddleware>();
+// Honeypot + quota/ngày cho trang trường (cần route values → sau UseRouting)
+app.UseMiddleware<ScrapeGuardMiddleware>();
 app.UseRateLimiter();
 
 // ShortUrl: vẫn chạy trước khi endpoint thực thi nên vẫn ưu tiên short_url hơn mọi route,
@@ -240,7 +242,6 @@ app.MapGet("cac-dich-vu-capstone/dich-vu-tim-nha",                              
 
 
 // Trường đối tác
-app.MapControllerRoute(name: "truong-search-json", pattern: "truong-doi-tac/search-json", defaults: new { controller = "Truong", action = "SearchJson" });
 app.MapControllerRoute(name: "truong-detail", pattern: "truong-doi-tac/{slug}-{id:int}", defaults: new { controller = "Truong", action = "Detail" });
 app.MapControllerRoute(name: "truong-quocgia", pattern: "truong-doi-tac/{countrySlug}", defaults: new { controller = "Truong", action = "QuocGia" });
 app.MapControllerRoute(name: "truong-index", pattern: "truong-doi-tac", defaults: new { controller = "Truong", action = "Index" });

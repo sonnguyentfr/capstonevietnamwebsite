@@ -67,6 +67,11 @@
 
     @await Html.PartialAsync("_Footer")
 
+    @* Honeypot chống crawler: người dùng không thấy, bot tốt không vào (robots.txt Disallow).
+       Ai truy cập link này bị ban IP – xem ScrapeGuardMiddleware / RateLimiting:HoneypotPath *@
+    <a href="/truong-doi-tac/xuat-du-lieu-truong" rel="nofollow" tabindex="-1" aria-hidden="true"
+       style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden">Dữ liệu trường</a>
+
     <script src="/static/js/global.min.js"></script>
     <script src="/static/js/aos.js"></script>
     <script src="/static/js/main.min.js"></script>

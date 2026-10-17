@@ -123,18 +123,4 @@ public class TruongController : Controller
         ViewData["TrangDanhMuc"] = "Tìm ngành học";
         return View(vm);
     }
-
-    // AJAX: GET /truong-doi-tac/search-json
-    public async Task<IActionResult> SearchJson(TruongSearchFilterViewModel filter, string? majorids, string? quocgiaids)
-    {
-        NormalizeFilter(filter, majorids, quocgiaids);
-        var vm = await _truongService.SearchAsync(filter);
-        return Json(new
-        {
-            items = vm.Items,
-            total = vm.Total,
-            page = vm.Page,
-            totalPages = vm.TotalPages
-        });
-    }
 }
