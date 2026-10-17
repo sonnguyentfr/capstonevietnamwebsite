@@ -22,15 +22,15 @@ BEGIN
 
     -- Total count
     SELECT COUNT(*)
-    FROM   Cap_School t
+    FROM   dbo.Cap_Truong t
     WHERE  t.Status = 1
       AND  (@Letter     IS NULL OR t.NameofSchool LIKE @Letter + N'%')
       AND  (@QuocGia    IS NULL OR t.Country      =  @QuocGia)
       AND  (@Loai       IS NULL OR t.Loai         =  @Loai)
       AND  (@IsPartner  IS NULL OR t.isPartner    =  @IsPartner)
       AND  (@MajorId    IS NULL OR EXISTS (
-               SELECT 1 FROM Cap_SchoolMajor sm
-               WHERE  sm.SchoolId = t.Id AND sm.MajorId = @MajorId))
+               SELECT 1 FROM dbo.Cap_Truong_TruongMajor sm
+               WHERE  sm.TruongId = t.Id AND sm.Major = @MajorId))
       AND  (@TuitionMax IS NULL OR
             t.ECUnder      <= @TuitionMax OR
             t.ECass        <= @TuitionMax OR
@@ -39,15 +39,15 @@ BEGIN
 
     -- Paged rows
     SELECT t.*
-    FROM   Cap_School t
+    FROM   dbo.Cap_Truong t
     WHERE  t.Status = 1
       AND  (@Letter     IS NULL OR t.NameofSchool LIKE @Letter + N'%')
       AND  (@QuocGia    IS NULL OR t.Country      =  @QuocGia)
       AND  (@Loai       IS NULL OR t.Loai         =  @Loai)
       AND  (@IsPartner  IS NULL OR t.isPartner    =  @IsPartner)
       AND  (@MajorId    IS NULL OR EXISTS (
-               SELECT 1 FROM Cap_SchoolMajor sm
-               WHERE  sm.SchoolId = t.Id AND sm.MajorId = @MajorId))
+               SELECT 1 FROM dbo.Cap_Truong_TruongMajor sm
+               WHERE  sm.TruongId = t.Id AND sm.Major = @MajorId))
       AND  (@TuitionMax IS NULL OR
             t.ECUnder      <= @TuitionMax OR
             t.ECass        <= @TuitionMax OR

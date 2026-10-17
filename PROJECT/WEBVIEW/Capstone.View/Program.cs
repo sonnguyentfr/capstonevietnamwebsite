@@ -3,9 +3,7 @@ using Capstone.View.Middleware;
 using Capstone.View.Options;
 using Capstone.View.Services;
 using Microsoft.AspNetCore.ResponseCompression;
-using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Net.Http.Headers;
-using System.Threading.RateLimiting;
 using NVCMS.WebView.Data;
 using NVCMS.WebView.Data.Contracts.Service;
 using NVCMS.WebView.Data.Service;
@@ -57,25 +55,10 @@ builder.Services.AddHttpClient("ApiClient", client =>
 });
 builder.Services.AddMemoryCache();
 
-// ── Rate limit cho các trang tìm trường (chống bot/crawler quét URL lọc) ───────
-builder.Services.Configure<ForwardedHeadersOptions>(o =>
-{
-    o.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
-    o.KnownNetworks.Clear();
-    o.KnownProxies.Clear();
-});
-builder.Services.AddRateLimiter(o =>
-{
-    o.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
-    o.AddPolicy("search", ctx => RateLimitPartition.GetFixedWindowLimiter(
-        ctx.Connection.RemoteIpAddress?.ToString() ?? "unknown",
-        _ => new FixedWindowRateLimiterOptions
-        {
-            PermitLimit = 60,
-            Window = TimeSpan.FromMinutes(1),
-            QueueLimit = 0
-        }));
-});
+// ── Chống scrape + rate limit theo IP (cấu hình: appsettings "RateLimiting") ────
+// Site chạy thẳng trên IIS, không qua proxy → dùng IP kết nối thật, KHÔNG tin
+// X-Forwarded-For (header này client tự đặt được để né limit).
+builder.Services.AddSiteRateLimiting(builder.Configuration);
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowWebsite", policy =>
@@ -94,7 +77,6 @@ builder.Services.AddCors(options =>
 
 
 var app = builder.Build();
-app.UseForwardedHeaders();
 app.UseCors("AllowWebsite");
 // ── Response Compression — must be first ─────────────────────────────────────
 app.UseResponseCompression();
@@ -180,11 +162,17 @@ app.UseStaticFiles(new StaticFileOptions
     }
 });
 
-// ShortUrl: chạy trước UseRouting để ưu tiên short_url hơn bất kỳ route nào
+app.UseRouting();
+
+// Chặn UA scrape / bot giả mạo, gán khoá IP → rồi mới rate limit
+// (UseRateLimiter phải sau UseRouting để đọc được [EnableRateLimiting] trên action)
+app.UseMiddleware<BotGuardMiddleware>();
+app.UseRateLimiter();
+
+// ShortUrl: vẫn chạy trước khi endpoint thực thi nên vẫn ưu tiên short_url hơn mọi route,
+// đặt sau rate limiter để lookup DB cũng bị giới hạn
 app.UseMiddleware<ShortUrlMiddleware>();
 
-app.UseRouting();
-app.UseRateLimiter();
 app.UseAuthorization();
 
 // ── Event Registration route ──────────────────────────────────────────────────

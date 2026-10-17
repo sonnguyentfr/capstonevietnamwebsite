@@ -32,6 +32,7 @@ public class MailUnsubscribeController : Controller
 
     // POST /mail-unsubscribe
     [HttpPost]
+    [Microsoft.AspNetCore.RateLimiting.EnableRateLimiting("form")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Index(
         [FromQuery]  string? email,

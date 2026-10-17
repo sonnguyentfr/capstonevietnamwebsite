@@ -101,6 +101,7 @@ public class TruongController : Controller
     }
 
     // GET /truong-doi-tac/{slug}-{id}
+    [EnableRateLimiting("detail")]
     public async Task<IActionResult> Detail(string slug, int id)
     {
         var vm = await _truongService.GetDetailAsync(id);

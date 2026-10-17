@@ -35,9 +35,11 @@
                             </div>
                             <div class="school-card__body">
                                 <div class="school-card__logo-wrap">
-                                    @* <img cdn-src="@t.LogoUrl" alt="logo @t.NameofSchool" loading="lazy" /> *@
-                                    <img cdn-src="@t.LogoUrl" cdn-w="60" cdn-h="60"
-                                         alt="@t.NameofSchool" loading="lazy" />
+                                    <img cdn-src="@(t.LogoUrl ?? "/static/images/no-photo.png")"
+                                         cdn-w="490"
+                                         cdn-h="320"
+                                         alt="@t.NameofSchool"
+                                         loading="lazy" />
                                 </div>
                                 <h4 class="school-card__name">@t.NameofSchool</h4>
                                 <div class="school-card__meta">

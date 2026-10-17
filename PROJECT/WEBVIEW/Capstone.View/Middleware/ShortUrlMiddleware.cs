@@ -5,7 +5,7 @@ namespace Capstone.View.Middleware;
 
 /// <summary>
 /// Middleware ưu tiên cao nhất: nếu path segment đầu tiên khớp short_url trong DB
-/// thì redirect 301 tới real_url. Đặt TRƯỚC UseRouting() trong Program.cs.
+/// thì redirect 301 tới real_url. Đặt trước khi endpoint thực thi (sau UseRateLimiter) trong Program.cs.
 /// </summary>
 public class ShortUrlMiddleware
 {

@@ -98,6 +98,7 @@ public class EventRegistrationController : Controller
     // ── POST /dang-ky-su-kien ─────────────────────────────────────────────────
 
     [HttpPost]
+    [Microsoft.AspNetCore.RateLimiting.EnableRateLimiting("form")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Index(EventRegistrationInputViewModel input, CancellationToken ct)
     {

@@ -25,6 +25,7 @@ public class HomeController : Controller
     public IActionResult Index() => View();
 
     [HttpPost]
+    [Microsoft.AspNetCore.RateLimiting.EnableRateLimiting("form")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> DangKyTuVan([FromForm] TuVanFormInputViewModel model, CancellationToken ct)
     {

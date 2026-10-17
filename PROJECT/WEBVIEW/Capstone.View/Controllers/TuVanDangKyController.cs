@@ -51,6 +51,7 @@ public class TuVanDangKyController : Controller
     // ── POST /dang-ky-tu-van ──────────────────────────────────────────────────
 
     [HttpPost]
+    [Microsoft.AspNetCore.RateLimiting.EnableRateLimiting("form")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Index(
         [Bind(Prefix = "Input")] TuVanDangKyInputViewModel input, CancellationToken ct)
@@ -83,6 +84,7 @@ public class TuVanDangKyController : Controller
     // ── POST /dang-ky-tu-van/nhanh (AJAX – form sidebar trang chi tiết) ───────
 
     [HttpPost]
+    [Microsoft.AspNetCore.RateLimiting.EnableRateLimiting("form")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Nhanh(TuVanNhanhInputViewModel input, CancellationToken ct)
     {
