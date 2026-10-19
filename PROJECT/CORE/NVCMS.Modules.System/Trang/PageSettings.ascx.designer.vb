@@ -489,4 +489,75 @@ Partial Public Class PageSettings
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents lbtCancelTop2 As Global.System.Web.UI.WebControls.LinkButton
+    '''<summary>
+    '''txtGaPropertyId control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents txtGaPropertyId As Global.System.Web.UI.HtmlControls.HtmlInputText
+
+    '''<summary>
+    '''txtGaKeyFile control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents txtGaKeyFile As Global.System.Web.UI.HtmlControls.HtmlInputText
+
+    '''<summary>
+    '''litGaKeyStatus control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents litGaKeyStatus As Global.System.Web.UI.WebControls.Literal
+
+    '''<summary>
+    '''txtGaKeyJson control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents txtGaKeyJson As Global.System.Web.UI.WebControls.TextBox
+
+    '''<summary>
+    '''txtGaKeyEvents control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents txtGaKeyEvents As Global.System.Web.UI.HtmlControls.HtmlInputText
+
+    '''<summary>
+    '''txtGaMonthlyTarget control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents txtGaMonthlyTarget As Global.System.Web.UI.HtmlControls.HtmlInputGenericControl
+
+    '''<summary>
+    '''txtGaArticlePattern control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents txtGaArticlePattern As Global.System.Web.UI.HtmlControls.HtmlInputText
+
+    '''<summary>
+    '''txtGaCacheMinutes control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents txtGaCacheMinutes As Global.System.Web.UI.HtmlControls.HtmlInputGenericControl
 End Class

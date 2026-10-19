@@ -427,3 +427,7 @@ WWW_VIEW/appsettings.json
 # Zalo OA Chat - key Data Protection mã hoá Zalo token (KHÔNG commit, phải giữ khi deploy)
 /PROJECT/API/NVCMS.API.ReadGoogleSheet/App_Data/
 WWW_API/App_Data/
+
+# Khóa service account Google Analytics (Cấu hình website › Google Analytics) - không commit
+WWW/App_Data/*.json
+WWW/App_Data/NVCMS/

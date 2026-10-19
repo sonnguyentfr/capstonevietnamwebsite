@@ -55,6 +55,21 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\WWW\bin\NVCMS.Modules.Marketing.dll</HintPath>
     </Reference>
+    <Reference Include="Google.Apis, Version=1.69.0.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\WWW\bin\Google.Apis.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Google.Apis.Auth, Version=1.69.0.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\WWW\bin\Google.Apis.Auth.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Google.Apis.Core, Version=1.69.0.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\WWW\bin\Google.Apis.Core.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Net.Http.Formatting, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -101,6 +116,12 @@
     <Compile Include="Services\Marketing\ReportServices.cs" />
     <Compile Include="Services\Marketing\ZaloCampaignServices.cs" />
     <Compile Include="WebApi\RouteMapper.cs" />
+    <Compile Include="Controller\Analytics\MarketingAnalyticsController.cs" />
+    <Compile Include="Services\Analytics\AnalyticsCore.cs" />
+    <Compile Include="Services\Analytics\Ga4Query.cs" />
+    <Compile Include="Services\Analytics\InsightBuilder.cs" />
+    <Compile Include="Services\Analytics\MarketingEntities.cs" />
+    <Compile Include="Services\Analytics\MarketingService.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="App_LocalResources\index.html.en-US.resx" />

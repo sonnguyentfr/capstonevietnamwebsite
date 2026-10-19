@@ -142,6 +142,8 @@ Public Class PageSettings
                 emailtenhienthi.Value = PortalController.GetPortalSetting(nvcmsBL.settingPageMailTenHienThi, iPortalId, Null.NullString)
                 emailEmail.Value = Server.HtmlDecode(PortalController.GetPortalSetting(nvcmsBL.settingPageMailEmail, iPortalId, Null.NullString))
                 emailmatkhau.Value = Server.HtmlDecode(PortalController.GetPortalSetting(nvcmsBL.settingPageMailMatkhau, iPortalId, Null.NullString))
+                ' Google Analytics
+                BindAnalytics()
                 '------------------
 
                 If Not Request.UrlReferrer Is Nothing Then
@@ -163,6 +165,11 @@ Public Class PageSettings
 
     Protected Sub lbtUpdate_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles lbtUpdate2.Click
         Try
+            Dim gaError As String = ValidateAnalytics()
+            If gaError IsNot Nothing Then
+                ClientAPI.RegisterStartUpScript(Me.Page, "showError", "<script>notifyError(" & HttpUtility.JavaScriptStringEncode(gaError, True) & ");</script>")
+                Return
+            End If
             'CheckValidFolder()
             PortalController.UpdatePortalSetting(iPortalId, nvcmsBL.settingPagesitename, sitename.Value, True)
             PortalController.UpdatePortalSetting(iPortalId, nvcmsBL.settingPagesiteweb, siteweb.Value, True)
@@ -216,6 +223,8 @@ Public Class PageSettings
             PortalController.UpdatePortalSetting(iPortalId, nvcmsBL.settingPageMailTenHienThi, emailtenhienthi.Value, True)
             PortalController.UpdatePortalSetting(iPortalId, nvcmsBL.settingPageMailEmail, emailEmail.Value, True)
             PortalController.UpdatePortalSetting(iPortalId, nvcmsBL.settingPageMailMatkhau, emailmatkhau.Value, True)
+            ' Google Analytics
+            SaveAnalytics()
             'Logo
             Dim strFileName As String = ""
             Dim strFileNamePath As String = ""
@@ -246,6 +255,137 @@ Public Class PageSettings
             ClientAPI.RegisterStartUpScript(Me.Page, "showError", "<script>notifyError('Cập nhật cấu hình thất bại');</script>")
         End Try
     End Sub
+#Region "Google Analytics (NVCMS.Analytics.* - đọc bởi NVCMS.API, Services/Analytics/AnalyticsCore.cs)"
+    Private Const GaPrefix As String = "NVCMS.Analytics."
+
+    ''' <summary>Tệp khóa khi dán JSON: App_Data (IIS không phục vụ thư mục này ra ngoài).</summary>
+    Private ReadOnly Property GaKeyVirtual() As String
+        Get
+            Return "~/App_Data/NVCMS/ga4-" & PortalId & ".json"
+        End Get
+    End Property
+
+    Private Function Ga(ByVal name As String) As String
+        Return If(PortalController.GetPortalSetting(GaPrefix & name, PortalId, ""), "")
+    End Function
+
+    Private Sub SetGa(ByVal name As String, ByVal value As String)
+        PortalController.UpdatePortalSetting(PortalId, GaPrefix & name, If(value, "").Trim(), True)
+    End Sub
+
+    ''' <summary>"~/App_Data/x.json" -> đường dẫn vật lý; chỉ nhận tệp .json trong App_Data.</summary>
+    Private Shared Function GaPath(ByVal file As String) As String
+        Dim v As String = If(file, "").Trim().Replace("\", "/")
+        If v.StartsWith("/App_Data/", StringComparison.OrdinalIgnoreCase) Then v = "~" & v
+        If Not v.StartsWith("~/App_Data/", StringComparison.OrdinalIgnoreCase) OrElse Not v.EndsWith(".json", StringComparison.OrdinalIgnoreCase) OrElse v.Contains("..") Then Return ""
+        Try
+            Return System.Web.Hosting.HostingEnvironment.MapPath(v)
+        Catch ex As Exception
+            Return ""
+        End Try
+    End Function
+
+    ''' <summary>Lỗi của nội dung khóa service account; Nothing nếu hợp lệ.</summary>
+    Private Shared Function CheckServiceAccount(ByVal json As String) As String
+        Dim o As Newtonsoft.Json.Linq.JObject
+        Try
+            o = Newtonsoft.Json.Linq.JObject.Parse(json)
+        Catch ex As Exception
+            Return "không phải JSON hợp lệ"
+        End Try
+        If CStr(o("type")) <> "service_account" OrElse String.IsNullOrEmpty(CStr(o("client_email"))) OrElse String.IsNullOrEmpty(CStr(o("private_key"))) Then
+            Return "phải là khóa service account (có type = service_account, client_email, private_key)"
+        End If
+        Return Nothing
+    End Function
+
+    Private Sub BindAnalytics()
+        txtGaPropertyId.Value = Ga("GA4.PropertyId")
+        txtGaKeyFile.Value = Ga("GA4.CredentialFile")
+        txtGaKeyEvents.Value = Ga("KeyEvents")
+        txtGaMonthlyTarget.Value = Ga("MonthlyTarget")
+        txtGaArticlePattern.Value = Ga("ArticleIdPattern")
+        txtGaCacheMinutes.Value = Ga("CacheMinutes")
+        ' chỉ hiện email service account + ngày cập nhật; không bao giờ in khóa ra trang
+        Dim path As String = GaPath(txtGaKeyFile.Value)
+        If path.Length > 0 AndAlso System.IO.File.Exists(path) Then
+            Dim email As String
+            Try
+                email = CStr(Newtonsoft.Json.Linq.JObject.Parse(System.IO.File.ReadAllText(path))("client_email"))
+            Catch ex As Exception
+                email = "(tệp khóa không đọc được)"
+            End Try
+            litGaKeyStatus.Text = "Đang dùng khóa của <b>" & Server.HtmlEncode(email) & "</b> · cập nhật " & System.IO.File.GetLastWriteTime(path).ToString("dd/MM/yyyy HH:mm") &
+                                  ". Email này cần quyền Viewer trong GA4."
+        ElseIf txtGaKeyFile.Value.Length > 0 Then
+            litGaKeyStatus.Text = "<span class=""text-danger"">Không thấy tệp khóa (chỉ nhận tệp .json trong ~/App_Data/).</span>"
+        Else
+            litGaKeyStatus.Text = "Chưa có khóa service account."
+        End If
+    End Sub
+
+    ''' <summary>"properties/123456789" / " 123456789 " -> "123456789"; sai định dạng -> "".</summary>
+    Private Shared Function NormalizeProperty(ByVal value As String) As String
+        Dim v As String = If(value, "").Trim()
+        If v.StartsWith("properties/", StringComparison.OrdinalIgnoreCase) Then v = v.Substring(11)
+        Return If(System.Text.RegularExpressions.Regex.IsMatch(v, "^\d{5,15}$"), v, "")
+    End Function
+
+    ''' <summary>Kiểm tra trước khi lưu; trả thông báo lỗi hoặc Nothing.</summary>
+    Private Function ValidateAnalytics() As String
+        Dim prop As String = txtGaPropertyId.Value.Trim()
+        If prop.Length > 0 AndAlso NormalizeProperty(prop).Length = 0 Then Return "Google Analytics: Property ID chỉ gồm chữ số (VD 123456789), không phải mã G-XXXX."
+        Dim json As String = txtGaKeyJson.Text.Trim()
+        If json.Length > 0 Then
+            Dim err As String = CheckServiceAccount(json)
+            If err IsNot Nothing Then Return "Google Analytics: khóa dán vào " & err & "."
+        ElseIf txtGaKeyFile.Value.Trim().Length > 0 Then
+            Dim path As String = GaPath(txtGaKeyFile.Value)
+            If path.Length = 0 Then Return "Google Analytics: tệp khóa phải là tệp .json trong ~/App_Data/."
+            If Not System.IO.File.Exists(path) Then Return "Google Analytics: không thấy tệp " & txtGaKeyFile.Value.Trim() & "."
+            Dim err As String = CheckServiceAccount(System.IO.File.ReadAllText(path))
+            If err IsNot Nothing Then Return "Google Analytics: tệp khóa " & err & "."
+        End If
+        For Each ev As String In txtGaKeyEvents.Value.Split(New Char() {","c, ";"c, " "c}, StringSplitOptions.RemoveEmptyEntries)
+            If Not System.Text.RegularExpressions.Regex.IsMatch(ev.Trim(), "^[A-Za-z][A-Za-z0-9_]{0,39}$") Then Return "Google Analytics: tên sự kiện """ & ev.Trim() & """ không hợp lệ (chữ, số, gạch dưới)."
+        Next
+        Dim pattern As String = txtGaArticlePattern.Value.Trim()
+        If pattern.Length > 0 Then
+            Try
+                If New System.Text.RegularExpressions.Regex(pattern).GetGroupNumbers().Length < 2 Then Return "Google Analytics: mẫu NewId cần một nhóm ( ) chứa mã bài."
+            Catch ex As ArgumentException
+                Return "Google Analytics: mẫu NewId không phải biểu thức chính quy hợp lệ."
+            End Try
+        End If
+        Dim target As Long
+        If txtGaMonthlyTarget.Value.Trim().Length > 0 AndAlso (Not Long.TryParse(txtGaMonthlyTarget.Value.Trim(), target) OrElse target < 0) Then Return "Google Analytics: mục tiêu phiên / tháng phải là số nguyên ≥ 0."
+        Dim cache As Integer
+        If txtGaCacheMinutes.Value.Trim().Length > 0 AndAlso (Not Integer.TryParse(txtGaCacheMinutes.Value.Trim(), cache) OrElse cache < 1 OrElse cache > 1440) Then Return "Google Analytics: thời gian cache từ 1 đến 1440 phút."
+        Return Nothing
+    End Function
+
+    Private Sub SaveAnalytics()
+        SetGa("GA4.PropertyId", NormalizeProperty(txtGaPropertyId.Value))
+        SetGa("KeyEvents", txtGaKeyEvents.Value)
+        SetGa("MonthlyTarget", txtGaMonthlyTarget.Value)
+        SetGa("ArticleIdPattern", txtGaArticlePattern.Value)
+        SetGa("CacheMinutes", txtGaCacheMinutes.Value)
+        Dim json As String = txtGaKeyJson.Text.Trim()
+        If json.Length > 0 Then
+            Dim path As String = System.Web.Hosting.HostingEnvironment.MapPath(GaKeyVirtual)
+            System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(path))
+            System.IO.File.WriteAllText(path, json, New System.Text.UTF8Encoding(False))
+            SetGa("GA4.CredentialFile", GaKeyVirtual)
+        Else
+            SetGa("GA4.CredentialFile", txtGaKeyFile.Value.Trim().Replace("\", "/"))
+        End If
+        txtGaKeyJson.Text = ""
+        ' cấu hình + báo cáo đã cache của NVCMS.API (AnalyticsSettings.ClearCache)
+        DotNetNuke.Common.Utilities.DataCache.ClearCache(GaPrefix)
+        BindAnalytics()
+    End Sub
+#End Region
+
     Protected Sub BindPage()
         Dim arrpage As New ArrayList
         arrpage = PortalController.Instance.GetPortals()

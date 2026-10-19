@@ -773,6 +773,140 @@
             </div>
 
         </div>
+        <div class="card card-bordered">
+            <div class="card-inner">
+                <div class="card-head">
+                    <h5 class="card-title">GOOGLE ANALYTICS (PHÂN TÍCH MARKETING)</h5>
+                </div>
+                <p class="text-soft small">Số liệu cho trang chủ quản trị: nội dung, nguồn truy cập, UTM, chiến dịch, khán giả và gợi ý hành động. Cần: bật Google Analytics Data API trong Google Cloud, tạo service account, thêm email service account vào GA4 (Admin › Property access management) với quyền Viewer. Khóa chỉ lưu ở máy chủ.</p>
+                <div class="gy-3">
+                    <div class="row g-3 align-center">
+                        <div class="col-lg-5">
+                            <div class="form-group">
+                                <label class="form-label">GA4 Property ID</label>
+                                <span class="form-note">GA4 › Admin › Property details (chỉ chữ số, không phải mã G-XXXX)</span>
+                            </div>
+                        </div>
+                        <div class="col-lg-7">
+                            <div class="form-group">
+                                <div class="form-control-wrap">
+                                    <input type="text" class="form-control" id="txtGaPropertyId" runat="server" placeholder="123456789" inputmode="numeric">
+                                    <mark><small>NVCMS.Analytics.GA4.PropertyId</small></mark>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="gy-3">
+                    <div class="row g-3 align-center">
+                        <div class="col-lg-5">
+                            <div class="form-group">
+                                <label class="form-label">Tệp khóa service account</label>
+                                <span class="form-note">Đường dẫn tệp JSON trong App_Data (IIS không phục vụ thư mục này ra ngoài)</span>
+                            </div>
+                        </div>
+                        <div class="col-lg-7">
+                            <div class="form-group">
+                                <div class="form-control-wrap">
+                                    <input type="text" class="form-control" id="txtGaKeyFile" runat="server" placeholder="~/App_Data/ten-tep-khoa.json"><div class="form-note mt-1"><asp:Literal ID="litGaKeyStatus" runat="server"></asp:Literal></div>
+                                    <mark><small>NVCMS.Analytics.GA4.CredentialFile</small></mark>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="gy-3">
+                    <div class="row g-3 align-center">
+                        <div class="col-lg-5">
+                            <div class="form-group">
+                                <label class="form-label">Hoặc dán khóa JSON</label>
+                                <span class="form-note">Dán toàn bộ nội dung tệp .json tải từ Google Cloud - sẽ lưu vào ~/App_Data/NVCMS/ga4-{portal}.json. Để trống = giữ khóa hiện tại.</span>
+                            </div>
+                        </div>
+                        <div class="col-lg-7">
+                            <div class="form-group">
+                                <div class="form-control-wrap">
+                                    <asp:TextBox ID="txtGaKeyJson" CssClass="form-control" runat="server" TextMode="MultiLine" Rows="4" placeholder="{ &quot;type&quot;: &quot;service_account&quot;, ... }"></asp:TextBox>
+                                    <mark><small>App_Data/NVCMS</small></mark>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="gy-3">
+                    <div class="row g-3 align-center">
+                        <div class="col-lg-5">
+                            <div class="form-group">
+                                <label class="form-label">Sự kiện chuyển đổi</label>
+                                <span class="form-note">Tối đa 3 key event GA4, cách nhau dấu phẩy. Để trống = tổng mọi key event.</span>
+                            </div>
+                        </div>
+                        <div class="col-lg-7">
+                            <div class="form-group">
+                                <div class="form-control-wrap">
+                                    <input type="text" class="form-control" id="txtGaKeyEvents" runat="server" placeholder="generate_lead, click_hotline, click_zalo">
+                                    <mark><small>NVCMS.Analytics.KeyEvents</small></mark>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="gy-3">
+                    <div class="row g-3 align-center">
+                        <div class="col-lg-5">
+                            <div class="form-group">
+                                <label class="form-label">Mục tiêu phiên / tháng</label>
+                                <span class="form-note">Theo dõi tiến độ, cảnh báo khi chậm (để trống = không đặt)</span>
+                            </div>
+                        </div>
+                        <div class="col-lg-7">
+                            <div class="form-group">
+                                <div class="form-control-wrap">
+                                    <input type="number" min="0" class="form-control" id="txtGaMonthlyTarget" runat="server" placeholder="50000">
+                                    <mark><small>NVCMS.Analytics.MonthlyTarget</small></mark>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="gy-3">
+                    <div class="row g-3 align-center">
+                        <div class="col-lg-5">
+                            <div class="form-group">
+                                <label class="form-label">Mẫu NewId trong URL bài</label>
+                                <span class="form-note">Biểu thức chính quy, nhóm ( ) = mã bài. Để trống = /tin-tuc/…-{id}, /tu-van-dinh-cu/…-{id}, /tu-van-dau-tu/…-{id}, …-{id}.html</span>
+                            </div>
+                        </div>
+                        <div class="col-lg-7">
+                            <div class="form-group">
+                                <div class="form-control-wrap">
+                                    <input type="text" class="form-control" id="txtGaArticlePattern" runat="server" placeholder="để trống = mặc định">
+                                    <mark><small>NVCMS.Analytics.ArticleIdPattern</small></mark>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="gy-3">
+                    <div class="row g-3 align-center">
+                        <div class="col-lg-5">
+                            <div class="form-group">
+                                <label class="form-label">Cache số liệu (phút)</label>
+                                <span class="form-note">1–1440, mặc định 10. Kỳ đã qua cache tối thiểu 60 phút.</span>
+                            </div>
+                        </div>
+                        <div class="col-lg-7">
+                            <div class="form-group">
+                                <div class="form-control-wrap">
+                                    <input type="number" min="1" max="1440" class="form-control" id="txtGaCacheMinutes" runat="server" placeholder="10">
+                                    <mark><small>NVCMS.Analytics.CacheMinutes</small></mark>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     <div class="col-lg-7 offset-lg-5">
         <div class="form-group mt-2">
