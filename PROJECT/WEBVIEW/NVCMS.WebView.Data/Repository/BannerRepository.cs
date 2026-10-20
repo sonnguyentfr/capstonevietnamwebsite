@@ -51,21 +51,21 @@ public class BannerRepository : IBannerRepository
             commandType: CommandType.StoredProcedure);
     }
 
+    // 2 SP này của module DNN cũ được gọi bằng SqlHelper (truyền tham số theo VỊ TRÍ),
+    // tên tham số trong SP không phải @BannerId → truyền theo tên sẽ lỗi.
+    // Dùng EXEC positional để không phụ thuộc tên tham số.
     public async Task UpdateClickAsync(int bannerId)
     {
         await using var conn = CreateConn();
-        await conn.ExecuteAsync(
-            "NVCMS_Banner_UpdateClick",
-            new { BannerId = bannerId },
-            commandType: CommandType.StoredProcedure);
+        await conn.ExecuteAsync("EXEC NVCMS_Banner_UpdateClick @Id", new { Id = bannerId });
     }
 
-    public async Task UpdateViewAsync(int bannerId)
+    public async Task UpdateViewAsync(IEnumerable<int> bannerIds)
     {
+        var ids = bannerIds.Select(id => new { Id = id }).ToList();
+        if (ids.Count == 0) return;
+
         await using var conn = CreateConn();
-        await conn.ExecuteAsync(
-            "NVCMS_Banner_UpdateView",
-            new { BannerId = bannerId },
-            commandType: CommandType.StoredProcedure);
+        await conn.ExecuteAsync("EXEC NVCMS_Banner_UpdateView @Id", ids);
     }
 }

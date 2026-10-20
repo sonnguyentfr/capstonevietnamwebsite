@@ -6,7 +6,7 @@
 
 @foreach (var (banner, i) in items.Select((b, i) => (b, i)))
 {
-    <div class="home-courses-item" data-aos="fade-up" data-aos-delay="@delays[i % delays.Length]">
+    <div class="home-courses-item" data-banner-view="@banner.Id" data-aos="fade-up" data-aos-delay="@delays[i % delays.Length]">
         <div class="image img-cover">
             <a href="@banner.Link" data-banner-id="@banner.Id" title="@banner.Title">
                 @if (!string.IsNullOrEmpty(banner.IMGLink))

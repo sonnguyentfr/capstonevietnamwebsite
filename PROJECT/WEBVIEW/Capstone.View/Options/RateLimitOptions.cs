@@ -25,6 +25,9 @@ public class RateLimitOptions
     /// <summary>Form POST (đăng ký tư vấn, sự kiện...).</summary>
     public int FormPerMinute { get; set; } = 3;
 
+    /// <summary>Beacon thống kê banner (click / view).</summary>
+    public int TrackPerMinute { get; set; } = 30;
+
     /// <summary>Bot search engine đã xác minh qua reverse DNS (Googlebot, Bingbot...).</summary>
     public int VerifiedBotPerMinute { get; set; } = 300;
 

@@ -9,5 +9,5 @@ public interface IBannerService
     Task<IEnumerable<BannerViewModel>> GetByVitriAsync(int vitri, int portalId);
     Task<BannerViewModel?> GetByIdAsync(int bannerId);
     Task UpdateClickAsync(int bannerId);
-    Task UpdateViewAsync(int bannerId);
+    Task UpdateViewAsync(IEnumerable<int> bannerIds);
 }

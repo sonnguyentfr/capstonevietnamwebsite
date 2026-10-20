@@ -5,7 +5,7 @@
         <div class="swiper-wrapper">
             @foreach (var banner in Model)
             {
-                <div class="swiper-slide">
+                <div class="swiper-slide" data-banner-view="@banner.Id">
                     <div class="image img-cover">
                         @if (!string.IsNullOrEmpty(banner.Link))
                         {

@@ -17,6 +17,7 @@ public static class RateLimitingSetup
     public const string SearchPolicy = "search";
     public const string DetailPolicy = "detail";
     public const string FormPolicy   = "form";
+    public const string TrackPolicy  = "track";
 
     public static IServiceCollection AddSiteRateLimiting(this IServiceCollection services, IConfiguration config)
     {
@@ -51,6 +52,9 @@ public static class RateLimitingSetup
             o.AddPolicy(FormPolicy, ctx => IsExempt(ctx)
                 ? RateLimitPartition.GetNoLimiter("exempt")
                 : SlidingWindow("f:" + Key(ctx), opt.FormPerMinute));
+            o.AddPolicy(TrackPolicy, ctx => IsExempt(ctx)
+                ? RateLimitPartition.GetNoLimiter("exempt")
+                : SlidingWindow("t:" + Key(ctx), opt.TrackPerMinute));
 
             o.OnRejected = async (ctx, ct) =>
             {

@@ -48,6 +48,7 @@
                         <th class="nk-tb-col tb-col-mb"><span class="sub-text">Vị trí</span></th>
                         <th class="nk-tb-col tb-col-mb"><span class="sub-text">Kích thước</span></th>
                         <th class="nk-tb-col tb-col-mb"><span class="sub-text">Hiện thị</span></th>
+                        <th class="nk-tb-col tb-col-mb"><span class="sub-text">Lượt xem</span></th>
                         <th class="nk-tb-col tb-col-mb"><span class="sub-text">Click</span></th>
                         <th class="nk-tb-col nk-tb-col-tools text-right"></th>
                     </tr>
@@ -82,6 +83,9 @@
                                 </td>
                                 <td class="nk-tb-col tb-col-mb" style="font-size: 20px;" data-order="35040.34">
                                     <%#IIf(CBool(DataBinder.Eval(Container.DataItem, "Visible")) = True, "<em class='icon ni ni-eye'></em>", "<em class='icon ni ni-eye-off'></em>") %>
+                                </td>
+                                <td class="nk-tb-col tb-col-mb" style="font-size: 20px;" data-order="35040.34">
+                                    <span class="tb-amount"><%# Eval("sView")%></span>
                                 </td>
                                 <td class="nk-tb-col tb-col-mb" style="font-size: 20px;" data-order="35040.34">
                                     <span class="tb-amount"><%# Eval("Click")%></span>

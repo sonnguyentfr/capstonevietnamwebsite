@@ -63,5 +63,5 @@ public class BannerService : IBannerService
     }
 
     public Task UpdateClickAsync(int bannerId) => _repo.UpdateClickAsync(bannerId);
-    public Task UpdateViewAsync(int bannerId)  => _repo.UpdateViewAsync(bannerId);
+    public Task UpdateViewAsync(IEnumerable<int> bannerIds) => _repo.UpdateViewAsync(bannerIds);
 }

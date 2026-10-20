@@ -5,7 +5,7 @@
 
 @if (banner != null)
 {
-    <div class="col lg:w-1/2">
+    <div class="col lg:w-1/2" data-banner-view="@banner.Id">
         <div class="img img-cover img-zoom-in">
             <a href="@banner.Link" data-banner-id="@banner.Id" title="@banner.Title">
                 @if (!string.IsNullOrEmpty(banner.IMGLink))
