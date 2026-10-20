@@ -31,6 +31,23 @@
         });
         window.location.href = '/tim-truong?' + params.toString();
     };
-    
+
+    /* =========================================================
+       BANNER CLICK - dem click banner (a[data-banner-id])
+       sendBeacon khong chan dieu huong; auxclick = click chuot giua
+    ========================================================= */
+    function trackBannerClick(e) {
+        if (e.type === 'auxclick' && e.button !== 1) return;
+        var a = e.target.closest ? e.target.closest('a[data-banner-id]') : null;
+        if (!a) return;
+        var url = '/api/Banner/click/' + encodeURIComponent(a.getAttribute('data-banner-id'));
+        if (navigator.sendBeacon) {
+            navigator.sendBeacon(url);
+        } else {
+            fetch(url, { method: 'POST', keepalive: true }).catch(function () { });
+        }
+    }
+    document.addEventListener('click', trackBannerClick, true);
+    document.addEventListener('auxclick', trackBannerClick, true);
 
 })();

@@ -22,7 +22,4 @@ public class NewsDetailViewModel
 
     public List<NewsItemViewModel>    RelatedNews    { get; set; } = [];
     public List<TruongCardViewModel>  RelatedSchools { get; set; } = [];
-
-    /// <summary>Sự kiện sắp diễn ra – hiển thị website, sắp xếp theo thời gian bắt đầu gần nhất.</summary>
-    public List<EventsCatViewModel>   UpcomingEvents { get; set; } = [];
 }

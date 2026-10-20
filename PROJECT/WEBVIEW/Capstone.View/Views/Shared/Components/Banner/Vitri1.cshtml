@@ -9,7 +9,7 @@
                     <div class="image img-cover">
                         @if (!string.IsNullOrEmpty(banner.Link))
                         {
-                            <a href="@banner.Link" title="@banner.Title">
+                            <a href="@banner.Link" data-banner-id="@banner.Id" title="@banner.Title">
                                 <img cdn-src="@banner.IMGLink" cdn-w="@banner.Width" cdn-h="@banner.Height"
                                      alt="@banner.Title" loading="lazy" />
                             </a>

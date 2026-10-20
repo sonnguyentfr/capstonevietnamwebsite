@@ -5,11 +5,11 @@
         @foreach (var banner in Model)
         {
             <div class="card" data-aos="fade-up">
-                <a href="@banner.Link" title="@banner.Title">
+                <a href="@banner.Link" data-banner-id="@banner.Id" title="@banner.Title">
                     <img cdn-src="@banner.IMGLink" cdn-w="@banner.Width" cdn-h="@banner.Height"
                          alt="@banner.Title" loading="lazy" />
                 </a>
-                <div class="card__head"><a href="@banner.Link">@banner.Title</a></div>
+                <div class="card__head"><a href="@banner.Link" data-banner-id="@banner.Id">@banner.Title</a></div>
             </div>
         }
     </div>
