@@ -1,0 +1,34 @@
+@page "/privacy"
+@page "/terms"
+@inject IContentApi Api
+@inject NavigationManager Nav
+
+@* Generic text page from the CMS (GET pages/{slug}). Add more @page routes as needed. *@
+
+@if (_page is not null)
+{
+    <Seo Title="@_page.Title" Description="@_page.Summary" />
+    <PageHero Title="@_page.Title" Lead="@_page.Summary" Crumbs="@(PageHero.Trail(new PageHero.Crumb(_page.Title)))" />
+    <section class="section">
+        <div class="container">
+            <article class="prose">
+                @if (!string.IsNullOrWhiteSpace(_page.BodyHtml))
+                {
+                    @((MarkupString)_page.BodyHtml)
+                }
+            </article>
+        </div>
+    </section>
+}
+
+@code {
+    private PageDto? _page;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var slug = Nav.ToBaseRelativePath(Nav.Uri).Split('?', '#')[0].Trim('/');
+        _page = await Api.GetPageAsync(slug);
+        if (_page is null)
+            Nav.NotFound();
+    }
+}

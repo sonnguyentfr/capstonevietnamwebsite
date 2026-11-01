@@ -4,7 +4,7 @@
 -- Nguon  : ZNS_Send_Queue (hang doi gui)  -> trang thai vong doi ban tin
 --          ZNS_Send_Log   (log goi Zalo API) -> ket qua ky thuat, error code, quota
 --          Zalo_Message_Log (log ban tin)    -> ket qua giao ban tin tu phia Zalo
--- Connection: SiteSqlServerV1 ([CapstoneVietNam_old])
+-- Connection: SiteSqlServerV1 ([CapstoneVietNamCRM])
 --
 -- LUU Y TUONG THICH (DB compatibility_level = 100):
 --   - KHONG dung: STRING_SPLIT, TRY_CONVERT, OPENJSON  (khong ho tro)

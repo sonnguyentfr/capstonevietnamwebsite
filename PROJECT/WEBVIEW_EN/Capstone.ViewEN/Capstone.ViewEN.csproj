@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>Capstone.ViewEN</RootNamespace>
+    <AssemblyName>Capstone.ViewEN</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Capstone.Content\Capstone.Content.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Shared sample data (../MockData), used only when ContentApi:UseMock = true. -->
+    <Content Include="..\MockData\**\*.json" LinkBase="MockData" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="Never" />
+  </ItemGroup>
+
+</Project>

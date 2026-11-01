@@ -1,0 +1,26 @@
+<section class="section section--navy inst" aria-labelledby="inst-title">
+    <DongSonDrum Class="inst__drum" />
+    <div class="container inst__grid">
+        <div>
+            <h2 class="inst__title" id="inst-title">@Block.Title</h2>
+            <p class="inst__lead">@Block.Lead</p>
+            <div class="inst__actions">
+                <a class="btn btn--primary" href="/institutions#exhibit">Exhibit at a fair</a>
+                <a class="btn btn--on-dark" href="/contact?role=institution">Talk to our partnerships team</a>
+            </div>
+        </div>
+        <ul class="inst__list">
+            @foreach (var i in Block.Items)
+            {
+                <li class="inst__item">
+                    <h3><Icon Name="@i.Icon" />@i.Title</h3>
+                    <p>@i.Text</p>
+                </li>
+            }
+        </ul>
+    </div>
+</section>
+
+@code {
+    [Parameter, EditorRequired] public InstitutionsBlockDto Block { get; set; } = default!;
+}

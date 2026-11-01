@@ -1,0 +1,27 @@
+<a class="school-tile" href="@Links.School(School)">
+    <div class="school-tile__logo">
+        @if (!string.IsNullOrWhiteSpace(School.LogoUrl))
+        {
+            <img src="@School.LogoUrl" alt="" loading="lazy" />
+        }
+        else
+        {
+            <span class="monogram" aria-hidden="true">@Fmt.Monogram(School.Name)</span>
+        }
+    </div>
+    <h3 class="school-tile__name">@School.Name</h3>
+    <div class="school-tile__meta">
+        @if (!string.IsNullOrWhiteSpace(School.City))
+        {
+            <span class="chip"><Flag Url="@School.FlagUrl" />@Fmt.FirstPart(School.City)</span>
+        }
+        @if (!string.IsNullOrWhiteSpace(School.Level))
+        {
+            <span class="chip">@School.Level</span>
+        }
+    </div>
+</a>
+
+@code {
+    [Parameter, EditorRequired] public SchoolDto School { get; set; } = default!;
+}

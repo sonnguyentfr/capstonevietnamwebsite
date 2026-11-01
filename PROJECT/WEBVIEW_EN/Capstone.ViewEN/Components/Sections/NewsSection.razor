@@ -1,0 +1,49 @@
+@* News is the main content of the EN site: latest articles + a scholarships column. *@
+@if (Items.Count > 0)
+{
+    <section class="section" aria-labelledby="news-title">
+        <div class="container">
+            <div class="section__head">
+                <div>
+                    <h2 class="section__title" id="news-title">News, school spotlights and scholarships</h2>
+                    <p class="section__intro">Profiles of partner schools, scholarship offers and recaps from our fairs.</p>
+                </div>
+                <a class="text-link" href="/news">All news<Icon Name="arrow" /></a>
+            </div>
+            <div class="news3">
+                <NewsCard Item="Items[0]" Variant="feature" />
+                <div>
+                    <p class="news3__col-title">Latest</p>
+                    <ul class="news-list">
+                        @foreach (var n in Items.Skip(1).Take(4))
+                        {
+                            <li><NewsCard Item="n" Variant="row" /></li>
+                        }
+                    </ul>
+                </div>
+                @if (Scholarships.Count > 0)
+                {
+                    <aside class="scholar-box" aria-labelledby="scholar-title">
+                        <p class="news3__col-title" id="scholar-title">Scholarships <a href="/news?category=scholarships">See all</a></p>
+                        <ul class="scholar-list">
+                            @foreach (var n in Scholarships.Take(4))
+                            {
+                                <li>
+                                    <a href="@Links.News(n)">
+                                        <strong>@n.Title</strong>
+                                        <span>@Fmt.Date(n.PublishedAt)</span>
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                    </aside>
+                }
+            </div>
+        </div>
+    </section>
+}
+
+@code {
+    [Parameter] public IReadOnlyList<NewsDto> Items { get; set; } = [];
+    [Parameter] public IReadOnlyList<NewsDto> Scholarships { get; set; } = [];
+}

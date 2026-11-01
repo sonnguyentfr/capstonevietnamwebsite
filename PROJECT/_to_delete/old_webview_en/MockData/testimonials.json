@@ -1,0 +1,6 @@
+[
+  { "id": 1, "name": "Nguyen Dang Truong", "schoolName": "Texas Christian University", "outcome": "Admitted with a 100% scholarship to Texas Christian University.", "quote": null, "photoUrl": null },
+  { "id": 2, "name": "Tran Lien Khanh Hoa", "schoolName": "Leysin American School", "outcome": "Won a scholarship to Leysin American School in Switzerland.", "quote": null, "photoUrl": null },
+  { "id": 3, "name": "Dang Bao Tram", "schoolName": "Shoreline Community College", "outcome": "Studies at Shoreline Community College, with a host family chosen with her counsellor.", "quote": null, "photoUrl": null },
+  { "id": 4, "name": "Vu Minh Anh", "schoolName": "Cascadia College", "outcome": "Enrolled at Cascadia College in Washington State on a transfer pathway.", "quote": null, "photoUrl": null }
+]

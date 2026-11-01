@@ -1,0 +1,46 @@
+@if (Destinations.Count > 0)
+{
+    <section class="section" aria-labelledby="dest-title">
+        <div class="container">
+            <div class="section__head">
+                <div>
+                    <h2 class="section__title" id="dest-title">Where do you want to study?</h2>
+                    <p class="section__intro">Country guides, partner schools and the latest scholarships for each destination.</p>
+                </div>
+            </div>
+            <div class="dest-grid">
+                @foreach (var d in Destinations)
+                {
+                    <a class="dest-card" href="/study-in/@d.Slug">
+                        @if (!string.IsNullOrWhiteSpace(d.ImageUrl))
+                        {
+                            <img src="@d.ImageUrl" alt="" loading="lazy" />
+                        }
+                        <div class="dest-card__body">
+                            <span class="dest-card__flag">
+                                <Flag Url="@d.FlagUrl" FallbackIcon="true" />
+                                @if (d.SchoolCount > 0)
+                                {
+                                    <span>@d.SchoolCount partner @(d.SchoolCount == 1 ? "school" : "schools")</span>
+                                }
+                            </span>
+                            <h3>@d.Name</h3>
+                            @if (!string.IsNullOrWhiteSpace(d.Tagline))
+                            {
+                                <p>@d.Tagline</p>
+                            }
+                        </div>
+                    </a>
+                }
+            </div>
+            <div class="dest-extra">
+                <a class="text-link" href="/services/immigration-and-settlement">Immigration and EB-5 advice<Icon Name="arrow" /></a>
+                <a class="text-link" href="/partners">Browse all partner schools<Icon Name="arrow" /></a>
+            </div>
+        </div>
+    </section>
+}
+
+@code {
+    [Parameter] public IReadOnlyList<DestinationDto> Destinations { get; set; } = [];
+}

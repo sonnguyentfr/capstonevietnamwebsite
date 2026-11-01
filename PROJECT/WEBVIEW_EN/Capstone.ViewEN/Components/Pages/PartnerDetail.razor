@@ -1,0 +1,191 @@
+@page "/partners/{SlugAndId}"
+@inject IContentApi Api
+@inject NavigationManager Nav
+
+@if (_school is not null)
+{
+    <Seo Title="@_school.Name"
+         Description="@MetaDescription"
+         Image="@_school.CoverUrl"
+         CanonicalPath="@Links.School(_school)"
+         JsonLd="_ld" />
+
+    <section class="page-hero">
+        <DongSonDrum Class="page-hero__drum" />
+        <div class="container" style="position:relative">
+            <nav aria-label="Breadcrumb">
+                <ol class="breadcrumb">
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/partners">Partner schools</a></li>
+                    <li><a href="@Links.PartnersIn(_school.CountrySlug)">@_school.CountryName</a></li>
+                    <li aria-current="page">@_school.Name</li>
+                </ol>
+            </nav>
+            <div class="school-head">
+                <div class="school-head__logo">
+                    @if (!string.IsNullOrWhiteSpace(_school.LogoUrl))
+                    {
+                        <img src="@_school.LogoUrl" alt="@_school.Name logo" />
+                    }
+                    else
+                    {
+                        <span class="monogram" aria-hidden="true">@Fmt.Monogram(_school.Name)</span>
+                    }
+                </div>
+                <div>
+                    <h1>@_school.Name</h1>
+                    <div class="school-tile__meta" style="margin-top:12px">
+                        @if (_school.IsPartner)
+                        {
+                            <span class="chip chip--partner">Capstone partner</span>
+                        }
+                        <span class="chip"><Flag Url="@_school.FlagUrl" />@_school.City</span>
+                        @if (!string.IsNullOrWhiteSpace(_school.Level))
+                        {
+                            <span class="chip">@_school.Level</span>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container detail">
+            <article class="prose">
+                @if (!string.IsNullOrWhiteSpace(_school.Summary))
+                {
+                    <p><strong>@_school.Summary</strong></p>
+                }
+                @if (!string.IsNullOrWhiteSpace(_school.DescriptionHtml))
+                {
+                    @((MarkupString)_school.DescriptionHtml)
+                }
+                @if (_school.Programs.Count > 0)
+                {
+                    <h2>Programmes</h2>
+                    <ul>
+                        @foreach (var p in _school.Programs)
+                        {
+                            <li>@p</li>
+                        }
+                    </ul>
+                }
+                @if (!string.IsNullOrWhiteSpace(_school.VideoUrl))
+                {
+                    <h2>Video tour</h2>
+                    <div style="aspect-ratio:16/9">
+                        <iframe src="@_school.VideoUrl" title="@_school.Name video" loading="lazy" style="width:100%;height:100%;border:0;border-radius:12px" allowfullscreen></iframe>
+                    </div>
+                }
+            </article>
+
+            <aside class="aside-card" aria-label="Key facts">
+                <dl class="facts">
+                    <div><dt>Destination</dt><dd>@_school.CountryName</dd></div>
+                    @if (!string.IsNullOrWhiteSpace(_school.City))
+                    {
+                        <div><dt>Location</dt><dd>@_school.City</dd></div>
+                    }
+                    @if (!string.IsNullOrWhiteSpace(_school.Level))
+                    {
+                        <div><dt>Level</dt><dd>@_school.Level</dd></div>
+                    }
+                    @if (_school.Founded is not null)
+                    {
+                        <div><dt>Founded</dt><dd>@_school.Founded</dd></div>
+                    }
+                    @if (!string.IsNullOrWhiteSpace(_school.Accreditation))
+                    {
+                        <div><dt>Accreditation</dt><dd>@_school.Accreditation</dd></div>
+                    }
+                    @if (!string.IsNullOrWhiteSpace(_school.TuitionFrom))
+                    {
+                        <div><dt>Tuition from</dt><dd>@_school.TuitionFrom</dd></div>
+                    }
+                </dl>
+                <a class="btn btn--primary btn--block" href="/contact?school=@Uri.EscapeDataString(_school.Name)">Ask a counsellor about this school</a>
+                @if (!string.IsNullOrWhiteSpace(_school.Website))
+                {
+                    <a class="btn btn--outline btn--block" href="@_school.Website" target="_blank" rel="noopener">Visit the school website<Icon Name="external" /></a>
+                }
+            </aside>
+        </div>
+    </section>
+
+    @if (_school.UpcomingEvents.Count > 0)
+    {
+        <section class="section section--mist" aria-labelledby="school-events">
+            <div class="container">
+                <div class="section__head"><h2 class="section__title" id="school-events">Meet @_school.Name in Vietnam</h2></div>
+                <ul class="agenda">
+                    @foreach (var e in _school.UpcomingEvents)
+                    {
+                        <EventRow Event="e" />
+                    }
+                </ul>
+            </div>
+        </section>
+    }
+
+    @if (_school.Related.Count > 0)
+    {
+        <section class="section" aria-labelledby="related-schools">
+            <div class="container">
+                <div class="section__head">
+                    <h2 class="section__title" id="related-schools">More partners in @_school.CountryName</h2>
+                    <a class="text-link" href="@Links.PartnersIn(_school.CountrySlug)">See all<Icon Name="arrow" /></a>
+                </div>
+                <div class="school-grid">
+                    @foreach (var s in _school.Related)
+                    {
+                        <SchoolTile School="s" />
+                    }
+                </div>
+            </div>
+        </section>
+    }
+}
+
+@code {
+    [Parameter] public string SlugAndId { get; set; } = string.Empty;
+
+    private SchoolDetailDto? _school;
+    private object? _ld;
+
+    private string MetaDescription => _school is null
+        ? string.Empty
+        : _school.Summary ?? $"{_school.Name}, a Capstone partner {_school.Level?.ToLowerInvariant()} in {_school.City}.";
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (!SlugId.TryParse(SlugAndId, out var slug, out var id))
+        {
+            Nav.NotFound();
+            return;
+        }
+
+        _school = await Api.GetSchoolAsync(id);
+        if (_school is null)
+        {
+            Nav.NotFound();
+            return;
+        }
+
+        // Old or mistyped slug → redirect to the canonical URL.
+        if (!string.Equals(slug, _school.Slug, StringComparison.OrdinalIgnoreCase))
+        {
+            Nav.NavigateTo(Links.School(_school), replace: true);
+            return;
+        }
+
+        _ld = new Dictionary<string, object?>
+        {
+            ["@context"] = "https://schema.org",
+            ["@type"] = _school.Level is "University" or "College" or "Community college" ? "CollegeOrUniversity" : "School",
+            ["name"] = _school.Name,
+            ["url"] = _school.Website,
+            ["address"] = new Dictionary<string, object?> { ["@type"] = "PostalAddress", ["addressLocality"] = _school.City, ["addressCountry"] = _school.CountryName }
+        };
+    }
+}

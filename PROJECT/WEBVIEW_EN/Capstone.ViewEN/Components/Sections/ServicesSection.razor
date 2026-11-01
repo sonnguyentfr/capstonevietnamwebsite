@@ -1,0 +1,30 @@
+<section class="section section--mist" aria-labelledby="services-title">
+    <div class="container services__layout">
+        <div class="services__intro">
+            <h2 class="section__title" id="services-title">@Intro.Title</h2>
+            <p class="section__intro">@Intro.Intro</p>
+            @if (!string.IsNullOrWhiteSpace(Intro.ImageUrl))
+            {
+                <div class="services__photo"><img src="@Intro.ImageUrl" alt="" loading="lazy" /></div>
+            }
+        </div>
+        <div class="service-list">
+            @foreach (var s in Services)
+            {
+                <a class="service-row" href="@Links.Service(s)">
+                    <span class="service-row__icon"><Icon Name="@s.Icon" /></span>
+                    <span>
+                        <span class="service-row__title">@s.Title</span>
+                        <span class="service-row__desc">@s.Summary</span>
+                    </span>
+                    <span class="service-row__go"><Icon Name="arrow" /></span>
+                </a>
+            }
+        </div>
+    </div>
+</section>
+
+@code {
+    [Parameter, EditorRequired] public SectionIntroDto Intro { get; set; } = default!;
+    [Parameter] public IReadOnlyList<ServiceDto> Services { get; set; } = [];
+}

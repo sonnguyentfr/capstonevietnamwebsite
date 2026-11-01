@@ -1,0 +1,92 @@
+<footer class="site-footer">
+    <div class="container">
+        <div class="footer__top">
+            <div class="footer__brand">
+                <img src="@Site.FooterLogo" alt="@Site.Name" width="172" height="52" loading="lazy" />
+                <p>@Site.Tagline</p>
+                @if (Site.Socials.Count > 0)
+                {
+                    <div class="socials">
+                        @foreach (var s in Site.Socials)
+                        {
+                            <a href="@s.Url" target="_blank" rel="noopener" aria-label="Capstone on @s.Network"><Icon Name="@s.Network" /></a>
+                        }
+                    </div>
+                }
+            </div>
+
+            <nav class="footer__col" aria-labelledby="f-students">
+                <h2 id="f-students">Students and parents</h2>
+                <ul>
+                    <li><a href="/study-in">Study abroad</a></li>
+                    <li><a href="/partners">Partner schools</a></li>
+                    <li><a href="/services">Services</a></li>
+                    <li><a href="/events">Events and fairs</a></li>
+                    <li><a href="/news?category=scholarships">Scholarships</a></li>
+                    <li><a href="/news">News</a></li>
+                </ul>
+            </nav>
+            <nav class="footer__col" aria-labelledby="f-inst">
+                <h2 id="f-inst">Institutions</h2>
+                <ul>
+                    <li><a href="/institutions">Work with Capstone</a></li>
+                    <li><a href="/institutions#exhibit">Exhibit at a fair</a></li>
+                    <li><a href="/contact?role=institution">Host an info session</a></li>
+                    <li><a href="@Site.RecruitSiteUrl" target="_blank" rel="noopener">Recruit in Vietnam</a></li>
+                </ul>
+            </nav>
+            <nav class="footer__col" aria-labelledby="f-cap">
+                <h2 id="f-cap">Capstone</h2>
+                <ul>
+                    <li><a href="/about">About us</a></li>
+                    <li><a href="/about/our-team">Our team</a></li>
+                    <li><a href="/about/careers">Careers</a></li>
+                    <li><a href="/contact">Contact</a></li>
+                    @if (!string.IsNullOrWhiteSpace(Site.MediaUrl))
+                    {
+                        <li><a href="@Site.MediaUrl" target="_blank" rel="noopener">Capstone in the media</a></li>
+                    }
+                    <li><a href="@Site.VietnameseSiteUrl" hreflang="vi" lang="vi">Tiếng Việt</a></li>
+                </ul>
+            </nav>
+        </div>
+
+        @if (Site.Offices.Count > 0)
+        {
+            <div class="footer__offices">
+                @foreach (var o in Site.Offices)
+                {
+                    <div>
+                        <h3>@o.City office</h3>
+                        <p>
+                            @o.Address
+                            @if (!string.IsNullOrWhiteSpace(o.Phone))
+                            {
+                                <br /><span>Tel </span><a href="tel:@Tel(o.Phone)">@o.Phone</a>
+                            }
+                            @if (!string.IsNullOrWhiteSpace(o.Hotline))
+                            {
+                                <br /><span>Hotline </span><a href="tel:@Tel(o.Hotline)">@o.Hotline</a>
+                            }
+                        </p>
+                    </div>
+                }
+            </div>
+        }
+
+        <div class="footer__bottom">
+            <span>© @DateTime.Now.Year @Site.Name</span>
+            <ul>
+                <li><a href="/terms">Terms of service</a></li>
+                <li><a href="/privacy">Privacy policy</a></li>
+                <li><a href="/sitemap.xml">Sitemap</a></li>
+            </ul>
+        </div>
+    </div>
+</footer>
+
+@code {
+    [Parameter, EditorRequired] public SiteDto Site { get; set; } = default!;
+
+    private static string Tel(string? phone) => phone is null ? string.Empty : new(phone.Where(c => char.IsDigit(c) || c == '+').ToArray());
+}

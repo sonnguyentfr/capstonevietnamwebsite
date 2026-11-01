@@ -1,0 +1,26 @@
+@page "/error"
+@using System.Diagnostics
+
+<Seo Title="Something went wrong" NoIndex="true" />
+
+<PageHero Title="This page didn't load" Lead="Our server ran into a problem. Reload the page in a minute; if it keeps happening, call our hotline or email us." />
+
+<section class="section">
+    <div class="container">
+        <a class="btn btn--primary" href="/">Go to the home page</a>
+        @if (ShowRequestId)
+        {
+            <p style="margin-top:24px;font-size:var(--fs-xs);color:var(--ink-3)">Reference: <code>@RequestId</code></p>
+        }
+    </div>
+</section>
+
+@code {
+    [CascadingParameter] private HttpContext? HttpContext { get; set; }
+
+    private string? RequestId { get; set; }
+    private bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
+
+    protected override void OnInitialized() =>
+        RequestId = Activity.Current?.Id ?? HttpContext?.TraceIdentifier;
+}

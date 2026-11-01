@@ -1,0 +1,92 @@
+@inject NavigationManager Nav
+
+<header class="site-header" data-header>
+    <div class="container site-header__inner">
+        <a class="brand" href="/" aria-label="@Site.Name, home">
+            <img src="@Site.HeaderLogo" alt="@Site.Name" width="146" height="44" />
+        </a>
+
+        <nav class="nav" id="site-nav" aria-label="Main">
+            <ul class="nav__list">
+                @foreach (var item in Site.Menu)
+                {
+                    var hasChildren = item.Children.Count > 0;
+                    var isMega = item.Children.Any(c => c.Children.Count > 0);
+                    <li class="nav__item">
+                        <div class="nav__row">
+                            <a class="nav__link" href="@item.Url" aria-current="@(IsActive(item) ? "page" : null)">
+                                @item.Title
+                                @if (hasChildren)
+                                {
+                                    <Icon Name="chevron" Class="nav__caret" />
+                                }
+                            </a>
+                            @if (hasChildren)
+                            {
+                                <button class="nav__expand" type="button" aria-expanded="false" aria-label="Show @item.Title links" data-nav-expand>
+                                    <Icon Name="chevron" />
+                                </button>
+                            }
+                        </div>
+                        @if (isMega)
+                        {
+                            @* Two levels, e.g. Partners → country → level *@
+                            <div class="nav__panel nav__panel--mega">
+                                @foreach (var grp in item.Children)
+                                {
+                                    <div class="nav__group">
+                                        <a class="nav__group-title" href="@grp.Url">@grp.Title</a>
+                                        @foreach (var child in grp.Children)
+                                        {
+                                            <a href="@child.Url">@child.Title</a>
+                                        }
+                                    </div>
+                                }
+                                <a class="nav__panel-all" href="@item.Url">All @item.Title.ToLowerInvariant()<Icon Name="arrow" /></a>
+                            </div>
+                        }
+                        else if (hasChildren)
+                        {
+                            <div class="nav__panel">
+                                @foreach (var child in item.Children)
+                                {
+                                    <a href="@child.Url">
+                                        @child.Title
+                                        @if (!string.IsNullOrWhiteSpace(child.Description))
+                                        {
+                                            <small>@child.Description</small>
+                                        }
+                                    </a>
+                                }
+                            </div>
+                        }
+                    </li>
+                }
+            </ul>
+            <div class="nav__mobile-cta">
+                <a class="btn btn--primary btn--block" href="/contact">Book a consultation</a>
+                <a class="btn btn--outline btn--block" href="/institutions">For institutions</a>
+            </div>
+        </nav>
+
+        <a class="btn btn--primary header-cta" href="/contact">Book a consultation</a>
+
+        <button class="nav-toggle" type="button" aria-controls="site-nav" aria-expanded="false" aria-label="Open menu" data-nav-toggle>
+            <Icon Name="menu" />
+        </button>
+    </div>
+</header>
+
+@code {
+    [Parameter, EditorRequired] public SiteDto Site { get; set; } = default!;
+
+    private string CurrentPath => "/" + Nav.ToBaseRelativePath(Nav.Uri).Split('?', '#')[0].TrimEnd('/');
+
+    private bool IsActive(MenuItemDto item)
+    {
+        var path = item.Url.Split('?', '#')[0].TrimEnd('/');
+        if (string.IsNullOrEmpty(path)) return CurrentPath == "/";
+        return CurrentPath.Equals(path, StringComparison.OrdinalIgnoreCase)
+            || CurrentPath.StartsWith(path + "/", StringComparison.OrdinalIgnoreCase);
+    }
+}

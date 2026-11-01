@@ -8,15 +8,17 @@ namespace Capstone.View.ViewComponents;
 public class EventsViewComponent : ViewComponent
 {
     private readonly IEventsService _eventsService;
+    private readonly int _portalCrmId;
 
-    public EventsViewComponent(IEventsService eventsService)
+    public EventsViewComponent(IEventsService eventsService, IOptions<SiteSettings> siteOptions)
     {
         _eventsService = eventsService;
+        _portalCrmId = siteOptions.Value.PortalCRMId;
     }
 
     public async Task<IViewComponentResult> InvokeAsync()
     {
-        var cats = await _eventsService.GetActiveCatsWithEventsAsync(50);
+        var cats = await _eventsService.GetActiveCatsWithEventsAsync(_portalCrmId);
         return View(cats);
     }
 }

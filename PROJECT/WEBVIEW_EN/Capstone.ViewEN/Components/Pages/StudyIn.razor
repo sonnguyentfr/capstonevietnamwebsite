@@ -1,0 +1,150 @@
+@page "/study-in"
+@page "/study-in/{Slug}"
+@inject IContentApi Api
+@inject NavigationManager Nav
+
+@if (Slug is null)
+{
+    <Seo Title="Study abroad" Description="Study in the USA, Canada, the UK, Australia and other countries: country guides, partner schools and scholarships." />
+    <PageHero Title="Study abroad" Lead="Choose a destination to see its partner schools, scholarships and the latest news."
+              Crumbs="@(PageHero.Trail(new PageHero.Crumb("Study abroad")))" />
+    <DestinationsSection Destinations="_destinations" />
+    <SchoolFinder Countries="_countries" />
+    <div style="height:var(--section-y)"></div>
+}
+else if (_dest is not null)
+{
+    <Seo Title="@_dest.Name" Description="@(_dest.Intro ?? _dest.Tagline)" Image="@_dest.ImageUrl" CanonicalPath="@($"/study-in/{_dest.Slug}")" />
+
+    <section class="dest-hero">
+        @if (!string.IsNullOrWhiteSpace(_dest.ImageUrl))
+        {
+            <img class="dest-hero__img" src="@_dest.ImageUrl" alt="" />
+        }
+        <div class="container">
+            <nav aria-label="Breadcrumb">
+                <ol class="breadcrumb">
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/study-in">Study abroad</a></li>
+                    <li aria-current="page">@_dest.Name</li>
+                </ol>
+            </nav>
+            <h1>
+                @if (!string.IsNullOrWhiteSpace(_dest.FlagUrl))
+                {
+                    <img src="@_dest.FlagUrl" alt="" />
+                }
+                @_dest.Name
+            </h1>
+            @if (!string.IsNullOrWhiteSpace(_dest.Intro))
+            {
+                <p>@_dest.Intro</p>
+            }
+            @if (_dest.Facts.Count > 0)
+            {
+                <dl class="fact-strip">
+                    @foreach (var f in _dest.Facts)
+                    {
+                        <div><dt>@f.Label</dt><dd>@f.Value</dd></div>
+                    }
+                    @if (_dest.SchoolCount > 0)
+                    {
+                        <div><dt>Capstone partners</dt><dd>@_dest.SchoolCount schools</dd></div>
+                    }
+                </dl>
+            }
+        </div>
+    </section>
+
+    <section class="section" aria-labelledby="dest-schools">
+        <div class="container">
+            <div class="section__head">
+                <h2 class="section__title" id="dest-schools">Partner schools</h2>
+                <a class="text-link" href="@Links.PartnersIn(_dest.CountrySlug)">See all @_schools.Total<Icon Name="arrow" /></a>
+            </div>
+            @if (_schools.Items.Count > 0)
+            {
+                <div class="school-grid school-grid--4">
+                    @foreach (var s in _schools.Items)
+                    {
+                        <SchoolTile School="s" />
+                    }
+                </div>
+            }
+            else
+            {
+                <EmptyState Title="No partner schools listed here yet" Text="Ask a counsellor: we work with more schools than we list online." ActionUrl="#consult" ActionLabel="Ask a counsellor" />
+            }
+        </div>
+    </section>
+
+    @if (_news.Items.Count > 0)
+    {
+        <section class="section section--mist" aria-labelledby="dest-news">
+            <div class="container">
+                <div class="section__head">
+                    <h2 class="section__title" id="dest-news">News and scholarships</h2>
+                    <a class="text-link" href="/news?country=@Uri.EscapeDataString(_dest.CountrySlug)">More articles<Icon Name="arrow" /></a>
+                </div>
+                <div class="news-grid">
+                    @foreach (var n in _news.Items)
+                    {
+                        <NewsCard Item="n" />
+                    }
+                </div>
+            </div>
+        </section>
+    }
+
+    @if (!string.IsNullOrWhiteSpace(_dest.BodyHtml))
+    {
+        <section class="section">
+            <div class="container">
+                <h2 class="section__title" style="margin-bottom:20px">Country guide</h2>
+                <article class="prose">@((MarkupString)_dest.BodyHtml)</article>
+            </div>
+        </section>
+    }
+
+    <ConsultSection Offices="Site.Offices" Title="@ConsultTitle" />
+}
+
+@code {
+    [Parameter] public string? Slug { get; set; }
+    [CascadingParameter] public SiteDto Site { get; set; } = new();
+
+    private DestinationDto? _dest;
+    private IReadOnlyList<DestinationDto> _destinations = [];
+    private IReadOnlyList<CountryDto> _countries = [];
+    private PagedResult<SchoolDto> _schools = new();
+    private PagedResult<NewsDto> _news = new();
+
+    private string ConsultTitle => _dest is null ? "Talk to a counsellor" : $"Plan your {_dest.Name.Replace("Study in ", string.Empty)} studies with a counsellor";
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (Slug is null)
+        {
+            var destinations = Api.GetDestinationsAsync();
+            var countries = Api.GetCountriesAsync();
+            await Task.WhenAll(destinations, countries);
+            _destinations = destinations.Result;
+            _countries = countries.Result;
+            return;
+        }
+
+        var dest = await Api.GetDestinationAsync(Slug);
+        _dest = dest;
+        if (dest is null)
+        {
+            Nav.NotFound();
+            return;
+        }
+
+        var schools = Api.GetSchoolsAsync(new SchoolQuery { Country = dest.CountrySlug, PageSize = 8 });
+        var news = Api.GetNewsAsync(new NewsQuery { Country = dest.CountrySlug, PageSize = 6 });
+        await Task.WhenAll(schools, news);
+        _schools = schools.Result;
+        _news = news.Result;
+    }
+}

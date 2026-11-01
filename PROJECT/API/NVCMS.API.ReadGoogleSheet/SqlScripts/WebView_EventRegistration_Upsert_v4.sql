@@ -1,6 +1,6 @@
 -- ============================================================
 -- SP: WebView_EventRegistration_Upsert
--- Database: CapstoneVietnam_old
+-- Database: CapstoneVietNamCRM
 -- Version: 4 — Unified logic with EventCat-based code for new students
 --              StudentCode format: {CatCode}{YY}{MM}{StudentId}
 --              Example: HE2607150993

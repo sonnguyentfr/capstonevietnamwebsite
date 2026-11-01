@@ -1,0 +1,28 @@
+<div class="topbar">
+    <div class="container topbar__inner">
+        <div class="topbar__contact">
+            @if (!string.IsNullOrWhiteSpace(Site.Hotline))
+            {
+                <a href="tel:@Tel(Site.Hotline)"><Icon Name="phone" />@Site.Hotline</a>
+            }
+            @if (!string.IsNullOrWhiteSpace(Site.Email))
+            {
+                <a href="mailto:@Site.Email"><Icon Name="mail" />@Site.Email</a>
+            }
+        </div>
+        <div class="topbar__right">
+            <a class="topbar__inst" href="/institutions">For institutions</a>
+            <a class="topbar__recruit" href="@Site.RecruitSiteUrl" target="_blank" rel="noopener">Recruit in Vietnam</a>
+            <nav class="lang-switch" aria-label="Language">
+                <span aria-current="true">EN</span>
+                <a href="@Site.VietnameseSiteUrl" hreflang="vi" lang="vi" title="Tiếng Việt">VI</a>
+            </nav>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter, EditorRequired] public SiteDto Site { get; set; } = default!;
+
+    private static string Tel(string? phone) => phone is null ? string.Empty : new(phone.Where(c => char.IsDigit(c) || c == '+').ToArray());
+}

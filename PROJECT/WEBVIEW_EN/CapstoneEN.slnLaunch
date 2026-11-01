@@ -1,0 +1,9 @@
+[
+  {
+    "Name": "Website + API",
+    "Projects": [
+      { "Path": "Capstone.ApiEN\\Capstone.ApiEN.csproj", "Action": "Start", "DebugTarget": "http" },
+      { "Path": "Capstone.ViewEN\\Capstone.ViewEN.csproj", "Action": "Start", "DebugTarget": "https" }
+    ]
+  }
+]

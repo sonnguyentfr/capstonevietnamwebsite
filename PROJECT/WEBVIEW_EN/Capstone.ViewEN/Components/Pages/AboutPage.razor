@@ -1,0 +1,170 @@
+@page "/about"
+@page "/about/{Slug}"
+@inject IContentApi Api
+@inject NavigationManager Nav
+
+@* About hub, like the old site's "About Capstone" menu: overview, services, vision & values,
+   why Capstone, team, careers — one layout with a side menu. Text pages come from pages?section=about. *@
+
+@if (_title is not null)
+{
+    <Seo Title="@_title" Description="@_summary" CanonicalPath="@CurrentPath" />
+
+    <PageHero Title="@_title" Lead="@_summary"
+              Crumbs="@(IsOverview ? PageHero.Trail(new PageHero.Crumb("About")) : PageHero.Trail(new PageHero.Crumb("About", "/about"), new PageHero.Crumb(_title)))" />
+
+    @if (IsOverview && Site.Stats.Count > 0)
+    {
+        <section class="section" style="padding-bottom:0">
+            <div class="container">
+                <dl class="stats">
+                    @foreach (var s in Site.Stats)
+                    {
+                        <div><dt>@s.Label</dt><dd class="tabular">@s.Value</dd></div>
+                    }
+                </dl>
+            </div>
+        </section>
+    }
+
+    <section class="section">
+        <div class="container side-layout">
+            <nav class="side-nav" aria-label="About Capstone">
+                @foreach (var (label, url) in MenuItems())
+                {
+                    <a href="@url" aria-current="@(url == CurrentPath ? "page" : null)">@label</a>
+                }
+            </nav>
+
+            <div>
+                @if (IsTeam)
+                {
+                    <div class="team-grid">
+                        @foreach (var m in _team)
+                        {
+                            <article class="team-card">
+                                <div class="team-card__photo">
+                                    @if (!string.IsNullOrWhiteSpace(m.PhotoUrl))
+                                    {
+                                        <img src="@m.PhotoUrl" alt="@m.Name" loading="lazy" />
+                                    }
+                                    else
+                                    {
+                                        <span class="monogram" aria-hidden="true">@Fmt.Monogram(m.Name.Replace("Dr.", ""))</span>
+                                    }
+                                </div>
+                                <h3>@m.Name</h3>
+                                <span class="role">@m.Title</span>
+                                @if (!string.IsNullOrWhiteSpace(m.Bio))
+                                {
+                                    <p>@m.Bio</p>
+                                }
+                                @if (!string.IsNullOrWhiteSpace(m.ProfileUrl))
+                                {
+                                    <a class="text-link" href="@m.ProfileUrl" target="_blank" rel="noopener">Full biography<Icon Name="external" /></a>
+                                }
+                            </article>
+                        }
+                    </div>
+                }
+                else if (!string.IsNullOrWhiteSpace(_body))
+                {
+                    <article class="prose">@((MarkupString)_body)</article>
+                }
+
+                @if (IsOverview)
+                {
+                    <div class="aside-card" style="position:static;margin-top:40px">
+                        <h2 style="font-size:var(--fs-l)">Visit us</h2>
+                        @foreach (var o in Site.Offices)
+                        {
+                            <div class="office">
+                                <h3>@o.City</h3>
+                                <p>@o.Address</p>
+                                @if (!string.IsNullOrWhiteSpace(o.MapUrl))
+                                {
+                                    <a href="@o.MapUrl" target="_blank" rel="noopener">Open in Maps</a>
+                                }
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    </section>
+
+    @if (IsOverview)
+    {
+        <VoicesSection Leader="Site.Leader" />
+    }
+}
+
+@code {
+    [Parameter] public string? Slug { get; set; }
+    [CascadingParameter] public SiteDto Site { get; set; } = new();
+
+    private const string TeamSlug = "our-team";
+
+    private IReadOnlyList<PageDto> _pages = [];
+    private IReadOnlyList<TeamMemberDto> _team = [];
+    private string? _title;
+    private string? _summary;
+    private string? _body;
+
+    private bool IsOverview => string.IsNullOrEmpty(Slug);
+    private bool IsTeam => string.Equals(Slug, TeamSlug, StringComparison.OrdinalIgnoreCase);
+    private string CurrentPath => IsOverview ? "/about" : $"/about/{Slug!.ToLowerInvariant()}";
+
+    /// <summary>Side menu: CMS pages of the "about" section, plus Services and Team in the old site's order.</summary>
+    private IEnumerable<(string Label, string Url)> MenuItems()
+    {
+        foreach (var p in _pages)
+        {
+            yield return (p.Slug == "about" ? "Who we are" : p.Title, p.Slug == "about" ? "/about" : $"/about/{p.Slug}");
+            if (p.Slug == "about") yield return ("Our services", "/services");
+            if (p.Slug == "why-capstone") yield return ("Our team", $"/about/{TeamSlug}");
+        }
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (string.Equals(Slug, "about", StringComparison.OrdinalIgnoreCase))
+        {
+            Nav.NavigateTo("/about", replace: true); // the overview lives at /about only
+            return;
+        }
+
+        var pagesTask = Api.GetPagesAsync("about");
+
+        if (IsTeam)
+        {
+            var team = Api.GetTeamAsync();
+            await Task.WhenAll(pagesTask, team);
+            _pages = pagesTask.Result;
+            _team = team.Result;
+            _title = "Our team";
+            _summary = "Bilingual, bicultural and experienced advisors in Hanoi and Ho Chi Minh City.";
+            return;
+        }
+
+        var page = Api.GetPageAsync(IsOverview ? "about" : Slug!);
+        await Task.WhenAll(pagesTask, page);
+        _pages = pagesTask.Result;
+
+        // Only pages of the about section are served here; anything else is a 404.
+        if (page.Result is not { } p || (!IsOverview && !string.Equals(p.Section, "about", StringComparison.OrdinalIgnoreCase)))
+        {
+            if (IsOverview)
+            {
+                _title = "About Capstone Vietnam";
+                return;
+            }
+            Nav.NotFound();
+            return;
+        }
+
+        _title = p.Title;
+        _summary = p.Summary;
+        _body = p.BodyHtml;
+    }
+}

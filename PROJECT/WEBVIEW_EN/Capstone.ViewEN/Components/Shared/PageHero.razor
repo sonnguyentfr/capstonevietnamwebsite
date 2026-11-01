@@ -1,0 +1,42 @@
+<section class="page-hero">
+    <DongSonDrum Class="page-hero__drum" />
+    <div class="container" style="position:relative">
+        @if (Crumbs.Count > 0)
+        {
+            <nav aria-label="Breadcrumb">
+                <ol class="breadcrumb">
+                    <li><a href="/">Home</a></li>
+                    @foreach (var c in Crumbs)
+                    {
+                        if (string.IsNullOrEmpty(c.Url))
+                        {
+                            <li aria-current="page">@c.Title</li>
+                        }
+                        else
+                        {
+                            <li><a href="@c.Url">@c.Title</a></li>
+                        }
+                    }
+                </ol>
+            </nav>
+        }
+        <h1>@Title</h1>
+        @if (!string.IsNullOrWhiteSpace(Lead))
+        {
+            <p>@Lead</p>
+        }
+        @ChildContent
+    </div>
+</section>
+
+@code {
+    [Parameter, EditorRequired] public string Title { get; set; } = string.Empty;
+    [Parameter] public string? Lead { get; set; }
+    /// <summary>Breadcrumb trail after "Home". The last item usually has no Url.</summary>
+    [Parameter] public IReadOnlyList<Crumb> Crumbs { get; set; } = [];
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    public sealed record Crumb(string Title, string? Url = null);
+
+    public static IReadOnlyList<Crumb> Trail(params Crumb[] items) => items;
+}

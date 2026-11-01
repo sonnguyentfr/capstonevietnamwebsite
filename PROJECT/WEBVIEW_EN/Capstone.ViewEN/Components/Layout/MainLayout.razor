@@ -1,0 +1,30 @@
+@inherits LayoutComponentBase
+@inject IContentApi Api
+
+@* Tracking code (HeaderCode) is rendered by <Seo>, the single HeadContent of each page:
+   two HeadContent blocks on one page would replace each other. *@
+
+<CascadingValue Value="_site">
+    <TopBar Site="_site" />
+    <SiteHeader Site="_site" />
+
+    <main id="main" tabindex="-1">
+        @Body
+    </main>
+
+    <SiteFooter Site="_site" />
+</CascadingValue>
+
+@if (!string.IsNullOrWhiteSpace(_site.FooterCode))
+{
+    @((MarkupString)_site.FooterCode)
+}
+
+@code {
+    private SiteDto _site = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        _site = await Api.GetSiteAsync();
+    }
+}

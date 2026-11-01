@@ -1,0 +1,84 @@
+@if (Leader is not null || Stories.Count > 0)
+{
+    <section class="section" aria-labelledby="voices-title">
+        <div class="container voices__grid">
+            <div>
+                <h2 class="sr-only" id="voices-title">Our founder and our students</h2>
+                @if (Leader is not null)
+                {
+                    <figure class="leader-quote">
+                        <blockquote>“@Leader.Quote”</blockquote>
+                        <figcaption>
+                            @if (!string.IsNullOrWhiteSpace(Leader.PhotoUrl))
+                            {
+                                <img src="@Leader.PhotoUrl" alt="" width="56" height="56" loading="lazy" />
+                            }
+                            else
+                            {
+                                <span class="monogram" aria-hidden="true">@Fmt.Monogram(Leader.Name.Replace("Dr.", ""))</span>
+                            }
+                            <span>
+                                <cite>@Leader.Name</cite>
+                                <small>@Leader.Title</small>
+                            </span>
+                        </figcaption>
+                    </figure>
+                    @if (!string.IsNullOrWhiteSpace(Leader.Bio))
+                    {
+                        <p class="leader-bio">@Leader.Bio</p>
+                    }
+                    @if (!string.IsNullOrWhiteSpace(Leader.ProfileUrl))
+                    {
+                        <a class="text-link" style="margin-top:12px" href="@Leader.ProfileUrl" target="_blank" rel="noopener">Read his biographical sketch<Icon Name="external" /></a>
+                    }
+                }
+            </div>
+
+            @if (Stories.Count > 0)
+            {
+                <div class="stories">
+                    @foreach (var s in Stories)
+                    {
+                        <article class="story">
+                            <p>@(s.Quote ?? s.Outcome)</p>
+                            <div class="story__who">
+                                @if (!string.IsNullOrWhiteSpace(s.PhotoUrl))
+                                {
+                                    <img src="@s.PhotoUrl" alt="" width="40" height="40" loading="lazy" style="border-radius:50%" />
+                                }
+                                else
+                                {
+                                    <span class="monogram" aria-hidden="true">@Initials(s.Name)</span>
+                                }
+                                <span>
+                                    <b>@s.Name</b>
+                                    @if (!string.IsNullOrWhiteSpace(s.SchoolName))
+                                    {
+                                        <span>@s.SchoolName</span>
+                                    }
+                                </span>
+                            </div>
+                        </article>
+                    }
+                </div>
+            }
+        </div>
+    </section>
+}
+
+@code {
+    [Parameter] public LeaderDto? Leader { get; set; }
+    [Parameter] public IReadOnlyList<TestimonialDto> Stories { get; set; } = [];
+
+    /// <summary>Vietnamese names: given name is last, family name first → "Nguyen Dang Truong" = "TN".</summary>
+    private static string Initials(string name)
+    {
+        var parts = name.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+        return parts.Length switch
+        {
+            0 => "?",
+            1 => parts[0][..1].ToUpperInvariant(),
+            _ => $"{char.ToUpperInvariant(parts[^1][0])}{char.ToUpperInvariant(parts[0][0])}"
+        };
+    }
+}

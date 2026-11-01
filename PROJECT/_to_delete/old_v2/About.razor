@@ -1,0 +1,57 @@
+@page "/about"
+@inject IContentApi Api
+
+<Seo Title="About us" Description="@(_page?.Summary ?? "Capstone Vietnam is a higher education consultancy founded in 2009, with offices in Hanoi and Ho Chi Minh City.")" />
+
+<PageHero Title="@(_page?.Title ?? "About Capstone Vietnam")" Lead="@_page?.Summary"
+          Crumbs="@(PageHero.Trail(new PageHero.Crumb("About")))" />
+
+@if (Site.Stats.Count > 0)
+{
+    <section class="section" style="padding-bottom:0">
+        <div class="container">
+            <dl class="stats">
+                @foreach (var s in Site.Stats)
+                {
+                    <div><dt>@s.Label</dt><dd class="tabular">@s.Value</dd></div>
+                }
+            </dl>
+        </div>
+    </section>
+}
+
+<section class="section">
+    <div class="container detail">
+        <article class="prose">
+            @if (!string.IsNullOrWhiteSpace(_page?.BodyHtml))
+            {
+                @((MarkupString)_page.BodyHtml)
+            }
+        </article>
+        <aside class="aside-card" aria-label="Our offices">
+            <h2 style="font-size:var(--fs-l)">Visit us</h2>
+            @foreach (var o in Site.Offices)
+            {
+                <div class="office">
+                    <h3>@o.City</h3>
+                    <p>@o.Address</p>
+                    @if (!string.IsNullOrWhiteSpace(o.MapUrl))
+                    {
+                        <a href="@o.MapUrl" target="_blank" rel="noopener">Open in Maps</a>
+                    }
+                </div>
+            }
+            <a class="btn btn--primary btn--block" href="/contact">Contact us</a>
+        </aside>
+    </div>
+</section>
+
+<VoicesSection Leader="Site.Leader" />
+
+@code {
+    [CascadingParameter] public SiteDto Site { get; set; } = new();
+
+    private PageDto? _page;
+
+    protected override async Task OnInitializedAsync() => _page = await Api.GetPageAsync("about");
+}

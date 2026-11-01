@@ -13,7 +13,7 @@ public class TruongService : ITruongService
     private readonly INewsRepository   _newsRepo;
     private readonly ContentUrlRewriter _rewriter;
 
-    // Country Id mapping — matches Cap_Location.LocationId in CapstoneVietnam_old
+    // Country Id mapping — matches Cap_Location.LocationId in CapstoneVietNamCRM
     // 1=Úc, 3=Canada, 23=Thụy Sĩ, 28=Anh, 38=Mỹ, 99=New Zealand, 401=Ireland
     private static readonly Dictionary<int, string> CountryNames = new()
     {

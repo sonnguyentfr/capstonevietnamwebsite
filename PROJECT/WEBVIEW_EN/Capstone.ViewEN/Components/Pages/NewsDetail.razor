@@ -1,0 +1,113 @@
+@page "/news/{SlugAndId}"
+@inject IContentApi Api
+@inject NavigationManager Nav
+
+@if (_article is not null)
+{
+    <Seo Title="@_article.Title" Description="@_article.Summary" Image="@_article.ImageUrl" OgType="article"
+         CanonicalPath="@Links.News(_article)" JsonLd="_ld" />
+
+    <PageHero Title="@_article.Title"
+              Crumbs="@(PageHero.Trail(new PageHero.Crumb("News", "/news"), new PageHero.Crumb(_article.CategoryName ?? "Article")))">
+        <div class="news-meta" style="color:rgba(255,255,255,.7)">
+            @if (!string.IsNullOrWhiteSpace(_article.CategoryName))
+            {
+                <span style="color:var(--bronze-300)">@_article.CategoryName</span>
+            }
+            <time datetime="@_article.PublishedAt.ToString("yyyy-MM-dd")">@Fmt.Date(_article.PublishedAt)</time>
+            @if (!string.IsNullOrWhiteSpace(_article.Author))
+            {
+                <span>@_article.Author</span>
+            }
+        </div>
+    </PageHero>
+
+    <section class="section">
+        <div class="container detail">
+            <article class="prose">
+                @if (!string.IsNullOrWhiteSpace(_article.ImageUrl))
+                {
+                    <img src="@_article.ImageUrl" alt="" />
+                }
+                @if (!string.IsNullOrWhiteSpace(_article.Summary))
+                {
+                    <p><strong>@_article.Summary</strong></p>
+                }
+                @if (!string.IsNullOrWhiteSpace(_article.BodyHtml))
+                {
+                    @((MarkupString)_article.BodyHtml)
+                }
+                @if (_article.Tags.Count > 0)
+                {
+                    <div class="school-tile__meta" style="margin-top:32px">
+                        @foreach (var t in _article.Tags)
+                        {
+                            <span class="chip">@t</span>
+                        }
+                    </div>
+                }
+            </article>
+            <aside class="aside-card" aria-label="Talk to a counsellor">
+                <h2 style="font-size:var(--fs-l)">Planning to study abroad?</h2>
+                <p style="font-size:var(--fs-s);color:var(--ink-2)">Our counsellors in Hanoi and Ho Chi Minh City can help you shortlist schools and apply.</p>
+                <a class="btn btn--primary btn--block" href="/contact">Book a consultation</a>
+            </aside>
+        </div>
+    </section>
+
+    @if (_article.Related.Count > 0)
+    {
+        <section class="section section--mist" aria-labelledby="related-news">
+            <div class="container">
+                <div class="section__head"><h2 class="section__title" id="related-news">Read next</h2></div>
+                <div class="news-grid">
+                    @foreach (var n in _article.Related)
+                    {
+                        <NewsCard Item="n" />
+                    }
+                </div>
+            </div>
+        </section>
+    }
+}
+
+@code {
+    [Parameter] public string SlugAndId { get; set; } = string.Empty;
+
+    private NewsDetailDto? _article;
+    private object? _ld;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (!SlugId.TryParse(SlugAndId, out var slug, out var id))
+        {
+            Nav.NotFound();
+            return;
+        }
+
+        var article = await Api.GetNewsArticleAsync(id);
+        _article = article;
+        if (article is null)
+        {
+            Nav.NotFound();
+            return;
+        }
+
+        if (!string.Equals(slug, article.Slug, StringComparison.OrdinalIgnoreCase))
+        {
+            Nav.NavigateTo(Links.News(article), replace: true);
+            return;
+        }
+
+        _ld = new Dictionary<string, object?>
+        {
+            ["@context"] = "https://schema.org",
+            ["@type"] = "NewsArticle",
+            ["headline"] = article.Title,
+            ["description"] = article.Summary,
+            ["image"] = article.ImageUrl,
+            ["datePublished"] = article.PublishedAt.ToString("o"),
+            ["author"] = new Dictionary<string, object?> { ["@type"] = "Organization", ["name"] = article.Author ?? "Capstone Vietnam" }
+        };
+    }
+}

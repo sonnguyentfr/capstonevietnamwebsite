@@ -1,0 +1,102 @@
+@page "/news"
+@inject IContentApi Api
+
+<Seo Title="@SeoTitle" Description="Scholarship news, partner school spotlights, info sessions and education fair recaps from Capstone Vietnam." />
+
+<PageHero Title="News and school spotlights"
+          Lead="Scholarship offers, profiles of partner schools and what happened at our latest fairs."
+          Crumbs="@(PageHero.Trail(new PageHero.Crumb("News")))" />
+
+<section class="section">
+    <div class="container">
+        @if (_categories.Count > 0)
+        {
+            <div class="filter-groups">
+                <div>
+                    <p class="filter-groups__label">Topic</p>
+                    <nav class="tabs" aria-label="News topics">
+                        <a href="/news" aria-current="@(IsAll ? "page" : null)">All</a>
+                        @foreach (var c in _categories.Where(c => c.Group != "destination"))
+                        {
+                            <a href="/news?category=@Uri.EscapeDataString(c.Slug)" aria-current="@(c.Slug == Category ? "page" : null)">@c.Name<span class="count">@(c.Count > 0 ? c.Count.ToString() : null)</span></a>
+                        }
+                    </nav>
+                </div>
+                @if (_destinations.Count > 0)
+                {
+                    <div>
+                        <p class="filter-groups__label">Destination</p>
+                        <nav class="tabs" aria-label="News by destination">
+                            @foreach (var d in _destinations)
+                            {
+                                <a href="/news?country=@Uri.EscapeDataString(d.CountrySlug)" aria-current="@(d.CountrySlug == Country ? "page" : null)">@d.Name</a>
+                            }
+                        </nav>
+                    </div>
+                }
+            </div>
+        }
+
+        @if (_result.Items.Count > 0)
+        {
+            var first = (_result.Page <= 1) ? _result.Items[0] : null;
+            if (first is not null)
+            {
+                <div class="news-lead">
+                    <NewsCard Item="first" Variant="feature" />
+                    <ul class="news-list">
+                        @foreach (var n in _result.Items.Skip(1).Take(3))
+                        {
+                            <li><NewsCard Item="n" Variant="row" /></li>
+                        }
+                    </ul>
+                </div>
+            }
+            <div class="news-grid">
+                @foreach (var n in first is null ? _result.Items : _result.Items.Skip(4))
+                {
+                    <NewsCard Item="n" />
+                }
+            </div>
+            <Pagination Page="_result.Page" TotalPages="_result.TotalPages" />
+        }
+        else
+        {
+            <EmptyState Title="No articles here yet" ActionUrl="/news" ActionLabel="See all news" />
+        }
+    </div>
+</section>
+
+@code {
+    [SupplyParameterFromQuery(Name = "category")] public string? Category { get; set; }
+    [SupplyParameterFromQuery(Name = "country")] public string? Country { get; set; }
+    [SupplyParameterFromQuery(Name = "page")] public int? Page { get; set; }
+
+    private IReadOnlyList<CategoryDto> _categories = [];
+    private IReadOnlyList<DestinationDto> _destinations = [];
+    private PagedResult<NewsDto> _result = new();
+
+    private bool IsAll => string.IsNullOrEmpty(Category) && string.IsNullOrEmpty(Country);
+
+    private string SeoTitle =>
+        _categories.FirstOrDefault(c => c.Slug == Category)?.Name
+        ?? _destinations.FirstOrDefault(d => d.CountrySlug == Country)?.Name
+        ?? "News and school spotlights";
+
+    protected override async Task OnParametersSetAsync()
+    {
+        var categories = Api.GetNewsCategoriesAsync();
+        var destinations = Api.GetDestinationsAsync();
+        var result = Api.GetNewsAsync(new NewsQuery
+        {
+            Category = Category,
+            Country = string.IsNullOrEmpty(Category) ? Country : null,
+            Page = Math.Max(1, Page ?? 1),
+            PageSize = 13
+        });
+        await Task.WhenAll(categories, destinations, result);
+        _categories = categories.Result;
+        _destinations = destinations.Result;
+        _result = result.Result;
+    }
+}

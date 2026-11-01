@@ -1,0 +1,23 @@
+{
+  "hero": {
+    "title": "Where Vietnamese students meet the world's schools",
+    "lead": "Capstone advises students and families in Hanoi and Ho Chi Minh City, and helps schools and universities from abroad recruit in Vietnam.",
+    "studentDoor": { "who": "For students and parents", "label": "Find your school", "url": "/partners" },
+    "institutionDoor": { "who": "For admissions teams", "label": "Recruit in Vietnam", "url": "/institutions" }
+  },
+  "servicesIntro": {
+    "title": "Advice from shortlist to arrival",
+    "intro": "One counsellor stays with each student from the first conversation to the first week on campus. These are the services families ask us for most.",
+    "imageUrl": "/img/sample/students.jpg"
+  },
+  "institutions": {
+    "title": "Recruiting in Vietnam? Start with the people who know the market.",
+    "lead": "Capstone has worked with admissions teams since 2009. We put your school in front of students who are ready to apply, and we stay on the ground after you fly home.",
+    "items": [
+      { "icon": "users", "title": "Exhibit at our fairs", "text": "Meet pre-screened students and parents at our fairs in Hanoi and Ho Chi Minh City." },
+      { "icon": "presentation", "title": "Host an info session", "text": "A dedicated session for your school, with an audience we invite and follow up with." },
+      { "icon": "badge", "title": "In-country representation", "text": "Our counsellors represent your programmes year-round and handle applicant questions." },
+      { "icon": "chart", "title": "Market insight", "text": "Data on demand, pricing and visa trends to plan your Vietnam strategy." }
+    ]
+  }
+}

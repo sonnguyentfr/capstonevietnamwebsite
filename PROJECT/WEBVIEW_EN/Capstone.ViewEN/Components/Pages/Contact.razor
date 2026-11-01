@@ -1,0 +1,14 @@
+@page "/contact"
+
+<Seo Title="Contact us" Description="Contact Capstone Vietnam in Hanoi or Ho Chi Minh City. Book a consultation or talk to our partnerships team." />
+
+<PageHero Title="Contact Capstone Vietnam"
+          Lead="Students, parents and institutions: send us a message and the right team will get back to you."
+          Crumbs="@(PageHero.Trail(new PageHero.Crumb("Contact")))" />
+
+<ConsultSection Offices="Site.Offices" Title="Send us a message"
+                Intro="@($"Prefer to talk? Call our hotline on {Site.Hotline}.")" />
+
+@code {
+    [CascadingParameter] public SiteDto Site { get; set; } = new();
+}

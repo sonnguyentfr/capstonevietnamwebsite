@@ -1,0 +1,73 @@
+@using Microsoft.AspNetCore.WebUtilities
+@inject NavigationManager Nav
+
+@if (TotalPages > 1)
+{
+    <nav class="pagination" aria-label="Pages">
+        @if (Page > 1)
+        {
+            <a href="@UrlFor(Page - 1)" rel="prev">Previous</a>
+        }
+        else
+        {
+            <span class="is-disabled" aria-hidden="true">Previous</span>
+        }
+
+        @foreach (var p in Window())
+        {
+            if (p is null)
+            {
+                <span aria-hidden="true">…</span>
+            }
+            else if (p == Page)
+            {
+                <span aria-current="page">@p</span>
+            }
+            else
+            {
+                <a href="@UrlFor(p.Value)">@p</a>
+            }
+        }
+
+        @if (Page < TotalPages)
+        {
+            <a href="@UrlFor(Page + 1)" rel="next">Next</a>
+        }
+        else
+        {
+            <span class="is-disabled" aria-hidden="true">Next</span>
+        }
+    </nav>
+}
+
+@code {
+    [Parameter] public int Page { get; set; } = 1;
+    [Parameter] public int TotalPages { get; set; }
+
+    /// <summary>Keeps the current query string (filters) and only changes ?page=.</summary>
+    private string UrlFor(int page)
+    {
+        var uri = new Uri(Nav.Uri);
+        var query = QueryHelpers.ParseQuery(uri.Query)
+            .Where(kv => !kv.Key.Equals("page", StringComparison.OrdinalIgnoreCase))
+            .ToDictionary(kv => kv.Key, kv => (string?)kv.Value.ToString());
+        if (page > 1) query["page"] = page.ToString();
+        return QueryHelpers.AddQueryString(uri.AbsolutePath, query);
+    }
+
+    /// <summary>1 … 4 5 6 … 12</summary>
+    private IEnumerable<int?> Window()
+    {
+        var pages = new SortedSet<int> { 1, TotalPages };
+        for (var i = Page - 1; i <= Page + 1; i++)
+            if (i >= 1 && i <= TotalPages) pages.Add(i);
+
+        int? previous = null;
+        foreach (var p in pages)
+        {
+            if (previous is not null && p - previous > 1) yield return null;
+            yield return p;
+            previous = p;
+        }
+    }
+}

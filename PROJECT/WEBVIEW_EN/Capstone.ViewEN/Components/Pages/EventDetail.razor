@@ -1,0 +1,176 @@
+@page "/events/{SlugAndId}"
+@inject IContentApi Api
+@inject NavigationManager Nav
+
+@if (_event is not null)
+{
+    <Seo Title="@_event.Title" Description="@_event.Summary" Image="@_event.CoverUrl" OgType="article"
+         CanonicalPath="@Links.Event(_event)" JsonLd="_ld" />
+
+    <PageHero Title="@_event.Title" Lead="@_event.Summary"
+              Crumbs="@(PageHero.Trail(new PageHero.Crumb("Events and fairs", "/events"), new PageHero.Crumb(_event.Title)))">
+        <div class="school-tile__meta" style="margin-top:20px">
+            <span class="chip">@EventTypes.Label(_event.Type)</span>
+            @if (IsPast)
+            {
+                <span class="chip">Past event</span>
+            }
+        </div>
+    </PageHero>
+
+    <section class="section">
+        <div class="container detail">
+            <article>
+                @if (!string.IsNullOrWhiteSpace(_event.CoverUrl))
+                {
+                    <div class="news-feature__img" style="margin-bottom:32px"><img src="@_event.CoverUrl" alt="" /></div>
+                }
+
+                @if (_event.Sessions.Count > 0)
+                {
+                    <h2 class="section__title" style="font-size:var(--fs-xl);margin-bottom:16px">Dates and venues</h2>
+                    <ul class="agenda" style="margin-bottom:40px">
+                        @foreach (var s in _event.Sessions)
+                        {
+                            <li class="agenda__row">
+                                <div class="agenda__date"><b class="tabular">@Fmt.Day(s.StartAt)</b><span>@Fmt.MonthYear(s.StartAt)</span></div>
+                                <div>
+                                    <div class="agenda__type">@Fmt.Weekday(s.StartAt), @Fmt.TimeRange(s.StartAt, s.EndAt)</div>
+                                    <h3 class="agenda__title">@s.City</h3>
+                                </div>
+                                <div class="agenda__place"><Icon Name="pin" /><span>@s.Venue</span></div>
+                            </li>
+                        }
+                    </ul>
+                }
+
+                <div class="prose">
+                    @if (!string.IsNullOrWhiteSpace(_event.BodyHtml))
+                    {
+                        @((MarkupString)_event.BodyHtml)
+                    }
+                </div>
+
+                @if (_event.Schools.Count > 0)
+                {
+                    <h2 class="section__title" style="font-size:var(--fs-xl);margin:48px 0 20px">Schools taking part</h2>
+                    <div class="school-grid">
+                        @foreach (var s in _event.Schools)
+                        {
+                            <SchoolTile School="s" />
+                        }
+                    </div>
+                }
+            </article>
+
+            <aside class="aside-card" aria-label="Event details" id="register">
+                <dl class="facts">
+                    <div><dt>When</dt><dd>@Fmt.DateRange(_event.StartAt, _event.EndAt)</dd></div>
+                    <div><dt>Where</dt><dd>@(_event.IsOnline ? "Online" : _event.City)</dd></div>
+                    @if (!string.IsNullOrWhiteSpace(_event.Venue))
+                    {
+                        <div><dt>Venue</dt><dd>@_event.Venue</dd></div>
+                    }
+                    @if (_event.SchoolCount > 1)
+                    {
+                        <div><dt>Schools</dt><dd>@_event.SchoolCount confirmed</dd></div>
+                    }
+                    <div><dt>Entry</dt><dd>Free for students and parents</dd></div>
+                </dl>
+                @if (IsPast)
+                {
+                    <p style="font-size:var(--fs-s);color:var(--ink-2)">This event has ended.</p>
+                    <a class="btn btn--outline btn--block" href="/events">See upcoming events</a>
+                }
+                else
+                {
+                    if (!string.IsNullOrWhiteSpace(_event.StudentRegistrationUrl) && !_event.StudentRegistrationUrl.Contains("#register"))
+                    {
+                        <a class="btn btn--primary btn--block" href="@_event.StudentRegistrationUrl">Register to attend</a>
+                    }
+                    else
+                    {
+                        <a class="btn btn--primary btn--block" href="#consult">Register to attend</a>
+                    }
+                    if (!string.IsNullOrWhiteSpace(_event.ExhibitorRegistrationUrl))
+                    {
+                        <a class="btn btn--outline btn--block" href="@_event.ExhibitorRegistrationUrl">Book an exhibitor table</a>
+                    }
+                }
+            </aside>
+        </div>
+    </section>
+
+    @if (!IsPast)
+    {
+        <ConsultSection Offices="Site.Offices" Title="Register for this event"
+                        Intro="Leave your details and we'll confirm your place by email." />
+    }
+}
+
+@code {
+    [Parameter] public string SlugAndId { get; set; } = string.Empty;
+    [CascadingParameter] public SiteDto Site { get; set; } = new();
+
+    private EventDetailDto? _event;
+    private object? _ld;
+
+    private bool IsPast => _event is not null && (_event.EndAt ?? _event.StartAt) < DateTimeOffset.Now;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (!SlugId.TryParse(SlugAndId, out var slug, out var id))
+        {
+            Nav.NotFound();
+            return;
+        }
+
+        var ev = await Api.GetEventAsync(id);
+        _event = ev;
+        if (ev is null)
+        {
+            Nav.NotFound();
+            return;
+        }
+
+        if (!string.Equals(slug, ev.Slug, StringComparison.OrdinalIgnoreCase))
+        {
+            Nav.NavigateTo(Links.Event(ev), replace: true);
+            return;
+        }
+
+        // schema.org/Event → eligible for Google event rich results.
+        _ld = new Dictionary<string, object?>
+        {
+            ["@context"] = "https://schema.org",
+            ["@type"] = ev.Type == EventTypes.Fair ? "EducationEvent" : "Event",
+            ["name"] = ev.Title,
+            ["description"] = ev.Summary,
+            ["startDate"] = ev.StartAt.ToString("o"),
+            ["endDate"] = (ev.EndAt ?? ev.StartAt).ToString("o"),
+            ["eventAttendanceMode"] = ev.IsOnline ? "https://schema.org/OnlineEventAttendanceMode" : "https://schema.org/OfflineEventAttendanceMode",
+            ["eventStatus"] = "https://schema.org/EventScheduled",
+            ["isAccessibleForFree"] = true,
+            ["image"] = ev.CoverUrl,
+            ["organizer"] = new Dictionary<string, object?> { ["@type"] = "Organization", ["name"] = "Capstone Vietnam", ["url"] = "https://en.capstonevietnam.com" },
+            ["location"] = BuildLocation(ev)
+        };
+    }
+
+    private static object? BuildLocation(EventDetailDto ev)
+    {
+        if (ev.IsOnline)
+            return new Dictionary<string, object?> { ["@type"] = "VirtualLocation", ["url"] = ev.StudentRegistrationUrl };
+
+        static Dictionary<string, object?> Place(string? name, string? city) => new()
+        {
+            ["@type"] = "Place",
+            ["name"] = name ?? city,
+            ["address"] = new Dictionary<string, object?> { ["@type"] = "PostalAddress", ["addressLocality"] = city, ["addressCountry"] = "VN" }
+        };
+
+        return ev.Sessions.Count > 0
+            ? (object)ev.Sessions.Select(s => Place(s.Venue, s.City)).ToArray()
+            : Place(ev.Venue, ev.City);
+    }
+}

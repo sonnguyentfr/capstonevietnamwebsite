@@ -1,0 +1,82 @@
+[
+  {
+    "id": 1,
+    "slug": "study-abroad-advising",
+    "icon": "compass",
+    "title": "Study abroad advising",
+    "summary": "Choose a country, a school and a programme that fit your goals, grades and budget.",
+    "audience": "students",
+    "order": 1,
+    "bodyHtml": "<p>A counsellor looks at your grades, English level, budget and goals, then builds a shortlist with you.</p><h2>What's included</h2><ul><li>Profile assessment and study plan</li><li>Shortlist of schools across countries</li><li>Application timeline and document checklist</li><li>Essay and personal statement review</li><li>Scholarship and financial aid search</li></ul><h2>How it works</h2><ol><li>Book a free first consultation.</li><li>Agree a plan and timeline with your counsellor.</li><li>Work through each step together until you arrive.</li></ol>"
+  },
+  {
+    "id": 2,
+    "slug": "top-university-admissions",
+    "icon": "graduation",
+    "title": "Top university admissions",
+    "summary": "Essays, activities and interview preparation for highly selective universities.",
+    "audience": "students",
+    "order": 2,
+    "bodyHtml": "<p>For students aiming at highly selective universities, we plan the application one to two years ahead.</p><h2>What's included</h2><ul><li>Extracurricular and summer programme planning</li><li>Test planning (SAT, ACT, IELTS, TOEFL)</li><li>Essay brainstorming and editing</li><li>Interview practice</li><li>Early decision and early action strategy</li></ul><h2>How it works</h2><ol><li>Book a free first consultation.</li><li>Agree a plan and timeline with your counsellor.</li><li>Work through each step together until you arrive.</li></ol>"
+  },
+  {
+    "id": 3,
+    "slug": "graduate-school-advising",
+    "icon": "award",
+    "title": "Graduate school and scholarships",
+    "summary": "Master's and PhD applications, funding searches and scholarship essays.",
+    "audience": "students",
+    "order": 3,
+    "bodyHtml": "<p>Master's and PhD applicants get help choosing programmes and building a funded application.</p><h2>What's included</h2><ul><li>Programme and supervisor research</li><li>Statement of purpose and CV review</li><li>Recommendation letter guidance</li><li>Assistantship and scholarship applications</li></ul><h2>How it works</h2><ol><li>Book a free first consultation.</li><li>Agree a plan and timeline with your counsellor.</li><li>Work through each step together until you arrive.</li></ol>"
+  },
+  {
+    "id": 4,
+    "slug": "career-orientation",
+    "icon": "briefcase",
+    "title": "Career and major orientation",
+    "summary": "Aptitude assessment and one-to-one sessions to pick a major with a future.",
+    "audience": "students",
+    "order": 4,
+    "bodyHtml": "<p>Before choosing a major, students take an aptitude assessment and meet a counsellor to talk through the results.</p><h2>What's included</h2><ul><li>Aptitude and interest assessment</li><li>One-to-one feedback session</li><li>Major and career pathway report</li><li>Advice on matching schools</li></ul><h2>How it works</h2><ol><li>Book a free first consultation.</li><li>Agree a plan and timeline with your counsellor.</li><li>Work through each step together until you arrive.</li></ol>"
+  },
+  {
+    "id": 5,
+    "slug": "student-visa",
+    "icon": "filecheck",
+    "title": "Student and visitor visas",
+    "summary": "Document checks and mock interviews for F-1, UK Student, Canadian and Australian visas.",
+    "audience": "students",
+    "order": 5,
+    "bodyHtml": "<p>Visa applications are checked line by line and students practise the interview until they are confident.</p><h2>What's included</h2><ul><li>Document checklist per country</li><li>Financial evidence review</li><li>Mock visa interviews</li><li>Help booking appointments</li></ul><h2>How it works</h2><ol><li>Book a free first consultation.</li><li>Agree a plan and timeline with your counsellor.</li><li>Work through each step together until you arrive.</li></ol>"
+  },
+  {
+    "id": 6,
+    "slug": "housing-and-arrival",
+    "icon": "home",
+    "title": "Housing and arrival",
+    "summary": "Host families, dormitories and airport pick-up arranged before you fly.",
+    "audience": "students",
+    "order": 6,
+    "bodyHtml": "<p>We arrange where students live and how they get there, so the first week is about settling in.</p><h2>What's included</h2><ul><li>Host family or dormitory placement</li><li>Airport pick-up</li><li>Pre-departure briefing for students and parents</li><li>Check-in after arrival</li></ul><h2>How it works</h2><ol><li>Book a free first consultation.</li><li>Agree a plan and timeline with your counsellor.</li><li>Work through each step together until you arrive.</li></ol>"
+  },
+  {
+    "id": 7,
+    "slug": "tuition-transfer",
+    "icon": "plane",
+    "title": "Tuition transfer",
+    "summary": "Pay deposits and tuition abroad safely, with the paperwork your bank asks for.",
+    "audience": "students",
+    "order": 7,
+    "bodyHtml": "<p>Families pay deposits and tuition through partner banks with the paperwork schools and banks require.</p><h2>What's included</h2><ul><li>Payment instructions per school</li><li>Document preparation for the bank</li><li>Payment confirmation follow-up</li></ul><h2>How it works</h2><ol><li>Book a free first consultation.</li><li>Agree a plan and timeline with your counsellor.</li><li>Work through each step together until you arrive.</li></ol>"
+  },
+  {
+    "id": 8,
+    "slug": "immigration-and-settlement",
+    "icon": "globe",
+    "title": "Immigration and settlement",
+    "summary": "Advice on long-term pathways, including EB-5, for families planning to settle abroad.",
+    "audience": "students",
+    "order": 8,
+    "bodyHtml": "<p>Families planning to settle abroad get an overview of the pathways that fit their situation.</p><h2>What's included</h2><ul><li>Overview of long-term pathways, including EB-5</li><li>Referral to licensed immigration lawyers</li><li>Education planning for children</li></ul><h2>How it works</h2><ol><li>Book a free first consultation.</li><li>Agree a plan and timeline with your counsellor.</li><li>Work through each step together until you arrive.</li></ol>"
+  }
+]

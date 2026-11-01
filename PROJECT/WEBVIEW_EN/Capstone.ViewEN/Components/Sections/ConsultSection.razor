@@ -1,0 +1,32 @@
+<section class="section section--mist" id="consult" aria-labelledby="consult-title">
+    <div class="container consult__grid">
+        <div>
+            <h2 class="section__title" id="consult-title">@Title</h2>
+            <p class="section__intro">@Intro</p>
+            @if (Offices.Count > 0)
+            {
+                <div class="consult__offices">
+                    @foreach (var o in Offices)
+                    {
+                        <div class="office">
+                            <h3>@o.City</h3>
+                            <p>@o.Address</p>
+                            @if (!string.IsNullOrWhiteSpace(o.Phone))
+                            {
+                                <a href="tel:@o.Phone">@o.Phone</a>
+                            }
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+        <LeadForm DefaultRole="@DefaultRole" />
+    </div>
+</section>
+
+@code {
+    [Parameter] public IReadOnlyList<OfficeDto> Offices { get; set; } = [];
+    [Parameter] public string Title { get; set; } = "Talk to a counsellor";
+    [Parameter] public string Intro { get; set; } = "Tell us what you're planning. A counsellor from the nearest office will get back to you.";
+    [Parameter] public string DefaultRole { get; set; } = "student";
+}

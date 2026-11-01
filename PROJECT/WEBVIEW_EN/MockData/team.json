@@ -1,0 +1,53 @@
+[
+  {
+    "id": 1,
+    "name": "Dr. Mark A. Ashwill",
+    "title": "Managing Director and Co-Founder",
+    "bio": "An international educator and education entrepreneur in the public, non-profit and private sectors in three countries.",
+    "photoUrl": "https://capstonevietnam-fileserver.nvcms.net/CAPSTONEEN/IMAGES/2020/08/202008100507CHimg_7347-rev.jpg?width=240&height=240&mode=crop&anchor=topcenter",
+    "profileUrl": "https://markashwill.com/abouteng/",
+    "order": 1
+  },
+  {
+    "id": 2,
+    "name": "Pham Minh Hang",
+    "title": "Deputy Director and Co-Founder",
+    "bio": "Led in the non-profit sector for many years before co-founding Capstone Vietnam in 2009.",
+    "order": 2
+  },
+  {
+    "id": 3,
+    "name": "Taylor Smith",
+    "title": "Senior Educational Advisor",
+    "bio": "About 50 years in education, and still values daily contact with students and colleagues.",
+    "order": 3
+  },
+  {
+    "id": 4,
+    "name": "Tram Le",
+    "title": "Office Manager",
+    "bio": "More than 20 years in education, guided by the belief that education shapes children's futures.",
+    "order": 4
+  },
+  {
+    "id": 5,
+    "name": "Thanh Phan",
+    "title": "Educational Advisor",
+    "bio": "Builds best-fit study plans around each student's academics, finances and career goals.",
+    "order": 5
+  },
+  {
+    "id": 6,
+    "name": "Uyen Hoang",
+    "title": "Educational Advisor",
+    "bio": "Holds a master's in psychology and is pursuing a Ph.D. in cognitive psychology at the University of Oklahoma.",
+    "order": 6
+  },
+  {
+    "id": 7,
+    "name": "Hung Ha",
+    "title": "Educational Advisor",
+    "bio": "Alumnus of a Hanoi specialised high school, now studying at Williams College.",
+    "order": 7
+  }
+]

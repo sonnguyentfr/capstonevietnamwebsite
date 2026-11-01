@@ -1,0 +1,22 @@
+[
+  {
+    "slug": "about",
+    "title": "About Capstone Vietnam",
+    "summary": "A higher education consultancy founded in 2009, with offices in Hanoi and Ho Chi Minh City.",
+    "imageUrl": "/img/sample/students.jpg",
+    "bodyHtml": "<p>Capstone Vietnam is a higher education and private sector consultancy. Our first clients, in March 2010, were The University of Chicago and Hobsons.</p><h2>What we do</h2><p>We advise Vietnamese students and families on studying abroad, and we help schools, colleges and universities from around the world recruit in Vietnam.</p><h2 id=\"team\">Our team</h2><p>Team profiles load from the CMS.</p><h2 id=\"careers\">Careers</h2><p>Open positions load from the CMS.</p>"
+  },
+  {
+    "slug": "institutions",
+    "title": "Recruit Vietnamese students with Capstone",
+    "summary": "Fairs, info sessions and year-round representation for schools, colleges and universities.",
+    "imageUrl": "/img/sample/event-1.jpg",
+    "bodyHtml": "<p>Detailed packages, pricing and the fair calendar for institutions load from the CMS.</p><h2 id=\"exhibit\">Exhibit at a fair</h2><p>Book a table at our next education fair in Hanoi and Ho Chi Minh City.</p>"
+  },
+  {
+    "slug": "privacy",
+    "title": "Privacy policy",
+    "summary": "How Capstone Vietnam collects and uses your personal data.",
+    "bodyHtml": "<p>Policy text loads from the CMS.</p>"
+  }
+]

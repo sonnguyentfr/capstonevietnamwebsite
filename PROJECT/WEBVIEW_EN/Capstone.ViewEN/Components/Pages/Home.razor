@@ -1,0 +1,93 @@
+@page "/"
+@inject IContentApi Api
+@inject IOptions<SiteOptions> SiteOpts
+
+<Seo Title="Capstone Vietnam"
+     Description="Study abroad advice for Vietnamese students and families, education fairs in Hanoi and Ho Chi Minh City, and student recruitment support for schools and universities."
+     CanonicalPath="/"
+     VietnameseUrl="@Site.VietnameseSiteUrl"
+     JsonLd="_orgLd" />
+
+<HeroSection Hero="_home.Hero" Countries="_countries" />
+
+@if (_fair is not null)
+{
+    <NextFair Event="_fair" />
+}
+
+<SchoolFinder Countries="_countries" />
+<DestinationsSection Destinations="_destinations" />
+<PartnersSection Countries="_countries" Schools="_schools" />
+<NewsSection Items="_news" Scholarships="_scholarships" />
+<ServicesSection Intro="_home.ServicesIntro" Services="_services" />
+<EventsSection Events="_events" />
+<InstitutionsSection Block="_home.Institutions" />
+<VoicesSection Leader="Site.Leader" Stories="_stories" />
+<ConsultSection Offices="Site.Offices" />
+
+@code {
+    [CascadingParameter] public SiteDto Site { get; set; } = new();
+
+    private HomeContentDto _home = new();
+    private IReadOnlyList<CountryDto> _countries = [];
+    private IReadOnlyList<SchoolDto> _schools = [];
+    private IReadOnlyList<ServiceDto> _services = [];
+    private IReadOnlyList<EventDto> _events = [];
+    private IReadOnlyList<TestimonialDto> _stories = [];
+    private IReadOnlyList<NewsDto> _news = [];
+    private IReadOnlyList<NewsDto> _scholarships = [];
+    private IReadOnlyList<DestinationDto> _destinations = [];
+    private EventDto? _fair;
+    private object? _orgLd;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Independent calls run in parallel (9 API calls); each falls back to empty on failure.
+        var home = Api.GetHomeAsync();
+        var countries = Api.GetCountriesAsync();
+        var schools = Api.GetSchoolsAsync(new SchoolQuery { Featured = true, PageSize = 8 });
+        var services = Api.GetServicesAsync();
+        var events = Api.GetEventsAsync(new EventQuery { When = "upcoming", PageSize = 5 });
+        var stories = Api.GetTestimonialsAsync(6);
+        var news = Api.GetNewsAsync(new NewsQuery { PageSize = 5 });
+        var scholarships = Api.GetNewsAsync(new NewsQuery { Category = "scholarships", PageSize = 4 });
+        var destinations = Api.GetDestinationsAsync();
+
+        await Task.WhenAll(home, countries, schools, services, events, stories, news, scholarships, destinations);
+
+        _home = home.Result;
+        _countries = countries.Result;
+        _schools = schools.Result.Items;
+        _services = services.Result.Where(s => s.Audience != "institutions").ToList();
+        _events = events.Result.Items;
+        _stories = stories.Result;
+        _news = news.Result.Items;
+        _scholarships = scholarships.Result.Items;
+        _destinations = destinations.Result;
+        _fair = _events.FirstOrDefault(e => e.IsFeatured) ?? _events.FirstOrDefault(e => e.Type == EventTypes.Fair);
+    }
+
+    protected override void OnParametersSet()
+    {
+        var baseUrl = SiteOpts.Value.BaseUrl.TrimEnd('/');
+        _orgLd = new Dictionary<string, object?>
+        {
+            ["@context"] = "https://schema.org",
+            ["@type"] = "EducationalOrganization",
+            ["name"] = Site.Name,
+            ["url"] = baseUrl + "/",
+            ["logo"] = baseUrl + Site.HeaderLogo,
+            ["foundingDate"] = "2009",
+            ["telephone"] = Site.Hotline,
+            ["email"] = Site.Email,
+            ["sameAs"] = Site.Socials.Select(s => s.Url).ToArray(),
+            ["address"] = Site.Offices.Select(o => new Dictionary<string, object?>
+            {
+                ["@type"] = "PostalAddress",
+                ["streetAddress"] = o.Address,
+                ["addressLocality"] = o.City,
+                ["addressCountry"] = "VN"
+            }).ToArray()
+        };
+    }
+}

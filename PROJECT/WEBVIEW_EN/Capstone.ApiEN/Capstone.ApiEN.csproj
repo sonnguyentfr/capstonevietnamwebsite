@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>Capstone.ApiEN</RootNamespace>
+    <AssemblyName>Capstone.ApiEN</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Capstone.Content\Capstone.Content.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Same versions as NVCMS.WebView.Data, so they are already in the local NuGet cache. -->
+    <PackageReference Include="Dapper" Version="2.1.66" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="6.0.2" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Sample data served when Content:DataSource = "Json"; CMS blocks (site, home, pages, services,
+         testimonials) are always read from here until they have database tables. -->
+    <Content Include="..\MockData\**\*.json" LinkBase="MockData" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,54 @@
+[
+  {
+    "slug": "about",
+    "section": "about",
+    "order": 1,
+    "title": "About Capstone Vietnam",
+    "summary": "A higher education consultancy founded in 2009, with offices in Hanoi and Ho Chi Minh City.",
+    "imageUrl": "/img/sample/students.jpg",
+    "bodyHtml": "<p>Capstone Vietnam is a human resource development company offering education and training solutions: institutional services, overseas study, skills training, English language testing and education products. Our first higher education and private sector clients, in March 2010, were The University of Chicago and Hobsons.</p><h2>Reaching new heights</h2><p>A capstone is a high point. Our mission is to help clients tap their potential and make a lasting difference for individuals, organisations and society: to do well, and to do good.</p><h2>How we advise students</h2><p>We match each student's background, interests, finances and goals with suitable colleges and universities, and with boarding schools at secondary level. We work only with regionally accredited U.S. institutions and officially accredited schools in other countries, and we explain our services and fees in full.</p>"
+  },
+  {
+    "slug": "vision-mission-values",
+    "section": "about",
+    "order": 2,
+    "title": "Vision, mission and values",
+    "summary": "What we aim for and how we work.",
+    "bodyHtml": "<h2>Vision</h2><p>To be the leading human resource development company in Vietnam, recognised for creative education and training solutions and excellent service.</p><h2>Mission</h2><p>To create opportunities that help individuals and institutions succeed: helping people reach their study and career ambitions, helping institutions carry out their international education plans in Vietnam and abroad, and making a lasting, positive difference.</p><h2>Values</h2><ul><li><strong>Integrity.</strong> The highest ethical standards in everything we do; openness is both right and good business.</li><li><strong>Learning.</strong> Continuous personal, academic and professional growth, and listening to client feedback.</li><li><strong>Global awareness.</strong> Helping clients build international and cultural perspectives.</li><li><strong>Innovation.</strong> Staying adaptable and willing to reinvent ourselves.</li><li><strong>Results.</strong> Caring as much about the outcome as the process, at every stage.</li></ul>"
+  },
+  {
+    "slug": "why-capstone",
+    "section": "about",
+    "order": 3,
+    "title": "Why Capstone",
+    "summary": "Bilingual, bicultural and experienced.",
+    "bodyHtml": "<h2>Quality pledge</h2><p>We aim to benefit everyone we serve, from individuals to institutions. A commitment to excellence and superior service helps our clients succeed personally, academically and professionally.</p><h2>Bilingual, bicultural, experienced</h2><p>Our founder and staff hold advanced degrees from U.S. universities and have decades of senior experience in higher education, non-profit and private sectors in the United States, Germany and Vietnam.</p><h2>Company profile</h2><p>Download our two-page company profile (PDF link loads from the CMS).</p>"
+  },
+  {
+    "slug": "careers",
+    "section": "about",
+    "order": 5,
+    "title": "Careers",
+    "summary": "Join a bilingual team that helps students reach their goals.",
+    "bodyHtml": "<h2>Open positions</h2><ul><li><strong>Marketing Executive</strong>, Hanoi or Ho Chi Minh City</li><li><strong>Educational Counsellor</strong>, Hanoi or Ho Chi Minh City</li></ul><p>Send your CV to <a href=\"mailto:info@capstonevietnam.com\">info@capstonevietnam.com</a>. Job descriptions load from the CMS.</p>"
+  },
+  {
+    "slug": "institutions",
+    "title": "Recruit Vietnamese students with Capstone",
+    "summary": "Fairs, info sessions and year-round representation for schools, colleges and universities.",
+    "imageUrl": "/img/sample/event-1.jpg",
+    "bodyHtml": "<p>Capstone has worked with higher education institutions since its first clients, The University of Chicago and Hobsons, in 2010. Full recruitment services are described on our Recruit in Vietnam site.</p><h2 id=\"exhibit\">Exhibit at a StudyGlobal fair</h2><p>Book a table at our next StudyGlobal education fair in Hanoi and Ho Chi Minh City. Packages and the fair calendar load from the CMS.</p>"
+  },
+  {
+    "slug": "privacy",
+    "title": "Privacy policy",
+    "summary": "How Capstone Vietnam collects and uses your personal data.",
+    "bodyHtml": "<p>Policy text migrates from the current site (privacy-policy.html).</p>"
+  },
+  {
+    "slug": "terms",
+    "title": "Terms of service",
+    "summary": "Terms for using this website and our services.",
+    "bodyHtml": "<p>Terms migrate from the current site (terms-of-service.html).</p>"
+  }
+]

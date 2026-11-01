@@ -1,0 +1,18 @@
+<div class="empty-state">
+    <h3>@Title</h3>
+    @if (!string.IsNullOrWhiteSpace(Text))
+    {
+        <p>@Text</p>
+    }
+    @if (!string.IsNullOrWhiteSpace(ActionUrl))
+    {
+        <a class="btn btn--outline" href="@ActionUrl">@ActionLabel</a>
+    }
+</div>
+
+@code {
+    [Parameter, EditorRequired] public string Title { get; set; } = string.Empty;
+    [Parameter] public string? Text { get; set; }
+    [Parameter] public string? ActionUrl { get; set; }
+    [Parameter] public string ActionLabel { get; set; } = "Clear filters";
+}

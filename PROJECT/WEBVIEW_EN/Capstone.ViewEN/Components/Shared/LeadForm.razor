@@ -1,0 +1,202 @@
+@using System.ComponentModel.DataAnnotations
+@using Microsoft.AspNetCore.WebUtilities
+@inject IContentApi Api
+@inject NavigationManager Nav
+
+@*
+    Consultation / partnership enquiry. Works with static SSR: the form posts back to the
+    current URL (enhanced, no full reload), is validated with DataAnnotations and sent to
+    POST {ContentApi}/leads. UTM parameters on the page URL are forwarded for GA4/CRM tracking.
+*@
+
+@if (_result?.Success == true)
+{
+    <div class="form-card" role="status">
+        <h3>Thanks, @(Model?.FullName). Your enquiry is with us.</h3>
+        <p class="section__intro">A counsellor will reply to @(Model?.Email) soon. If it's urgent, call our hotline.</p>
+    </div>
+}
+else
+{
+    <EditForm Model="Model" FormName="lead" OnValidSubmit="SubmitAsync" class="form-card" Enhance novalidate>
+        <DataAnnotationsValidator />
+        <div class="form-grid">
+            <fieldset class="field span-2">
+                <legend>I am</legend>
+                <InputRadioGroup @bind-Value="Model!.Role">
+                    <div class="segmented">
+                        @foreach (var (value, label) in Roles)
+                        {
+                            <label><InputRadio Value="value" /><span>@label</span></label>
+                        }
+                    </div>
+                </InputRadioGroup>
+            </fieldset>
+
+            <div class="field">
+                <label for="lead-name">Full name</label>
+                <InputText id="lead-name" class="input" @bind-Value="Model!.FullName" autocomplete="name" />
+                <ValidationMessage For="() => Model!.FullName" />
+            </div>
+            <div class="field">
+                <label for="lead-email">Email</label>
+                <InputText id="lead-email" type="email" class="input" @bind-Value="Model!.Email" autocomplete="email" />
+                <ValidationMessage For="() => Model!.Email" />
+            </div>
+            <div class="field">
+                <label for="lead-phone">Phone <span class="hint">(optional)</span></label>
+                <InputText id="lead-phone" type="tel" class="input" @bind-Value="Model!.Phone" autocomplete="tel" />
+                <ValidationMessage For="() => Model!.Phone" />
+            </div>
+            <div class="field">
+                <label for="lead-interest">I'm interested in</label>
+                <InputSelect id="lead-interest" class="select" @bind-Value="Model!.Interest">
+                    @foreach (var option in Interests)
+                    {
+                        <option value="@option">@option</option>
+                    }
+                </InputSelect>
+            </div>
+            <div class="field span-2">
+                <label for="lead-org">School or organisation <span class="hint">(institutions only)</span></label>
+                <InputText id="lead-org" class="input" @bind-Value="Model!.Organisation" autocomplete="organization" />
+            </div>
+            <div class="field span-2">
+                <label for="lead-msg">Message</label>
+                <InputTextArea id="lead-msg" class="textarea" @bind-Value="Model!.Message" placeholder="Which country or school are you considering? When do you plan to start?" />
+                <ValidationMessage For="() => Model!.Message" />
+            </div>
+
+            @* Honeypot: hidden from people, filled in by bots. *@
+            <div class="hp-field" aria-hidden="true">
+                <label for="lead-website">Website</label>
+                <InputText id="lead-website" @bind-Value="Model!.Website" tabindex="-1" autocomplete="off" />
+            </div>
+
+            <div class="span-2">
+                <label class="check">
+                    <InputCheckbox @bind-Value="Model!.Consent" />
+                    <span>I agree that Capstone Vietnam may contact me about this enquiry, as described in the <a href="/privacy">privacy policy</a>.</span>
+                </label>
+                <ValidationMessage For="() => Model!.Consent" />
+            </div>
+
+            @if (_result is { Success: false })
+            {
+                <div class="form-status form-status--error span-2" role="alert">@_result.Message</div>
+            }
+
+            <div class="span-2">
+                <button class="btn btn--primary" type="submit">Send my enquiry</button>
+            </div>
+        </div>
+    </EditForm>
+}
+
+@code {
+    /// <summary>Pre-selects "From a school or university" (e.g. on /institutions).</summary>
+    [Parameter] public string DefaultRole { get; set; } = "student";
+    [Parameter] public string? DefaultInterest { get; set; }
+
+    /// <summary>Bound to the posted form on POST; null on the first GET.</summary>
+    [SupplyParameterFromForm(FormName = "lead")]
+    private LeadFormModel? Model { get; set; }
+
+    private LeadResult? _result;
+
+    private static readonly (string Value, string Label)[] Roles =
+    [
+        ("student", "A student"),
+        ("parent", "A parent"),
+        ("institution", "From a school or university")
+    ];
+
+    private static readonly string[] Interests =
+    [
+        "Study abroad advising",
+        "Top university admissions",
+        "Graduate school and scholarships",
+        "Career and major orientation",
+        "Visa support",
+        "Immigration and settlement",
+        "Exhibiting at a fair",
+        "Representation in Vietnam",
+        "Something else"
+    ];
+
+    protected override void OnInitialized()
+    {
+        if (Model is not null) return; // POST: keep what the visitor typed.
+
+        // First GET: apply defaults, also from ?role= in the URL (e.g. /contact?role=institution).
+        Model = new LeadFormModel();
+        var query = QueryHelpers.ParseQuery(new Uri(Nav.Uri).Query);
+        var role = query.TryGetValue("role", out var r) ? r.ToString() : null;
+        Model.Role = Roles.Any(x => x.Value == role) ? role! : DefaultRole;
+        Model.Interest = DefaultInterest ?? (Model.Role == "institution" ? "Exhibiting at a fair" : Interests[0]);
+
+        // Coming from a school page (/contact?school=...): start the message for them.
+        if (query.TryGetValue("school", out var school) && !string.IsNullOrWhiteSpace(school))
+            Model.Message = $"I'd like advice about applying to {school.ToString().Trim()}.";
+    }
+
+    private async Task SubmitAsync()
+    {
+        if (Model is null) return;
+        if (!string.IsNullOrEmpty(Model.Website))
+        {
+            // Bot: pretend it worked, send nothing.
+            _result = new LeadResult { Success = true };
+            return;
+        }
+
+        var uri = new Uri(Nav.Uri);
+        var query = QueryHelpers.ParseQuery(uri.Query);
+        string? Q(string key) => query.TryGetValue(key, out var v) ? v.ToString() : null;
+
+        _result = await Api.SubmitLeadAsync(new LeadRequest
+        {
+            Role = Model!.Role,
+            FullName = Model!.FullName.Trim(),
+            Email = Model!.Email.Trim(),
+            Phone = Model!.Phone?.Trim(),
+            Organisation = Model!.Organisation?.Trim(),
+            Interest = Model!.Interest,
+            Message = Model!.Message?.Trim(),
+            Consent = Model!.Consent,
+            SourceUrl = uri.GetLeftPart(UriPartial.Path),
+            UtmSource = Q("utm_source"),
+            UtmMedium = Q("utm_medium"),
+            UtmCampaign = Q("utm_campaign")
+        });
+    }
+
+    public sealed class LeadFormModel
+    {
+        public string Role { get; set; } = "student";
+
+        [Required(ErrorMessage = "Enter your full name.")]
+        [StringLength(120, ErrorMessage = "Use 120 characters or fewer.")]
+        public string FullName { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Enter your email so a counsellor can reply.")]
+        [EmailAddress(ErrorMessage = "Enter an email address like name@example.com.")]
+        public string Email { get; set; } = string.Empty;
+
+        [Phone(ErrorMessage = "Enter a phone number using digits, spaces or +.")]
+        public string? Phone { get; set; }
+
+        public string? Organisation { get; set; }
+
+        public string Interest { get; set; } = string.Empty;
+
+        [StringLength(2000, ErrorMessage = "Keep your message under 2,000 characters.")]
+        public string? Message { get; set; }
+
+        [Range(typeof(bool), "true", "true", ErrorMessage = "Tick the box so we're allowed to contact you.")]
+        public bool Consent { get; set; }
+
+        /// <summary>Honeypot.</summary>
+        public string? Website { get; set; }
+    }
+}

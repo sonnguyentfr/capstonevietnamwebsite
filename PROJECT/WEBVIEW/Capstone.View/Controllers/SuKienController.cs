@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using Capstone.View.Options;
 using NVCMS.WebView.Data.Common;
 using NVCMS.WebView.Data.Contracts.Service;
 using NVCMS.WebView.Data.ViewModels;
@@ -8,10 +10,12 @@ namespace Capstone.View.Controllers;
 public class SuKienController : Controller
 {
     private readonly IEventsService _events;
+    private readonly int _portalCrmId;
 
-    public SuKienController(IEventsService events)
+    public SuKienController(IEventsService events, IOptions<SiteSettings> siteOptions)
     {
         _events = events;
+        _portalCrmId = siteOptions.Value.PortalCRMId;
     }
 
     // GET /su-kien
@@ -19,7 +23,7 @@ public class SuKienController : Controller
     {
         var vm = new EventsPageViewModel
         {
-            Upcoming = await _events.GetActiveCatsWithEventsAsync(50),
+            Upcoming = await _events.GetActiveCatsWithEventsAsync(_portalCrmId),
             Past     = []
         };
         ViewData["TrangDanhMuc"] = "Hội thảo - Sự kiện";
@@ -30,7 +34,7 @@ public class SuKienController : Controller
     [HttpGet]
     public async Task<IActionResult> PastPaged(int page = 1, int pageSize = 24)
     {
-        var (items, total) = await _events.GetPastCatsPagedAsync(50, page, pageSize);
+        var (items, total) = await _events.GetPastCatsPagedAsync(_portalCrmId, page, pageSize);
         var list = items.Select(c => new
         {
             id       = c.Id,
@@ -48,7 +52,7 @@ public class SuKienController : Controller
     // GET /su-kien/{slug}-{id}
     public async Task<IActionResult> Detail(int id, string? slug)
     {
-        var vm = await _events.GetCatWithEventsAsync(id, 50);
+        var vm = await _events.GetCatWithEventsAsync(id, _portalCrmId);
         if (vm is null) return NotFound();
 
         var canonical = SlugHelper.ToSlug(vm.CatName);

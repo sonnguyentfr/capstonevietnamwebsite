@@ -1,6 +1,6 @@
 -- ============================================================
 -- SP: WebView_TuVan_Upsert
--- Database: CapstoneVietnam_old (CRM)
+-- Database: CapstoneVietNamCRM (CRM)
 -- Dùng cho form /dang-ky-tu-van trên website.
 --
 --   1. Tìm khách theo SĐT (ưu tiên) rồi tới Email.

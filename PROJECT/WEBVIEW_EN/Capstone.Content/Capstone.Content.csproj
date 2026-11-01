@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    Shared contract between the EN website (Capstone.ViewEN) and the EN content API (Capstone.ApiEN):
+    DTOs, the IContentApi interface and the JSON store that serves ../MockData.
+    Change a DTO here and both sides stay in sync.
+  -->
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>Capstone.Content</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Logging, hosting abstractions, System.Text.Json: no NuGet download needed. -->
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+</Project>

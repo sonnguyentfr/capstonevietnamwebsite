@@ -1,0 +1,39 @@
+@* "Search by course or university" from the old site, as a plain GET form to /partners. *@
+<section class="finder" aria-labelledby="finder-title">
+    <div class="container">
+        <h2 class="finder__title" id="finder-title">Find a school or university</h2>
+        <form class="finder__form" method="get" action="/partners" role="search">
+            <div class="field">
+                <label for="finder-q">School name or city</label>
+                <input id="finder-q" class="input" type="search" name="q" placeholder="e.g. Kentucky, Boston, Sheffield" />
+            </div>
+            <div class="field">
+                <label for="finder-country">Destination</label>
+                <select id="finder-country" class="select" name="country">
+                    <option value="">All destinations</option>
+                    @foreach (var c in Countries)
+                    {
+                        <option value="@c.Slug">@c.Name</option>
+                    }
+                </select>
+            </div>
+            <div class="field">
+                <label for="finder-level">Level</label>
+                <select id="finder-level" class="select" name="level">
+                    <option value="">All levels</option>
+                    @foreach (var l in Levels)
+                    {
+                        <option value="@l">@l</option>
+                    }
+                </select>
+            </div>
+            <button class="btn btn--navy" type="submit"><Icon Name="search" />Search schools</button>
+        </form>
+    </div>
+</section>
+
+@code {
+    [Parameter] public IReadOnlyList<CountryDto> Countries { get; set; } = [];
+
+    public static readonly string[] Levels = ["High school", "Community college", "College", "University", "Graduate school", "ESL", "Summer programme"];
+}

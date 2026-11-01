@@ -1,0 +1,101 @@
+@using System.Globalization
+@using System.Net
+@using System.Text
+@*
+    The face of a Dong Son bronze drum: a 14-point star at the centre, rings of
+    concentric circles and ladder ticks around it. In the hero the outer ring carries
+    the partner destinations with their school counts (data from /countries).
+    Drawn in code so it stays crisp at any size and needs no image request.
+*@
+<div class="@Class" aria-hidden="@(Labels.Count == 0 ? "true" : null)">
+    @((MarkupString)Svg)
+</div>
+
+@code {
+    [Parameter] public IReadOnlyList<DrumLabel> Labels { get; set; } = [];
+    [Parameter] public string? Class { get; set; }
+    /// <summary>Prefix for path ids; must be unique if several drums with labels share a page.</summary>
+    [Parameter] public string IdPrefix { get; set; } = "drum";
+
+    public sealed record DrumLabel(string Text, int? Count);
+
+    private const string Bronze = "#c39a4f";
+    private static string F(double v) => v.ToString("0.##", CultureInfo.InvariantCulture);
+    private static double Rad(double deg) => deg * Math.PI / 180d;
+
+    private string Svg => Build();
+
+    private string Build()
+    {
+        var sb = new StringBuilder(16_000);
+        var label = Labels.Count > 0
+            ? "Capstone partner destinations: " + string.Join(", ", Labels.Select(l => l.Count is null ? l.Text : $"{l.Text}, {l.Count} schools"))
+            : null;
+        sb.Append("<svg viewBox=\"-300 -300 600 600\"")
+          .Append(label is null ? " aria-hidden=\"true\">" : $" role=\"img\" aria-label=\"{WebUtility.HtmlEncode(label)}\">");
+
+        sb.Append($"<circle r=\"292\" fill=\"none\" stroke=\"{Bronze}\" stroke-opacity=\".25\"/>");
+        sb.Append($"<circle r=\"276\" fill=\"none\" stroke=\"{Bronze}\" stroke-opacity=\".35\" stroke-dasharray=\"2 6\"/>");
+
+        // Outer ring: destination labels, each on its own arc so the text always reads upright.
+        var n = Labels.Count;
+        for (var i = 0; i < n; i++)
+        {
+            const double r = 250;
+            var a = -90 + i * 360d / n;
+            var span = 360d / n / 2 - 4;
+            var top = Math.Sin(Rad(a)) < 0.2;
+            var (a1, a2) = top ? (a - span, a + span) : (a + span, a - span);
+            var id = $"{IdPrefix}-l{i}";
+            sb.Append($"<path id=\"{id}\" d=\"M{F(r * Math.Cos(Rad(a1)))} {F(r * Math.Sin(Rad(a1)))} A{F(r)} {F(r)} 0 0 {(top ? 1 : 0)} {F(r * Math.Cos(Rad(a2)))} {F(r * Math.Sin(Rad(a2)))}\" fill=\"none\"/>");
+            sb.Append($"<text class=\"drum__label\" dy=\"5\"><textPath href=\"#{id}\" startOffset=\"50%\" text-anchor=\"middle\">{WebUtility.HtmlEncode(Labels[i].Text)}");
+            if (Labels[i].Count is { } c)
+                sb.Append($" <tspan class=\"drum__count\">{c.ToString(CultureInfo.InvariantCulture)}</tspan>");
+            sb.Append("</textPath></text>");
+
+            var b = Rad(a + 360d / n / 2);
+            sb.Append($"<rect x=\"-4\" y=\"-4\" width=\"8\" height=\"8\" fill=\"{Bronze}\" transform=\"translate({F(r * Math.Cos(b))} {F(r * Math.Sin(b))}) rotate(45)\"/>");
+        }
+
+        sb.Append($"<circle r=\"226\" fill=\"none\" stroke=\"{Bronze}\" stroke-opacity=\".7\"/>");
+
+        // Ladder ticks — the only moving part (slow rotation, disabled for reduced motion).
+        sb.Append("<g class=\"drum__spin\">");
+        for (var i = 0; i < 120; i++)
+        {
+            var t = Rad(i * 3);
+            sb.Append($"<line x1=\"{F(206 * Math.Cos(t))}\" y1=\"{F(206 * Math.Sin(t))}\" x2=\"{F(220 * Math.Cos(t))}\" y2=\"{F(220 * Math.Sin(t))}\" stroke=\"{Bronze}\" stroke-opacity=\".75\" stroke-width=\"1.4\"/>");
+        }
+        sb.Append("</g>");
+
+        sb.Append($"<circle r=\"200\" fill=\"none\" stroke=\"{Bronze}\" stroke-opacity=\".7\"/>");
+
+        // Ring of concentric-circle motifs.
+        for (var i = 0; i < 30; i++)
+        {
+            var t = Rad(i * 12 + 6);
+            var (x, y) = (183 * Math.Cos(t), 183 * Math.Sin(t));
+            sb.Append($"<circle cx=\"{F(x)}\" cy=\"{F(y)}\" r=\"8\" fill=\"none\" stroke=\"{Bronze}\" stroke-opacity=\".8\"/><circle cx=\"{F(x)}\" cy=\"{F(y)}\" r=\"2.2\" fill=\"{Bronze}\"/>");
+        }
+        sb.Append($"<circle r=\"166\" fill=\"none\" stroke=\"{Bronze}\" stroke-opacity=\".7\"/>");
+
+        // 14-point sun star.
+        sb.Append("<polygon points=\"");
+        for (var i = 0; i < 28; i++)
+        {
+            var t = Rad(-90 + i * 360d / 28);
+            var r = i % 2 == 0 ? 150 : 30;
+            sb.Append(F(r * Math.Cos(t))).Append(',').Append(F(r * Math.Sin(t))).Append(' ');
+        }
+        sb.Append($"\" fill=\"{Bronze}\"/>");
+
+        for (var i = 0; i < 14; i++)
+        {
+            var t = Rad(-90 + (i + .5) * 360d / 14);
+            sb.Append($"<circle cx=\"{F(92 * Math.Cos(t))}\" cy=\"{F(92 * Math.Sin(t))}\" r=\"5\" fill=\"none\" stroke=\"{Bronze}\" stroke-opacity=\".6\"/>");
+        }
+        sb.Append($"<circle r=\"30\" fill=\"#15204d\" stroke=\"{Bronze}\" stroke-width=\"2\"/><circle r=\"11\" fill=\"{Bronze}\"/>");
+        sb.Append("</svg>");
+        return sb.ToString();
+    }
+}

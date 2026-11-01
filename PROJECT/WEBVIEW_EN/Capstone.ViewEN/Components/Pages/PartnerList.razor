@@ -1,0 +1,119 @@
+@page "/partners"
+@inject IContentApi Api
+
+<Seo Title="@SeoTitle" Description="Search Capstone's partner high schools, colleges and universities in the US, Canada, the UK, Australia, Europe and Asia." />
+
+<PageHero Title="Partner schools and universities"
+          Lead="Every school here works directly with Capstone. Our counsellors know their admissions teams, deadlines and scholarships."
+          Crumbs="@(PageHero.Trail(new PageHero.Crumb("Partner schools")))" />
+
+<section class="section">
+    <div class="container directory">
+        <form class="filters" method="get" action="/partners" role="search" aria-label="Filter partner schools">
+            <h2>Find a school</h2>
+            <div class="field">
+                <label for="f-q">School name or city</label>
+                <input id="f-q" class="input" type="search" name="q" value="@Q" placeholder="e.g. Sheffield" />
+            </div>
+            <div class="field">
+                <label for="f-country">Destination</label>
+                <select id="f-country" class="select" name="country">
+                    <option value="">All destinations</option>
+                    @foreach (var c in _countries)
+                    {
+                        <option value="@c.Slug" selected="@(c.Slug == Country)">@c.Name</option>
+                    }
+                </select>
+            </div>
+            <div class="field">
+                <label for="f-level">Level</label>
+                <select id="f-level" class="select" name="level">
+                    <option value="">All levels</option>
+                    @foreach (var l in Levels)
+                    {
+                        <option value="@l" selected="@(string.Equals(l, Level, StringComparison.OrdinalIgnoreCase))">@l</option>
+                    }
+                </select>
+            </div>
+            <div class="filters__actions">
+                <button class="btn btn--navy" type="submit"><Icon Name="search" />Search</button>
+                @if (HasFilters)
+                {
+                    <a class="btn btn--outline" href="/partners">Clear</a>
+                }
+            </div>
+        </form>
+
+        <div>
+            <div class="result-bar" aria-live="polite">
+                <span><strong>@_result.Total</strong> @(_result.Total == 1 ? "school" : "schools")@(HasFilters ? " match your filters" : "")</span>
+            </div>
+
+            @if (_result.Items.Count > 0)
+            {
+                <div class="school-grid">
+                    @foreach (var s in _result.Items)
+                    {
+                        <SchoolTile School="s" />
+                    }
+                </div>
+                <Pagination Page="_result.Page" TotalPages="_result.TotalPages" />
+            }
+            else
+            {
+                <EmptyState Title="No schools match these filters"
+                            Text="Try another destination or level, or ask a counsellor: we work with more schools than are listed here."
+                            ActionUrl="/partners" ActionLabel="Clear filters" />
+            }
+        </div>
+    </div>
+</section>
+
+<section class="cta-band">
+    <div class="container cta-band__inner">
+        <div>
+            <h2>Not sure which school fits?</h2>
+            <p>Book a free first consultation and get a shortlist matched to your grades and budget.</p>
+        </div>
+        <a class="btn btn--outline" href="/contact">Book a consultation</a>
+    </div>
+</section>
+
+@code {
+    [SupplyParameterFromQuery(Name = "q")] public string? Q { get; set; }
+    [SupplyParameterFromQuery(Name = "country")] public string? Country { get; set; }
+    [SupplyParameterFromQuery(Name = "level")] public string? Level { get; set; }
+    [SupplyParameterFromQuery(Name = "page")] public int? PageNumber { get; set; }
+
+    private static string[] Levels => SchoolFinder.Levels;
+
+    private IReadOnlyList<CountryDto> _countries = [];
+    private PagedResult<SchoolDto> _result = new();
+
+    private bool HasFilters => !string.IsNullOrWhiteSpace(Q) || !string.IsNullOrWhiteSpace(Country) || !string.IsNullOrWhiteSpace(Level);
+
+    private string SeoTitle
+    {
+        get
+        {
+            var country = _countries.FirstOrDefault(c => c.Slug == Country)?.Name;
+            return country is null ? "Partner schools and universities" : $"Partner schools in {country}";
+        }
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        var countries = Api.GetCountriesAsync();
+        var result = Api.GetSchoolsAsync(new SchoolQuery
+        {
+            Keyword = Q,
+            Country = Country,
+            Level = Level,
+            Page = Math.Max(1, PageNumber ?? 1),
+            PageSize = 12
+        });
+        await Task.WhenAll(countries, result);
+        _countries = countries.Result;
+        _result = result.Result;
+    }
+}

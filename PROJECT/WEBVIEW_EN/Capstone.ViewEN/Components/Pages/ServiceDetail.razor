@@ -1,0 +1,54 @@
+@page "/services/{Slug}"
+@inject IContentApi Api
+@inject NavigationManager Nav
+
+@if (_service is not null)
+{
+    <Seo Title="@_service.Title" Description="@_service.Summary" CanonicalPath="@Links.Service(_service)" />
+
+    <PageHero Title="@_service.Title" Lead="@_service.Summary"
+              Crumbs="@(PageHero.Trail(new PageHero.Crumb("Services", "/services"), new PageHero.Crumb(_service.Title)))" />
+
+    <section class="section">
+        <div class="container detail">
+            <article class="prose">
+                @if (!string.IsNullOrWhiteSpace(_service.BodyHtml))
+                {
+                    @((MarkupString)_service.BodyHtml)
+                }
+            </article>
+            <aside class="aside-card" aria-label="Other services">
+                <h2 style="font-size:var(--fs-m)">Other services</h2>
+                <ul>
+                    @foreach (var s in _others)
+                    {
+                        <li style="padding:8px 0;border-bottom:1px solid var(--line)"><a href="@Links.Service(s)" style="text-decoration:none;font-weight:600">@s.Title</a></li>
+                    }
+                </ul>
+                <a class="btn btn--primary btn--block" href="#consult">Ask about this service</a>
+            </aside>
+        </div>
+    </section>
+
+    <ConsultSection Offices="Site.Offices" Title="Ask about this service" />
+}
+
+@code {
+    [Parameter] public string Slug { get; set; } = string.Empty;
+    [CascadingParameter] public SiteDto Site { get; set; } = new();
+
+    private ServiceDto? _service;
+    private IReadOnlyList<ServiceDto> _others = [];
+
+    protected override async Task OnParametersSetAsync()
+    {
+        var service = await Api.GetServiceAsync(Slug);
+        _service = service;
+        if (service is null)
+        {
+            Nav.NotFound();
+            return;
+        }
+        _others = (await Api.GetServicesAsync()).Where(s => s.Id != service.Id && s.Audience == service.Audience).ToList();
+    }
+}

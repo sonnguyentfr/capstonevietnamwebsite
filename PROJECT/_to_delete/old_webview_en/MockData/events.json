@@ -1,0 +1,69 @@
+[
+  {
+    "id": 501, "slug": "study-abroad-fair-fall-2026", "type": "fair", "isFeatured": true,
+    "title": "Capstone Study Abroad Fair, Fall 2026",
+    "summary": "Meet admissions officers from schools and universities in the US, Canada, the UK and Australia. Free entry for students and parents.",
+    "coverUrl": "/img/sample/event-1.jpg",
+    "startAt": "2026-11-14T09:00:00+07:00", "endAt": "2026-11-15T16:00:00+07:00",
+    "city": "Hanoi and Ho Chi Minh City", "venue": null, "isOnline": false,
+    "schoolCount": 42,
+    "studentRegistrationUrl": "/events/study-abroad-fair-fall-2026-501#register",
+    "exhibitorRegistrationUrl": "/institutions#exhibit",
+    "sessions": [
+      { "city": "Hanoi", "venue": "Central Hanoi, venue confirmed on registration", "startAt": "2026-11-14T09:00:00+07:00", "endAt": "2026-11-14T16:00:00+07:00" },
+      { "city": "Ho Chi Minh City", "venue": "District 1, venue confirmed on registration", "startAt": "2026-11-15T09:00:00+07:00", "endAt": "2026-11-15T16:00:00+07:00" }
+    ],
+    "bodyHtml": "<p>Programme, floor plan and exhibitor list load from the CMS.</p>"
+  },
+  {
+    "id": 502, "slug": "info-session-ohio-university", "type": "info-session", "isFeatured": false,
+    "title": "Info session: Ohio University",
+    "summary": "An affordable route to a US degree, with admissions and scholarship advice from the university team.",
+    "coverUrl": "/img/sample/campus.jpg",
+    "startAt": "2026-11-05T18:00:00+07:00", "endAt": "2026-11-05T19:30:00+07:00",
+    "city": "Hanoi", "venue": "Capstone Hanoi office, 2 Le Quy Don", "isOnline": false,
+    "schoolCount": 1,
+    "studentRegistrationUrl": "/events/info-session-ohio-university-502#register",
+    "exhibitorRegistrationUrl": null,
+    "sessions": [],
+    "bodyHtml": "<p>Content loads from the CMS.</p>"
+  },
+  {
+    "id": 503, "slug": "info-session-madison-college", "type": "info-session", "isFeatured": false,
+    "title": "Info session: Madison College",
+    "summary": "Start at a community college in Wisconsin, then transfer to a top 50 US university.",
+    "coverUrl": null,
+    "startAt": "2026-11-21T19:00:00+07:00", "endAt": "2026-11-21T20:00:00+07:00",
+    "city": "Online", "venue": "Zoom", "isOnline": true,
+    "schoolCount": 1,
+    "studentRegistrationUrl": "/events/info-session-madison-college-503#register",
+    "exhibitorRegistrationUrl": null,
+    "sessions": [],
+    "bodyHtml": "<p>Content loads from the CMS.</p>"
+  },
+  {
+    "id": 504, "slug": "uk-and-europe-education-fair-2026", "type": "fair", "isFeatured": false,
+    "title": "UK and Europe Education Fair",
+    "summary": "Sixth-form colleges, boarding schools and universities from the UK, Spain, Hungary and Greece.",
+    "coverUrl": "/img/sample/event-2.jpg",
+    "startAt": "2026-12-06T09:00:00+07:00", "endAt": "2026-12-06T15:00:00+07:00",
+    "city": "Ho Chi Minh City", "venue": "Capstone Ho Chi Minh City office", "isOnline": false,
+    "schoolCount": 18,
+    "studentRegistrationUrl": "/events/uk-and-europe-education-fair-2026-504#register",
+    "exhibitorRegistrationUrl": "/institutions#exhibit",
+    "sessions": [],
+    "bodyHtml": "<p>Content loads from the CMS.</p>"
+  },
+  {
+    "id": 505, "slug": "info-session-fork-union-military-academy", "type": "info-session", "isFeatured": false,
+    "title": "Info session: Fork Union Military Academy",
+    "summary": "A college-preparatory boarding school for boys in grades 7 to 12, in Virginia.",
+    "coverUrl": null,
+    "startAt": "2026-09-19T09:30:00+07:00", "endAt": "2026-09-19T11:00:00+07:00",
+    "city": "Ho Chi Minh City", "venue": "Capstone Ho Chi Minh City office", "isOnline": false,
+    "schoolCount": 1,
+    "studentRegistrationUrl": null, "exhibitorRegistrationUrl": null,
+    "sessions": [],
+    "bodyHtml": "<p>Content loads from the CMS.</p>"
+  }
+]

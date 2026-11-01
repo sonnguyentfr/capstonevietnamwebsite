@@ -1,0 +1,38 @@
+[
+  {
+    "slug": "united-states",
+    "name": "United States",
+    "flagUrl": "/img/flags/us.svg",
+    "schoolCount": 0
+  },
+  {
+    "slug": "canada",
+    "name": "Canada",
+    "flagUrl": "/img/flags/ca.svg",
+    "schoolCount": 0
+  },
+  {
+    "slug": "united-kingdom",
+    "name": "United Kingdom",
+    "flagUrl": "/img/flags/gb.svg",
+    "schoolCount": 0
+  },
+  {
+    "slug": "australia",
+    "name": "Australia",
+    "flagUrl": "/img/flags/au.svg",
+    "schoolCount": 0
+  },
+  {
+    "slug": "ireland",
+    "name": "Ireland",
+    "flagUrl": "/img/flags/ie.svg",
+    "schoolCount": 0
+  },
+  {
+    "slug": "other",
+    "name": "Europe and Asia",
+    "flagUrl": null,
+    "schoolCount": 0
+  }
+]

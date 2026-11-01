@@ -1,0 +1,87 @@
+@page "/events"
+@inject IContentApi Api
+
+<Seo Title="@(IsPast ? "Past events" : "Education fairs and info sessions")"
+     Description="Upcoming study abroad fairs and school info sessions in Hanoi, Ho Chi Minh City and online. Free for students and parents." />
+
+<PageHero Title="Education fairs and info sessions"
+          Lead="Meet admissions officers face to face. Entry is free for students and parents; schools can book a table."
+          Crumbs="@(PageHero.Trail(new PageHero.Crumb("Events and fairs")))" />
+
+@if (!IsPast && _featured is not null && (Page ?? 1) <= 1)
+{
+    <NextFair Event="_featured" />
+}
+
+<section class="section">
+    <div class="container">
+        <nav class="tabs" aria-label="Filter events">
+            @foreach (var (label, url, active) in Tabs())
+            {
+                <a href="@url" aria-current="@(active ? "page" : null)">@label</a>
+            }
+        </nav>
+
+        @if (_result.Items.Count > 0)
+        {
+            <ul class="agenda">
+                @foreach (var e in _result.Items)
+                {
+                    <EventRow Event="e" />
+                }
+            </ul>
+            <Pagination Page="_result.Page" TotalPages="_result.TotalPages" />
+        }
+        else if (IsPast)
+        {
+            <EmptyState Title="No past events to show" ActionUrl="/events" ActionLabel="See upcoming events" />
+        }
+        else
+        {
+            <EmptyState Title="Nothing scheduled in this category yet"
+                        Text="Leave your details and we'll invite you when the next one is announced."
+                        ActionUrl="/contact" ActionLabel="Get event invitations" />
+        }
+    </div>
+</section>
+
+<section class="cta-band">
+    <div class="container cta-band__inner">
+        <div>
+            <h2>Recruiting for a school or university?</h2>
+            <p>Book a table at our next fair or host your own info session with Capstone.</p>
+        </div>
+        <a class="btn btn--outline" href="/institutions#exhibit">Exhibit with us</a>
+    </div>
+</section>
+
+@code {
+    [SupplyParameterFromQuery(Name = "type")] public string? Type { get; set; }
+    [SupplyParameterFromQuery(Name = "when")] public string? When { get; set; }
+    [SupplyParameterFromQuery(Name = "page")] public int? Page { get; set; }
+
+    private PagedResult<EventDto> _result = new();
+    private EventDto? _featured;
+
+    private bool IsPast => string.Equals(When, "past", StringComparison.OrdinalIgnoreCase);
+
+    private IEnumerable<(string Label, string Url, bool Active)> Tabs()
+    {
+        yield return ("All upcoming", "/events", !IsPast && string.IsNullOrEmpty(Type));
+        yield return ("Education fairs", "/events?type=fair", !IsPast && Type == EventTypes.Fair);
+        yield return ("Info sessions", "/events?type=info-session", !IsPast && Type == EventTypes.InfoSession);
+        yield return ("Past events", "/events?when=past", IsPast);
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        _result = await Api.GetEventsAsync(new EventQuery
+        {
+            Type = Type,
+            When = IsPast ? "past" : "upcoming",
+            Page = Math.Max(1, Page ?? 1),
+            PageSize = 10
+        });
+        _featured = _result.Items.FirstOrDefault(e => e.IsFeatured);
+    }
+}

@@ -1,0 +1,144 @@
+[
+  {
+    "slug": "usa",
+    "name": "Study in the USA",
+    "countrySlug": "united-states",
+    "flagUrl": "/img/flags/us.svg",
+    "order": 1,
+    "imageUrl": "https://capstonevietnam-fileserver.nvcms.net/CAPSTONEEN/IMAGES/2024/10/10/202410100426CHcampusview-1.jpg?width=1200&height=700&mode=crop&anchor=topcenter",
+    "tagline": "Universities, community colleges and boarding schools",
+    "intro": "The widest choice of any destination: research universities, liberal arts colleges, community colleges with transfer pathways, and boarding high schools.",
+    "facts": [
+      {
+        "label": "Bachelor's degree",
+        "value": "4 years"
+      },
+      {
+        "label": "Community college",
+        "value": "2 years, then transfer (2+2)"
+      },
+      {
+        "label": "Student visa",
+        "value": "F-1"
+      },
+      {
+        "label": "Work after graduating",
+        "value": "OPT, 12 months (up to 36 for STEM)"
+      }
+    ],
+    "bodyHtml": "<p>The widest choice of any destination: research universities, liberal arts colleges, community colleges with transfer pathways, and boarding high schools.</p><p><em>Sample content: country guide (education system, costs, visas) loads from the CMS.</em></p>",
+    "schoolCount": 0
+  },
+  {
+    "slug": "canada",
+    "name": "Study in Canada",
+    "countrySlug": "canada",
+    "flagUrl": "/img/flags/ca.svg",
+    "order": 2,
+    "imageUrl": "https://capstonevietnam-fileserver.nvcms.net/CAPSTONEEN/IMAGES/2026/04/17/202604171034SAsjk-graduation.jpg?width=1200&height=700&mode=crop&anchor=topcenter",
+    "tagline": "Public school boards, IB schools and colleges",
+    "intro": "Safe cities, public school boards that welcome international students, IB schools and colleges with co-op placements.",
+    "facts": [
+      {
+        "label": "Bachelor's degree",
+        "value": "3–4 years"
+      },
+      {
+        "label": "College diploma",
+        "value": "2–3 years"
+      },
+      {
+        "label": "Student visa",
+        "value": "Study permit"
+      },
+      {
+        "label": "Work after graduating",
+        "value": "Post-Graduation Work Permit"
+      }
+    ],
+    "bodyHtml": "<p>Safe cities, public school boards that welcome international students, IB schools and colleges with co-op placements.</p><p><em>Sample content: country guide (education system, costs, visas) loads from the CMS.</em></p>",
+    "schoolCount": 0
+  },
+  {
+    "slug": "uk",
+    "name": "Study in the UK",
+    "countrySlug": "united-kingdom",
+    "flagUrl": "/img/flags/gb.svg",
+    "order": 3,
+    "imageUrl": "https://capstonevietnam-fileserver.nvcms.net/CAPSTONEEN/IMAGES/2026/04/15/202604150151CH20220830-james-cunningham-westbourne-school-dji_0711-1-1.jpeg?width=1200&height=700&mode=crop&anchor=topcenter",
+    "tagline": "Boarding schools, A-Levels and 3-year degrees",
+    "intro": "Boarding schools and sixth-form colleges with A-Level routes, then shorter degrees: three years for a bachelor's and one for most master's.",
+    "facts": [
+      {
+        "label": "Bachelor's degree",
+        "value": "3 years (4 in Scotland)"
+      },
+      {
+        "label": "Master's degree",
+        "value": "Usually 1 year"
+      },
+      {
+        "label": "Student visa",
+        "value": "Student visa"
+      },
+      {
+        "label": "Work after graduating",
+        "value": "Graduate Route"
+      }
+    ],
+    "bodyHtml": "<p>Boarding schools and sixth-form colleges with A-Level routes, then shorter degrees: three years for a bachelor's and one for most master's.</p><p><em>Sample content: country guide (education system, costs, visas) loads from the CMS.</em></p>",
+    "schoolCount": 0
+  },
+  {
+    "slug": "australia",
+    "name": "Study in Australia",
+    "countrySlug": "australia",
+    "flagUrl": "/img/flags/au.svg",
+    "order": 4,
+    "imageUrl": "/img/sample/campus.jpg",
+    "tagline": "Universities close to Vietnam",
+    "intro": "Universities a short flight from Vietnam, with three-year bachelor's degrees and post-study work options.",
+    "facts": [
+      {
+        "label": "Bachelor's degree",
+        "value": "3 years"
+      },
+      {
+        "label": "Master's degree",
+        "value": "1–2 years"
+      },
+      {
+        "label": "Student visa",
+        "value": "Subclass 500"
+      },
+      {
+        "label": "Work after graduating",
+        "value": "Temporary Graduate visa (485)"
+      }
+    ],
+    "bodyHtml": "<p>Universities a short flight from Vietnam, with three-year bachelor's degrees and post-study work options.</p><p><em>Sample content: country guide (education system, costs, visas) loads from the CMS.</em></p>",
+    "schoolCount": 0
+  },
+  {
+    "slug": "other-countries",
+    "name": "Study in other countries",
+    "countrySlug": "other",
+    "flagUrl": null,
+    "order": 5,
+    "imageUrl": "https://capstonevietnam-fileserver.nvcms.net/CAPSTONEEN/IMAGES/2024/10/16/202410160234CHdu-hoc-cap-ba.jpg?width=1200&height=700&mode=crop&anchor=topcenter",
+    "tagline": "Europe and Asia",
+    "intro": "Partner schools and universities in Spain, Hungary, Lithuania, Greece, the Netherlands, Singapore and Malaysia.",
+    "facts": [
+      {
+        "label": "Destinations",
+        "value": "Europe and Asia"
+      },
+      {
+        "label": "Popular routes",
+        "value": "IB schools, English-taught degrees"
+      }
+    ],
+    "bodyHtml": "<p>Partner schools and universities in Spain, Hungary, Lithuania, Greece, the Netherlands, Singapore and Malaysia.</p><p><em>Sample content: country guide (education system, costs, visas) loads from the CMS.</em></p>",
+    "schoolCount": 0
+  }
+]

@@ -1,0 +1,9 @@
+<svg class="@Class" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="@PathData" /></svg>
+
+@code {
+    /// <summary>Key in <see cref="IconPaths.All"/>. Unknown names fall back to "globe".</summary>
+    [Parameter, EditorRequired] public string Name { get; set; } = string.Empty;
+    [Parameter] public string? Class { get; set; }
+
+    private string PathData => IconPaths.All.TryGetValue(Name, out var d) ? d : IconPaths.All["globe"];
+}

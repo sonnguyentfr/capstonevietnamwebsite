@@ -13,7 +13,7 @@ public class TruongRepository : ITruongRepository
     public TruongRepository(string connectionString) => _cs = connectionString;
     private SqlConnection CreateConn() => new(_cs);
 
-    // Country Id mapping — matches Cap_Location.LocationId in CapstoneVietnam_old
+    // Country Id mapping — matches Cap_Location.LocationId in CapstoneVietNamCRM
     // 1=Úc, 3=Canada, 23=Thụy Sĩ, 28=Anh, 38=Mỹ, 99=New Zealand, 401=Ireland
     private static readonly Dictionary<int, string> CountryNames = new()
     {

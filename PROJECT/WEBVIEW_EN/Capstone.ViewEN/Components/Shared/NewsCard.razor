@@ -1,0 +1,57 @@
+@switch (Variant)
+{
+    case "feature":
+        <a class="news-feature" href="@Links.News(Item)">
+            <div class="news-feature__img">
+                @if (!string.IsNullOrWhiteSpace(Item.ImageUrl))
+                {
+                    <img src="@Item.ImageUrl" alt="" loading="lazy" />
+                }
+            </div>
+            <div class="news-meta"><span>@Item.CategoryName</span><time datetime="@Item.PublishedAt.ToString("yyyy-MM-dd")">@Fmt.Date(Item.PublishedAt)</time></div>
+            <h3>@Item.Title</h3>
+            @if (!string.IsNullOrWhiteSpace(Item.Summary))
+            {
+                <p>@Item.Summary</p>
+            }
+        </a>
+        break;
+
+    case "row":
+        <a href="@Links.News(Item)">
+            <div class="thumb">
+                @if (!string.IsNullOrWhiteSpace(Item.ImageUrl))
+                {
+                    <img src="@Item.ImageUrl" alt="" loading="lazy" />
+                }
+            </div>
+            <div>
+                <h3>@Item.Title</h3>
+                <div class="news-meta"><span>@Item.CategoryName</span><time datetime="@Item.PublishedAt.ToString("yyyy-MM-dd")">@Fmt.MonthYear(Item.PublishedAt)</time></div>
+            </div>
+        </a>
+        break;
+
+    default:
+        <a class="news-card" href="@Links.News(Item)">
+            <div class="news-card__img">
+                @if (!string.IsNullOrWhiteSpace(Item.ImageUrl))
+                {
+                    <img src="@Item.ImageUrl" alt="" loading="lazy" />
+                }
+            </div>
+            <div class="news-meta"><span>@Item.CategoryName</span><time datetime="@Item.PublishedAt.ToString("yyyy-MM-dd")">@Fmt.Date(Item.PublishedAt)</time></div>
+            <h3>@Item.Title</h3>
+            @if (!string.IsNullOrWhiteSpace(Item.Summary))
+            {
+                <p>@Item.Summary</p>
+            }
+        </a>
+        break;
+}
+
+@code {
+    [Parameter, EditorRequired] public NewsDto Item { get; set; } = default!;
+    /// <summary>card (default) | feature | row</summary>
+    [Parameter] public string Variant { get; set; } = "card";
+}

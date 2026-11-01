@@ -1,0 +1,79 @@
+@page "/institutions"
+@inject IContentApi Api
+
+<Seo Title="For schools and universities" Description="Recruit Vietnamese students with Capstone: education fairs, info sessions, in-country representation and market insight." />
+
+<PageHero Title="@(_page?.Title ?? "Recruit Vietnamese students with Capstone")" Lead="@_page?.Summary"
+          Crumbs="@(PageHero.Trail(new PageHero.Crumb("For institutions")))">
+    <div class="inst__actions">
+        <a class="btn btn--primary" href="#exhibit">Exhibit at a fair</a>
+        <a class="btn btn--on-dark" href="#consult">Talk to our partnerships team</a>
+    </div>
+</PageHero>
+
+<InstitutionsSection Block="_home.Institutions" />
+
+<section class="section">
+    <div class="container detail">
+        <article class="prose">
+            @if (!string.IsNullOrWhiteSpace(_page?.BodyHtml))
+            {
+                @((MarkupString)_page.BodyHtml)
+            }
+        </article>
+        <aside class="aside-card" aria-label="Partner schools">
+            <h2 style="font-size:var(--fs-l)">Already a partner?</h2>
+            <p style="font-size:var(--fs-s);color:var(--ink-2)">Check how your school appears to Vietnamese students and families.</p>
+            <a class="btn btn--outline btn--block" href="/partners">Open the partner directory</a>
+            <a class="btn btn--outline btn--block" href="@Site.RecruitSiteUrl" target="_blank" rel="noopener">Recruit in Vietnam<Icon Name="external" /></a>
+        </aside>
+    </div>
+</section>
+
+<section class="section section--mist" aria-labelledby="fairs-title">
+    <div class="container">
+        <div class="section__head">
+            <div>
+                <h2 class="section__title" id="fairs-title">Fairs you can exhibit at</h2>
+                <p class="section__intro">Tables are limited. Book early to choose your city and position.</p>
+            </div>
+            <a class="text-link" href="/events?type=fair">All fairs<Icon Name="arrow" /></a>
+        </div>
+        @if (_fairs.Count > 0)
+        {
+            <ul class="agenda">
+                @foreach (var e in _fairs)
+                {
+                    <EventRow Event="e" />
+                }
+            </ul>
+        }
+        else
+        {
+            <EmptyState Title="The next fair dates aren't published yet" Text="Leave your details and our partnerships team will send the calendar as soon as it's set." ActionUrl="#consult" ActionLabel="Request the fair calendar" />
+        }
+    </div>
+</section>
+
+<ConsultSection Offices="Site.Offices" DefaultRole="institution"
+                Title="Talk to our partnerships team"
+                Intro="Tell us about your institution and the students you're looking for." />
+
+@code {
+    [CascadingParameter] public SiteDto Site { get; set; } = new();
+
+    private PageDto? _page;
+    private HomeContentDto _home = new();
+    private IReadOnlyList<EventDto> _fairs = [];
+
+    protected override async Task OnInitializedAsync()
+    {
+        var page = Api.GetPageAsync("institutions");
+        var home = Api.GetHomeAsync();
+        var fairs = Api.GetEventsAsync(new EventQuery { Type = EventTypes.Fair, PageSize = 4 });
+        await Task.WhenAll(page, home, fairs);
+        _page = page.Result;
+        _home = home.Result;
+        _fairs = fairs.Result.Items;
+    }
+}

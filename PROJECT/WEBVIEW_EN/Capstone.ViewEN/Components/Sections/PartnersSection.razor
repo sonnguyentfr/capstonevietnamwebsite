@@ -1,0 +1,40 @@
+<section class="section section--mist" aria-labelledby="partners-title">
+    <div class="container">
+        <div class="section__head">
+            <div>
+                <h2 class="section__title" id="partners-title">Partner schools and universities</h2>
+                <p class="section__intro">We work directly with admissions teams at more than 500 institutions, from boarding schools to research universities.</p>
+            </div>
+            <a class="text-link" href="/partners">Browse all partners<Icon Name="arrow" /></a>
+        </div>
+
+        @if (Countries.Count > 0)
+        {
+            <nav class="tabs" aria-label="Partners by destination">
+                @foreach (var c in Countries)
+                {
+                    <a href="@Links.PartnersIn(c.Slug)">@c.Name<span class="count">@c.SchoolCount</span></a>
+                }
+            </nav>
+        }
+
+        @if (Schools.Count > 0)
+        {
+            <div class="school-grid school-grid--4 home-schools">
+                @foreach (var s in Schools.Take(8))
+                {
+                    <SchoolTile School="s" />
+                }
+            </div>
+        }
+        else
+        {
+            <EmptyState Title="Partner list unavailable" Text="We couldn't load partner schools just now." ActionUrl="/partners" ActionLabel="Open the partner directory" />
+        }
+    </div>
+</section>
+
+@code {
+    [Parameter] public IReadOnlyList<CountryDto> Countries { get; set; } = [];
+    [Parameter] public IReadOnlyList<SchoolDto> Schools { get; set; } = [];
+}

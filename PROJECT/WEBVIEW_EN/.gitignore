@@ -1,0 +1,4 @@
+bin/
+obj/
+.vs/
+Capstone.ApiEN/App_Data/

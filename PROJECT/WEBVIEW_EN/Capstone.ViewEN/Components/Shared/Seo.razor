@@ -1,0 +1,69 @@
+@using System.Text.Json
+@inject NavigationManager Nav
+@inject IOptions<SiteOptions> SiteOpts
+
+<PageTitle>@FullTitle</PageTitle>
+<HeadContent>
+    <meta name="description" content="@Description" />
+    <link rel="canonical" href="@CanonicalUrl" />
+    @if (!string.IsNullOrWhiteSpace(VietnameseUrl))
+    {
+        <link rel="alternate" hreflang="vi" href="@VietnameseUrl" />
+        <link rel="alternate" hreflang="en" href="@CanonicalUrl" />
+    }
+    @if (NoIndex)
+    {
+        <meta name="robots" content="noindex" />
+    }
+    <meta property="og:type" content="@OgType" />
+    <meta property="og:site_name" content="Capstone Vietnam" />
+    <meta property="og:title" content="@FullTitle" />
+    <meta property="og:description" content="@Description" />
+    <meta property="og:url" content="@CanonicalUrl" />
+    <meta property="og:image" content="@Absolute(Image ?? SiteOpts.Value.DefaultOgImage)" />
+    <meta property="og:locale" content="en_GB" />
+    <meta name="twitter:card" content="summary_large_image" />
+    @if (!string.IsNullOrWhiteSpace(Site?.HeaderCode))
+    {
+        @((MarkupString)Site.HeaderCode)
+    }
+    @if (JsonLd is not null)
+    {
+        @((MarkupString)$"<script type=\"application/ld+json\">{JsonSerializer.Serialize(JsonLd, LdJson)}</script>")
+    }
+</HeadContent>
+
+@code {
+    [Parameter, EditorRequired] public string Title { get; set; } = string.Empty;
+    /// <summary>From MainLayout; supplies the CMS tracking code (GTM / GA4) for &lt;head&gt;.</summary>
+    [CascadingParameter] public SiteDto? Site { get; set; }
+    [Parameter] public string? Description { get; set; }
+    [Parameter] public string? Image { get; set; }
+    [Parameter] public string OgType { get; set; } = "website";
+    /// <summary>Path of this page, e.g. "/partners/abc-12". Defaults to the current path without query string.</summary>
+    [Parameter] public string? CanonicalPath { get; set; }
+    [Parameter] public string? VietnameseUrl { get; set; }
+    [Parameter] public bool NoIndex { get; set; }
+    /// <summary>schema.org object (anonymous type or dictionary). Serialized safely: '&lt;' is escaped.</summary>
+    [Parameter] public object? JsonLd { get; set; }
+
+    private static readonly JsonSerializerOptions LdJson = new() { PropertyNamingPolicy = null };
+
+    private string FullTitle => string.IsNullOrWhiteSpace(Title) || Title == "Capstone Vietnam"
+        ? "Capstone Vietnam | Study abroad advice and education fairs"
+        : $"{Title} | Capstone Vietnam";
+
+    private string CanonicalUrl
+    {
+        get
+        {
+            var path = CanonicalPath ?? "/" + Nav.ToBaseRelativePath(Nav.Uri).Split('?', '#')[0];
+            return Absolute(path);
+        }
+    }
+
+    private string Absolute(string pathOrUrl)
+        => pathOrUrl.StartsWith("http", StringComparison.OrdinalIgnoreCase)
+            ? pathOrUrl
+            : SiteOpts.Value.BaseUrl.TrimEnd('/') + "/" + pathOrUrl.TrimStart('/');
+}

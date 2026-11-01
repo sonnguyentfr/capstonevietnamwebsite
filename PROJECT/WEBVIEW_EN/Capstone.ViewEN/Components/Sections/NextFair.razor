@@ -1,0 +1,47 @@
+@* The next featured fair, overlapping the bottom of the hero. *@
+<section class="fair" aria-labelledby="fair-title">
+    <div class="container">
+        <div class="fair__card">
+            <div class="fair__date">
+                <span class="fair__month">@Fmt.Month(Event.StartAt)</span>
+                <span class="fair__day tabular">@Fmt.DayRange(Event.StartAt, Event.EndAt)</span>
+                <span class="fair__year">@Event.StartAt.Year</span>
+            </div>
+            <div class="fair__body">
+                <span class="fair__kind"><Icon Name="users" />Next @EventTypes.Label(Event.Type).ToLowerInvariant()</span>
+                <h2 class="fair__title" id="fair-title"><a href="@Links.Event(Event)" style="color:inherit;text-decoration:none">@Event.Title</a></h2>
+                <ul class="fair__sessions">
+                    @if (Event.Sessions.Count > 0)
+                    {
+                        foreach (var s in Event.Sessions)
+                        {
+                            <li><strong>@s.City</strong><span>@Fmt.Weekday(s.StartAt), @Fmt.TimeRange(s.StartAt, s.EndAt)</span></li>
+                        }
+                    }
+                    else
+                    {
+                        <li><strong>@(Event.IsOnline ? "Online" : Event.City)</strong><span>@Fmt.Weekday(Event.StartAt), @Fmt.TimeRange(Event.StartAt, Event.EndAt)</span></li>
+                    }
+                </ul>
+            </div>
+            <div class="fair__actions">
+                @if (!string.IsNullOrWhiteSpace(Event.StudentRegistrationUrl))
+                {
+                    <a class="btn btn--primary" href="@Event.StudentRegistrationUrl">Register to attend</a>
+                }
+                @if (!string.IsNullOrWhiteSpace(Event.ExhibitorRegistrationUrl))
+                {
+                    <a class="btn btn--outline" href="@Event.ExhibitorRegistrationUrl">Book an exhibitor table</a>
+                }
+                @if (Event.SchoolCount > 1)
+                {
+                    <span class="fair__stat">@Event.SchoolCount schools confirmed</span>
+                }
+            </div>
+        </div>
+    </div>
+</section>
+
+@code {
+    [Parameter, EditorRequired] public EventDto Event { get; set; } = default!;
+}

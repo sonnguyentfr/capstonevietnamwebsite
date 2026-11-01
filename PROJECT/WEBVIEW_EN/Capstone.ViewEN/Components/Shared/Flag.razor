@@ -1,0 +1,13 @@
+@if (!string.IsNullOrWhiteSpace(Url))
+{
+    <img src="@Url" alt="" width="26" height="18" loading="lazy" />
+}
+else if (FallbackIcon)
+{
+    <Icon Name="globe" />
+}
+
+@code {
+    [Parameter] public string? Url { get; set; }
+    [Parameter] public bool FallbackIcon { get; set; }
+}

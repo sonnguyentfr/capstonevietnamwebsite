@@ -1,0 +1,95 @@
+# Visual Studio / Rider HTTP client — chạy từng request bằng nút "Send request".
+@api = http://localhost:5320/api/v1/en
+@key =
+
+GET {{api}}/site
+X-Api-Key: {{key}}
+
+###
+GET {{api}}/home
+
+###
+GET {{api}}/countries
+
+###
+GET {{api}}/schools?country=united-states&level=University&page=1&pageSize=12
+
+###
+GET {{api}}/schools?featured=true&pageSize=9
+
+###
+GET {{api}}/schools/101
+
+###
+GET {{api}}/events?when=upcoming
+
+###
+GET {{api}}/events?type=fair
+
+###
+GET {{api}}/events?when=past
+
+###
+GET {{api}}/events/501
+
+###
+GET {{api}}/news/categories
+
+###
+GET {{api}}/news?category=schools&page=1
+
+###
+GET {{api}}/news/5958
+
+###
+GET {{api}}/pages/about
+
+###
+GET {{api}}/pages?section=about
+
+###
+GET {{api}}/team
+
+###
+GET {{api}}/destinations
+
+###
+GET {{api}}/destinations/usa
+
+###
+GET {{api}}/news?country=united-states&pageSize=6
+
+###
+GET {{api}}/services
+
+###
+GET {{api}}/testimonials?take=4
+
+###
+# 400 + lỗi từng trường
+POST {{api}}/leads
+Content-Type: application/json
+
+{ "role": "student", "fullName": "", "email": "not-an-email", "consent": false }
+
+###
+# 200 — Json mode ghi vào App_Data/leads.jsonl, Sql mode ghi vào CRM (WebView_TuVan_Upsert)
+POST {{api}}/leads
+Content-Type: application/json
+
+{
+  "role": "student",
+  "fullName": "Nguyen Van An",
+  "email": "an@example.com",
+  "phone": "0912345678",
+  "interest": "Study abroad advising",
+  "message": "I'd like advice about applying to Ohio University.",
+  "consent": true,
+  "sourceUrl": "https://en.capstonevietnam.com/partners/ohio-university-102",
+  "utmSource": "facebook",
+  "utmMedium": "cpc",
+  "utmCampaign": "fall-fair-2026"
+}
+
+###
+POST {{api}}/admin/cache/clear

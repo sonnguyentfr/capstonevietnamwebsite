@@ -1,0 +1,47 @@
+[
+  {
+    "slug": "general-information",
+    "name": "General information",
+    "group": "topic"
+  },
+  {
+    "slug": "scholarships",
+    "name": "Scholarships",
+    "group": "topic"
+  },
+  {
+    "slug": "info-sessions",
+    "name": "Info sessions",
+    "group": "topic"
+  },
+  {
+    "slug": "education-fairs",
+    "name": "Education fairs",
+    "group": "topic"
+  },
+  {
+    "slug": "study-in-the-usa",
+    "name": "Study in the USA",
+    "group": "destination"
+  },
+  {
+    "slug": "study-in-canada",
+    "name": "Study in Canada",
+    "group": "destination"
+  },
+  {
+    "slug": "study-in-uk",
+    "name": "Study in the UK",
+    "group": "destination"
+  },
+  {
+    "slug": "study-in-australia",
+    "name": "Study in Australia",
+    "group": "destination"
+  },
+  {
+    "slug": "study-in-other-countries",
+    "name": "Study in other countries",
+    "group": "destination"
+  }
+]

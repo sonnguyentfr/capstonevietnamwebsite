@@ -1,0 +1,82 @@
+{
+  "name": "Capstone Vietnam",
+  "tagline": "Higher education consultancy connecting Vietnamese students with schools worldwide since 2009.",
+  "headerLogo": "/img/logo-color.png",
+  "footerLogo": "/img/logo-white.png",
+  "hotline": "+84 989 906 608",
+  "email": "info@capstonevietnam.com",
+  "vietnameseSiteUrl": "https://capstonevietnam.com/",
+  "recruitSiteUrl": "https://recruitinvietnam.com/",
+  "offices": [
+    {
+      "city": "Hanoi",
+      "address": "2 Le Quy Don Street, Hai Ba Trung District, Hanoi",
+      "phone": "+84 24 3938 8455",
+      "email": "info@capstonevietnam.com",
+      "mapUrl": "https://maps.google.com/?q=2+Le+Quy+Don+Hanoi"
+    },
+    {
+      "city": "Ho Chi Minh City",
+      "address": "22 Tran Quy Khoach Street, Tan Dinh Ward, District 1, Ho Chi Minh City",
+      "phone": "+84 28 3848 2628",
+      "email": "info@capstonevietnam.com",
+      "mapUrl": "https://maps.google.com/?q=22+Tran+Quy+Khoach+Ho+Chi+Minh+City"
+    }
+  ],
+  "socials": [
+    { "network": "facebook", "url": "https://www.facebook.com/CapstoneVN" },
+    { "network": "linkedin", "url": "https://www.linkedin.com/company/capstone-vietnam" },
+    { "network": "youtube", "url": "https://www.youtube.com/@capstonevietnam" },
+    { "network": "instagram", "url": "https://www.instagram.com/capstonevietnam" },
+    { "network": "zalo", "url": "https://zalo.me/capstonevietnam" }
+  ],
+  "menu": [
+    {
+      "title": "About",
+      "url": "/about",
+      "children": [
+        { "title": "Who we are", "url": "/about", "description": "Our story since 2009" },
+        { "title": "Our team", "url": "/about#team", "description": "Counsellors in Hanoi and Ho Chi Minh City" },
+        { "title": "Careers", "url": "/about#careers", "description": "Work with Capstone" }
+      ]
+    },
+    {
+      "title": "Partner schools",
+      "url": "/partners",
+      "children": [
+        { "title": "United States", "url": "/partners?country=united-states" },
+        { "title": "Canada", "url": "/partners?country=canada" },
+        { "title": "United Kingdom", "url": "/partners?country=united-kingdom" },
+        { "title": "Australia", "url": "/partners?country=australia" },
+        { "title": "Europe and Asia", "url": "/partners?country=other" }
+      ]
+    },
+    { "title": "Services", "url": "/services" },
+    {
+      "title": "Events and fairs",
+      "url": "/events",
+      "children": [
+        { "title": "Education fairs", "url": "/events?type=fair", "description": "Meet schools in Hanoi and Ho Chi Minh City" },
+        { "title": "Info sessions", "url": "/events?type=info-session", "description": "Talks hosted by a single school" },
+        { "title": "Past events", "url": "/events?when=past" }
+      ]
+    },
+    { "title": "For institutions", "url": "/institutions" },
+    { "title": "News", "url": "/news" },
+    { "title": "Contact", "url": "/contact" }
+  ],
+  "stats": [
+    { "value": "2009", "label": "Founded in Hanoi" },
+    { "value": "500+", "label": "Partner institutions worldwide" },
+    { "value": "2", "label": "Offices, in Hanoi and Ho Chi Minh City" }
+  ],
+  "leader": {
+    "name": "Dr. Mark A. Ashwill",
+    "title": "Managing Director and Co-Founder",
+    "quote": "I have spent my entire career as an international educator and education entrepreneur.",
+    "photoUrl": null,
+    "profileUrl": "/about#team"
+  },
+  "headerCode": "",
+  "footerCode": ""
+}

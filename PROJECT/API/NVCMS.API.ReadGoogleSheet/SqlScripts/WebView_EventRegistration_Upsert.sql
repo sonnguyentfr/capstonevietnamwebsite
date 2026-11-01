@@ -1,6 +1,6 @@
 -- ============================================================
 -- SP: WebView_EventRegistration_Upsert
--- Database: CapstoneVietnam_old
+-- Database: CapstoneVietNamCRM
 -- Version: 3 — StudentCode dạng {CatCode}{YY}{MM}{StudentId}
 --              Ví dụ: HE2607150993
 --                HE     = NV_Events_Cat.Code (theo EventCatId)

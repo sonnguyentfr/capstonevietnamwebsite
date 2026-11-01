@@ -1,0 +1,32 @@
+<li class="agenda__row">
+    <div class="agenda__date">
+        <b class="tabular">@Fmt.Day(Event.StartAt)</b>
+        <span>@Fmt.MonthYear(Event.StartAt)</span>
+    </div>
+    <div>
+        <div class="agenda__type">@EventTypes.Label(Event.Type)</div>
+        <h3 class="agenda__title"><a href="@Links.Event(Event)">@Event.Title</a></h3>
+    </div>
+    <div class="agenda__place">
+        <Icon Name="@(Event.IsOnline ? "globe" : "pin")" />
+        <span>@(Event.IsOnline ? "Online" : Event.City)</span>
+    </div>
+    @if (IsPast)
+    {
+        <a class="btn btn--outline btn--sm" href="@Links.Event(Event)">See recap</a>
+    }
+    else if (!string.IsNullOrWhiteSpace(Event.StudentRegistrationUrl))
+    {
+        <a class="btn btn--outline btn--sm" href="@Event.StudentRegistrationUrl">Register</a>
+    }
+    else
+    {
+        <a class="btn btn--outline btn--sm" href="@Links.Event(Event)">Details</a>
+    }
+</li>
+
+@code {
+    [Parameter, EditorRequired] public EventDto Event { get; set; } = default!;
+
+    private bool IsPast => (Event.EndAt ?? Event.StartAt) < DateTimeOffset.Now;
+}

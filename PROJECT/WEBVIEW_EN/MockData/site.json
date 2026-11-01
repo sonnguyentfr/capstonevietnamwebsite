@@ -1,0 +1,255 @@
+{
+  "name": "Capstone Vietnam",
+  "tagline": "Reaching new heights. A higher education consultancy helping Vietnamese students and institutions from around the world since 2009.",
+  "headerLogo": "/img/logo-color.png",
+  "footerLogo": "/img/logo-white.png",
+  "hotline": "+84 989 906 608",
+  "email": "info@capstonevietnam.com",
+  "vietnameseSiteUrl": "https://capstonevietnam.com/",
+  "recruitSiteUrl": "https://recruitinvietnam.com/",
+  "offices": [
+    {
+      "city": "Hanoi",
+      "address": "2 Le Quy Don Street, Hai Ba Trung District, Hanoi",
+      "phone": "+84 24 3938 8455",
+      "email": "info@capstonevietnam.com",
+      "mapUrl": "https://maps.google.com/?q=2+Le+Quy+Don+Hanoi",
+      "hotline": "0936 701 696"
+    },
+    {
+      "city": "Ho Chi Minh City",
+      "address": "22 Tran Quy Khoach Street, Tan Dinh Ward, District 1, Ho Chi Minh City",
+      "phone": "+84 28 3848 2628",
+      "email": "info@capstonevietnam.com",
+      "mapUrl": "https://maps.google.com/?q=22+Tran+Quy+Khoach+Ho+Chi+Minh+City",
+      "hotline": "0966 703 162"
+    }
+  ],
+  "socials": [
+    {
+      "network": "facebook",
+      "url": "https://www.facebook.com/CapstoneVN"
+    },
+    {
+      "network": "linkedin",
+      "url": "https://www.linkedin.com/company/capstonevietnam"
+    },
+    {
+      "network": "youtube",
+      "url": "https://www.youtube.com/channel/UCdg56kflbBVIF7CcU4f0NHw"
+    },
+    {
+      "network": "instagram",
+      "url": "https://www.instagram.com/capstonevn/"
+    },
+    {
+      "network": "twitter",
+      "url": "https://twitter.com/capstonevietnam"
+    },
+    {
+      "network": "zalo",
+      "url": "https://zalo.me/capstonevietnam"
+    }
+  ],
+  "menu": [
+    {
+      "title": "About",
+      "url": "/about",
+      "children": [
+        {
+          "title": "Who we are",
+          "url": "/about",
+          "description": "Our story since 2009"
+        },
+        {
+          "title": "Our services",
+          "url": "/services",
+          "description": "Advising from shortlist to arrival"
+        },
+        {
+          "title": "Vision, mission and values",
+          "url": "/about/vision-mission-values"
+        },
+        {
+          "title": "Why Capstone",
+          "url": "/about/why-capstone"
+        },
+        {
+          "title": "Our team",
+          "url": "/about/our-team"
+        },
+        {
+          "title": "Careers",
+          "url": "/about/careers"
+        }
+      ]
+    },
+    {
+      "title": "Study abroad",
+      "url": "/study-in",
+      "children": [
+        {
+          "title": "Study in the USA",
+          "url": "/study-in/usa"
+        },
+        {
+          "title": "Study in Canada",
+          "url": "/study-in/canada"
+        },
+        {
+          "title": "Study in the UK",
+          "url": "/study-in/uk"
+        },
+        {
+          "title": "Study in Australia",
+          "url": "/study-in/australia"
+        },
+        {
+          "title": "Other countries",
+          "url": "/study-in/other-countries"
+        },
+        {
+          "title": "Immigration and EB-5",
+          "url": "/services/immigration-and-settlement"
+        }
+      ]
+    },
+    {
+      "title": "Partners",
+      "url": "/partners",
+      "children": [
+        {
+          "title": "United States",
+          "url": "/partners?country=united-states",
+          "children": [
+            {
+              "title": "High school",
+              "url": "/partners?country=united-states&level=High%20school"
+            },
+            {
+              "title": "Community college",
+              "url": "/partners?country=united-states&level=Community%20college"
+            },
+            {
+              "title": "University",
+              "url": "/partners?country=united-states&level=University"
+            }
+          ]
+        },
+        {
+          "title": "Canada",
+          "url": "/partners?country=canada",
+          "children": [
+            {
+              "title": "High school",
+              "url": "/partners?country=canada&level=High%20school"
+            },
+            {
+              "title": "University",
+              "url": "/partners?country=canada&level=University"
+            }
+          ]
+        },
+        {
+          "title": "United Kingdom",
+          "url": "/partners?country=united-kingdom",
+          "children": [
+            {
+              "title": "High school",
+              "url": "/partners?country=united-kingdom&level=High%20school"
+            },
+            {
+              "title": "College",
+              "url": "/partners?country=united-kingdom&level=College"
+            },
+            {
+              "title": "University",
+              "url": "/partners?country=united-kingdom&level=University"
+            }
+          ]
+        },
+        {
+          "title": "Australia",
+          "url": "/partners?country=australia",
+          "children": [
+            {
+              "title": "University",
+              "url": "/partners?country=australia&level=University"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Events",
+      "url": "/events",
+      "children": [
+        {
+          "title": "Education fairs",
+          "url": "/events?type=fair",
+          "description": "Meet schools in Hanoi and Ho Chi Minh City"
+        },
+        {
+          "title": "Info sessions",
+          "url": "/events?type=info-session",
+          "description": "Talks hosted by a single school"
+        },
+        {
+          "title": "Past events",
+          "url": "/events?when=past"
+        }
+      ]
+    },
+    {
+      "title": "News",
+      "url": "/news",
+      "children": [
+        {
+          "title": "General information",
+          "url": "/news?category=general-information"
+        },
+        {
+          "title": "Scholarships",
+          "url": "/news?category=scholarships"
+        },
+        {
+          "title": "Info sessions",
+          "url": "/news?category=info-sessions"
+        },
+        {
+          "title": "Education fairs",
+          "url": "/news?category=education-fairs"
+        }
+      ]
+    },
+    {
+      "title": "Contact",
+      "url": "/contact"
+    }
+  ],
+  "stats": [
+    {
+      "value": "2009",
+      "label": "Founded in Hanoi"
+    },
+    {
+      "value": "500+",
+      "label": "Partner institutions worldwide"
+    },
+    {
+      "value": "2",
+      "label": "Offices, in Hanoi and Ho Chi Minh City"
+    }
+  ],
+  "leader": {
+    "name": "Dr. Mark A. Ashwill",
+    "title": "Managing Director and Co-Founder",
+    "quote": "I have spent my entire career as an international educator and education entrepreneur.",
+    "photoUrl": "https://capstonevietnam-fileserver.nvcms.net/CAPSTONEEN/IMAGES/2020/08/202008100507CHimg_7347-rev.jpg?width=240&height=240&mode=crop&anchor=topcenter",
+    "profileUrl": "https://markashwill.com/abouteng/",
+    "bio": "Ph.D. (SUNY-Buffalo), M.A. (University of Maryland), B.A. (University of Delaware). Country director of IIE-Vietnam from 2005 to 2009 before co-founding Capstone."
+  },
+  "headerCode": "",
+  "footerCode": "",
+  "mediaUrl": "http://blog.capstonevietnam.com"
+}

@@ -1,0 +1,17 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="README.md" />
+    <File Path="MockData/site.json" />
+    <File Path="MockData/home.json" />
+    <File Path="MockData/countries.json" />
+    <File Path="MockData/schools.json" />
+    <File Path="MockData/services.json" />
+    <File Path="MockData/events.json" />
+    <File Path="MockData/news.json" />
+    <File Path="MockData/testimonials.json" />
+    <File Path="MockData/pages.json" />
+  </Folder>
+  <Project Path="Capstone.Content/Capstone.Content.csproj" />
+  <Project Path="Capstone.ApiEN/Capstone.ApiEN.csproj" />
+  <Project Path="Capstone.ViewEN/Capstone.ViewEN.csproj" />
+</Solution>

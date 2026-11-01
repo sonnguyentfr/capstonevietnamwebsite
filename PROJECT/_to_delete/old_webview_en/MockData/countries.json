@@ -1,0 +1,7 @@
+[
+  { "slug": "united-states", "name": "United States", "flagUrl": "/img/flags/us.svg", "schoolCount": 214 },
+  { "slug": "canada", "name": "Canada", "flagUrl": "/img/flags/ca.svg", "schoolCount": 68 },
+  { "slug": "united-kingdom", "name": "United Kingdom", "flagUrl": "/img/flags/gb.svg", "schoolCount": 96 },
+  { "slug": "australia", "name": "Australia", "flagUrl": "/img/flags/au.svg", "schoolCount": 54 },
+  { "slug": "other", "name": "Europe and Asia", "flagUrl": null, "schoolCount": 81 }
+]

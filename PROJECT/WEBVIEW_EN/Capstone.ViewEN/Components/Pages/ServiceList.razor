@@ -1,0 +1,52 @@
+@page "/services"
+@inject IContentApi Api
+
+<Seo Title="Services" Description="Study abroad advising, top university admissions, scholarships, visas, housing and settlement services from Capstone Vietnam." />
+
+<PageHero Title="Services for students and families"
+          Lead="From choosing a country to settling in on campus, one counsellor stays with you at every step."
+          Crumbs="@(PageHero.Trail(new PageHero.Crumb("Services")))" />
+
+<section class="section">
+    <div class="container">
+        @if (_services.Count > 0)
+        {
+            <div class="service-list">
+                @foreach (var s in _services)
+                {
+                    <a class="service-row" href="@Links.Service(s)">
+                        <span class="service-row__icon"><Icon Name="@s.Icon" /></span>
+                        <span>
+                            <span class="service-row__title">@s.Title</span>
+                            <span class="service-row__desc">@s.Summary</span>
+                        </span>
+                        <span class="service-row__go"><Icon Name="arrow" /></span>
+                    </a>
+                }
+            </div>
+        }
+        else
+        {
+            <EmptyState Title="Service details are unavailable right now" Text="Call our hotline or send an enquiry and a counsellor will explain what we offer." ActionUrl="/contact" ActionLabel="Contact a counsellor" />
+        }
+    </div>
+</section>
+
+<InstitutionsSection Block="_home.Institutions" />
+<ConsultSection Offices="Site.Offices" />
+
+@code {
+    [CascadingParameter] public SiteDto Site { get; set; } = new();
+
+    private IReadOnlyList<ServiceDto> _services = [];
+    private HomeContentDto _home = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var services = Api.GetServicesAsync();
+        var home = Api.GetHomeAsync();
+        await Task.WhenAll(services, home);
+        _services = services.Result.Where(s => s.Audience != "institutions").ToList();
+        _home = home.Result;
+    }
+}
