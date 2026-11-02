@@ -14,7 +14,9 @@
     [LogoUrl] [Website] [WebsiteUrl] [Hotline] [ContactEmail] [Facebook]
     [HaNoiAddress] [HaNoiPhone] [HCMAddress] [HCMPhone]
   Mọi link http(s) trong thư được tự gắn theo dõi click khi gửi; ảnh 1x1 đếm lượt mở được chèn cuối thư.
-  Màu: navy #0f2c59 · đỏ Capstone #a41034 · vàng kim #b8893b · nền giấy #f7f2e8.
+  Màu: navy #0f2c59 · đỏ Capstone #a41034 · vàng kim #b8893b · nền giấy #f7f2e8. Khổ 700px.
+  Font: Nunito (nội dung thiệp); khối tin / sự kiện: tiêu đề Nunito, nội dung Roboto (Google Fonts — Apple Mail, iOS, Android;
+  Gmail web / Outlook không tải font web nên tự dùng Arial).
   =====================================================================================================================
 -->
 <!DOCTYPE html>
@@ -27,18 +29,21 @@
 <meta name="color-scheme" content="light only">
 <meta name="supported-color-schemes" content="light only">
 <title>Chúc mừng sinh nhật [FirstName]</title>
+<!--[if !mso]><!-->
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&amp;family=Roboto:wght@400;500;700&amp;display=swap" rel="stylesheet">
+<!--<![endif]-->
 <!--[if mso]><noscript><xml><o:OfficeDocumentSettings><o:PixelsPerInch>96</o:PixelsPerInch></o:OfficeDocumentSettings></xml></noscript><![endif]-->
 <style>
   body{margin:0;padding:0;width:100%!important;background:#efe7d6;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%}
   table{border-collapse:collapse;mso-table-lspace:0;mso-table-rspace:0}
   img{border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic;display:block}
   a{color:#a41034}
-  .serif{font-family:Georgia,'Times New Roman',Times,serif}
-  @media only screen and (max-width:620px){
+  body,table,td,p,a,div,span{font-family:'Nunito',Arial,Helvetica,sans-serif}
+  @media only screen and (max-width:720px){
     .wrap{width:100%!important}
     .px{padding-left:22px!important;padding-right:22px!important}
-    .hero-title{font-size:44px!important;line-height:50px!important}
-    .greet{font-size:22px!important;line-height:30px!important}
+    .hero-title{font-size:34px!important;line-height:42px!important}
+    .greet{font-size:19px!important;line-height:27px!important}
     .stack{display:block!important;width:100%!important}
     .stack-img img{width:100%!important;height:auto!important}
     .stack-txt{padding:14px 0 0 0!important}
@@ -57,7 +62,7 @@
 <tr><td align="center" style="padding:28px 12px 36px 12px;">
 
   <!-- logo -->
-  <table role="presentation" class="wrap" width="600" cellpadding="0" cellspacing="0" border="0" style="width:600px;max-width:600px;">
+  <table role="presentation" class="wrap" width="700" cellpadding="0" cellspacing="0" border="0" style="width:700px;max-width:700px;">
     <tr><td align="center" style="padding:0 0 18px 0;">
       <a href="[WebsiteUrl]" target="_blank" style="text-decoration:none;">
         <img src="[LogoUrl]" width="150" alt="Capstone Vietnam" style="display:block;width:150px;height:auto;border:0;">
@@ -66,8 +71,8 @@
   </table>
 
   <!-- ===================== THIỆP ===================== -->
-  <table role="presentation" class="wrap" width="600" cellpadding="0" cellspacing="0" border="0"
-         style="width:600px;max-width:600px;background:#0f2c59;border-radius:6px;">
+  <table role="presentation" class="wrap" width="700" cellpadding="0" cellspacing="0" border="0"
+         style="width:700px;max-width:700px;background:#0f2c59;border-radius:6px;">
   <tr><td style="padding:10px;">
     <!-- viền vàng kim kiểu thiệp in -->
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"
@@ -78,23 +83,23 @@
         <!-- phần đầu thiệp: nền navy, chữ vàng -->
         <tr><td align="center" bgcolor="#0f2c59" class="px" style="background:#0f2c59;padding:38px 40px 34px 40px;">
           <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr>
-            <td style="font-family:Georgia,'Times New Roman',serif;font-size:14px;line-height:14px;color:#b8893b;letter-spacing:10px;">&#10022; &#10023; &#10022;</td>
+            <td style="font-family:'Nunito',Arial,Helvetica,sans-serif;font-size:14px;line-height:14px;color:#b8893b;letter-spacing:10px;">&#10022; &#10023; &#10022;</td>
           </tr></table>
           <div style="height:16px;line-height:16px;font-size:0;">&nbsp;</div>
-          <div class="serif" style="font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:16px;letter-spacing:5px;color:#e9dcc0;text-transform:uppercase;">
+          <div class="serif" style="font-family:'Nunito',Arial,Helvetica,sans-serif;font-size:12px;line-height:16px;letter-spacing:5px;color:#e9dcc0;text-transform:uppercase;">
             Chúc mừng sinh nhật
           </div>
           <div style="height:10px;line-height:10px;font-size:0;">&nbsp;</div>
-          <div class="hero-title" style="font-family:Georgia,'Times New Roman',Times,serif;font-style:italic;font-size:56px;line-height:62px;color:#e2bf72;font-weight:normal;">
+          <div class="hero-title" style="font-family:'Nunito',Arial,Helvetica,sans-serif;font-size:44px;line-height:52px;color:#e2bf72;font-weight:800;letter-spacing:.5px;">
             Happy Birthday
           </div>
           <div style="height:18px;line-height:18px;font-size:0;">&nbsp;</div>
           <!-- huy hiệu ngày sinh -->
           <table role="presentation" cellpadding="0" cellspacing="0" border="0" align="center" style="border-collapse:separate;"><tr>
             <td width="96" height="96" align="center" valign="middle"
-                style="width:96px;height:96px;border:2px solid #b8893b;border-radius:50%;font-family:Georgia,'Times New Roman',serif;color:#ffffff;">
-              <div style="font-size:30px;line-height:32px;font-weight:bold;letter-spacing:1px;">[BirthDay]</div>
-              <div style="font-family:Arial,Helvetica,sans-serif;font-size:9px;line-height:12px;letter-spacing:3px;color:#e2bf72;text-transform:uppercase;padding-top:4px;">[Year]</div>
+                style="width:96px;height:96px;border:2px solid #b8893b;border-radius:50%;font-family:'Nunito',Arial,Helvetica,sans-serif;color:#ffffff;">
+              <div style="font-size:26px;line-height:30px;font-weight:800;letter-spacing:1px;">[BirthDay]</div>
+              <div style="font-family:'Nunito',Arial,Helvetica,sans-serif;font-size:9px;line-height:12px;letter-spacing:3px;color:#e2bf72;text-transform:uppercase;padding-top:4px;">[Year]</div>
             </td>
           </tr></table>
         </td></tr>
@@ -105,16 +110,16 @@
         <tr><td style="padding:0;">[HeroImage]</td></tr>
 
         <!-- lời chúc -->
-        <tr><td class="px" style="padding:40px 52px 8px 52px;font-family:Arial,Helvetica,sans-serif;color:#334155;">
-          <div class="greet" style="font-family:Georgia,'Times New Roman',Times,serif;font-size:26px;line-height:34px;color:#0f2c59;">
+        <tr><td class="px" style="padding:40px 52px 8px 52px;font-family:'Nunito',Arial,Helvetica,sans-serif;color:#334155;">
+          <div class="greet" style="font-family:'Nunito',Arial,Helvetica,sans-serif;font-size:21px;line-height:30px;color:#0f2c59;font-weight:700;">
             Thân gửi <span style="color:#a41034;">[Fullname]</span>,
           </div>
           <div style="height:18px;line-height:18px;font-size:0;">&nbsp;</div>
-          <p style="margin:0 0 16px 0;font-size:16px;line-height:27px;color:#334155;">
+          <p style="margin:0 0 14px 0;font-size:15px;line-height:25px;color:#334155;">
             Hôm nay là một ngày thật đặc biệt — ngày <strong style="color:#0f2c59;">[FirstName]</strong> chào đời. Thay mặt toàn thể đội ngũ
             <strong style="color:#0f2c59;">Capstone Vietnam</strong>, chúng tôi xin gửi tới bạn lời chúc mừng sinh nhật chân thành và ấm áp nhất.
           </p>
-          <p style="margin:0 0 22px 0;font-size:16px;line-height:27px;color:#334155;">
+          <p style="margin:0 0 20px 0;font-size:15px;line-height:25px;color:#334155;">
             Chúc bạn bước sang tuổi mới với thật nhiều sức khỏe, niềm vui và năng lượng tích cực; luôn tự tin, bản lĩnh và vững bước
             trên hành trình chinh phục những ước mơ phía trước.
           </p>
@@ -125,16 +130,16 @@
           <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"
                  style="border-top:1px solid #d9c49a;border-bottom:1px solid #d9c49a;">
             <tr>
-              <td class="stack" width="33%" align="center" valign="top" style="padding:18px 6px;font-family:Arial,Helvetica,sans-serif;">
-                <div style="font-family:Georgia,serif;font-size:22px;line-height:24px;color:#b8893b;">&#10047;</div>
+              <td class="stack" width="33%" align="center" valign="top" style="padding:18px 6px;font-family:'Nunito',Arial,Helvetica,sans-serif;">
+                <div style="font-family:'Nunito',Arial,Helvetica,sans-serif;font-size:22px;line-height:24px;color:#b8893b;">&#10047;</div>
                 <div style="font-size:13px;line-height:19px;color:#0f2c59;font-weight:bold;padding-top:6px;">Sức khỏe dồi dào</div>
               </td>
-              <td class="stack" width="34%" align="center" valign="top" style="padding:18px 6px;font-family:Arial,Helvetica,sans-serif;">
-                <div style="font-family:Georgia,serif;font-size:22px;line-height:24px;color:#b8893b;">&#10022;</div>
+              <td class="stack" width="34%" align="center" valign="top" style="padding:18px 6px;font-family:'Nunito',Arial,Helvetica,sans-serif;">
+                <div style="font-family:'Nunito',Arial,Helvetica,sans-serif;font-size:22px;line-height:24px;color:#b8893b;">&#10022;</div>
                 <div style="font-size:13px;line-height:19px;color:#0f2c59;font-weight:bold;padding-top:6px;">Học tập &amp; sự nghiệp rạng rỡ</div>
               </td>
-              <td class="stack" width="33%" align="center" valign="top" style="padding:18px 6px;font-family:Arial,Helvetica,sans-serif;">
-                <div style="font-family:Georgia,serif;font-size:22px;line-height:24px;color:#b8893b;">&#10084;</div>
+              <td class="stack" width="33%" align="center" valign="top" style="padding:18px 6px;font-family:'Nunito',Arial,Helvetica,sans-serif;">
+                <div style="font-family:'Nunito',Arial,Helvetica,sans-serif;font-size:22px;line-height:24px;color:#b8893b;">&#10084;</div>
                 <div style="font-size:13px;line-height:19px;color:#0f2c59;font-weight:bold;padding-top:6px;">Ước mơ thành hiện thực</div>
               </td>
             </tr>
@@ -142,9 +147,9 @@
         </td></tr>
 
         <!-- ký tên -->
-        <tr><td class="px" align="right" style="padding:22px 52px 38px 52px;font-family:Arial,Helvetica,sans-serif;">
+        <tr><td class="px" align="right" style="padding:22px 52px 38px 52px;font-family:'Nunito',Arial,Helvetica,sans-serif;">
           <div style="font-size:14px;line-height:20px;color:#64748b;">Thân mến,</div>
-          <div style="font-family:Georgia,'Times New Roman',Times,serif;font-style:italic;font-size:24px;line-height:32px;color:#a41034;padding-top:4px;">
+          <div style="font-family:'Nunito',Arial,Helvetica,sans-serif;font-size:20px;line-height:28px;color:#a41034;font-weight:800;padding-top:4px;">
             Capstone Vietnam
           </div>
           <div style="font-size:11px;line-height:16px;letter-spacing:2px;color:#b8893b;text-transform:uppercase;">Tư vấn du học &amp; định cư</div>
@@ -155,7 +160,7 @@
         <tr><td class="px" style="padding:0 52px;">[Events]</td></tr>
 
         <!-- hoa văn kết -->
-        <tr><td align="center" style="padding:6px 0 26px 0;font-family:Georgia,serif;font-size:13px;line-height:13px;color:#b8893b;letter-spacing:8px;">
+        <tr><td align="center" style="padding:6px 0 26px 0;font-family:'Nunito',Arial,Helvetica,sans-serif;font-size:13px;line-height:13px;color:#b8893b;letter-spacing:8px;">
           &#8212;&#8212; &#10022; &#8212;&#8212;
         </td></tr>
       </table>
@@ -166,8 +171,8 @@
   <!-- =================== HẾT THIỆP =================== -->
 
   <!-- chân thư -->
-  <table role="presentation" class="wrap" width="600" cellpadding="0" cellspacing="0" border="0" style="width:600px;max-width:600px;">
-    <tr><td class="px" style="padding:26px 30px 6px 30px;font-family:Arial,Helvetica,sans-serif;">
+  <table role="presentation" class="wrap" width="700" cellpadding="0" cellspacing="0" border="0" style="width:700px;max-width:700px;">
+    <tr><td class="px" style="padding:26px 30px 6px 30px;font-family:'Nunito',Arial,Helvetica,sans-serif;">
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
         <td class="foot-col" width="50%" valign="top" style="padding-right:12px;font-size:12px;line-height:19px;color:#5b6475;">
           <strong style="color:#0f2c59;">Văn phòng Hà Nội</strong><br>[HaNoiAddress]<br>[HaNoiPhone]
@@ -177,12 +182,12 @@
         </td>
       </tr></table>
     </td></tr>
-    <tr><td align="center" class="px" style="padding:10px 30px 4px 30px;font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:20px;color:#5b6475;">
+    <tr><td align="center" class="px" style="padding:10px 30px 4px 30px;font-family:'Nunito',Arial,Helvetica,sans-serif;font-size:12px;line-height:20px;color:#5b6475;">
       <a href="[WebsiteUrl]" target="_blank" style="color:#a41034;text-decoration:none;font-weight:bold;">[Website]</a>
       &nbsp;·&nbsp; Hotline <a href="tel:[Hotline]" style="color:#0f2c59;text-decoration:none;font-weight:bold;">[Hotline]</a>
       &nbsp;·&nbsp; <a href="mailto:[ContactEmail]" style="color:#0f2c59;text-decoration:none;">[ContactEmail]</a>
     </td></tr>
-    <tr><td align="center" class="px" style="padding:12px 30px 0 30px;font-family:Arial,Helvetica,sans-serif;font-size:11px;line-height:17px;color:#8a8f99;">
+    <tr><td align="center" class="px" style="padding:12px 30px 0 30px;font-family:'Nunito',Arial,Helvetica,sans-serif;font-size:11px;line-height:17px;color:#8a8f99;">
       Bạn nhận được thư này vì là khách hàng thân thiết của Capstone Vietnam. © [Year] Capstone Vietnam.
       [Unsubscribe]
     </td></tr>

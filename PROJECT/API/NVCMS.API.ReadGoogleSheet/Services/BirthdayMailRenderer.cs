@@ -76,7 +76,7 @@ namespace NVCMS.API.ReadGoogleSheet.Services
                 // mẫu Marketing không đặt [News]/[Events] nhưng có tin đang bật -> chèn trước chân thư
                 var extra = (hasNews ? "" : "[News]") + (hasEvents ? "" : "[Events]");
                 html = InsertBeforeBodyEnd(html, "<table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td align=\"center\">" +
-                    "<table role=\"presentation\" width=\"600\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"max-width:600px;width:100%;\"><tr><td style=\"padding:0 20px;\">" +
+                    "<table role=\"presentation\" width=\"700\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"max-width:700px;width:100%;\"><tr><td style=\"padding:0 20px;\">" +
                     extra + "</td></tr></table></td></tr></table>");
             }
             if (!ContainsToken(html, "Unsubscribe") && !ContainsToken(html, "UnsubscribeUrl"))
@@ -236,10 +236,10 @@ namespace NVCMS.API.ReadGoogleSheet.Services
             if (items.Count == 0) return string.Empty;
             var sb = new StringBuilder();
             sb.Append("<table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:100%;\">");
-            sb.Append("<tr><td style=\"padding:28px 0 4px 0;border-top:1px solid #d9c49a;font-family:Arial,Helvetica,sans-serif;\">");
-            sb.Append("<div style=\"font-size:11px;line-height:16px;letter-spacing:4px;color:#b8893b;text-transform:uppercase;font-weight:bold;\">")
+            sb.Append("<tr><td style=\"padding:26px 0 4px 0;border-top:1px solid #d9c49a;font-family:'Nunito',Arial,Helvetica,sans-serif;\">");
+            sb.Append("<div style=\"font-family:'Nunito',Arial,Helvetica,sans-serif;font-size:11px;line-height:16px;letter-spacing:3px;color:#b8893b;text-transform:uppercase;font-weight:700;\">")
               .Append(isEvent ? "Sự kiện sắp diễn ra" : "Tin tức dành cho bạn").Append("</div>");
-            sb.Append("<div style=\"font-family:Georgia,'Times New Roman',Times,serif;font-size:21px;line-height:28px;color:#0f2c59;padding-top:4px;\">")
+            sb.Append("<div style=\"font-family:'Nunito',Arial,Helvetica,sans-serif;font-size:18px;line-height:26px;color:#0f2c59;font-weight:700;padding-top:4px;\">")
               .Append(isEvent ? "Hẹn gặp bạn tại Capstone" : "Góc thông tin từ Capstone").Append("</div>");
             sb.Append("</td></tr>");
 
@@ -264,20 +264,20 @@ namespace NVCMS.API.ReadGoogleSheet.Services
                       .Append("\" style=\"display:block;width:180px;height:auto;border:0;border-radius:4px;\"></a></td>");
                 }
                 sb.Append("<td class=\"stack stack-txt\" valign=\"top\" style=\"").Append(hasImg ? "padding:0 0 0 18px;" : "padding:0;")
-                  .Append("font-family:Arial,Helvetica,sans-serif;\">");
+                  .Append("font-family:'Roboto',Arial,Helvetica,sans-serif;\">");
                 if (!string.IsNullOrWhiteSpace(it.MetaText))
-                    sb.Append("<div style=\"font-size:12px;line-height:18px;color:#a41034;font-weight:bold;padding-bottom:4px;\">")
+                    sb.Append("<div style=\"font-family:'Roboto',Arial,Helvetica,sans-serif;font-size:12px;line-height:18px;color:#a41034;font-weight:500;padding-bottom:4px;\">")
                       .Append(Enc(it.MetaText)).Append("</div>");
-                sb.Append("<a href=\"").Append(href).Append("\" target=\"_blank\" style=\"font-family:Georgia,'Times New Roman',Times,serif;font-size:18px;line-height:24px;color:#0f2c59;text-decoration:none;font-weight:bold;\">")
+                sb.Append("<a href=\"").Append(href).Append("\" target=\"_blank\" style=\"font-family:'Nunito',Arial,Helvetica,sans-serif;font-size:16px;line-height:22px;color:#0f2c59;text-decoration:none;font-weight:700;\">")
                   .Append(Enc(it.Title)).Append("</a>");
                 if (!string.IsNullOrWhiteSpace(it.Summary))
-                    sb.Append("<div style=\"font-size:14px;line-height:21px;color:#475569;padding-top:6px;\">").Append(Enc(Cut(it.Summary, 260))).Append("</div>");
+                    sb.Append("<div style=\"font-family:'Roboto',Arial,Helvetica,sans-serif;font-size:14px;line-height:21px;color:#475569;padding-top:6px;\">").Append(Enc(Cut(it.Summary, 260))).Append("</div>");
                 sb.Append("<div style=\"padding-top:12px;\">");
                 if (isEvent)
-                    sb.Append("<a href=\"").Append(href).Append("\" target=\"_blank\" style=\"display:inline-block;background:#a41034;color:#ffffff;font-size:13px;line-height:16px;font-weight:bold;text-decoration:none;padding:10px 18px;border-radius:3px;\">")
+                    sb.Append("<a href=\"").Append(href).Append("\" target=\"_blank\" style=\"display:inline-block;background:#a41034;color:#ffffff;font-family:'Roboto',Arial,Helvetica,sans-serif;font-size:13px;line-height:16px;font-weight:500;text-decoration:none;padding:10px 18px;border-radius:3px;\">")
                       .Append(Enc(btn)).Append(" &rarr;</a>");
                 else
-                    sb.Append("<a href=\"").Append(href).Append("\" target=\"_blank\" style=\"font-size:13px;line-height:16px;color:#a41034;font-weight:bold;text-decoration:none;\">")
+                    sb.Append("<a href=\"").Append(href).Append("\" target=\"_blank\" style=\"font-family:'Roboto',Arial,Helvetica,sans-serif;font-size:13px;line-height:16px;color:#a41034;font-weight:500;text-decoration:none;\">")
                       .Append(Enc(btn)).Append(" &rarr;</a>");
                 sb.Append("</div></td></tr></table></td></tr>");
             }
@@ -289,7 +289,7 @@ namespace NVCMS.API.ReadGoogleSheet.Services
         {
             if (!Uri.TryCreate(url, UriKind.Absolute, out var u) || (u.Scheme != Uri.UriSchemeHttps && u.Scheme != Uri.UriSchemeHttp)) return string.Empty;
             return "<table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td style=\"padding:0;\">" +
-                   "<img src=\"" + Enc(url) + "\" width=\"568\" alt=\"Chúc mừng sinh nhật\" style=\"display:block;width:100%;max-width:568px;height:auto;border:0;\">" +
+                   "<img src=\"" + Enc(url) + "\" width=\"668\" alt=\"Chúc mừng sinh nhật\" style=\"display:block;width:100%;max-width:668px;height:auto;border:0;\">" +
                    "</td></tr></table>";
         }
 
