@@ -1,0 +1,273 @@
+﻿using Hangfire;
+using Hangfire.SqlServer;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.DataProtection;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+using NVCMS.API.ReadGoogleSheet.Data;
+using NVCMS.API.ReadGoogleSheet.Infrastructure;
+using NVCMS.API.ReadGoogleSheet.Infrastructure.Http;
+using NVCMS.API.ReadGoogleSheet.Infrastructure.Locking;
+using NVCMS.API.ReadGoogleSheet.Infrastructure.Security;
+using NVCMS.API.ReadGoogleSheet.Jobs;
+using NVCMS.API.ReadGoogleSheet.Models;
+using NVCMS.API.ReadGoogleSheet.Models.Config;
+using NVCMS.API.ReadGoogleSheet.Repositories;
+using NVCMS.API.ReadGoogleSheet.Services;
+using System.Text;
+var builder = WebApplication.CreateBuilder(args);
+
+// Add services to the container
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+
+// Configure SMTP Settings
+builder.Services.Configure<SmtpSettings>(builder.Configuration.GetSection("SmtpSettings"));
+
+// Configure SES Settings
+builder.Services.Configure<SesSettings>(builder.Configuration.GetSection("SesSettings"));
+// Configure Zalo
+builder.Services.Configure<ZaloSettings>(builder.Configuration.GetSection("ZaloSettings"));
+builder.Services.Configure<ZaloOAChatSettings>(builder.Configuration.GetSection("ZaloOAChat"));
+
+// Data Protection - mã hoá Zalo token trong DB. Key ring phải được giữ nguyên giữa các lần deploy.
+var dataProtectionKeysPath = builder.Configuration["DataProtection:KeysPath"];
+if (string.IsNullOrWhiteSpace(dataProtectionKeysPath))
+    dataProtectionKeysPath = Path.Combine(builder.Environment.ContentRootPath, "App_Data", "DataProtection-Keys");
+builder.Services.AddDataProtection()
+    .SetApplicationName("NVCMS.API.ReadGoogleSheet")
+    .PersistKeysToFileSystem(new DirectoryInfo(dataProtectionKeysPath));
+// Configure HangfireJobs
+builder.Services.Configure<HangfireJobSettings>(builder.Configuration.GetSection("HangfireJobs"));
+// Configure CRM sync jobs (thay 2 job DNN Scheduler cũ)
+builder.Services.Configure<CrmSyncSettings>(builder.Configuration.GetSection("CrmSync"));
+
+// Configure Swagger with JWT
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "NVCMS Google Sheet Reader API",
+        Version = "v1",
+        Description = "API for reading Google Sheets and importing to SQL Server"
+    });
+
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Description = "JWT Authorization header using the Bearer scheme. Enter 'Bearer' [space] and then your token in the text input below.",
+        Name = "Authorization",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer"
+    });
+
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            Array.Empty<string>()
+        }
+    });
+});
+
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+// Configure DbContext with SQL Server
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+    // Chỉ bật khi Development: log giá trị tham số SQL sẽ làm lộ Zalo token khi INSERT Zalo_Token
+    if (builder.Environment.IsDevelopment())
+        options.EnableSensitiveDataLogging();
+    options.LogTo(Console.WriteLine, Microsoft.Extensions.Logging.LogLevel.Information);
+});
+
+// Configure JWT Authentication
+var jwtSettings = builder.Configuration.GetSection("Jwt");
+var secretKey = jwtSettings["Secret"] ?? throw new InvalidOperationException("JWT Secret not configured");
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = jwtSettings["Issuer"],
+        ValidAudience = jwtSettings["Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))
+    };
+});
+
+builder.Services.AddAuthorization();
+
+// Register Repositories
+builder.Services.AddScoped(typeof(IRepository<>), typeof(MarketingRepository<>));
+builder.Services.AddScoped<ICrmDataLadingRepository, CrmDataLadingRepository>();
+builder.Services.AddScoped<IZaloTokenRepository, ZaloTokenRepository>();
+builder.Services.AddScoped<IZaloMessageLogRepository, ZaloMessageLogRepository>();
+builder.Services.AddScoped<IZaloZnsClient, ZaloZnsClient>();
+builder.Services.AddScoped<IZnsTemplateRepository, ZnsTemplateRepository>();
+builder.Services.AddScoped<IZnsSendQueueRepository, ZnsSendQueueRepository>();
+builder.Services.AddScoped<IZnsSendLogRepository, ZnsSendLogRepository>();
+builder.Services.AddScoped<ICrmSyncRepository, CrmSyncRepository>();
+
+// Register Services
+builder.Services.AddScoped<IGoogleSheetService, GoogleSheetService>();
+builder.Services.AddScoped<ICrmDataService, CrmDataService>();
+builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddSingleton<EmailTemplateRenderer>();
+builder.Services.AddScoped<IZaloService, ZaloService>();
+builder.Services.AddScoped<IZnsTemplateService, ZnsTemplateService>();
+builder.Services.AddScoped<IZnsSendService, ZnsSendService>();
+builder.Services.AddScoped<IJobAlertService, JobAlertService>();
+
+// Zalo token: mã hoá + khoá chống refresh song song
+builder.Services.AddSingleton<IZaloTokenProtector, ZaloTokenProtector>();
+builder.Services.AddSingleton<IZaloTokenRefreshLock, SqlZaloTokenRefreshLock>();
+builder.Services.AddSingleton<IZaloTokenColumnInspector, ZaloTokenColumnInspector>();
+
+// Zalo OA Chat
+builder.Services.AddScoped<IZaloOAClient, ZaloOAClient>();
+builder.Services.AddScoped<IZaloOAChatRepository, ZaloOAChatRepository>();
+builder.Services.AddScoped<IZaloOACustomerService, ZaloOACustomerService>();
+builder.Services.AddScoped<IZaloOAWebhookService, ZaloOAWebhookService>();
+builder.Services.AddScoped<IZaloOAChatService, ZaloOAChatService>();
+builder.Services.AddScoped<IZaloOAHistoryImportService, ZaloOAHistoryImportService>();
+
+// Marketing DbContext (DefaultCRMConnection)
+builder.Services.AddDbContext<CRMDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultCRMConnection"),
+        // DB CRM có compatibility level < 130 (không hỗ trợ OPENJSON) → EF sinh IN (...) cho list.Contains
+        sql => sql.UseCompatibilityLevel(120)));
+
+// Marketing Repositories
+builder.Services.AddScoped<IMarketingCampaignRepository, MarketingCampaignRepository>();
+builder.Services.AddScoped<IMarketingListMailRepository, MarketingListMailRepository>();
+builder.Services.AddScoped<IMarketingTemplateRepository, MarketingTemplateRepository>();
+builder.Services.AddScoped<IMarketingUnsubRepository, MarketingUnsubRepository>();
+builder.Services.AddScoped<IMarketingSendLogRepository, MarketingSendLogRepository>();
+builder.Services.AddScoped<IMailAccountRepository, MailAccountRepository>();
+builder.Services.AddScoped<IEmailMarketingService, EmailMarketingService>();
+builder.Services.AddScoped<ISESService, SESService>();
+
+// ── Hangfire ──────────────────────────────────────────────────────────────────
+var hangfireConn = builder.Configuration.GetConnectionString("DefaultCRMConnection")!;
+builder.Services.AddHangfire(config => config
+    .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
+    .UseSimpleAssemblyNameTypeSerializer()
+    .UseRecommendedSerializerSettings()
+    .UseSqlServerStorage(hangfireConn, new SqlServerStorageOptions
+    {
+        CommandBatchMaxTimeout = TimeSpan.FromMinutes(5),
+        SlidingInvisibilityTimeout = TimeSpan.FromMinutes(5),
+        QueuePollInterval = TimeSpan.FromSeconds(15),
+        UseRecommendedIsolationLevel = true,
+        DisableGlobalLocks = true
+    }));
+
+builder.Services.AddHangfireServer(options =>
+{
+    options.WorkerCount = Environment.ProcessorCount * 2;
+    options.Queues = ["default"];
+});
+
+// Register Jobs as transient (Hangfire activator tự resolve qua DI)
+builder.Services.AddTransient<CampaignBatchJob>();
+builder.Services.AddTransient<EventDetailStaticEmailJob>();
+// ZNS refresh token
+builder.Services.AddTransient<ZnsRefreshTokenJob>();
+builder.Services.AddTransient<ZnsTemplateSyncJob>();
+builder.Services.AddTransient<ZnsSendJob>();
+builder.Services.AddTransient<ZnsCampaignEnqueueJob>();
+// Event registration confirmation emails (enqueued by Capstone.View)
+builder.Services.AddTransient<EventRegistrationEmailJob>();
+// CRM sync - thay cho NVCMS.Modules.Scheduler (DNN)
+builder.Services.AddTransient<ImportCrmDataJob>();
+builder.Services.AddTransient<CopyStudentFromLadiJob>();
+// Zalo OA Chat
+builder.Services.AddTransient<ZaloOAWebhookProcessJob>();
+builder.Services.AddTransient<ZaloOAWebhookReprocessJob>();
+builder.Services.AddTransient<ZaloOAHistoryImportJob>();
+
+// Add CORS if needed
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
+});
+
+//builder.Services.AddHttpClient();
+builder.Services.AddHttpClient<BaseApi>();
+
+var app = builder.Build();
+
+// Configure the HTTP request pipeline
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "NVCMS Google Sheet Reader API V1");
+    });
+}
+
+app.UseHttpsRedirection();
+
+app.UseCors("AllowAll");
+
+app.UseAuthentication();
+app.UseAuthorization();
+
+// ── Hangfire Dashboard (/hangfire) ────────────────────────────────────────────
+var _hangfireCfg = builder.Configuration.GetSection("HangfireDashboard");
+var _cookieSecret = _hangfireCfg["CookieSecret"] ?? string.Empty;
+
+// Middleware chặn /hangfire trước khi Hangfire xử lý.
+// Nếu chưa có cookie hợp lệ → redirect sang /hangfire-login (HTTP 302).
+// Làm vậy vì IDashboardAuthorizationFilter.Authorize() trả false thì Hangfire
+// tự trả 401 và ghi đè mọi redirect ta set trong response.
+app.Use(async (context, next) =>
+{
+    if (context.Request.Path.StartsWithSegments("/hangfire"))
+    {
+        var cookie = context.Request.Cookies[HangfireDashboardAuthFilter.CookieName];
+        if (!HangfireDashboardAuthFilter.IsValidCookieValue(cookie, _cookieSecret))
+        {
+            var returnUrl = Uri.EscapeDataString(context.Request.PathBase + context.Request.Path);
+            context.Response.Redirect($"/hangfire-login?returnUrl={returnUrl}");
+            return;
+        }
+    }
+    await next();
+});
+
+app.UseHangfireDashboard("/hangfire", new DashboardOptions
+{
+    DashboardTitle = "NVCMS – Hangfire Monitor",
+    Authorization = [new HangfireDashboardAuthFilter(_cookieSecret)],
+    AppPath = "/swagger"
+});
+
+app.MapControllers();
+app.RegisterRecurringJobs();
+app.Run();

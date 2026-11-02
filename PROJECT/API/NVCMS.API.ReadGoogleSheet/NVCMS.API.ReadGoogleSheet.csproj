@@ -24,6 +24,11 @@
   </ItemGroup>
 
 
+  <!-- BIRTHDAY-MAIL 02/11/2026: thiệp mặc định đọc từ EmailTemplates lúc chạy -> chép theo khi build / publish -->
+  <ItemGroup>
+    <None Update="EmailTemplates\birthday-*.html" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+  </ItemGroup>
+
   <ItemGroup>
     <InternalsVisibleTo Include="NVCMS.API.ReadGoogleSheet.Tests" />
   </ItemGroup>

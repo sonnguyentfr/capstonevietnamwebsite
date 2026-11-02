@@ -14,6 +14,14 @@
         /// <summary>student_from_ladipage → Student_Info / NV_Events_Student (thay DNN CopyDataStudentFromLadiScheduledJob).</summary>
         public JobSetting CopyStudentFromLadi { get; set; } = new();
 
+        /// <summary>BIRTHDAY-MAIL 02/11/2026: thư chúc mừng sinh nhật. Tick định kỳ; giờ gửi thật + bật/tắt do Marketing đặt trong CRM.</summary>
+        public JobSetting BirthdayMail { get; set; } = new()
+        {
+            Enabled = true,
+            Cron = "*/10 * * * *",
+            TimeZone = "SE Asia Standard Time"
+        };
+
         /// <summary>Xử lý lại webhook Zalo OA bị lỗi / bị kẹt PENDING. Mặc định bật, 5 phút/lần.</summary>
         public JobSetting ZaloOAWebhookReprocess { get; set; } = new()
         {

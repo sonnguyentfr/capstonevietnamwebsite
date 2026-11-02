@@ -27,7 +27,30 @@ namespace NVCMS.API.ReadGoogleSheet.Infrastructure
             RegisterImportCrmData(settings);
             RegisterCopyStudentFromLadi(settings);
 
+            // BIRTHDAY-MAIL 02/11/2026: thư chúc mừng sinh nhật khách CRM
+            RegisterBirthdayMail(settings);
+
             //RegisterZaloOAWebhookReprocess(settings);
+        }
+
+        private static void RegisterBirthdayMail(HangfireJobSettings settings)
+        {
+            var cfg = settings.BirthdayMail;
+
+            if (!cfg.Enabled)
+            {
+                RecurringJob.RemoveIfExists(BirthdayMailJob.JobId);
+                return;
+            }
+
+            RecurringJob.AddOrUpdate<BirthdayMailJob>(
+                BirthdayMailJob.JobId,
+                x => x.Execute(CancellationToken.None),
+                string.IsNullOrWhiteSpace(cfg.Cron) ? "*/10 * * * *" : cfg.Cron,
+                new RecurringJobOptions
+                {
+                    TimeZone = ResolveTimeZone(cfg.TimeZone)
+                });
         }
 
         private static void RegisterZaloOAWebhookReprocess(HangfireJobSettings settings)
