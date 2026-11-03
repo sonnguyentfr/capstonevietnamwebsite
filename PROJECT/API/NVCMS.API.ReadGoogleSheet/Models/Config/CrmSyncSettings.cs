@@ -21,6 +21,21 @@ namespace NVCMS.API.ReadGoogleSheet.Models.Config
         /// <summary>Domain dùng để sinh QR check-in trong mail.</summary>
         public string UrlDomain { get; set; } = "http://crm.capstonevietnam.com";
 
+        /// <summary>
+        /// PortalId website (DB CapstoneVietNamWeb) để đọc tên site / logo qua SP
+        /// WebView_GetSiteSettings — phải trùng SiteSettings:PortalId của Capstone.View.
+        /// </summary>
+        public int WebsitePortalId { get; set; } = 0;
+
+        /// <summary>Dự phòng khi không đọc được WebView_GetSiteSettings.</summary>
+        public string SiteName { get; set; } = "Capstone Vietnam";
+
+        /// <summary>Dự phòng khi không đọc được WebView_GetSiteSettings.</summary>
+        public string SiteUrl { get; set; } = "https://capstonevietnam.com";
+
+        /// <summary>Dự phòng khi không đọc được WebView_GetSiteSettings (rỗng = hiện chữ SiteName).</summary>
+        public string LogoUrl { get; set; } = "";
+
         /// <summary>Nghỉ giữa 2 lần gửi mail (ms) để không vượt rate limit SES.</summary>
         public int SendMailThrottleMs { get; set; } = 1000;
 

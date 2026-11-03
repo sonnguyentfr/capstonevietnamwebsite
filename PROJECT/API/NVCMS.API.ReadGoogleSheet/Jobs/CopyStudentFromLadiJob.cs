@@ -50,6 +50,8 @@ public class CopyStudentFromLadiJob
     private readonly IEmailService _email;
     private readonly IJobAlertService _alert;
     private readonly CrmSyncSettings _settings;
+    private readonly EmailTemplateRenderer _renderer;
+    private readonly ISiteBrandingProvider _branding;
     private readonly ILogger<CopyStudentFromLadiJob> _logger;
 
     public CopyStudentFromLadiJob(
@@ -57,12 +59,16 @@ public class CopyStudentFromLadiJob
         IEmailService email,
         IJobAlertService alert,
         IOptions<CrmSyncSettings> settings,
+        EmailTemplateRenderer renderer,
+        ISiteBrandingProvider branding,
         ILogger<CopyStudentFromLadiJob> logger)
     {
         _crm = crm;
         _email = email;
         _alert = alert;
         _settings = settings.Value;
+        _renderer = renderer;
+        _branding = branding;
         _logger = logger;
     }
 
@@ -304,7 +310,7 @@ public class CopyStudentFromLadiJob
         await _crm.MarkLadipageSyncedAsync(row.id);
 
         await SendConfirmationMailAsync(
-            cat, evt, firstName, lastName, toEmail, studentCode, cancellationToken);
+            cat, evt, firstName, lastName, toEmail, row.so_dien_thoai, studentCode, cancellationToken);
 
         return isNewStudent ? RowOutcome.CreatedNew : RowOutcome.LinkedExisting;
     }
@@ -374,23 +380,34 @@ public class CopyStudentFromLadiJob
 
     private async Task SendConfirmationMailAsync(
         EventCatRow cat, EventRow evt,
-        string? firstName, string? lastName, string? toEmail, string studentCode,
+        string? firstName, string? lastName, string? toEmail, string? phone, string studentCode,
         CancellationToken cancellationToken)
     {
-        var subject = $"Thư xác nhận đăng ký thành công: {cat.CatName}";
+        // Dùng chung template EmailTemplates/customer-registration.html với trang
+        // /dang-ky-su-kien (Capstone.View EventRegistrationMailService) để khách
+        // đăng ký qua Ladi hay qua website đều nhận cùng một mẫu mail.
+        var site = await _branding.GetAsync(cancellationToken);
+        var eventName = cat.CatName ?? string.Empty;
 
-        var body = EventRegistrationMailTemplate.BuildCustomerBody(
-            isSendCode: cat.sendcode ?? false,
-            titleMail: cat.titleMail,
-            firstName: firstName,
-            lastName: lastName,
-            catName: cat.CatName,
-            thoiGianTu: FormatEventTime(evt.fromdatetime),
-            thoiGianDen: FormatEventTime(evt.enddatetime),
-            diaDiem: evt.diadiem,
-            contentMail: WebUtility.HtmlDecode(cat.ContentMail ?? string.Empty),
-            urlDomain: _settings.UrlDomain,
-            studentCode: studentCode);
+        var subject = CustomerRegistrationMail.BuildSubject(site.SiteName, eventName);
+
+        var body = CustomerRegistrationMail.BuildBody(_renderer, new CustomerRegistrationMailModel
+        {
+            StudentName = $"{firstName} {lastName}".Trim(),
+            StudentCode = studentCode,
+            StudentPhone = NormalizeVnPhone(phone),
+            EventName = eventName,
+            EventLocation = evt.diadiem ?? string.Empty,
+            EventDate = evt.fromdatetime?.ToString("dd/MM/yyyy") ?? string.Empty,
+            EventTime = evt.fromdatetime?.ToString("HH:mm") ?? string.Empty,
+            // ContentMail lưu dạng HTML-encode (editor DNN) → decode như job VB cũ
+            Notes = WebUtility.HtmlDecode(cat.ContentMail ?? string.Empty),
+            SendCode = cat.sendcode ?? false,
+            SiteName = site.SiteName,
+            SiteUrl = site.SiteUrl,
+            LogoUrl = site.LogoUrl,
+            CheckinDomain = _settings.UrlDomain,
+        });
 
         string recipient;
         string? cc;
@@ -456,9 +473,6 @@ public class CopyStudentFromLadiJob
     private static bool IsInvalidEmail(string? email)
         => string.IsNullOrWhiteSpace(email)
            || InvalidEmails.Contains(email.Trim(), StringComparer.OrdinalIgnoreCase);
-
-    private static string FormatEventTime(DateTime? value)
-        => value?.ToString("dd/MM/yyyy HH:mm") ?? string.Empty;
 
     /// <summary>
     /// Chặn giá trị nằm ngoài dải của kiểu SQL datetime (trước 01/01/1753),

@@ -25,8 +25,9 @@
 
 
   <!-- BIRTHDAY-MAIL 02/11/2026: thiệp mặc định đọc từ EmailTemplates lúc chạy -> chép theo khi build / publish -->
+  <!-- 03/11/2026: customer-registration.html (mail xác nhận CopyStudentFromLadiJob) cũng phải publish theo -->
   <ItemGroup>
-    <None Update="EmailTemplates\birthday-*.html" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+    <None Update="EmailTemplates\*.html" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
   </ItemGroup>
 
   <ItemGroup>
