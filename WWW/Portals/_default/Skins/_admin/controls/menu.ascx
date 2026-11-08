@@ -17,6 +17,12 @@
                 </div>
                 <div class="nk-sidebar-footer">
                     <ul class="nk-menu nk-menu-md apps-menu">
+                        <%-- PERSONABAR-TOGGLE: bật / tắt Persona Bar của DNN (xem controls/personabar.ascx). Icon MDI mdi-adjust: font + CSS nằm trong personabar.ascx (font ở /fonts/materialdesignicons-webfont.*), đang bật thì nút đổi màu --%>
+                        <li class="nk-menu-item nv-pb-toggle" id="nvPbToggle">
+                            <a href="javascript:void(0)" class="nk-menu-link" title="Hiện Persona Bar" aria-pressed="false" onclick="return window.nvPersonaBar ? nvPersonaBar.toggle() : false;">
+                                <span class="nk-menu-icon"><i class="mdi mdi-adjust"></i></span>
+                            </a>
+                        </li>
                         <li class="nk-menu-item">
                             <a href="#" class="nk-menu-link" title="Settings">
                                 <span class="nk-menu-icon"><em class="icon ni ni-setting"></em></span>

@@ -1,5 +1,7 @@
 ﻿<%@ Control Language="vb" AutoEventWireup="false" Explicit="true" codefile="inc_version.ascx.vb" Inherits="DesktopModules.TinTuc.Manager.newsapprove.NewsApprove_inc_version" %>
 
+<link rel="stylesheet" href="/DesktopModules/NVCMS.TinTuc/Manager/tt-v3.css" />
+<div class="nvc tt-app tt-v3">
 <table id="Table1" border="0" width="100%" >
 	<tr>
 		<td>
@@ -30,3 +32,4 @@
         return false;
     });
 </script>
+</div>

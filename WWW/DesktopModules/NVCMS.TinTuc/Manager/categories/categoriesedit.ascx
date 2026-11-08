@@ -1,5 +1,7 @@
 <%@ Control Language="vb" AutoEventWireup="false" Explicit ="true"  codefile="categoriesedit.ascx.vb" Inherits="DesktopModules.TinTuc.Manager.categories.categoriesedit" %>
 
+<link rel="stylesheet" href="/DesktopModules/NVCMS.TinTuc/Manager/tt-v3.css" />
+<div class="nvc tt-app tt-v3">
 <div class="x_content">
     <br>
     <div id="demo-form2" class="form-horizontal form-label-left">
@@ -103,4 +105,5 @@
         </div>
 
     </div>
+</div>
 </div>

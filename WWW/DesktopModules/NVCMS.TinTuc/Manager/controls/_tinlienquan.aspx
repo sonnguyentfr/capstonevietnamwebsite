@@ -85,8 +85,9 @@
 
         }
     </script>
+<link rel="stylesheet" href="/DesktopModules/NVCMS.TinTuc/Manager/tt-v3.css" />
 </head>
-<body>
+<body class="nvc tt-app tt-v3">
     <form id="formChoose" runat="server">
     <div id="content" style="padding:5px;">
         <div class="nav-main">

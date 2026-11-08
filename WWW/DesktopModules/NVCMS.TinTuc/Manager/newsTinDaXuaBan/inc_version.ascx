@@ -1,4 +1,6 @@
 ﻿<%@ Control Language="vb" AutoEventWireup="false" Explicit="true" CodeFile="inc_version.ascx.vb" Inherits="DesktopModules.TinTuc.Manager.newsapprove.NewsApprove_inc_version" %>
+<link rel="stylesheet" href="/DesktopModules/NVCMS.TinTuc/Manager/tt-v3.css" />
+<div class="nvc tt-app tt-v3">
 <script src="/static/_admin/js/diff_match_patch.js"></script>
 <style type="text/css">
     ul.timeline-list {
@@ -137,4 +139,4 @@
     <!-- .card -->
 </div>
 <asp:HiddenField ID="hdfNewId" runat="server" />
-
+</div>

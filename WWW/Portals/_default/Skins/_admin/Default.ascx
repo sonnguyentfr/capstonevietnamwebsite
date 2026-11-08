@@ -3,6 +3,7 @@
 <%@ Register Src="~/Portals/_default/Skins/_admin/controls/js.ascx" TagPrefix="uc1" TagName="js" %>
 <%@ Register Src="~/Portals/_default/Skins/_admin/controls/menu.ascx" TagPrefix="uc1" TagName="menu" %>
 <%@ Register Src="~/Portals/_default/Skins/_admin/controls/footer.ascx" TagPrefix="uc1" TagName="footer" %>
+<%@ Register Src="~/Portals/_default/Skins/_admin/controls/personabar.ascx" TagPrefix="uc1" TagName="personabar" %>
 <%@ Register Src="~/Portals/_default/Skins/_admin/controls/header.ascx" TagPrefix="uc1" TagName="header" %>
 
 <uc1:headercss runat="server" ID="headercss" />
@@ -39,3 +40,4 @@
     <uc1:js runat="server" ID="js" />
 </div>
 <uc1:footer runat="server" ID="footer" />
+<uc1:personabar runat="server" ID="personabar" />

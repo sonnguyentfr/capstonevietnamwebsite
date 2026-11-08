@@ -1,6 +1,8 @@
 ﻿<%@ Control Language="VB" AutoEventWireup="false" CodeFile="tinlienquan.ascx.vb" Inherits="NVCMS.Modules.TinTuc.newsedittinleinquan" %>
 <%@ Register TagPrefix="dnn" Assembly="DotNetNuke" Namespace="DotNetNuke.UI.WebControls" %>
 
+<link rel="stylesheet" href="/DesktopModules/NVCMS.TinTuc/Manager/tt-v3.css" />
+<div class="nvc tt-app tt-v3">
 <style>
     .tlq-popup-toolbar {
         display: flex;
@@ -152,4 +154,4 @@
     var to = document.getElementById('<%=txtEndDate.ClientID%>').value;
 
 </script>
-
+</div>

@@ -7,6 +7,8 @@
 <link href="/static/_admin/js/jquery.tagsinput/bootstrap-tagsinput.css" rel="stylesheet" />
 <script src="/static/_admin/js/jquery.tagsinput/bootstrap-tagsinput.js"></script>
 <link rel="stylesheet" href="/Portals/_default/Skins/_admin/controls/newsedit.css" />
+<link rel="stylesheet" href="/DesktopModules/NVCMS.TinTuc/Manager/news/newsedit-v3.css" />
+<script src="/DesktopModules/NVCMS.TinTuc/Manager/news/newsedit-v3.js"></script>
 <link rel="stylesheet" href="/static/_admin/assets/css/libs/jstree.css?ver=2.7.0">
 <script src="/static/_admin/assets/js/libs/jstree.js?ver=2.7.0"></script>
 <style type="text/css">
@@ -156,11 +158,10 @@
     <!-- .nk-block-between -->
 </div>
 <div class="nk-block">
-    <div class="row g-gs">
-        <div class="col-md-9 col-lg-9 col-xxl-9">
-            <div class="card card-bordered">
-                <div class="card-header border-bottom">
-                    <ul class="cc_button">
+<div class="nvc tt-app tt-ed ne-v3">
+<script>window.NE_CFG = { editor: '<%=teContent.ClientID%>', itemId: '<%=hdf_itemid.ClientID%>', msg: '<%=lblMessage.ClientID%>' };</script>
+<div class="tt-ed-actionbar">
+                    <ul class="cc_button tt-ed-actions">
                         <li>
                             <asp:LinkButton ID="lbtSave" ValidationGroup="InputValidate" runat="server" Font-Bold="True" CssClass=" btn btn-sm  btn-outline-primary" OnClientClick="formModified=false; updateFormAttachedMedia(); saveNews(); return false;">
                                 <span>Lưu thay đổi</span><em class="icon ni ni-save-fill"></em>
@@ -199,8 +200,11 @@
 
                     </ul>
 
-                </div>
-                <div class="card-inner">
+</div>
+<div class="tt-ed-grid">
+<div class="tt-ed-main">
+<div class="card card-bordered tt-card tt-card-write">
+<div class="card-inner">
                     <div class="form-group">
                         <div class="form-control-wrap">
                             <asp:TextBox ID="txtTitle" Font-Names="Nunito" runat="server" CssClass="form-control form-control-xl form-control-outlined editor-f-22 editor-font" ValidationGroup="InputValidate"></asp:TextBox>
@@ -264,6 +268,11 @@
                             <textarea id="teContent" width="100%" runat="server" font-size="22px" height="1500px" validationgroup="InputValidate"></textarea>
                         </div>
                     </div>
+</div>
+</div>
+<div class="card card-bordered tt-card" id="ne-card-extra">
+<div class="tt-card-head"><button type="button" class="tt-card-toggle" data-ne-toggle aria-expanded="true"><span>Tag, nguồn &amp; SEO</span><em class="icon ni ni-chevron-down tt-card-chev"></em></button></div>
+<div class="tt-card-body">
                     <div class="form-group">
                         <div class="form-control-wrap">
                             <asp:TextBox ID="txtButDanh" runat="server" CssClass="form-control form-control-xl form-control-outlined"></asp:TextBox>
@@ -277,56 +286,6 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <div class="form-control-wrap">
-                            <asp:TextBox ID="txtSource" runat="server" CssClass="form-control form-control-xl form-control-outlined"></asp:TextBox>
-                            <label class="form-label-outlined" for="<%=txtSource.ClientID %>">Link nguồn (nếu copy từ nơi khác)</label>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="overline-title-alt mb-2">Lưu ý / bút phê</div>
-                        <asp:UpdatePanel ID="udpLuuy" runat="server">
-                            <ContentTemplate>
-                                <div class="form-control-wrap">
-                                    <ul class="newsnote">
-                                        <asp:Repeater ID="rptNotes" runat="server">
-                                            <ItemTemplate>
-                                                <li>
-                                                    <b><%#BL.GetButDanh(PortalId, Eval("UserId")) %></b> <small><%#BL.FormatDate(Eval("CreatedDate")) %></small>: <%#Eval("NoiDung") %>
-                                                </li>
-                                            </ItemTemplate>
-                                        </asp:Repeater>
-                                    </ul>
-                                    <label class="form-label" for="default-textarea">Lời nhắn:</label>
-                                    <div class="form-control-wrap">
-                                        <asp:TextBox ID="txtNoteNews" runat="server" TextMode="MultiLine" CssClass="form-control no-resize newsnotes"></asp:TextBox>
-                                        <asp:RequiredFieldValidator ValidationGroup="InputValidateNewsNote" ControlToValidate="txtNoteNews" CssClass="NormalRed" Display="Dynamic" ID="RequiredFieldValidator3" runat="server" ErrorMessage="Nhập nội dung lời nhắn!"></asp:RequiredFieldValidator>
-                                        <asp:RegularExpressionValidator
-                                            ID="RegularExpressionValidator1" runat="server" ControlToValidate="txtNoteNews" ValidationGroup="InputValidateNewsNote"
-                                            Display="Dynamic" CssClass="NormalRed" ErrorMessage="Nhập nhiều vào"
-                                            ForeColor="" ValidationExpression=".{3}.*"></asp:RegularExpressionValidator>
-                                    </div>
-                                    <asp:LinkButton ID="lbtSendNewsNote" ValidationGroup="InputValidateNewsNote" runat="server" Font-Bold="True" CssClass="btn btn-dim btn-info btn-sm">
-                                            <span>Lưu thay đổi</span><em class="icon ni ni-save-fill"></em>
-                                    </asp:LinkButton>
-
-                                </div>
-                            </ContentTemplate>
-                        </asp:UpdatePanel>
-                    </div>
-                </div>
-            </div>
-            <!-- .card -->
-        </div>
-        <!-- .col -->
-        <div class="col-md-3 col-lg-3 col-xxl-3">
-            <div class="card card-bordered h-100">
-                <div class="card-inner">
-                    <%--<div class="form-group">
-                        <div class="card-inner2">
-                            <a href="#" data-target="addProduct" class="toggle btn btn-sm btn-danger d-none d-md-inline-flex"><em class="icon ni ni-tags-fill"></em><span>Thư viện TAGs</span></a>
-                        </div>
-                    </div>--%>
-                    <div class="form-group">
                         <div class="card-inner2">
                             <h6 class="overline-title title">Từ khóa chủ đạo</h6>
                             <div class="form-control-wrap">
@@ -334,6 +293,59 @@
                             </div>
                         </div>
                     </div>
+</div>
+</div>
+</div>
+<aside class="tt-ed-side" aria-label="Ảnh, tệp và thông tin bài">
+<div class="tt-side-tabs" role="tablist" aria-label="Khung bên phải">
+<button type="button" class="tt-side-tab" role="tab" data-ne-side="media"><em class="icon ni ni-img"></em><span>Ảnh &amp; tệp</span></button>
+<button type="button" class="tt-side-tab" role="tab" data-ne-side="info"><em class="icon ni ni-file-text"></em><span>Thông tin bài</span></button>
+</div>
+<div class="tt-side-pane tt-ip" data-side-pane="info" role="tabpanel">
+<div class="card card-bordered tt-card" id="ne-card-publish">
+<div class="tt-card-head"><button type="button" class="tt-card-toggle" data-ne-toggle aria-expanded="true"><span>Xuất bản</span><em class="icon ni ni-chevron-down tt-card-chev"></em></button></div>
+<div class="tt-card-body">
+                    <div class="form-group" id="lblngayxuatban" runat="server">
+                        <div class="card-inner2">
+                            <h6 class="overline-title title text-danger">NGÀY GIỜ XUẤT BẢN</h6>
+                            <asp:TextBox ID="txtPublishedDate" runat="server" CssClass="form-control datetimepicker"></asp:TextBox>
+                        </div>
+                    </div>
+</div>
+</div>
+<div class="card card-bordered tt-card" id="ne-card-register">
+<div class="tt-card-head"><button type="button" class="tt-card-toggle" data-ne-toggle aria-expanded="true"><span>Đăng ký &amp; bảo vệ bài viết</span><em class="icon ni ni-chevron-down tt-card-chev"></em></button></div>
+<div class="tt-card-body">
+<div class="form-group"><div class="form-control-wrap">
+<asp:TextBox ID="txtSiteLink" runat="server" CssClass="form-control form-control-xl form-control-outlined" MaxLength="500" placeholder="https://"></asp:TextBox>
+<label class="form-label-outlined" for="<%=txtSiteLink.ClientID %>">Link đến site</label>
+</div></div>
+                    <div class="form-group">
+                        <div class="form-control-wrap">
+                            <asp:TextBox ID="txtSource" runat="server" CssClass="form-control form-control-xl form-control-outlined"></asp:TextBox>
+                            <label class="form-label-outlined" for="<%=txtSource.ClientID %>">Link đăng ký</label>
+                        </div>
+                    </div>
+<div class="form-group"><div class="form-control-wrap">
+<asp:TextBox ID="txtPostPassword" runat="server" CssClass="form-control form-control-xl form-control-outlined ne-pass" MaxLength="50" autocomplete="off"></asp:TextBox>
+<label class="form-label-outlined" for="<%=txtPostPassword.ClientID %>">Mật khẩu xem bài (để trống = ai cũng xem được)</label>
+</div></div>
+</div>
+</div>
+<div class="card card-bordered tt-card" id="ne-card-other">
+<div class="tt-card-head"><button type="button" class="tt-card-toggle" data-ne-toggle aria-expanded="true"><span>Thông tin bài</span><em class="icon ni ni-chevron-down tt-card-chev"></em></button></div>
+<div class="tt-card-body">
+                    <div class="form-group">
+                        <div class="card-inner2">
+                            <h6 class="overline-title title">NGÀY ĐĂNG</h6>
+                            <asp:TextBox ID="txtCreateDate" runat="server" CssClass="form-control" Enabled="false"></asp:TextBox>
+                        </div>
+                    </div>
+</div>
+</div>
+<div class="card card-bordered tt-card" id="ne-card-classify">
+<div class="tt-card-head"><button type="button" class="tt-card-toggle" data-ne-toggle aria-expanded="true"><span>Chuyên mục &amp; phân loại</span><em class="icon ni ni-chevron-down tt-card-chev"></em></button></div>
+<div class="tt-card-body">
                     <div class="form-group">
                         <div class="card-inner2">
                             <h6 class="overline-title title" style="margin-bottom: 20px;">Thể loại chuyên mục</h6>
@@ -364,7 +376,7 @@
                                 ErrorMessage="Chưa chọn chuyên mục" InitialValue="0" ValidationGroup="InputValidate"></asp:RequiredFieldValidator>
                         </div>
                     </div>
-                    <div class="form-group" style="display: none">
+                    <div class="form-group ne-subcat">
                         <div class="card card-bordered">
                             <div class="card-inner">
                                 <div class="overline-title-alt mb-2">Chuyên mục phụ</div>
@@ -376,6 +388,31 @@
                             </div>
                         </div>
                     </div>
+</div>
+</div>
+<div class="card card-bordered tt-card" id="ne-card-avatar">
+<div class="tt-card-head"><button type="button" class="tt-card-toggle" data-ne-toggle aria-expanded="true"><span>Ảnh đại diện</span><em class="icon ni ni-chevron-down tt-card-chev"></em></button></div>
+<div class="tt-card-body">
+                    <div class="form-group">
+                        <div class="form-group">
+                            <div class="form-control-wrap">
+                                <a href="#" class="btn btn-xs btn-info"><em class="icon ni ni-reports-alt"></em><span>Ảnh đại diện</span></a>
+                                <div class="border border-primary p-2">
+                                    <asp:HiddenField ID="txtImagePath" runat="server" />
+                                    <div id="imgDD" runat="server">
+                                        <img src="/images/no_avatar.gif" alt="Ảnh đại diện" />
+                                    </div>
+                                </div>
+
+                                <!-- .nk-tb-list -->
+                            </div>
+                        </div>
+                    </div>
+</div>
+</div>
+<div class="card card-bordered tt-card" id="ne-card-display">
+<div class="tt-card-head"><button type="button" class="tt-card-toggle" data-ne-toggle aria-expanded="true"><span>Hiển thị</span><em class="icon ni ni-chevron-down tt-card-chev"></em></button></div>
+<div class="tt-card-body">
                     <div class="form-group">
                         <div class="card-inner2">
                             <h6 class="overline-title title">Cấu hình hiện thị</h6>
@@ -482,6 +519,11 @@
 
                         </div>
                     </div>
+</div>
+</div>
+<div class="card card-bordered tt-card" id="ne-card-school">
+<div class="tt-card-head"><button type="button" class="tt-card-toggle" data-ne-toggle aria-expanded="true"><span>Trường liên quan &amp; thông báo</span><em class="icon ni ni-chevron-down tt-card-chev"></em></button></div>
+<div class="tt-card-body">
                     <div class="form-group">
                         <div class="overline-title-alt mb-2">Trường liên quan</div>
                         <div class="form-group">
@@ -526,18 +568,11 @@
                             </div>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <div class="card-inner2">
-                            <h6 class="overline-title title">NGÀY ĐĂNG</h6>
-                            <asp:TextBox ID="txtCreateDate" runat="server" CssClass="form-control" Enabled="false"></asp:TextBox>
-                        </div>
-                    </div>
-                    <div class="form-group" id="lblngayxuatban" runat="server">
-                        <div class="card-inner2">
-                            <h6 class="overline-title title text-danger">NGÀY GIỜ XUẤT BẢN</h6>
-                            <asp:TextBox ID="txtPublishedDate" runat="server" CssClass="form-control datetimepicker"></asp:TextBox>
-                        </div>
-                    </div>
+</div>
+</div>
+<div class="card card-bordered tt-card" id="ne-card-royalty" style="display: none">
+<div class="tt-card-head"><button type="button" class="tt-card-toggle" data-ne-toggle aria-expanded="true"><span>Nhuận bút</span><em class="icon ni ni-chevron-down tt-card-chev"></em></button></div>
+<div class="tt-card-body">
                     <div class="form-group">
                         <div class="card-inner2">
                             <h6 class="overline-title title inline" style="display: inline">Nhuận bút</h6>
@@ -641,23 +676,51 @@
                             </div>
                         </div>
                     </div>
+</div>
+</div>
+<div class="card card-bordered tt-card" id="ne-card-notes">
+<div class="tt-card-head"><button type="button" class="tt-card-toggle" data-ne-toggle aria-expanded="true"><span>Lưu ý / bút phê</span><em class="icon ni ni-chevron-down tt-card-chev"></em></button></div>
+<div class="tt-card-body">
                     <div class="form-group">
-                        <div class="form-group">
-                            <div class="form-control-wrap">
-                                <a href="#" class="btn btn-xs btn-info"><em class="icon ni ni-reports-alt"></em><span>Ảnh đại diện</span></a>
-                                <div class="border border-primary p-2">
-                                    <asp:HiddenField ID="txtImagePath" runat="server" />
-                                    <div id="imgDD" runat="server">
-                                        <img src="/images/no_avatar.gif" alt="Ảnh đại diện" />
+                        <div class="overline-title-alt mb-2">Lưu ý / bút phê</div>
+                        <asp:UpdatePanel ID="udpLuuy" runat="server">
+                            <ContentTemplate>
+                                <div class="form-control-wrap">
+                                    <ul class="newsnote">
+                                        <asp:Repeater ID="rptNotes" runat="server">
+                                            <ItemTemplate>
+                                                <li>
+                                                    <b><%#BL.GetButDanh(PortalId, Eval("UserId")) %></b> <small><%#BL.FormatDate(Eval("CreatedDate")) %></small>: <%#Eval("NoiDung") %>
+                                                </li>
+                                            </ItemTemplate>
+                                        </asp:Repeater>
+                                    </ul>
+                                    <label class="form-label" for="default-textarea">Lời nhắn:</label>
+                                    <div class="form-control-wrap">
+                                        <asp:TextBox ID="txtNoteNews" runat="server" TextMode="MultiLine" CssClass="form-control no-resize newsnotes"></asp:TextBox>
+                                        <asp:RequiredFieldValidator ValidationGroup="InputValidateNewsNote" ControlToValidate="txtNoteNews" CssClass="NormalRed" Display="Dynamic" ID="RequiredFieldValidator3" runat="server" ErrorMessage="Nhập nội dung lời nhắn!"></asp:RequiredFieldValidator>
+                                        <asp:RegularExpressionValidator
+                                            ID="RegularExpressionValidator1" runat="server" ControlToValidate="txtNoteNews" ValidationGroup="InputValidateNewsNote"
+                                            Display="Dynamic" CssClass="NormalRed" ErrorMessage="Nhập nhiều vào"
+                                            ForeColor="" ValidationExpression=".{3}.*"></asp:RegularExpressionValidator>
                                     </div>
-                                </div>
+                                    <asp:LinkButton ID="lbtSendNewsNote" ValidationGroup="InputValidateNewsNote" runat="server" Font-Bold="True" CssClass="btn btn-dim btn-info btn-sm">
+                                            <span>Lưu thay đổi</span><em class="icon ni ni-save-fill"></em>
+                                    </asp:LinkButton>
 
-                                <!-- .nk-tb-list -->
-                            </div>
-                        </div>
+                                </div>
+                            </ContentTemplate>
+                        </asp:UpdatePanel>
                     </div>
+</div>
+</div>
+</div>
+<section class="tt-side-pane tt-mp" data-side-pane="media" role="tabpanel">
+<div class="tt-mp-title">Ảnh &amp; tệp của bài</div>
+<div class="tt-drop"><em class="icon ni ni-upload-cloud tt-drop-icon" aria-hidden="true"></em><div class="tt-drop-text"><b>Kéo thả ảnh, tệp vào đây</b><small>hoặc bấm nút Chọn tệp bên dưới</small></div></div>
+<div class="tt-mp-body">
                     <div class="form-group">
-                        <div class="overline-title-alt mb-2">Tải ảnh / Media</div>
+                        
                         <div class="form-group">
                             <div class="form-control-wrap uploadbtn">
                                 <asp:FileUpload ID="file_upload" class="btn btn-xs btn-info multi" AllowMultiple="true" runat="server" />
@@ -724,13 +787,11 @@
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-            <!-- .card -->
-        </div>
-
-        <!-- .col -->
-    </div>
+</div>
+</section>
+</aside>
+</div>
+</div>
     <div class="border-top nvcms-sticky-btn p-2">
         <asp:LinkButton ID="lbtSave2" ValidationGroup="InputValidate" runat="server" Font-Bold="True" CssClass="__neo_submit-BTN btn btn-sm  btn-outline-primary" OnClientClick="formModified=false; updateFormAttachedMedia(); saveNews(); return false;">
                 <span>Lưu thay đổi</span><em class="icon ni ni-save-fill"></em>
@@ -1313,7 +1374,8 @@
         SourceText = Base64.encode($('#<%=txtSource.ClientID %>').val());
         keyword = Base64.encode($('#<%=txtkeyword.ClientID %>').val());
         arrdongtg = document.getElementById('<%=hdf_dongtg.ClientID %>').value;
-        luuy = "";
+        luuy = Base64.encode($('#<%=txtPostPassword.ClientID %>').val() || '');
+        nguontin = Base64.encode($('#<%=txtSiteLink.ClientID %>').val() || '');
         anhdd = Base64.encode($('#<%=txtImagePath.ClientID %>').val());
         mediaList = Base64.encode($('#<%=hdf_list_files.ClientID %>').val());
         imgList = Base64.encode($('#<%=hdf_IMG_files.ClientID %>').val());

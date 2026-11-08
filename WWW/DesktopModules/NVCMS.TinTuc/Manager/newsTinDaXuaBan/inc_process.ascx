@@ -1,5 +1,7 @@
 <%@ Control Language="vb" AutoEventWireup="false" CodeFile="inc_process.ascx.vb" Inherits="DesktopModules.TinTuc.Manager.newsapprove.Approve_inc_process" %>
 
+<link rel="stylesheet" href="/DesktopModules/NVCMS.TinTuc/Manager/tt-v3.css" />
+<div class="nvc tt-app tt-v3">
 <div class="nav-main">
 <table class="nav-top nav-noborder" width="100%">
     <tr>
@@ -52,3 +54,4 @@
         </td>
     </tr>
 </table>
+</div>

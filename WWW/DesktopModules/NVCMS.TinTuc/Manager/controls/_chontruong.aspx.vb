@@ -45,7 +45,7 @@ Namespace DesktopModules.TinTuc.Control
         End Sub
 
         Protected Sub lbtPrev_Click(ByVal sender As Object, ByVal e As EventArgs)
-            If CurrentPage > 0 Then
+            If CurrentPage > 1 Then
                 CurrentPage -= 1
                 LoadSchools()
             End If
@@ -54,7 +54,7 @@ Namespace DesktopModules.TinTuc.Control
         Protected Sub lbtNext_Click(ByVal sender As Object, ByVal e As EventArgs)
             Dim total As Integer = GetTotal()
             Dim totalPages As Integer = Math.Max(1, CInt(Math.Ceiling(total / PAGE_SIZE)))
-            If CurrentPage < totalPages - 1 Then
+            If CurrentPage < totalPages Then
                 CurrentPage += 1
                 LoadSchools()
             End If
@@ -75,8 +75,8 @@ Namespace DesktopModules.TinTuc.Control
             lblCurPage.Text = CurrentPage.ToString()
             lblTotalPage.Text = totalPages.ToString()
 
-            lbtPrev.Enabled = (CurrentPage > 0)
-            lbtNext.Enabled = (CurrentPage < totalPages - 1)
+            lbtPrev.Enabled = (CurrentPage > 1)
+            lbtNext.Enabled = (CurrentPage < totalPages)
 
             Dim lst = _schoolCtl.Marketing_Truong_Find_Index(keyword, "", -1, -1, -1, CurrentPage, PAGE_SIZE)
 

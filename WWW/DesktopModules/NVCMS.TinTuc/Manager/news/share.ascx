@@ -1,4 +1,6 @@
 <%@ Control Language="vb" AutoEventWireup="false" Explicit="true" CodeFile="share.ascx.vb" Inherits="DesktopModules.TinTuc.Manager.news.newsedit" EnableViewState="true" %>
+<link rel="stylesheet" href="/DesktopModules/NVCMS.TinTuc/Manager/tt-v3.css" />
+<div class="nvc tt-app tt-v3">
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <%@ Register TagPrefix="telerik" Namespace="Telerik.Web.UI" Assembly="Telerik.Web.UI" %>
 <script src="/Providers/HtmlEditorProviders/DNNConnect.CKE/js/ckeditor/4.12.1/ckeditor.js"></script>
@@ -81,7 +83,4 @@
         </div>
     </ProgressTemplate>
 </asp:UpdateProgress>
-
-
-
-
+</div>

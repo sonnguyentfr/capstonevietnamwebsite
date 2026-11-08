@@ -1,5 +1,7 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" CodeFile="inc_edit.ascx.cs" Inherits="DesktopModules.TinTuc.Manager.template.inc_edit" %>
 
+<link rel="stylesheet" href="/DesktopModules/NVCMS.TinTuc/Manager/tt-v3.css" />
+<div class="nvc tt-app tt-v3">
 <script src="/static/_Admin/js/ace/ace.js"></script>
 <div class="row">
     <div class="col-md-8 col-xs-12">
@@ -100,3 +102,4 @@
         });
     });
 </script>
+</div>

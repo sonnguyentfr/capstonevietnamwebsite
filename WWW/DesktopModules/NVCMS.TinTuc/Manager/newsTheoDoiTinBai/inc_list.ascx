@@ -1,5 +1,7 @@
 <%@ Control Language="vb" AutoEventWireup="false" CodeFile="inc_list.ascx.vb" Inherits="DesktopModules.TinTuc.Manager.newsapprove.Approve_inc_list" %>
 <%@ Register TagPrefix="dnn" Assembly="DotNetNuke" Namespace="DotNetNuke.UI.WebControls" %>
+<link rel="stylesheet" href="/DesktopModules/NVCMS.TinTuc/Manager/tt-v3.css" />
+<div class="nvc tt-app tt-v3">
 <asp:UpdatePanel ID="UpdatePanel1" runat="server">
     <ContentTemplate>
         <div class="nk-block-head nk-block-head-sm">
@@ -412,3 +414,4 @@
         });
     });
 </script>
+</div>

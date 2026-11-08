@@ -5,6 +5,8 @@
 <%@ Register Src="~/DesktopModules/NVCMS.TinTuc/Display/Controls/DocNhieu.ascx" TagPrefix="uc" TagName="DocNhieu" %>
 <%@ Register TagPrefix="uc" TagName="RELATED" Src="~/DesktopModules/NVCMS.TinTuc/Display/Controls/Related.ascx" %>
 <%@ Register Src="~/DesktopModules/NVCMS.TinTuc/Display/Controls/TinMoiNhat.ascx" TagPrefix="uc" TagName="MoiNhat" %>
+<link rel="stylesheet" href="/DesktopModules/NVCMS.TinTuc/Manager/tt-v3.css" />
+<div class="nvc tt-app tt-v3">
 <%--<%@ Register Src="~/DesktopModules/NVCMS.Video/control/home/TruyenHinh.ascx" TagPrefix="uc" TagName="TruyenHinh" %>--%>
 <%@ Register Src="~/DesktopModules/NVCMS.Banner/display/Default.ascx" TagPrefix="uc" TagName="Default" %>
 <%--<%@ Register Src="~/DesktopModules/NVCMS.Video/control/home/Videomoinhat.ascx" TagPrefix="uc" TagName="Videomoinhat" %>--%>
@@ -252,3 +254,4 @@
         });
     });
 </script>
+</div>

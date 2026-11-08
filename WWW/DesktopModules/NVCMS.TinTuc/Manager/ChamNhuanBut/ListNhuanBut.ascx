@@ -1,6 +1,8 @@
 ﻿<%@ Control Language="vb" Inherits="NVCMS.Modules.TinTuc.NhuanButView" ClientIDMode="Static" CodeFile="ListNhuanBut.ascx.vb" AutoEventWireup="false" Explicit="True" %>
 <%@ Register TagPrefix="dnn" Assembly="DotNetNuke.Web" Namespace="DotNetNuke.Web.UI.WebControls" %>
 <%@ Register TagPrefix="dnn" Assembly="DotNetNuke" Namespace="DotNetNuke.UI.WebControls" %>
+<link rel="stylesheet" href="/DesktopModules/NVCMS.TinTuc/Manager/tt-v3.css" />
+<div class="nvc tt-app tt-v3">
 <%--<%@ Register Src="~/DesktopModules/TNReport/AdminForm.ascx" TagName="AdminForm" TagPrefix="pu" %>--%>
 <script type="text/javascript" src="/static/_admin/js/autoNumeric.js"></script>
 <script src="/static/_admin/js/nvcmsinit.js"></script>
@@ -371,3 +373,4 @@
         });
     };
 </script>
+</div>

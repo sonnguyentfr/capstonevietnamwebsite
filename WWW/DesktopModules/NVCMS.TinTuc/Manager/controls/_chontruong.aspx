@@ -147,8 +147,9 @@
             color: #555
         }
     </style>
+<link rel="stylesheet" href="/DesktopModules/NVCMS.TinTuc/Manager/tt-v3.css" />
 </head>
-<body>
+<body class="nvc tt-app tt-v3">
     <form id="frmChonTruong" runat="server">
         <div class="search-bar">
             <asp:TextBox ID="txtSearch" runat="server" placeholder="Nhập tên trường..." />

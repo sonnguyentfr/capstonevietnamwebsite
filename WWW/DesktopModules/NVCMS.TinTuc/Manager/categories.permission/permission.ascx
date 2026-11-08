@@ -1,4 +1,6 @@
 ﻿<%@ Control Language="VB" AutoEventWireup="false" CodeFile="permission.ascx.vb" Inherits="DesktopModules.TinTuc.Manager.permission.permission" %>
+<link rel="stylesheet" href="/DesktopModules/NVCMS.TinTuc/Manager/tt-v3.css" />
+<div class="nvc tt-app tt-v3">
 <asp:UpdatePanel ID="pnlAjax" runat="server">
     <ContentTemplate>
         <div class="components-preview  mx-auto">
@@ -102,3 +104,4 @@
                 font-size: 30px;
             }
 </style>
+</div>

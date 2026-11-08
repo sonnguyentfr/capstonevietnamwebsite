@@ -13,6 +13,8 @@
 <link href="/static/_admin/js/jquery.tagsinput/bootstrap-tagsinput.css" rel="stylesheet" />
 <script src="/static/_admin/js/jquery.tagsinput/bootstrap-tagsinput.js"></script>
 <link rel="stylesheet" href="/Portals/_default/Skins/_admin/controls/newsedit.css" />
+<link rel="stylesheet" href="/DesktopModules/NVCMS.TinTuc/Manager/news/newsedit-v3.css" />
+<script src="/DesktopModules/NVCMS.TinTuc/Manager/news/newsedit-v3.js"></script>
 <style type="text/css">
     .tagreset {
         margin: 5px 7px;
@@ -214,11 +216,12 @@
     <!-- .nk-block-between -->
 </div>
 <div class="nk-block">
+<div class="nvc tt-app ne-v3 ne-v3-lite">
     <div class="row g-gs">
         <div class="col-md-9 col-lg-9 col-xxl-9">
             <div class="card card-bordered">
-                <div class="card-header border-bottom">
-                    <ul class="cc_button">
+                <div class="card-header border-bottom tt-ed-actionbar">
+                    <ul class="cc_button tt-ed-actions">
                         <li>
                             <asp:LinkButton ID="lbtSave" ValidationGroup="InputValidate" runat="server" Font-Bold="True" CssClass=" btn btn-sm  btn-outline-primary" OnClientClick="formModified=false; updateFormAttachedMedia(); saveNews(); return false;">
                                 <span>Lưu thay đổi</span><em class="icon ni ni-save-fill"></em>
@@ -782,6 +785,7 @@
         </div>
         <!-- .col -->
     </div>
+</div>
     <div class="border-top nvcms-sticky-btn p-2">
         <asp:LinkButton ID="lbtSave2" ValidationGroup="InputValidate" runat="server" Font-Bold="True" CssClass="__neo_submit-BTN btn btn-sm  btn-outline-primary" OnClientClick="formModified=false; updateFormAttachedMedia(); saveNews(); return false;">
                 <span>Lưu thay đổi</span><em class="icon ni ni-save-fill"></em>

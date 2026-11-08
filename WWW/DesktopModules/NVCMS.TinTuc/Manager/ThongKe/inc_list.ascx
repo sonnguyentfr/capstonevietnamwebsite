@@ -1,6 +1,8 @@
 <%@ Control Language="vb" AutoEventWireup="false" CodeFile="inc_list.ascx.vb" Inherits="DesktopModules.TinTuc.Manager.adminnews.adminnews_inc_list" %>
 <%@ Import Namespace="NVCMS.Modules.TinTuc" %>
 <%@ Register TagPrefix="dnn" Assembly="DotNetNuke" Namespace="DotNetNuke.UI.WebControls" %>
+<link rel="stylesheet" href="/DesktopModules/NVCMS.TinTuc/Manager/tt-v3.css" />
+<div class="nvc tt-app tt-v3">
 <script type="text/javascript" src="/static/_Admin/build/js/autoNumeric.js"></script>
 <script type="text/javascript">
     jQuery(function ($) {
@@ -137,3 +139,4 @@
         </div>
     </ProgressTemplate>
 </asp:UpdateProgress>
+</div>

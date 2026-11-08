@@ -1,6 +1,8 @@
 <%@ Control Language="vb" AutoEventWireup="false"  Explicit="true" codefile="inc_viewimg.ascx.vb" Inherits="DesktopModules.TinTuc.Manager.newsapprove.inc_view" %>
 <%@ Register TagPrefix="dnn" TagName="SectionHead" Src="~/controls/SectionHeadControl.ascx" %>
 
+<link rel="stylesheet" href="/DesktopModules/NVCMS.TinTuc/Manager/tt-v3.css" />
+<div class="nvc tt-app tt-v3">
 <div class="pustyle">
 <div class="toolbar-placeholder">
         <div class="toolbarBox toolbarHead">
@@ -106,4 +108,5 @@
         </td>
     </tr>
 </table>
+</div>
 </div>

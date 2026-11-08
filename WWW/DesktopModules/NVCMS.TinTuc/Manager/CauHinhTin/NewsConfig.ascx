@@ -1,5 +1,7 @@
 ﻿<%@ Control Language="VB" AutoEventWireup="false" CodeFile="NewsConfig.ascx.vb" Inherits="DesktopModules.TinTuc.Configurations.NewsConfigPC" %>
 <%@ Register Src="~/DesktopModules/NVCMS.TinTuc/Manager/controls/tinlienquan.ascx" TagPrefix="uc1" TagName="tinlienquan" %>
+<link rel="stylesheet" href="/DesktopModules/NVCMS.TinTuc/Manager/tt-v3.css" />
+<div class="nvc tt-app tt-v3">
 <%--<script src="//cdn.thuongtruong.com.vn/_Admin/vendors/ipad/jquery.mobile-1.4.0-alpha.2.min.js"></script>
 <script src="//cdn.thuongtruong.com.vn/_Admin/vendors/ipad/jquery-ui.min.js"></script>
 <script src="//cdn.thuongtruong.com.vn/_Admin/vendors/ipad/jquery.ui.touch-punch.min.js"></script>--%>
@@ -211,3 +213,4 @@ function addValue(id, value) {
         </div>
     </ProgressTemplate>
 </asp:UpdateProgress>--%>
+</div>

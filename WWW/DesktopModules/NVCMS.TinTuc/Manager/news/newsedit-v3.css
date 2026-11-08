@@ -1,0 +1,86 @@
+/* NVCMS.TinTuc - man soan bai (newsedit) theo giao dien NVCore.TinTuc (nvcmsv3).
+   Chi doi giao dien: giu nguyen ID control, code-behind, du lieu va luong xu ly.
+   Moi lop nam duoi .ne-v3. Diem gay: >= 1200px 2 cot, < 1200px 1 cot. */
+.ne-v3 { --tt-primary: #6576ff; --tt-danger: #e85347; --tt-border: #e5e9f2; max-width: 100%; }
+.ne-v3 .tt-ed-grid { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 24px; align-items: start; }
+.ne-v3 .tt-ed-main, .ne-v3 .tt-ed-side { min-width: 0; }
+
+/* thanh thao tac tren */
+.ne-v3 .tt-ed-actionbar { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; padding: .7rem .9rem; margin-bottom: 16px; background: #fff; border: 1px solid var(--tt-border); border-radius: 6px; position: sticky; top: 64px; z-index: 20; box-shadow: 0 1px 3px rgba(28, 43, 70, .06); }
+.ne-v3 .tt-ed-actions { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; list-style: none; margin: 0; padding: 0; width: 100%; }
+.ne-v3 .tt-ed-actions > li { float: none !important; margin: 0; }
+.ne-v3 .tt-ed-actions > li[style*="float: right"] { margin-left: auto; }
+
+/* the (card) */
+.ne-v3 .tt-card { margin-bottom: 16px; }
+.ne-v3 .tt-card-head { display: flex; align-items: center; gap: .5rem; padding: .6rem .75rem .6rem 1rem; border-bottom: 1px solid var(--tt-border); }
+.ne-v3 .tt-card-toggle { flex: 1 1 auto; display: flex; align-items: center; gap: .5rem; border: 0; background: transparent; padding: .2rem 0; text-align: left; font-weight: 700; font-size: 14px; color: #364a63; cursor: pointer; }
+.ne-v3 .tt-card-toggle:focus-visible { outline: 2px solid var(--tt-primary); outline-offset: 2px; }
+.ne-v3 .tt-card-chev { margin-left: auto; transition: transform .15s; color: #8094ae; }
+.ne-v3 .tt-card-body { padding: 1rem; }
+.ne-v3 .tt-card-body > .form-group:last-child { margin-bottom: 0; }
+.ne-v3 .tt-card.is-collapsed .tt-card-body { display: none; }
+.ne-v3 .tt-card.is-collapsed .tt-card-head { border-bottom: 0; }
+.ne-v3 .tt-card.is-collapsed .tt-card-chev { transform: rotate(-90deg); }
+.ne-v3 .tt-card-write > .card-inner { padding: 1.25rem; }
+.ne-v3 .tt-card-hint { font-size: 12px; color: #8094ae; margin-top: .35rem; }
+
+/* tab khung phai */
+.ne-v3 .tt-side-tabs { display: flex; gap: 4px; padding: 4px; margin-bottom: 12px; background: #eef0f4; border-radius: 10px; }
+.ne-v3 .tt-side-tab { flex: 1 1 0; display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-width: 0; height: 36px; padding: 0 8px; border: 0; border-radius: 7px; background: transparent; color: #526484; font-weight: 600; font-size: 13px; cursor: pointer; }
+.ne-v3 .tt-side-tab .icon { font-size: 16px; }
+.ne-v3 .tt-side-tab:hover { color: #1c2b46; }
+.ne-v3 .tt-side-tab.active { background: #fff; color: #1c2b46; box-shadow: 0 1px 3px rgba(28, 43, 70, .14); }
+.ne-v3 .tt-side-tab:focus { outline: 0; }
+.ne-v3 .tt-side-tab:focus-visible { outline: 2px solid var(--tt-primary); outline-offset: 1px; }
+
+/* khung anh & tep */
+.ne-v3 .tt-mp { background: #fff; border: 1px solid var(--tt-border); border-radius: 10px; padding: 12px; margin-bottom: 16px; transition: box-shadow .2s, border-color .2s; }
+.ne-v3 .tt-mp.is-flash { animation: ne-mp-flash 1s ease-out; }
+@keyframes ne-mp-flash { 0% { box-shadow: 0 0 0 4px rgba(101, 118, 255, .35); } 100% { box-shadow: 0 0 0 0 rgba(101, 118, 255, 0); } }
+.ne-v3 .tt-mp-title { font-weight: 700; font-size: 14px; color: #364a63; margin-bottom: .6rem; }
+.ne-v3 .tt-drop { display: flex; flex-wrap: wrap; align-items: center; gap: .75rem; padding: .7rem .85rem; border: 1.5px dashed #c5cbe0; border-radius: 8px; background: #fafbfd; font-size: 13px; transition: border-color .15s, background .15s; }
+.ne-v3 .tt-drop.is-over { border-color: var(--tt-primary); background: #f0f3ff; }
+.ne-v3 .tt-drop-icon { flex: 0 0 auto; font-size: 30px; color: #9aa6ff; }
+.ne-v3 .tt-drop-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; line-height: 1.35; flex: 1 1 140px; }
+.ne-v3 .tt-drop-text b { font-size: 13px; color: #364a63; }
+.ne-v3 .tt-drop-text small { color: #8094ae; font-size: 11px; }
+.ne-v3 .tt-drop .fileProgress { width: 100%; }
+.ne-v3 .tt-mp-body { margin-top: 10px; }
+
+/* o nhap pass bai viet */
+.ne-v3 .ne-pass-wrap { position: relative; }
+.ne-v3 .ne-pass-wrap .form-control { padding-right: 2.5rem; }
+.ne-v3 .ne-pass-eye { position: absolute; right: 6px; top: 50%; transform: translateY(-50%); border: 0; background: transparent; color: #8094ae; padding: 2px 6px; cursor: pointer; }
+
+/* lien quan / truong lien quan / nhuan but: gon lai trong khung phai */
+.ne-v3 .tt-ed-side .card-inner2 { padding: 0; }
+.ne-v3 .tt-ed-side .form-group { margin-bottom: 1rem; }
+.ne-v3 .tt-ed-side .cauhinhtin { margin-bottom: .35rem; }
+
+/* may tinh >= 1200px: khung phai dinh man hinh, 2 tab */
+@media (min-width: 1200px) {
+  .ne-v3 .tt-ed-side { position: sticky; top: 140px; max-height: calc(100vh - 156px); overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; padding-right: 2px; }
+  .ne-v3 .tt-side-pane.is-off { display: none; }
+}
+/* may tinh bang + dien thoai: 1 cot, bo tab, 2 phan xep doc */
+@media (max-width: 1199.98px) {
+  .ne-v3 .tt-ed-grid { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .ne-v3 .tt-side-tabs { display: none; }
+  .ne-v3 .tt-ed-actionbar { position: static; }
+}
+@media (max-width: 576px) {
+  .ne-v3 .tt-card-body { padding: .85rem; }
+  .ne-v3 .tt-card-write > .card-inner { padding: .9rem; }
+  .ne-v3 .tt-ed-actions > li > .btn, .ne-v3 .tt-ed-actions > li > a.btn { padding-left: .6rem; padding-right: .6rem; }
+}
+
+/* ---- che do "lite" (newseditMagazine): giu bo cuc cu, chi doi vai tro giao dien ---- */
+.ne-v3-lite .card-header.tt-ed-actionbar { position: sticky; top: 64px; z-index: 20; margin-bottom: 0; border-radius: 6px 6px 0 0; border-width: 0 0 1px; box-shadow: 0 1px 3px rgba(28, 43, 70, .06); }
+.ne-v3-lite .card.card-bordered { border-color: var(--tt-border); }
+.ne-v3-lite .overline-title, .ne-v3-lite .overline-title-alt { color: #364a63; font-weight: 700; }
+
+/* ---- chuyen muc phu (hien ra) ---- */
+.ne-v3 .ne-subcat .card.card-bordered { border: 0; box-shadow: none; margin: 0; }
+.ne-v3 .ne-subcat .card-inner { padding: 0; }
+.ne-v3 #checkbox-tree { max-height: 260px; overflow: auto; border: 1px solid var(--tt-border); border-radius: 6px; padding: 6px; background: #fff; }

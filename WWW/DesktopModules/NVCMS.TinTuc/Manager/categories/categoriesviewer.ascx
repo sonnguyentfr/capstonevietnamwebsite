@@ -1,4 +1,6 @@
 <%@ Control Language="vb" AutoEventWireup="false" Explicit="true" CodeFile="categoriesviewer.ascx.vb" Inherits="DesktopModules.TinTuc.Manager.categories.categoriesviewer" %>
+<link rel="stylesheet" href="/DesktopModules/NVCMS.TinTuc/Manager/tt-v3.css" />
+<div class="nvc tt-app tt-v3">
 <div class="components-preview ">
     <div class="nk-block-head nk-block-head-lg wide-sm">
         <div class="nk-block-head-content">
@@ -92,4 +94,4 @@
     <asp:LinkButton ID="lbtAddBottom" runat="server" CssClass="btn btn-primary"><em class="icon ni ni-download-cloud"></em><span>Thêm mới</span></asp:LinkButton>&nbsp;&nbsp;
     <asp:LinkButton ID="lbtUpdateOrder" runat="server" CssClass="btn btn-warning" OnClick="lbtUpdateOrder_Click" ><em class="icon ni ni-sort-line"></em> <span>Cập nhật thứ tự</span></asp:LinkButton>
 </div>
-
+</div>

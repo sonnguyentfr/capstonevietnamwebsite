@@ -165,7 +165,7 @@ Namespace DesktopModules.TinTuc.Manager.news
                     .TypeUrl = BL.FormatTheLoai(BL.GetLoaiTinBai(mediaList, imgList))
                     .NewsKind = CType(loaitinbai, Integer)
                     .AttachedFiles = "" ' tnUpload.FileList
-                    .Note = luuy
+                    .Note = KeepNote(ajItemID, luuy)
                     .Links = links
                     .ImagePath = anhdd
                     .keyword = keyword
@@ -484,6 +484,19 @@ Namespace DesktopModules.TinTuc.Manager.news
                 ProcessModuleLoadException(Me, ex)
             End Try
         End Sub
+        ''' <summary>Giữ nguyên cột Note (đang dùng làm mật khẩu bài viết ở màn soạn tin) khi lưu từ màn không có ô nhập này.</summary>
+        Private Function KeepNote(ByVal newsId As Integer, ByVal fromClient As String) As String
+            If Not String.IsNullOrEmpty(fromClient) Then Return fromClient
+            Try
+                If newsId > 0 Then
+                    Dim o As NV_NewsInfo = ctlNews.GetByID(newsId)
+                    If o IsNot Nothing Then Return If(o.Note, "")
+                End If
+            Catch ex As Exception
+            End Try
+            Return ""
+        End Function
+
         Private Function CollectNewsInfo(ByVal obj As NV_NewsInfo) As NV_NewsInfo
             Try
                 If obj Is Nothing Then
@@ -526,7 +539,7 @@ Namespace DesktopModules.TinTuc.Manager.news
                     .TypeUrl = BL.FormatTheLoai(BL.GetLoaiTinBai(hdf_list_files.Value, hdf_IMG_files.Value))
                     .ImagePath = txtImagePath.Value
                     .Links = hdf_Related.Value 'Tin lien quan
-                    .Note = ""
+                    .Note = If(.Note, "")
                     .SourceText = txtSource.Text
                     .keyword = txtkeyword.Text
                     Dim sCredit As String = Regex.Replace(txtCredit.Text, "[^\d]", "")

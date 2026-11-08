@@ -1,4 +1,6 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" CodeFile="inc_list.ascx.cs" Inherits="DesktopModules.TinTuc.Manager.template.inc_list" %>
+<link rel="stylesheet" href="/DesktopModules/NVCMS.TinTuc/Manager/tt-v3.css" />
+<div class="nvc tt-app tt-v3">
 <style type="text/css">
     #gridview table tr td {
         padding: 5px;
@@ -53,4 +55,4 @@
 <!-- End #gridView -->
 <p>
     <asp:LinkButton ID="linkAdd" runat="server" Text="Thêm mới" OnClick="linkAdd_Click" /></p>
-
+</div>

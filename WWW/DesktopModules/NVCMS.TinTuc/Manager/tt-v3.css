@@ -1,0 +1,61 @@
+/* NVCMS.TinTuc Manager - lop giao dien dung chung theo NVCore.TinTuc (nvcmsv3): danh sach, bo loc, the, bang, form.
+   Chi doi giao dien (mau, khoang cach, hover, nhan trang thai). Khong dung toi du lieu, ID control hay luong xu ly.
+   Moi lop nam duoi .tt-v3. */
+.tt-v3 { --tt-primary: #6576ff; --tt-danger: #e85347; --tt-border: #e5e9f2; max-width: 100%; }
+.tt-v3 mark { background: #fff1c2; color: inherit; padding: 0 1px; border-radius: 2px; }
+.tt-v3 .btn-xs { padding: .2rem .5rem; font-size: 11px; line-height: 1.4; border-radius: 4px; }
+.tt-v3 .NormalRed { color: var(--tt-danger); font-size: 12px; }
+
+/* the */
+.tt-v3 .card.card-bordered { border-color: var(--tt-border); border-radius: 6px; box-shadow: 0 1px 2px rgba(28, 43, 70, .04); }
+.tt-v3 .card-header { background: #fff; }
+.tt-v3 .card-inner-group > .card-inner:first-child { border-bottom: 1px solid var(--tt-border); }
+.tt-v3 .nk-block-title.page-title { font-size: 1.25rem; }
+
+/* bo loc */
+.tt-v3 .card-tools-toggle .form-label, .tt-v3 .form-label { font-size: 12px; color: #526484; margin-bottom: .25rem; }
+.tt-v3 .form-control:focus, .tt-v3 .form-select:focus { border-color: var(--tt-primary); box-shadow: 0 0 0 3px rgba(101, 118, 255, .15); }
+
+/* danh sach (nk-tb-list) giong .tt-row cua v3 */
+.tt-v3 .nk-tb-list .nk-tb-item { border-top: 1px solid var(--tt-border); transition: background .12s; }
+.tt-v3 .nk-tb-list .nk-tb-item:not(.nk-tb-head):hover { background: #f8f9fd; }
+.tt-v3 .nk-tb-list .nk-tb-head { background: #fafbfd; }
+.tt-v3 .nk-tb-list .nk-tb-head .sub-text { font-size: 12px; font-weight: 700; color: #526484; text-transform: none; letter-spacing: 0; }
+.tt-v3 .nk-tb-col a.title, .tt-v3 .nk-tb-col .tb-lead, .tt-v3 .nk-tb-col .tb-lead a { font-size: 15px; line-height: 1.4; font-weight: 600; color: #364a63; overflow-wrap: anywhere; }
+.tt-v3 .nk-tb-col a.title:hover, .tt-v3 .nk-tb-col .tb-lead a:hover { color: var(--tt-primary); }
+.tt-v3 .nk-tb-col .sub-text, .tt-v3 .nk-tb-col small { color: #8094ae; }
+.tt-v3 .nk-tb-actions .btn-trigger:hover { background: #ebeefd; }
+
+/* nhan trang thai / co (flag) */
+.tt-v3 .badge { display: inline-block; font-size: 10px; line-height: 1; font-weight: 700; text-transform: uppercase; letter-spacing: .02em; padding: 4px 6px; border-radius: 3px; vertical-align: 1px; }
+.tt-v3 .badge-light { background: #eef0f6; color: #526484; }
+.tt-v3 .badge-warning { background: #fff1e6; color: #f4772e; }
+.tt-v3 .badge-danger { background: #fde8e6; color: var(--tt-danger); }
+.tt-v3 .badge-danger a, .tt-v3 .badge-danger .text-white { color: var(--tt-danger) !important; }
+.tt-v3 .badge-info { background: #e6f7ff; color: #09c2de; }
+.tt-v3 .badge-success { background: #e6f8f3; color: #0fac81; }
+.tt-v3 .badge-primary { background: #f0f3ff; color: var(--tt-primary); }
+
+/* ghi chu / but phe trong dong */
+.tt-v3 .bg-pink-dim, .tt-v3 .newsnote li { background: #fff8e6; border-left: 3px solid #f4bd0e; padding: 4px 8px; border-radius: 0 3px 3px 0; font-size: 12px; color: #7a4b00; }
+.tt-v3 ul.newsnote { list-style: none; margin: 0 0 .75rem; padding: 0; }
+.tt-v3 ul.newsnote li { margin-bottom: 4px; background: #f5f6fa; border-left-color: #b7c2d0; color: #526484; }
+
+/* bang thuong (nhuan but, thong ke, chuyen muc) */
+.tt-v3 .table { color: #526484; }
+.tt-v3 .table thead th { background: #fafbfd; border-bottom: 1px solid var(--tt-border); font-size: 12px; font-weight: 700; color: #526484; }
+.tt-v3 .table td, .tt-v3 .table th { border-color: var(--tt-border); vertical-align: middle; }
+.tt-v3 .table-hover tbody tr:hover, .tt-v3 .table tbody tr:hover { background-color: #f8f9fd; }
+
+/* phan trang */
+.tt-v3 .pagination { flex-wrap: wrap; margin: 0; }
+.tt-v3 .page-item.active .page-link { background: var(--tt-primary); border-color: var(--tt-primary); }
+
+/* thanh tool dinh khi chon nhieu tin */
+.tt-v3 .card-inner.p-0 > .btn-dark.btn-dim { margin: .6rem 1.25rem; }
+
+/* man hinh nho */
+@media (max-width: 576px) {
+  .tt-v3 .nk-tb-col a.title, .tt-v3 .nk-tb-col .tb-lead { font-size: 14px; }
+  .tt-v3 .card-inner { padding: .85rem; }
+}

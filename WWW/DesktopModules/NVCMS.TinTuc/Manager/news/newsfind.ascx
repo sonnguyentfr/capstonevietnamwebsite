@@ -1,5 +1,7 @@
 <%@ Control Language="vb" AutoEventWireup="false" Explicit="true" CodeFile="newsfind.ascx.vb" Inherits="DesktopModules.TinTuc.Manager.news.newsfind" %>
 <%@ Register TagPrefix="dnn" Assembly="DotNetNuke" Namespace="DotNetNuke.UI.WebControls" %>
+<link rel="stylesheet" href="/DesktopModules/NVCMS.TinTuc/Manager/tt-v3.css" />
+<div class="nvc tt-app tt-v3">
 <asp:UpdatePanel ID="udpContent" runat="server">
     <ContentTemplate>
         <div class="nk-block-head nk-block-head-sm">
@@ -441,3 +443,4 @@
         });
     });
 </script>
+</div>

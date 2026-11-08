@@ -194,6 +194,7 @@ Namespace DesktopModules.TinTuc.Manager.news
                 Ultis.UpdateNewsByTags(ajItemID, sTags)
                 Ultis.Save2Version(objNews, UserId)
                 Ultis.UpdateNewsBySChool(ajItemID, lschool)
+                SaveSiteLink(ajItemID, DecodeB64(nguontin))
                 '3 Gui mail cho tác giả
                 Ultis.SendMailThongBaoBaiSuaBaiXB(objNews, PortalId, UserId)
                 'Ultis.InsertMediaFiles(Server, PortalId, UserId, ajItemID, chuyenmucchinh, mediaList)
@@ -322,6 +323,8 @@ Namespace DesktopModules.TinTuc.Manager.news
                                 txtkeyword.Text = .keyword
                                 txtSource.Text = .SourceText
                                 txtButDanh.Text = .ButDanh
+                                txtPostPassword.Text = .Note
+                                txtSiteLink.Text = LoadSiteLink(.NewId)
                                 teContent.Value = Server.HtmlDecode(.Content)
                                 If .Hotcat Then
                                     Me.chkHotCat.Checked = True
@@ -444,6 +447,12 @@ Namespace DesktopModules.TinTuc.Manager.news
                     If Not BL.IsXBGroup(UserInfo) Then
                         txtCredit.Visible = False
                     End If
+                    If Not NguonReady() Then
+                        txtSiteLink.Enabled = False
+                        txtSiteLink.ToolTip = "Bảng NV_News chưa có cột Nguon nên chưa lưu được Link đến site"
+                    ElseIf _nguonMax > 0 Then
+                        txtSiteLink.MaxLength = _nguonMax
+                    End If
                     hdf_Category.Value = ddlCategory.SelectedValue
                     'hdf_WF.Value = ddlWFTop.SelectedValue
                     Try
@@ -503,10 +512,86 @@ Namespace DesktopModules.TinTuc.Manager.news
                 Ultis.UpdateNewsByTags(ItemID, txtTags.Text)
                 'Ultis.UpdateNewsBySChool(ItemID, hdf_Schools.Value)
                 SaveNewsBySchool(ItemID)
+                SaveSiteLink(ItemID, txtSiteLink.Text)
             Catch ex As Exception
                 ProcessModuleLoadException(Me, ex)
             End Try
         End Sub
+
+#Region "Link đến site (cột Nguon của dbo.NV_News; proc News_add/News_update không có tham số này nên đọc/ghi trực tiếp)"
+        Private Shared _nguonChecked As Boolean = False
+        Private Shared _nguonOk As Boolean = False
+        Private Shared _nguonMax As Integer = 0
+
+        ''' <summary>Kiểm tra cột Nguon có trong dbo.NV_News và là kiểu chuỗi (một lần).</summary>
+        Private Shared Function NguonReady() As Boolean
+            If _nguonChecked Then Return _nguonOk
+            Try
+                Using cn As New System.Data.SqlClient.SqlConnection(DotNetNuke.Common.Utilities.Config.GetConnectionString())
+                    Using cmd As New System.Data.SqlClient.SqlCommand("SELECT DATA_TYPE, CHARACTER_MAXIMUM_LENGTH FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'NV_News' AND COLUMN_NAME = 'Nguon'", cn)
+                        cn.Open()
+                        Using rd As System.Data.SqlClient.SqlDataReader = cmd.ExecuteReader()
+                            If rd.Read() Then
+                                Dim dt As String = Convert.ToString(rd(0)).ToLower()
+                                _nguonOk = (dt = "nvarchar" OrElse dt = "varchar" OrElse dt = "nchar" OrElse dt = "char" OrElse dt = "ntext" OrElse dt = "text")
+                                If Not IsDBNull(rd(1)) Then _nguonMax = Convert.ToInt32(rd(1))
+                            End If
+                        End Using
+                    End Using
+                End Using
+                _nguonChecked = True
+            Catch ex As Exception
+                DotNetNuke.Services.Exceptions.Exceptions.LogException(ex)
+                Return False
+            End Try
+            Return _nguonOk
+        End Function
+
+        Private Function LoadSiteLink(ByVal newsId As Integer) As String
+            If newsId <= 0 OrElse Not NguonReady() Then Return ""
+            Try
+                Using cn As New System.Data.SqlClient.SqlConnection(DotNetNuke.Common.Utilities.Config.GetConnectionString())
+                    Using cmd As New System.Data.SqlClient.SqlCommand("SELECT Nguon FROM dbo.NV_News WHERE NewId = @NewId", cn)
+                        cmd.Parameters.AddWithValue("@NewId", newsId)
+                        cn.Open()
+                        Dim v As Object = cmd.ExecuteScalar()
+                        If v Is Nothing OrElse IsDBNull(v) Then Return ""
+                        Return Convert.ToString(v)
+                    End Using
+                End Using
+            Catch ex As Exception
+                DotNetNuke.Services.Exceptions.Exceptions.LogException(ex)
+                Return ""
+            End Try
+        End Function
+
+        Private Sub SaveSiteLink(ByVal newsId As Integer, ByVal link As String)
+            If newsId <= 0 OrElse Not NguonReady() Then Return
+            link = If(link, "").Trim()
+            If link <> "" AndAlso Not link.StartsWith("http://", StringComparison.OrdinalIgnoreCase) AndAlso Not link.StartsWith("https://", StringComparison.OrdinalIgnoreCase) Then link = "https://" & link
+            Try
+                Using cn As New System.Data.SqlClient.SqlConnection(DotNetNuke.Common.Utilities.Config.GetConnectionString())
+                    Using cmd As New System.Data.SqlClient.SqlCommand("UPDATE dbo.NV_News SET Nguon = @Nguon WHERE NewId = @NewId AND ISNULL(CAST(Nguon AS nvarchar(max)), N'') <> @Nguon", cn)
+                        cmd.Parameters.AddWithValue("@Nguon", link)
+                        cmd.Parameters.AddWithValue("@NewId", newsId)
+                        cn.Open()
+                        cmd.ExecuteNonQuery()
+                    End Using
+                End Using
+            Catch ex As Exception
+                DotNetNuke.Services.Exceptions.Exceptions.LogException(ex)
+            End Try
+        End Sub
+
+        Private Shared Function DecodeB64(ByVal s As String) As String
+            If String.IsNullOrEmpty(s) Then Return ""
+            Try
+                Return System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(s))
+            Catch ex As Exception
+                Return ""
+            End Try
+        End Function
+#End Region
 
         Private Function CollectNewsInfo(ByVal obj As NV_NewsInfo) As NV_NewsInfo
             Try
@@ -557,7 +642,7 @@ Namespace DesktopModules.TinTuc.Manager.news
                     .TypeUrl = BL.FormatTheLoai(BL.GetLoaiTinBai(hdf_list_files.Value, hdf_IMG_files.Value))
                     .ImagePath = txtImagePath.Value
                     .Links = hdf_Related.Value 'Tin lien quan
-                    .Note = ""
+                    .Note = txtPostPassword.Text.Trim()
                     .SourceText = txtSource.Text
                     .keyword = txtkeyword.Text
                     Dim sCredit As String = Regex.Replace(txtCredit.Text, "[^\d]", "")

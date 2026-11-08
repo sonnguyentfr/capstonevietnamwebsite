@@ -2,6 +2,7 @@
 <%@ Register Src="~/Portals/_default/Skins/_admin/controls/menu.ascx" TagPrefix="uc1" TagName="menu" %>
 <%@ Register Src="~/Portals/_default/Skins/_admin/controls/header.ascx" TagPrefix="uc1" TagName="header" %>
 <%@ Register Src="~/Portals/_default/Skins/_admin/controls/footer.ascx" TagPrefix="uc1" TagName="footer" %>
+<%@ Register Src="~/Portals/_default/Skins/_admin/controls/personabar.ascx" TagPrefix="uc1" TagName="personabar" %>
 <%@ Register Src="~/Portals/_default/Skins/_admin/controls/index/U_NhuanBut.ascx" TagPrefix="uc1" TagName="U_NhuanBut" %>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -61,3 +62,4 @@
     <script src="/static/_admin/js/nvcmsinit.js"></script>
 </div>
 <uc1:footer runat="server" ID="footer" />
+<uc1:personabar runat="server" ID="personabar" />
