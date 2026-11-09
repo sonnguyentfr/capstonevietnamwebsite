@@ -72,6 +72,26 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\WWW\bin\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="DotNetNuke.Web, Version=10.3.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\bin_resource\DotNetNuke.Web.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DotNetNuke.Abstractions">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\bin_resource\DotNetNuke.Abstractions.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DotNetNuke.Instrumentation">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\bin_resource\DotNetNuke.Instrumentation.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Web.Http">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\bin_resource\System.Web.Http.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Data" />
@@ -134,6 +154,14 @@
     <Compile Include="DAL\SqlDataProvider.vb" />
     <Compile Include="CurrentPortalContext.vb" />
     <Compile Include="menu\menu.vb" />
+    <Compile Include="API\MenuController.vb" />
+    <Compile Include="API\ServiceRouteMapper.vb" />
+    <Compile Include="menu\MenuNode.vb" />
+    <Compile Include="menu\MenuStore.vb" />
+    <Compile Include="menu\menuadmin.ascx.vb">
+      <DependentUpon>menuadmin.ascx</DependentUpon>
+      <SubType>ASPXCodebehind</SubType>
+    </Compile>
     <Compile Include="menu\menuwebsite.ascx.designer.vb">
       <DependentUpon>menuwebsite.ascx</DependentUpon>
     </Compile>
@@ -200,6 +228,7 @@
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>
     </None>
     <Content Include="Files\FilesSettings.ascx" />
+    <Content Include="menu\menuadmin.ascx" />
     <Content Include="menu\menuwebsite.ascx" />
     <Content Include="menu\menuwebsite.aspx" />
     <Content Include="Trang\PageSettings.ascx" />
