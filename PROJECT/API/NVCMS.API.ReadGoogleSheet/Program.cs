@@ -135,6 +135,7 @@ builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddSingleton<EmailTemplateRenderer>();
 builder.Services.AddSingleton<ISiteBrandingProvider, SiteBrandingProvider>();
+builder.Services.AddScoped<IBirthDateBackfillService, BirthDateBackfillService>();
 builder.Services.AddScoped<IZaloService, ZaloService>();
 builder.Services.AddScoped<IZnsTemplateService, ZnsTemplateService>();
 builder.Services.AddScoped<IZnsSendService, ZnsSendService>();

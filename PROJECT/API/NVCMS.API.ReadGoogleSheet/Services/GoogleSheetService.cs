@@ -2,6 +2,7 @@
 using Google.Apis.Services;
 using Google.Apis.Sheets.v4;
 using Newtonsoft.Json;
+using NVCMS.API.ReadGoogleSheet.Common;
 using NVCMS.API.ReadGoogleSheet.Entities;
 using System.Globalization;
 
@@ -83,16 +84,15 @@ namespace NVCMS.API.ReadGoogleSheet.Services
                                 case "client_ip": student.client_ip = text; break;
 
                                 case "ngay_sinh":
-                                    student.ngay_sinh =
-                                        DateTime.TryParseExact(
-                                            text,
-                                            "MM/dd/yyyy",
-                                            CultureInfo.InvariantCulture,
-                                            DateTimeStyles.None,
-                                            out var dob
-                                        )
-                                        ? dob
-                                        : new DateTime(1970, 1, 1);
+                                    // Sheet nhập dd/MM/yyyy (trước đây parse nhầm MM/dd/yyyy → mọi ngày
+                                    // có ngày > 12 bị gán 01/01/1970). Sai định dạng → null.
+                                    student.ngay_sinh = BirthDateParser.Parse(text);
+                                    if (student.ngay_sinh == null && !string.IsNullOrWhiteSpace(text))
+                                    {
+                                        _logger.LogWarning(
+                                            "Sheet {SpreadsheetId} dòng {Row}: ngày sinh '{Text}' không đúng dd/MM/yyyy → bỏ trống",
+                                            spreadsheetId, i + 1, text);
+                                    }
                                     break;
 
                                 case "created_date":

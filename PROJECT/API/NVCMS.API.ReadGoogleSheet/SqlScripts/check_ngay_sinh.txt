@@ -1,0 +1,22 @@
+﻿sp_select_ladipage
+--------------------------------
+OK: có ngay_sinh (hoặc SELECT *)
+
+(1 row affected)
+
+sp_student_insert
+--------------------
+OK: có @Ngaysinh
+
+(1 row affected)
+
+event_id    tong        ngay_1970   ngay_null   ngay_hop_le
+----------- ----------- ----------- ----------- -----------
+197         93          74          0           19
+194         817         719         0           98
+185         531         307         0           224
+
+(3 rows affected)
+
+
+Completion time: 2026-11-11T21:06:48.8693523+07:00
