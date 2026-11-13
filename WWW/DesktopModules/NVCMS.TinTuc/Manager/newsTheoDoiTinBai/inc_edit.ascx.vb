@@ -452,6 +452,15 @@ Namespace DesktopModules.TinTuc.Manager.news
                     If Not BL.IsXBGroup(UserInfo) Then
                         txtCredit.Visible = False
                     End If
+                    'Chưa có chuyên mục nào được chọn: chọn tạm chuyên mục đầu tiên trong danh sách
+                    If ddlCategory.SelectedValue = "0" Then
+                        For Each itCat As ListItem In ddlCategory.Items
+                            If itCat.Value <> "0" AndAlso itCat.Value <> "" Then
+                                ddlCategory.SelectedValue = itCat.Value
+                                Exit For
+                            End If
+                        Next
+                    End If
                     hdf_Category.Value = ddlCategory.SelectedValue
                     'hdf_WF.Value = ddlWFTop.SelectedValue
                     Try

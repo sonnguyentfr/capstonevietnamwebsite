@@ -29,7 +29,8 @@ Namespace doi.upload
                 If Not String.Equals(context.Request.HttpMethod, "POST", StringComparison.OrdinalIgnoreCase) Then Fail(context, 405) : Return
                 Dim userId As Integer = DotNetNuke.Entities.Users.UserController.Instance.GetCurrentUserInfo().UserID
                 If userId <= 0 Then Fail(context, 401) : Return
-                If context.Request.UrlReferrer IsNot Nothing AndAlso Not String.Equals(context.Request.UrlReferrer.Host, context.Request.Url.Host, StringComparison.OrdinalIgnoreCase) Then Fail(context, 403) : Return
+                'Chong CSRF: form o trang khac khong the tu dat header nay (khong phu thuoc host, dung duoc sau reverse proxy)
+                If Not String.Equals(context.Request.Headers("X-Requested-With"), "XMLHttpRequest", StringComparison.OrdinalIgnoreCase) Then Fail(context, 403) : Return
                 Dim itemid As Integer = 0
                 Integer.TryParse(context.Request.QueryString("itemid"), itemid)
                 If itemid <= 0 Then Fail(context, 400) : Return

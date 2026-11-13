@@ -167,21 +167,94 @@ Namespace DesktopModules.TinTuc.Manager.newsapprove
             End Set
         End Property
 #End Region
+#Region "Duong dan trang (theo link, khong theo TabID)"
+        ''' <summary>Tien to duong dan cua portal: portal con la "/ten-portal", portal dung domain rieng thi rong.</summary>
+        Private Function PortalPrefix() As String
+            Try
+                Dim a As String = PortalSettings.PortalAlias.HTTPAlias
+                Dim i As Integer = a.IndexOf("/"c)
+                If i >= 0 Then Return a.Substring(i).TrimEnd("/"c)
+            Catch ex As Exception
+            End Try
+            Return ""
+        End Function
+
+        ''' <summary>Cac dang duong dan cua trang dang xem (chu thuong, da bo tien to portal, /tabid/.. va /default.aspx).
+        ''' DNN viet lai URL nen Request.Url.AbsolutePath chi con /Default.aspx: phai lay tu RawUrl (link tren trinh duyet), du phong NavigateURL va TabPath.</summary>
+        Private Function CurrentPagePaths() As System.Collections.Generic.List(Of String)
+            If _pagePaths IsNot Nothing Then Return _pagePaths
+            Dim res As New System.Collections.Generic.List(Of String)
+            Dim pre As String = PortalPrefix().ToLower()
+            Dim raws As New System.Collections.Generic.List(Of String)
+            Try
+                raws.Add(Request.RawUrl)
+            Catch ex As Exception
+            End Try
+            Try
+                raws.Add(NavigateURL(TabId))
+            Catch ex As Exception
+            End Try
+            Try
+                raws.Add(PortalSettings.ActiveTab.TabPath.Replace("//", "/"))
+            Catch ex As Exception
+            End Try
+            For Each s As String In raws
+                Dim p As String = NormalizePath(s, pre)
+                If p <> "" AndAlso Not res.Contains(p) Then res.Add(p)
+            Next
+            _pagePaths = res
+            Return res
+        End Function
+        Private _pagePaths As System.Collections.Generic.List(Of String) = Nothing
+
+        Private Function NormalizePath(ByVal s As String, ByVal pre As String) As String
+            If String.IsNullOrEmpty(s) Then Return ""
+            Dim p As String = s.Trim().ToLower()
+            Dim i As Integer = p.IndexOf("://")
+            If i >= 0 Then
+                Dim j As Integer = p.IndexOf("/"c, i + 3)
+                If j >= 0 Then
+                    p = p.Substring(j)
+                Else
+                    p = "/"
+                End If
+            End If
+            Dim q As Integer = p.IndexOfAny(New Char() {"?"c, "#"c})
+            If q >= 0 Then p = p.Substring(0, q)
+            Dim k As Integer = p.IndexOf("/tabid/")
+            If k >= 0 Then p = p.Substring(0, k)
+            If p.EndsWith("/default.aspx") Then p = p.Substring(0, p.Length - "/default.aspx".Length)
+            p = p.TrimEnd("/"c)
+            If pre <> "" AndAlso p.StartsWith(pre) Then p = p.Substring(pre.Length)
+            Return p
+        End Function
+
+        Private Function IsPage(ByVal pagePath As String) As Boolean
+            Dim t As String = pagePath.ToLower().TrimEnd("/"c)
+            For Each h As String In CurrentPagePaths()
+                If h = t OrElse h.StartsWith(t & "/") Then Return True
+            Next
+            Return False
+        End Function
+#End Region
+
 #Region "Event Handlers"
         Private Sub Page_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
             Try
-                'Kiem tra xem dang o trang nao
-                Dim activetab As Integer = PortalSettings.ActiveTab.TabID
-                If activetab = BL.pagePheDuyetId Then
-                    PageSuaBai = BL.pageSuaPheDuyet
-
-                End If
-                If activetab = BL.pagePheDuyetXBId Then
-                    PageSuaBai = BL.pageSuaPheDuyetXB
-                End If
-                If activetab = BL.pageDaXuatBanId Then
-                    PageSuaBai = BL.pageDaXuatBanSua
-
+                'Kiem tra xem dang o trang nao: so theo duong dan (link) cua trang, khong theo TabID vi moi portal co TabID rieng
+                Dim pre As String = PortalPrefix()
+                If IsPage(BL.pagePheDuyet) Then
+                    PageSuaBai = pre & BL.pageSuaPheDuyet
+                ElseIf IsPage(BL.pagePheDuyetXB) Then
+                    PageSuaBai = pre & BL.pageSuaPheDuyetXB
+                ElseIf IsPage(BL.pageDaXuatBan) Then
+                    PageSuaBai = pre & BL.pageDaXuatBanSua
+                Else
+                    'Du phong: portal goc van nhan theo TabID nhu truoc
+                    Dim activetab As Integer = PortalSettings.ActiveTab.TabID
+                    If activetab = BL.pagePheDuyetId Then PageSuaBai = BL.pageSuaPheDuyet
+                    If activetab = BL.pagePheDuyetXBId Then PageSuaBai = BL.pageSuaPheDuyetXB
+                    If activetab = BL.pageDaXuatBanId Then PageSuaBai = BL.pageDaXuatBanSua
                 End If
                 DotNetNuke.UI.Utilities.ClientAPI.RegisterKeyCapture(Me.Parent, Me.lbtFind, Asc(vbCr))
                 If Not IsPostBack Then
@@ -525,6 +598,24 @@ Namespace DesktopModules.TinTuc.Manager.newsapprove
         Public Function GetUserName(ByVal userid As Integer) As String
             Return "(" + BL.GetNameByUserId(PortalId, userid) + ")"
         End Function
+#End Region
+#Region "Copy bài"
+        ''' <summary>Tao bai moi (Dang bien soan) la ban sao cua bai da chon roi chuyen sang man soan bai moi cua bai do.</summary>
+        Protected Sub cmdCopyNews(ByVal sender As Object, ByVal e As System.EventArgs)
+            Try
+                Dim sourceId As Integer = 0
+                Integer.TryParse(CType(sender, LinkButton).CommandArgument, sourceId)
+                Dim newId As Integer = 0
+                If sourceId > 0 Then newId = Ultis.CopyNews(sourceId, UserId, PortalId, Request.ServerVariables("REMOTE_ADDR"))
+                If newId > 0 Then
+                    Response.Redirect(PortalPrefix() & "/quan-tri/tin-tuc/them-moi?itemid=" & newId.ToString(), False)
+                Else
+                    DotNetNuke.UI.Skins.Skin.AddModuleMessage(Me, "Không copy được bài viết (không tìm thấy bài gốc hoặc lỗi khi tạo bài mới).", DotNetNuke.UI.Skins.Controls.ModuleMessage.ModuleMessageType.RedError)
+                End If
+            Catch ex As Exception
+                ProcessModuleLoadException(Me, ex)
+            End Try
+        End Sub
 #End Region
 #Region "Sửa ngày xuất bản"
         Protected Sub cmdSuaNgayXuatBan(ByVal sender As Object, ByVal e As System.EventArgs)

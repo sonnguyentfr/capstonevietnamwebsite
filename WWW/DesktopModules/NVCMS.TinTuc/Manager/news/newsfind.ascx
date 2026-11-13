@@ -22,13 +22,13 @@
                         <a href="#" class="btn btn-icon btn-trigger toggle-expand mr-n1" data-target="pageMenu"><em class="icon ni ni-menu-alt-r"></em></a>
                         <div class="toggle-expand-content" data-content="pageMenu">
                             <ul class="nk-block-tools g-3">
-                                <li><a href="/quan-tri/tin-tuc/them-moi" class="btn btn-white btn-outline-light"><em class="icon ni ni-download-cloud"></em><span>Thêm mới tin</span></a></li>
+                                <li><a href="<%= PagePrefix %>/quan-tri/tin-tuc/them-moi" class="btn btn-white btn-outline-light"><em class="icon ni ni-download-cloud"></em><span>Thêm mới tin</span></a></li>
                                 <li class="nk-block-tools-opt">
                                     <div class="drodown">
                                         <a href="#" class="dropdown-toggle btn btn-icon btn-primary" data-toggle="dropdown" aria-expanded="false"><em class="icon ni ni-plus"></em></a>
                                         <div class="dropdown-menu dropdown-menu-right" style="">
                                             <ul class="link-list-opt no-bdr">
-                                                <li><a href="/quan-tri/tin-tuc/them-moi"><em class="icon ni ni-file-docs"></em><span>Thêm tin mới</span></a></li>
+                                                <li><a href="<%= PagePrefix %>/quan-tri/tin-tuc/them-moi"><em class="icon ni ni-file-docs"></em><span>Thêm tin mới</span></a></li>
                                                 <li><a href="#"><em class="icon ni ni-video"></em><span>Thêm Tin Ảnh</span></a></li>
                                                 <li><a href="#"><em class="icon ni ni-camera"></em><span>Thêm Tin Video</span></a></li>
                                             </ul>
@@ -263,8 +263,8 @@
                                                         <br />
                                                     </small>
                                                     <small>
-                                                        <asp:Label ForeColor="Orange" Font-Size="11px" ID="lblEdittedBy" runat="server" Text='<%# Ultis.FormatEdittedBy(PortalId, CInt(Eval("newid"))) %>' Visible='<%#CBool(Eval("IsEdited")) %>'></asp:Label>&nbsp; 
-                                                        <asp:LinkButton ID="cmdUnlock" CssClass="btn btn-trigger" ForeColor="Orange" OnClick="GetUnlockNews" CommandArgument='<%# DataBinder.Eval(Container.DataItem, "newid") %>' Visible='<%# Ultis.FormatLockByUserDangoanThao(PortalId, CInt(Eval("NewId")), UserId) %>' runat="server" data-toggle="tooltip" data-placement="top" title="" data-original-title="Mở khóa tin bài">
+                                                        <asp:Label ForeColor="Orange" Font-Size="11px" ID="lblEdittedBy" runat="server" Text='<%# Ultis.FormatEdittedBy(PortalId, CInt(Eval("newid"))) %>' Visible="False"></asp:Label>&nbsp; 
+                                                        <asp:LinkButton ID="cmdUnlock" CssClass="btn btn-trigger" ForeColor="Orange" OnClick="GetUnlockNews" CommandArgument='<%# DataBinder.Eval(Container.DataItem, "newid") %>' Visible="False" runat="server" data-toggle="tooltip" data-placement="top" title="" data-original-title="Mở khóa tin bài">
                                                             <em class="icon ni ni-unlock"></em>
                                                         </asp:LinkButton>
                                                     </small>
@@ -309,7 +309,7 @@
                                         <div class="nk-tb-col nk-tb-col-tools">
                                             <ul class="nk-tb-actions gx-1">
                                                 <li class="nk-tb-action-hidden" id="nutsua" runat="server" visible='<%#Ultis.UButtonEdit(CInt(Eval("NewId"))) %>'>
-                                                    <a href="/quan-tri/tin-tuc/them-moi?itemid=<%#Eval("NewId") %>" class="btn btn-trigger btn-icon user-avatar" data-toggle="tooltip" data-placement="top" title="" data-original-title="Sửa">
+                                                    <a href="<%# PagePrefix %>/quan-tri/tin-tuc/them-moi?itemid=<%#Eval("NewId") %>" class="btn btn-trigger btn-icon user-avatar" data-toggle="tooltip" data-placement="top" title="" data-original-title="Sửa">
                                                         <em class="icon ni ni-edit-fill"></em>
                                                     </a>
                                                 </li>
@@ -355,13 +355,13 @@
                                         <a href="#" class="btn btn-icon btn-trigger toggle-expand mr-n1" data-target="pageMenu"><em class="icon ni ni-more-v"></em></a>
                                         <div class="toggle-expand-content" data-content="pageMenu">
                                             <ul class="nk-block-tools g-3">
-                                                <li class="nk-block-tools-opt"><a href="/quan-tri/tin-tuc/them-moi" class="btn btn-primary"><em class="icon ni ni-save"></em><span>Thêm mới tin</span></a></li>
+                                                <li class="nk-block-tools-opt"><a href="<%= PagePrefix %>/quan-tri/tin-tuc/them-moi" class="btn btn-primary"><em class="icon ni ni-save"></em><span>Thêm mới tin</span></a></li>
                                                 <li>
                                                     <div class="drodown">
                                                         <a href="#" class="dropdown-toggle btn btn-primary btn-dim btn-outline-light" data-toggle="dropdown"><em class="icon ni ni-list-thumb-alt"></em><span>Tác vụ</span><em class="dd-indc icon ni ni-chevron-right"></em></a>
                                                         <div class="dropdown-menu dropdown-menu-right">
                                                             <ul class="link-list-opt no-bdr">
-                                                                <li><a href="/quan-tri/tin-tuc/them-moi"><em class="icon ni ni-file-docs"></em><span>Thêm tin mới</span></a></li>
+                                                                <li><a href="<%= PagePrefix %>/quan-tri/tin-tuc/them-moi"><em class="icon ni ni-file-docs"></em><span>Thêm tin mới</span></a></li>
                                                                 <li><a href="#"><em class="icon ni ni-video"></em><span>Thêm Video</span></a></li>
                                                                 <li><a href="#"><em class="icon ni ni-camera"></em><span>Thêm Video</span></a></li>
                                                             </ul>

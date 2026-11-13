@@ -182,6 +182,7 @@ Namespace DesktopModules.TinTuc.Manager.news
                 Ultis.UpdateNewsByTags(ajItemID, sTags)
                 Ultis.UpdateNewsBySChool(ajItemID, lschool)
                 SaveSiteLink(ajItemID, DecodeB64(nguontin))
+                SavePostPassword(ajItemID, luuy)
                 'Ultis.InsertMediaFiles(Server, PortalId, UserId, ajItemID, chuyenmucchinh, mediaList)
                 Return ajItemID
             Catch ex As Exception
@@ -306,6 +307,7 @@ Namespace DesktopModules.TinTuc.Manager.news
                                 txtSource.Text = .SourceText
                                 txtButDanh.Text = .ButDanh
                                 txtPostPassword.Text = .Note
+                                If String.IsNullOrEmpty(txtPostPassword.Text) Then txtPostPassword.Text = LoadPostPassword(.NewId)
                                 txtSiteLink.Text = LoadSiteLink(.NewId)
                                 teContent.Value = Server.HtmlDecode(.Content)
                                 If .Hotcat Then
@@ -434,6 +436,15 @@ Namespace DesktopModules.TinTuc.Manager.news
                     ElseIf _nguonMax > 0 Then
                         txtSiteLink.MaxLength = _nguonMax
                     End If
+                    'Chưa có chuyên mục nào được chọn: chọn tạm chuyên mục đầu tiên trong danh sách
+                    If ddlCategory.SelectedValue = "0" Then
+                        For Each itCat As ListItem In ddlCategory.Items
+                            If itCat.Value <> "0" AndAlso itCat.Value <> "" Then
+                                ddlCategory.SelectedValue = itCat.Value
+                                Exit For
+                            End If
+                        Next
+                    End If
                     hdf_Category.Value = ddlCategory.SelectedValue
                     'hdf_WF.Value = ddlWFTop.SelectedValue
                     Try
@@ -477,6 +488,7 @@ Namespace DesktopModules.TinTuc.Manager.news
                 Ultis.UpdateNewsByTags(ItemID, txtTags.Text)
                 SaveNewsBySchool(ItemID)
                 SaveSiteLink(ItemID, txtSiteLink.Text)
+                SavePostPassword(ItemID, txtPostPassword.Text)
             Catch ex As Exception
                 ProcessModuleLoadException(Me, ex)
             End Try
@@ -536,6 +548,42 @@ Namespace DesktopModules.TinTuc.Manager.news
                 Using cn As New System.Data.SqlClient.SqlConnection(DotNetNuke.Common.Utilities.Config.GetConnectionString())
                     Using cmd As New System.Data.SqlClient.SqlCommand("UPDATE dbo.NV_News SET Nguon = @Nguon WHERE NewId = @NewId AND ISNULL(CAST(Nguon AS nvarchar(max)), N'') <> @Nguon", cn)
                         cmd.Parameters.AddWithValue("@Nguon", link)
+                        cmd.Parameters.AddWithValue("@NewId", newsId)
+                        cn.Open()
+                        cmd.ExecuteNonQuery()
+                    End Using
+                End Using
+            Catch ex As Exception
+                DotNetNuke.Services.Exceptions.Exceptions.LogException(ex)
+            End Try
+        End Sub
+
+        ''' <summary>Mat khau xem bai luu o cot Note cua dbo.NV_News. Doc/ghi truc tiep de khong phu thuoc proc select/update.</summary>
+        Private Function LoadPostPassword(ByVal newsId As Integer) As String
+            If newsId <= 0 Then Return ""
+            Try
+                Using cn As New System.Data.SqlClient.SqlConnection(DotNetNuke.Common.Utilities.Config.GetConnectionString())
+                    Using cmd As New System.Data.SqlClient.SqlCommand("SELECT Note FROM dbo.NV_News WHERE NewId = @NewId", cn)
+                        cmd.Parameters.AddWithValue("@NewId", newsId)
+                        cn.Open()
+                        Dim v As Object = cmd.ExecuteScalar()
+                        If v Is Nothing OrElse IsDBNull(v) Then Return ""
+                        Return Convert.ToString(v)
+                    End Using
+                End Using
+            Catch ex As Exception
+                DotNetNuke.Services.Exceptions.Exceptions.LogException(ex)
+                Return ""
+            End Try
+        End Function
+
+        Private Sub SavePostPassword(ByVal newsId As Integer, ByVal pass As String)
+            If newsId <= 0 Then Return
+            pass = If(pass, "").Trim()
+            Try
+                Using cn As New System.Data.SqlClient.SqlConnection(DotNetNuke.Common.Utilities.Config.GetConnectionString())
+                    Using cmd As New System.Data.SqlClient.SqlCommand("UPDATE dbo.NV_News SET Note = @Note WHERE NewId = @NewId AND ISNULL(CAST(Note AS nvarchar(max)), N'') <> @Note", cn)
+                        cmd.Parameters.AddWithValue("@Note", pass)
                         cmd.Parameters.AddWithValue("@NewId", newsId)
                         cn.Open()
                         cmd.ExecuteNonQuery()

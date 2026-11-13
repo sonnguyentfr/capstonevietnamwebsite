@@ -518,18 +518,8 @@ Public Class Ultis
         End If
     End Sub
     Public Shared Function NewsDaXuatBanCanEdit(newsid As Integer, ByVal UserId As Integer) As Boolean
-        Dim returnvalue As Boolean = True
-        Dim objUserinfo As UserInfo = UserController.GetUserById(PortalSettings.Current.PortalId, UserId)
-        Dim _NV_NewsController As New NV_NewsController
-        Dim objnews = _NV_NewsController.GetByID(newsid)
-        If Not objnews Is Nothing Then
-            With objnews
-                If .CanViewLock = False And objUserinfo.IsInRole("LanhDaoToaSoan") And objUserinfo.IsSuperUser Then
-                    returnvalue = False
-                End If
-            End With
-        End If
-        Return returnvalue
+        'Truoc day chan lanh dao sua bai dang bi khoa; khong con khoa bai nen luon cho sua
+        Return True
     End Function
     Public Shared Function NewsDaXuatBanCanEditNgayXuatBan(ByVal UserId As Integer) As Boolean
         Dim returnvalue As Boolean = False
@@ -1246,6 +1236,161 @@ Public Class Ultis
         Return tblFiles
     End Function
 #End Region
+#Region "Sao chep bai"
+    ''' <summary>
+    ''' Tao bai moi (trang thai Dang bien soan) la ban sao cua bai da co: tieu de, tom tat, noi dung, anh dai dien, SEO, chuyen muc chinh/phu,
+    ''' the loai, cac co hien thi, tag, tin lien quan, truong lien quan, cau hinh tin, link site/link dang ky/mat khau va danh sach anh, tep.
+    ''' Tra ve NewId bai moi; 0 neu khong tim thay bai goc.
+    ''' </summary>
+    Public Shared Function CopyNews(ByVal sourceId As Integer, ByVal userId As Integer, ByVal portalId As Integer, ByVal ip As String) As Integer
+        Dim ctlNews As New NV_NewsController
+        Dim src As NV_NewsInfo = ctlNews.GetByID(sourceId)
+        If src Is Nothing OrElse src.NewId <= 0 Then Return 0
+
+        Dim o As New NV_NewsInfo
+        With o
+            .CreateDate = DateTime.Now
+            .Status = NewsStatus.DangBienSoan
+            .UserId = userId
+            .PortalId = portalId
+            .IsImage = src.IsImage
+            .Unit = BL.GetPhongBanIdByUserId(portalId, userId)
+            .StorageFolder = Ultis.GetStorageFolder()
+            .isActive = True
+            .Title = src.Title
+            .Summary = src.Summary
+            .Content = src.Content
+            .meta_title = src.meta_title
+            .meta_description = src.meta_description
+            .meta_url = src.meta_url
+            .keyword = src.keyword
+            .ButDanh = src.ButDanh
+            .CategoryId = src.CategoryId
+            .NewsKind = src.NewsKind
+            .Hotcat = src.Hotcat
+            .Hotsite = src.Hotsite
+            .IsVideo = src.IsVideo
+            .IsPhoto = src.IsPhoto
+            .IsPR = src.IsPR
+            .IsShowBaiMoi = src.IsShowBaiMoi
+            .IsAMP = src.IsAMP
+            .IsHienQuangCao = src.IsHienQuangCao
+            .IsAnNoiDung = src.IsAnNoiDung
+            .Type = src.Type
+            .TypeUrl = src.TypeUrl
+            .ImagePath = src.ImagePath
+            .AttachedFiles = src.AttachedFiles
+            .Links = src.Links
+            .Tags = src.Tags
+            .SourceText = src.SourceText
+            .Note = src.Note
+            .Credit = 0
+        End With
+
+        Dim newId As Integer = ctlNews.Insert(o)
+        If newId <= 0 Then Return 0
+        o.NewId = newId
+
+        Try
+            Dim ctlProcess As New NewsProcessController
+            Dim p As New NewsProcessInfo
+            With p
+                .NewsID = newId
+                .CreateDate = DateTime.Now
+                .ByUser = userId
+                .StatusID = NewsStatus.DangBienSoan
+                .ProcessName = "Sao chép từ bài #" & sourceId.ToString()
+                .IPTrack = ip
+            End With
+            ctlProcess.Insert(p)
+            Ultis.Save2Version(o, userId)
+        Catch ex As Exception
+            DotNetNuke.Services.Exceptions.Exceptions.LogException(ex)
+        End Try
+
+        'Chuyen muc chinh + phu (giu nguyen co chuyen muc chinh cua bai goc)
+        Try
+            Dim hasMain As Boolean = False
+            For Each c As NewsByCategoryInfo In ctlNews.NewsByCategory_GetByNewsId(sourceId)
+                NVCMS.Modules.TinTuc.DataProvider.Instance.NV_NewsByCategory_Insert(newId, c.CategoryId, c.IsMainCategory)
+                If c.IsMainCategory Then hasMain = True
+            Next
+            If Not hasMain AndAlso src.CategoryId > 0 Then
+                NVCMS.Modules.TinTuc.DataProvider.Instance.NV_NewsByCategory_Insert(newId, src.CategoryId, True)
+            End If
+        Catch ex As Exception
+            DotNetNuke.Services.Exceptions.Exceptions.LogException(ex)
+        End Try
+
+        'Cau hinh tin (slide, tin nong, xu huong doc)
+        Try
+            Dim ctlSet As New NewsSettingsController
+            For k As Integer = 1 To 3
+                If Ultis.CheckCauHinhTin(sourceId, k, portalId) Then ctlSet.Insert(newId, 0, k, portalId)
+            Next
+        Catch ex As Exception
+            DotNetNuke.Services.Exceptions.Exceptions.LogException(ex)
+        End Try
+
+        'Truong lien quan
+        Try
+            Dim ids As New System.Text.StringBuilder
+            For Each s As NewsBySchoolInfo In (New NewsBySchool_Controller)._GetByNewID(sourceId)
+                If ids.Length > 0 Then ids.Append(",")
+                ids.Append(s.SchoolId.ToString())
+            Next
+            If ids.Length > 0 Then Ultis.UpdateNewsBySChool(newId, ids.ToString())
+        Catch ex As Exception
+            DotNetNuke.Services.Exceptions.Exceptions.LogException(ex)
+        End Try
+
+        'Tag
+        Try
+            If Not String.IsNullOrEmpty(src.Tags) Then Ultis.UpdateNewsByTags(newId, src.Tags)
+        Catch ex As Exception
+            DotNetNuke.Services.Exceptions.Exceptions.LogException(ex)
+        End Try
+
+        'Danh sach anh / tep cua bai (dung chung file, chi them dong lien ket)
+        Try
+            Dim ctlMediaNews As New NewsByMediaController
+            For Each m As NewsByMediaInfo In ctlMediaNews._GetAllByNewId(sourceId)
+                ctlMediaNews._Insert(newId, m.mediaid, DateTime.Now, userId, portalId)
+            Next
+        Catch ex As Exception
+            DotNetNuke.Services.Exceptions.Exceptions.LogException(ex)
+        End Try
+
+        'Tac gia / nhuan but / luot xem khoi tao nhu khi tao bai moi
+        Try
+            ctlNews.UpdateTacgia(newId, userId & ";")
+            Dim ctlNb As New NhuanButController
+            ctlNb.NhuanBut_Insert(newId, 1, userId, 0, DateTime.Now, userId, userId, portalId, 1)
+            Dim ctlView As New NewsByView
+            ctlView.NewsByView_Insert(newId, 0, portalId)
+        Catch ex As Exception
+            DotNetNuke.Services.Exceptions.Exceptions.LogException(ex)
+        End Try
+
+        'Mat khau (Note) va Link den site (Nguon): ghi truc tiep de khong phu thuoc proc insert; Nguon co the chua co cot nen tach rieng
+        For Each col As String In New String() {"Note", "Nguon"}
+            Try
+                Using cn As New System.Data.SqlClient.SqlConnection(DotNetNuke.Common.Utilities.Config.GetConnectionString())
+                    Using cmd As New System.Data.SqlClient.SqlCommand("UPDATE n SET n." & col & " = s." & col & " FROM dbo.NV_News n INNER JOIN dbo.NV_News s ON s.NewId = @src WHERE n.NewId = @dst", cn)
+                        cmd.Parameters.AddWithValue("@src", sourceId)
+                        cmd.Parameters.AddWithValue("@dst", newId)
+                        cn.Open()
+                        cmd.ExecuteNonQuery()
+                    End Using
+                End Using
+            Catch ex As Exception
+                If col <> "Nguon" Then DotNetNuke.Services.Exceptions.Exceptions.LogException(ex)
+            End Try
+        Next
+
+        Return newId
+    End Function
+#End Region
 #Region "Lock - Unlock - Visible News"
     Public Shared Sub UnlockNews(ByVal newsid As Integer, userid As Integer)
         Try
@@ -1254,25 +1399,16 @@ Public Class Ultis
         Catch ex As Exception
         End Try
     End Sub
+    ''' <summary>Khong con khoa bai khi mo sua (giu ham de cac man cu goi khong loi).</summary>
     Public Shared Sub LockNews(ByVal newsid As Integer, userid As Integer)
-        Try
-            Dim ctlNews As New NV_NewsController
-            ctlNews.UpdateLock(newsid, True, userid)
-        Catch ex As Exception
-        End Try
     End Sub
     ''' <summary>
     ''' Hàm kiểm tra 1 tin có bị LOCK hay không
     ''' </summary>
     ''' <remarks></remarks>
     Public Shared Function CheckNewsLock(portalid As Integer, ByVal newsid As Integer) As Boolean
-        Dim ctlNews As New NV_NewsController
-        Dim arr As ArrayList = ctlNews.GetLock(portalid, newsid)
-        If arr.Count > 0 Then
-            Return True
-        Else
-            Return False
-        End If
+        'Khong con co che khoa bai: khong bao gio bi khoa
+        Return False
     End Function
     Public Shared Function FormatLock(portalid As Integer, ByVal newsid As Integer) As Boolean
         If Ultis.CheckNewsLock(portalid, newsid) = True Then
@@ -1282,22 +1418,12 @@ Public Class Ultis
         End If
     End Function
     Public Shared Function FormatLockByUser(portalid As Integer, ByVal newsid As Integer, userid As Integer) As Boolean
-        Dim ctlNews As New NV_NewsController
-        Dim objNews As NV_NewsInfo = ctlNews.GetByID(newsid)
-        If objNews.IsEdited Then
-            Return True
-        Else
-            Return False
-        End If
+        'Khong con khoa bai => khong hien nut Mo khoa
+        Return False
     End Function
     Public Shared Function FormatLockByUserDangoanThao(portalid As Integer, ByVal newsid As Integer, userid As Integer) As Boolean
-        Dim ctlNews As New NV_NewsController
-        Dim objNews As NV_NewsInfo = ctlNews.GetByID(newsid)
-        If objNews.IsEdited AndAlso (objNews.Status = NewsStatus.DangBienSoan Or NewsStatus.BiTraLai) Then
-            Return True
-        Else
-            Return False
-        End If
+        'Khong con khoa bai => khong hien nut Mo khoa
+        Return False
     End Function
 
     Public Shared Function FormatVisibleByStatus(portalid As Integer, ByVal canaction As Boolean, ByVal newsid As Integer) As Boolean

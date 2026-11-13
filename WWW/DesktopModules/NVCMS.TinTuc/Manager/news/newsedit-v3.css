@@ -84,3 +84,56 @@
 .ne-v3 .ne-subcat .card.card-bordered { border: 0; box-shadow: none; margin: 0; }
 .ne-v3 .ne-subcat .card-inner { padding: 0; }
 .ne-v3 #checkbox-tree { max-height: 260px; overflow: auto; border: 1px solid var(--tt-border); border-radius: 6px; padding: 6px; background: #fff; }
+
+/* ======================================================================
+   Bo cuc viet bai: tieu de lon, trinh soan thao la trung tam, toolbar CKEditor dinh khi cuon
+   ====================================================================== */
+.ne-v3 { --ne-toolbar-top: 134px; }
+
+/* thanh trang thai luu + nut tap trung (tren thanh thao tac) */
+.ne-v3 .ne-tools-li { display: flex; align-items: center; gap: .5rem; margin-left: auto; }
+.ne-v3 .tt-ed-actions > li.ne-tools-li ~ li[style*="float"] { margin-left: 0; }
+.ne-v3 .ne-state { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 999px; background: #eefaf6; color: #0b7a5c; font-size: 12px; font-weight: 600; white-space: nowrap; }
+.ne-v3 .ne-state::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: #1ee0ac; }
+.ne-v3 .ne-state.is-dirty { background: #fff4e5; color: #a65a05; }
+.ne-v3 .ne-state.is-dirty::before { background: #f4bd0e; }
+.ne-v3 .ne-state.is-error { background: #fde8e6; color: #c0392b; }
+.ne-v3 .ne-state.is-error::before { background: var(--tt-danger); }
+.ne-v3 .ne-focus-btn.active { background: var(--tt-primary); border-color: var(--tt-primary); color: #fff; }
+
+/* tieu de va tom tat: lon, ro, de doc */
+.ne-v3 .tt-card-write > .card-inner { padding: 1.5rem 1.5rem 1.25rem; }
+.ne-v3 .tt-card-write input[id$="txtTitle"], .ne-v3 .tt-card-write textarea[id$="txtTitle"] { font-size: 26px; font-weight: 800; line-height: 1.3; height: auto; min-height: 64px; padding: .75rem 1rem; }
+.ne-v3 .tt-card-write textarea[id$="txtSummary"] { font-size: 16px; line-height: 1.6; min-height: 84px; }
+.ne-v3 .ne-count { margin-top: .35rem; font-size: 12px; color: #8094ae; }
+.ne-v3 .ne-count.is-over { color: #c0711a; }
+
+/* khung soan thao CKEditor */
+.ne-v3 .tt-card-write, .ne-v3 .tt-card-write > .card-inner, .ne-v3 .tt-card-write .form-group, .ne-v3 .tt-card-write .form-control-wrap { overflow: visible; }
+.ne-v3 .cke_chrome { border: 1px solid var(--tt-border) !important; border-radius: 8px; box-shadow: none !important; }
+.ne-v3 .cke_inner { overflow: visible !important; }
+.ne-v3 .cke_top { position: sticky; top: var(--ne-toolbar-top); z-index: 30; padding: 6px 8px 2px; background: #fff !important; border-bottom: 1px solid var(--tt-border) !important; border-radius: 8px 8px 0 0; box-shadow: 0 3px 8px rgba(28, 43, 70, .07); }
+.ne-v3 .cke_toolbar { margin: 0 6px 4px 0 !important; }
+.ne-v3 .cke_toolbar_break { display: block; clear: both; height: 0; }
+.ne-v3 .cke_button, .ne-v3 .cke_combo_button { border-radius: 5px; }
+.ne-v3 .cke_button_icon { width: 18px; height: 18px; }
+.ne-v3 .cke_bottom { background: #fafbfd !important; border-top: 1px solid var(--tt-border) !important; border-radius: 0 0 8px 8px; padding: 0 8px; }
+.ne-v3 .cke_wordcount { padding: 5px 4px; font-size: 12px; color: #526484; }
+.ne-v3 .cke_maximized .cke_top { top: 0; position: relative; }
+
+/* tin lien quan chuyen xuong duoi trinh soan thao */
+.ne-v3 #ne-card-related .tt-card-body { padding-top: .75rem; }
+
+/* che do tap trung: chi con tieu de, tom tat, noi dung */
+.ne-v3.ne-focus .tt-ed-side, .ne-v3.ne-focus #ne-card-extra, .ne-v3.ne-focus #ne-card-related { display: none; }
+.ne-v3.ne-focus .tt-ed-grid { grid-template-columns: minmax(0, 1fr); }
+.ne-v3.ne-focus .tt-ed-main { width: 100%; max-width: 980px; margin: 0 auto; }
+
+@media (max-width: 1199.98px) {
+  .ne-v3 .ne-tools-li { margin-left: 0; width: 100%; justify-content: space-between; }
+  .ne-v3 .ne-focus-btn { display: none; }
+  .ne-v3 .tt-card-write input[id$="txtTitle"], .ne-v3 .tt-card-write textarea[id$="txtTitle"] { font-size: 21px; min-height: 56px; }
+}
+
+.ne-v3 .ne-label-hidden { display: none !important; }
+.ne-v3 .tt-card-write ::placeholder { color: #a3adbf; font-weight: 600; }

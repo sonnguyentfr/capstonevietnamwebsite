@@ -69,6 +69,8 @@
     //Xu ly viec tuong tac anh
     function ActionImage() {
         var arrList = [];
+        //Go bo cac su kien cu truoc khi gan lai (tranh chen 2 lan sau khi them anh)
+        $('.anh-addToAvatar, .anh-addToContent, .anh-addToContent2, .anh-addToContentLink').off('click');
         $('.anh-removeSelected').off();
         $('.anh-removeSelected').on('click', function () {
             $(this).closest("li").remove();
@@ -125,27 +127,28 @@
 
 
         });
-        //Chen link vao text đã chọn
+        //Chen link vao text da chon trong bai; neu chua boi den chu nao thi chen ten tep lam chu lien ket tai con tro
         $('.anh-addToContentLink').on('click', function () {
-            var selection = CKEDITOR.instances['<%=teContent.ClientID%>'].getSelection();
-            if (selection.getType() == CKEDITOR.SELECTION_ELEMENT) {
-                var selectedContent = selection.getSelectedElement().$.outerHTML;
+            var editor = CKEDITOR.instances['<%=teContent.ClientID%>'];
+            var url = $(this).attr("data-img") || "";
+            var fname = url.split('?')[0].split('/').pop();
+            try { fname = decodeURIComponent(fname); } catch (e) { }
+            var titlebai = (($('#<%=txtTitle.ClientID %>').val()) || "").replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, '');
+            editor.focus();
+            var sel = editor.getSelection();
+            var hasSel = false;
+            if (sel) {
+                var st = sel.getType();
+                hasSel = (st == CKEDITOR.SELECTION_ELEMENT) || (st == CKEDITOR.SELECTION_TEXT && sel.getSelectedText().length > 0);
             }
-            else if (selection.getType() == CKEDITOR.SELECTION_TEXT) {
-                if (CKEDITOR.env.ie) {
-                    selection.unlock(true);
-                    selectedContent = selection.getNative().createRange().text;
-
-                } else {
-                    selectedContent = selection.getNative();
-                    var editor = CKEDITOR.instances.<%=teContent.ClientID%>; //get a reference to the editor
-                    var title = $(this).attr("data-title");
-                    var titlebai = title1.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, '');
-                    var image = $(this).attr("data-img");
-                    var selectedContentnew = "<a target=_blank title='" + titlebai + "' href='" + image + "'>" + selectedContent + "</a>";
-                    editor.insertHtml(selectedContentnew)
-                }
+            if (hasSel) {
+                new CKEDITOR.style({ element: 'a', attributes: { href: url, target: '_blank', title: titlebai } }).apply(editor);
+                notifySuccess('Đã gắn link vào chữ được chọn');
+            } else {
+                editor.insertHtml("<a target='_blank' title='" + titlebai.replace(/'/g, '&#39;') + "' href='" + url + "'>" + $('<div>').text(fname).html() + "</a>&nbsp;");
+                notifySuccess('Chưa chọn chữ nào: đã chèn tên tệp làm link tại vị trí con trỏ');
             }
+            formModified = true;
         });
     }
 </script>
@@ -225,7 +228,16 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <div class="overline-title-alt mb-2">Tin liên quan</div>
+                        <div class="form-control-wrap">
+                            <textarea id="teContent" width="100%" runat="server" font-size="22px" height="1500px" validationgroup="InputValidate"></textarea>
+                        </div>
+                    </div>
+</div>
+</div>
+<div class="card card-bordered tt-card" id="ne-card-related">
+<div class="tt-card-head"><button type="button" class="tt-card-toggle" data-ne-toggle aria-expanded="true"><span>Tin liên quan</span><em class="icon ni ni-chevron-down tt-card-chev"></em></button></div>
+<div class="tt-card-body">
+                    <div class="form-group">
                         <div class="form-group">
                             <div class="form-control-wrap">
                                 <a id="page-popup" onclick="popupwindow(900,600); return false;" class="btn btn-xs btn-info"><em class="icon ni ni-reports-alt"></em><span>Chọn tin liên quan</span></a>
@@ -256,16 +268,6 @@
 
                                 <!-- .nk-tb-list -->
                             </div>
-                        </div>
-                    </div>
-                    <div class="card-title-group align-start pb-3 g-2">
-                        <div class="card-title card-title-sm">
-                            <h6 class="title">Nội dung bài viết</h6>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="form-control-wrap">
-                            <textarea id="teContent" width="100%" runat="server" font-size="22px" height="1500px" validationgroup="InputValidate"></textarea>
                         </div>
                     </div>
 </div>
@@ -314,7 +316,7 @@
 </div>
 </div>
 <div class="card card-bordered tt-card" id="ne-card-register">
-<div class="tt-card-head"><button type="button" class="tt-card-toggle" data-ne-toggle aria-expanded="true"><span>Đăng ký &amp; bảo vệ bài viết</span><em class="icon ni ni-chevron-down tt-card-chev"></em></button></div>
+<div class="tt-card-head"><button type="button" class="tt-card-toggle" data-ne-toggle aria-expanded="true"><span>Link &amp; mật khẩu</span><em class="icon ni ni-chevron-down tt-card-chev"></em></button></div>
 <div class="tt-card-body">
 <div class="form-group"><div class="form-control-wrap">
 <asp:TextBox ID="txtSiteLink" runat="server" CssClass="form-control form-control-xl form-control-outlined" MaxLength="500" placeholder="https://"></asp:TextBox>
@@ -328,7 +330,7 @@
                     </div>
 <div class="form-group"><div class="form-control-wrap">
 <asp:TextBox ID="txtPostPassword" runat="server" CssClass="form-control form-control-xl form-control-outlined ne-pass" MaxLength="50" autocomplete="off"></asp:TextBox>
-<label class="form-label-outlined" for="<%=txtPostPassword.ClientID %>">Mật khẩu xem bài (để trống = ai cũng xem được)</label>
+<label class="form-label-outlined" for="<%=txtPostPassword.ClientID %>">Mật khẩu xem bài</label>
 </div></div>
 </div>
 </div>
@@ -351,8 +353,7 @@
                             <h6 class="overline-title title" style="margin-bottom: 20px;">Thể loại chuyên mục</h6>
                             <div class="form-control-wrap">
                                 <asp:DropDownList ID="ddlImage" runat="server" ValidationGroup="InputValidate" CssClass="form-select form-control">
-                                    <asp:ListItem Value="-1" Text="Chọn thể loại"></asp:ListItem>
-                                    <asp:ListItem Value="0" Text="TT - Tin tức tổng hợp"></asp:ListItem>
+                                    <asp:ListItem Value="0" Text="TT - Tin tức tổng hợp" Selected="True"></asp:ListItem>
                                     <asp:ListItem Value="7" Text="TH - Bài Tổng hợp"></asp:ListItem>
                                     <asp:ListItem Value="2" Text="TS - Tin sản xuất"></asp:ListItem>
                                     <asp:ListItem Value="3" Text="Bài - Bài sản xuất"></asp:ListItem>
@@ -363,8 +364,6 @@
                                     <asp:ListItem Value="12" Text="TDN - Tin dẫn nguồn"></asp:ListItem>
                                 </asp:DropDownList>
                                 <label class="form-label-outlined" for="<%=ddlImage.ClientID %>">Chọn thể loại</label>
-                                <asp:RequiredFieldValidator ID="RequiredFieldValidator2" runat="server" ControlToValidate="ddlImage" Display="Dynamic" CssClass="NormalRed"
-                                    ErrorMessage="Chưa chọn thể loại" InitialValue="-1" ValidationGroup="InputValidate"></asp:RequiredFieldValidator>
                             </div>
                         </div>
                     </div>
@@ -1341,7 +1340,7 @@
     var txtPublishedDate = '';
     var elEditor = null;
 
-    var editor = CKEDITOR.replace('<%=teContent.ClientID %>');
+    var editor = CKEDITOR.replace('<%=teContent.ClientID %>', window.neEditorConfig ? window.neEditorConfig() : undefined);
     elEditor = editor.getData();
     editor.on('change', function (evt) {
         elEditor = editor.getData();
@@ -1465,11 +1464,7 @@
         $(".tiennhuanbutnha").on('keyup change', Tongtiennhuanbut);
     });
     //Capturing when the user modifies a field
-    var warnMessage = 'Tin bài đã bị thay đổi và thoát không đúng cách!\n' +
-        '1. Bạn phải chọn: Ở lại trang (Stay on page) \n' +
-        '2. Bấm Lưu thay đổi (hoặc Thực hiện tác vụ) \n' +
-        '3. Sau đó bấm nút Ɔ Thoát (Phải sử dụng nút này để thoát). \n' +
-        '(Nếu không, tin bài này sẽ bị khóa, người khác không mở để duyệt sửa được!)';
+    var warnMessage = 'Tin bài có thay đổi chưa lưu. Nếu rời trang, các thay đổi sẽ bị mất!';
     var formModified = new Boolean();
     formModified = false;
     $('input:not(:button,:submit),textarea,select').on('change', function () {

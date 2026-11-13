@@ -148,14 +148,86 @@ Namespace DesktopModules.TinTuc.Manager.newsapprove
             End Set
         End Property
 #End Region
+#Region "Duong dan trang (theo link, khong theo TabID)"
+        ''' <summary>Tien to duong dan cua portal: portal con la "/ten-portal", portal dung domain rieng thi rong.</summary>
+        Private Function PortalPrefix() As String
+            Try
+                Dim a As String = PortalSettings.PortalAlias.HTTPAlias
+                Dim i As Integer = a.IndexOf("/"c)
+                If i >= 0 Then Return a.Substring(i).TrimEnd("/"c)
+            Catch ex As Exception
+            End Try
+            Return ""
+        End Function
+
+        ''' <summary>Cac dang duong dan cua trang dang xem (chu thuong, da bo tien to portal, /tabid/.. va /default.aspx).
+        ''' DNN viet lai URL nen Request.Url.AbsolutePath chi con /Default.aspx: phai lay tu RawUrl (link tren trinh duyet), du phong NavigateURL va TabPath.</summary>
+        Private Function CurrentPagePaths() As System.Collections.Generic.List(Of String)
+            If _pagePaths IsNot Nothing Then Return _pagePaths
+            Dim res As New System.Collections.Generic.List(Of String)
+            Dim pre As String = PortalPrefix().ToLower()
+            Dim raws As New System.Collections.Generic.List(Of String)
+            Try
+                raws.Add(Request.RawUrl)
+            Catch ex As Exception
+            End Try
+            Try
+                raws.Add(NavigateURL(TabId))
+            Catch ex As Exception
+            End Try
+            Try
+                raws.Add(PortalSettings.ActiveTab.TabPath.Replace("//", "/"))
+            Catch ex As Exception
+            End Try
+            For Each s As String In raws
+                Dim p As String = NormalizePath(s, pre)
+                If p <> "" AndAlso Not res.Contains(p) Then res.Add(p)
+            Next
+            _pagePaths = res
+            Return res
+        End Function
+        Private _pagePaths As System.Collections.Generic.List(Of String) = Nothing
+
+        Private Function NormalizePath(ByVal s As String, ByVal pre As String) As String
+            If String.IsNullOrEmpty(s) Then Return ""
+            Dim p As String = s.Trim().ToLower()
+            Dim i As Integer = p.IndexOf("://")
+            If i >= 0 Then
+                Dim j As Integer = p.IndexOf("/"c, i + 3)
+                If j >= 0 Then
+                    p = p.Substring(j)
+                Else
+                    p = "/"
+                End If
+            End If
+            Dim q As Integer = p.IndexOfAny(New Char() {"?"c, "#"c})
+            If q >= 0 Then p = p.Substring(0, q)
+            Dim k As Integer = p.IndexOf("/tabid/")
+            If k >= 0 Then p = p.Substring(0, k)
+            If p.EndsWith("/default.aspx") Then p = p.Substring(0, p.Length - "/default.aspx".Length)
+            p = p.TrimEnd("/"c)
+            If pre <> "" AndAlso p.StartsWith(pre) Then p = p.Substring(pre.Length)
+            Return p
+        End Function
+
+        Private Function IsPage(ByVal pagePath As String) As Boolean
+            Dim t As String = pagePath.ToLower().TrimEnd("/"c)
+            For Each h As String In CurrentPagePaths()
+                If h = t OrElse h.StartsWith(t & "/") Then Return True
+            Next
+            Return False
+        End Function
+#End Region
+
 #Region "Event Handlers"
         Private Sub Page_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
             Try
-                'Kiem tra xem dang o trang nao
-                Dim activetab As Integer = PortalSettings.ActiveTab.TabID
-                If activetab = BL.pageTheoDoiTinBaiId Then
+                'Kiem tra xem dang o trang nao: so theo duong dan (link) cua trang, khong theo TabID vi moi portal co TabID rieng
+                If IsPage(BL.pageTheoDoiTinBai) Then
+                    PageSuaBai = PortalPrefix() & BL.pageSuaTheoDoiTinBai
+                ElseIf PortalSettings.ActiveTab.TabID = BL.pageTheoDoiTinBaiId Then
+                    'Du phong: portal goc van nhan theo TabID nhu truoc
                     PageSuaBai = BL.pageSuaTheoDoiTinBai
-
                 End If
                 DotNetNuke.UI.Utilities.ClientAPI.RegisterKeyCapture(Me.Parent, Me.lbtFind, Asc(vbCr))
                 If Not IsPostBack Then

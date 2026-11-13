@@ -213,8 +213,8 @@
                                                     </small>
                                                     <br />
                                                     <small>
-                                                        <asp:Label ForeColor="Orange" Font-Size="11px" ID="lblEdittedBy" runat="server" Text='<%# Ultis.FormatEdittedBy(PortalId, DataBinder.Eval(Container.DataItem, "newid")) %>' Visible='<%# Eval("IsEdited") %>'></asp:Label>&nbsp; 
-                                                        <asp:LinkButton ID="cmdUnlock" CssClass="btn btn-trigger" ForeColor="Orange" OnClick="GetUnlockNews" CommandArgument='<%# DataBinder.Eval(Container.DataItem, "newid") %>' Visible='<%# Ultis.FormatLockByUser(PortalId, Eval("NewId"), UserId) %>' runat="server" data-toggle="tooltip" data-placement="top" title="" data-original-title="Mở khóa tin bài">
+                                                        <asp:Label ForeColor="Orange" Font-Size="11px" ID="lblEdittedBy" runat="server" Text='<%# Ultis.FormatEdittedBy(PortalId, DataBinder.Eval(Container.DataItem, "newid")) %>' Visible="False"></asp:Label>&nbsp; 
+                                                        <asp:LinkButton ID="cmdUnlock" CssClass="btn btn-trigger" ForeColor="Orange" OnClick="GetUnlockNews" CommandArgument='<%# DataBinder.Eval(Container.DataItem, "newid") %>' Visible="False" runat="server" data-toggle="tooltip" data-placement="top" title="" data-original-title="Mở khóa tin bài">
                                                             <em class="icon ni ni-unlock"></em>
                                                         </asp:LinkButton>
                                                     </small>
@@ -232,7 +232,7 @@
                                         <div class="nk-tb-col nk-tb-col-tools">
                                             <ul class="nk-tb-actions gx-1">
                                                 <li class="nk-tb-action-hidden">
-                                                    <asp:HyperLink ID="hptSua" NavigateUrl='<%#PageSuaBai & "?itemid=" & DataBinder.Eval(Container.DataItem, "newid") %>' runat="server" CssClass="btn btn-trigger btn-icon user-avatar" data-toggle="tooltip" data-placement="top" title="" data-original-title="Sửa" Visible='<%# Eval("CanViewLock") %>'>
+                                                    <asp:HyperLink ID="hptSua" NavigateUrl='<%#PageSuaBai & "?itemid=" & DataBinder.Eval(Container.DataItem, "newid") %>' runat="server" CssClass="btn btn-trigger btn-icon user-avatar" data-toggle="tooltip" data-placement="top" title="" data-original-title="Sửa">
                                                         <em class="icon ni ni-edit-fill"></em>
                                                     </asp:HyperLink>
                                                 </li>
@@ -252,7 +252,7 @@
                                                                     </a>
                                                                 </li>
                                                                 <li>
-                                                                    <asp:HyperLink ID="HyperLink1" NavigateUrl='<%#PageSuaBai & "?itemid=" & DataBinder.Eval(Container.DataItem, "newid") %>' runat="server" Visible='<%# Eval("CanViewLock") %>'>
+                                                                    <asp:HyperLink ID="HyperLink1" NavigateUrl='<%#PageSuaBai & "?itemid=" & DataBinder.Eval(Container.DataItem, "newid") %>' runat="server">
                                                                         <em class="icon ni ni-edit-fill"></em><span>Sửa bài</span>
                                                                     </asp:HyperLink>
                                                                 </li>

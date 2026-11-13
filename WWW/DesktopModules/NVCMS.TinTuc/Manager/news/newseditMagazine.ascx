@@ -272,8 +272,7 @@
                                 <div class="form-group">
                                     <div class="form-control-wrap">
                                         <asp:DropDownList ID="ddlImage" runat="server" ValidationGroup="InputValidate" CssClass="form-select form-control">
-                                            <asp:ListItem Value="-1" Text="Chọn thể loại"></asp:ListItem>
-                                            <asp:ListItem Value="0" Text="TT - Tin tức tổng hợp"></asp:ListItem>
+                                            <asp:ListItem Value="0" Text="TT - Tin tức tổng hợp" Selected="True"></asp:ListItem>
                                             <asp:ListItem Value="7" Text="TH - Bài Tổng hợp"></asp:ListItem>
                                             <asp:ListItem Value="2" Text="TS - Tin sản xuất"></asp:ListItem>
                                             <asp:ListItem Value="3" Text="Bài - Bài sản xuất"></asp:ListItem>
@@ -284,8 +283,6 @@
                                             <asp:ListItem Value="12" Text="TDN - Tin dẫn nguồn"></asp:ListItem>
                                         </asp:DropDownList>
                                         <label class="form-label-outlined" for="<%=ddlImage.ClientID %>">Chọn thể loại</label>
-                                        <asp:RequiredFieldValidator ID="RequiredFieldValidator2" runat="server" ControlToValidate="ddlImage" Display="Dynamic" CssClass="NormalRed"
-                                            ErrorMessage="Chưa chọn thể loại" InitialValue="-1" ValidationGroup="InputValidate"></asp:RequiredFieldValidator>
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -1354,11 +1351,7 @@
         $(".tiennhuanbutnha").on('keyup change', Tongtiennhuanbut);
     });
     //Capturing when the user modifies a field
-    var warnMessage = 'Tin bài đã bị thay đổi và thoát không đúng cách!\n' +
-        '1. Bạn phải chọn: Ở lại trang (Stay on page) \n' +
-        '2. Bấm Lưu thay đổi (hoặc Thực hiện tác vụ) \n' +
-        '3. Sau đó bấm nút Ɔ Thoát (Phải sử dụng nút này để thoát). \n' +
-        '(Nếu không, tin bài này sẽ bị khóa, người khác không mở để duyệt sửa được!)';
+    var warnMessage = 'Tin bài có thay đổi chưa lưu. Nếu rời trang, các thay đổi sẽ bị mất!';
     var formModified = new Boolean();
     formModified = false;
     $('input:not(:button,:submit),textarea,select').on('change', function () {
@@ -1497,12 +1490,7 @@
             document.getElementById('<%=txtPublishedDate.ClientID%>').focus();
             return false;
         }
-        var txtCredit = document.getElementById('<%=txtCredit.ClientID%>').value;
-        if (txtCredit == "" || txtCredit == "0") {
-            alert("Bạn chưa chấm nhuận bút!");
-            document.getElementById('<%=txtCredit.ClientID%>').focus();
-            return false;
-        }
+        // Nhuận bút không còn bắt buộc chấm khi xuất bản
 
     }
     function checkvalidatenhuan() {

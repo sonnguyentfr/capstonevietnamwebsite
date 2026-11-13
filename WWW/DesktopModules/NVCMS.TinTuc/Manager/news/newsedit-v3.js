@@ -95,6 +95,8 @@
     var seq = 0;
 
     function cfg() { return window.NE_CFG || null; }
+    // bat log: trong Console go  localStorage.setItem('ne.debug','1')  roi tai lai trang
+    function dbg() { try { if (window.localStorage.getItem('ne.debug') === '1') console.log.apply(console, ['[ne-paste]'].concat([].slice.call(arguments))); } catch (e) { /* bo qua */ } }
     function itemId() { var c = cfg(), h = c && document.getElementById(c.itemId); return (h && h.value) || '0'; }
     function say(ok, msg) { var f = ok ? window.notifySuccess : window.notifyError; if (typeof f === 'function') { try { f(msg); } catch (e) { /* bo qua */ } } }
     function extOf(t) { return ({ 'image/png': 'png', 'image/jpeg': 'jpg', 'image/jpg': 'jpg', 'image/gif': 'gif', 'image/webp': 'webp', 'image/bmp': 'bmp' })[(t || '').toLowerCase()] || 'png'; }
@@ -102,7 +104,7 @@
 
     // ------------------------------------------------------------------ upload
     function post(url, body) {
-        return fetch(url, { method: 'POST', body: body, credentials: 'same-origin' }).then(function (r) {
+        return fetch(url, { method: 'POST', body: body, credentials: 'same-origin', headers: { 'X-Requested-With': 'XMLHttpRequest' } }).then(function (r) {
             if (!r.ok) throw new Error('HTTP ' + r.status);
             return r.text();
         });
@@ -141,7 +143,19 @@
     function uploadSrc(src) {
         if (/^data:image\//i.test(src)) { var b = dataUrlToBlob(src); return uploadBlob(b, extOf(b.type)); }
         if (/^blob:/i.test(src)) return fetch(src).then(function (r) { return r.blob(); }).then(function (b) { return uploadBlob(b, extOf(b.type)); });
-        if (/^(https?:)?\/\//i.test(src)) return uploadRemote(src.indexOf('//') === 0 ? location.protocol + src : src);
+        if (/^(https?:)?\/\//i.test(src)) {
+            var u = src.indexOf('//') === 0 ? location.protocol + src : src;
+            return fetch(u, { mode: 'cors', credentials: 'omit' }).then(function (r) {
+                if (!r.ok) throw new Error('HTTP ' + r.status);
+                return r.blob();
+            }).then(function (b) {
+                if (!/^image\//i.test(b.type || '')) throw new Error('khong phai anh');
+                return { ok: true, b: b };
+            }, function () { return { ok: false }; }).then(function (r) {
+                dbg('tai anh', u, r.ok ? 'bang trinh duyet' : 'bang may chu');
+                return r.ok ? uploadBlob(r.b, extOf(r.b.type)) : uploadRemote(u);
+            });
+        }
         return Promise.reject(new Error('Nguon anh khong ho tro'));
     }
     function needsUpload(src) {
@@ -325,7 +339,9 @@
         editor.on('paste', function (evt) {
             var d = evt.data, dt = d.dataTransfer;
             var raw = d.dataValue || '';
+            if (!raw && dt && dt.getData) { try { raw = dt.getData('text/html') || ''; } catch (e) { /* bo qua */ } }
             var files = filesOf(dt);
+            dbg('paste', { type: d.type, html: raw.length, files: files.length });
             var hasContent = /<img\b/i.test(raw) || raw.replace(/<[^>]*>/g, '').replace(/&nbsp;|\s/g, '');
             if (files.length && !hasContent) { evt.cancel(); insertUploaded(editor, files); return; }
             if (!raw || d.type === 'text') return;
@@ -337,12 +353,26 @@
             });
             d.dataValue = out.innerHTML;
             pending = srcs;
-        }, null, null, 1);
+            dbg('anh can tai len', srcs.length);
+        }, null, null, 2);
         editor.on('afterPaste', function () {
             if (!pending || !pending.length) return;
             var s = pending; pending = null;
             processPending(editor, s);
         });
+        var ed = editor.editable();
+        ed.attachListener(ed, 'paste', function (ev) {
+            var cd = ev.data && ev.data.$ && ev.data.$.clipboardData;
+            if (!cd || !cd.items) return;
+            var files = [], hasStr = false, i;
+            for (i = 0; i < cd.items.length; i++) {
+                var it = cd.items[i];
+                if (it.kind === 'file' && /^image\//i.test(it.type)) { var f = it.getAsFile(); if (f) files.push(f); }
+                else if (it.kind === 'string' && (it.type === 'text/html' || it.type === 'text/plain')) hasStr = true;
+            }
+            dbg('paste goc', { items: cd.items.length, files: files.length, hasStr: hasStr });
+            if (files.length && !hasStr) { ev.cancel(); ev.data.preventDefault(); insertUploaded(editor, files); }
+        }, null, null, 0);
         editor.on('drop', function (evt) {
             var files = filesOf(evt.data.dataTransfer);
             if (!files.length) return;
@@ -357,4 +387,166 @@
             if (c && ev.editor.name === c.editor) bind(ev.editor);
         });
     }
+})();
+
+/* ============================================================================
+   Bo cuc viet bai (lay trinh soan thao lam trung tam):
+   - Toolbar CKEditor sap theo muc do dung (hang 1: viet bai; hang 2: nang cao), dinh khi cuon
+   - Nut "Anh & tep cua bai" ngay tren toolbar, Ctrl+S luu, thanh trang thai da luu / chua luu
+   - Che do tap trung (an khung phai), dem ky tu tom tat
+   Chi la lop giao dien: khong doi du lieu, ID control hay luong luu bai.
+   ============================================================================ */
+(function () {
+    'use strict';
+    var BASE = '/DesktopModules/NVCMS.TinTuc/Manager/news/';
+    var FKEY = 'ne.ed.focus';
+
+    function root() { return document.querySelector('.ne-v3'); }
+    function q(sel, ctx) { return (ctx || document).querySelector(sel); }
+    function hhmm() { var d = new Date(), p = function (n) { return (n < 10 ? '0' : '') + n; }; return p(d.getHours()) + ':' + p(d.getMinutes()); }
+
+    // ---------------------------------------------------------------- trang thai luu
+    function setState(kind, text) {
+        var s = document.getElementById('neState'); if (!s) return;
+        s.className = 'ne-state is-' + kind; s.textContent = text;
+    }
+    function hookSave() {
+        ['updateSuccess', 'updateError'].forEach(function (n) {
+            var f = window[n];
+            if (typeof f !== 'function' || f.__ne) return;
+            var w = function (result) {
+                var res = f.apply(this, arguments);
+                try {
+                    if (n === 'updateSuccess') {
+                        var ok = !(result === '0' || result === 0 || result === '' || result == null);
+                        setState(ok ? 'saved' : 'error', ok ? 'Đã lưu lúc ' + hhmm() : 'Lưu thất bại');
+                    } else setState('error', 'Lưu lỗi');
+                } catch (e) { /* bo qua */ }
+                return res;
+            };
+            w.__ne = 1; window[n] = w;
+        });
+    }
+
+    // ---------------------------------------------------------------- che do tap trung
+    function setFocus(on) {
+        var r = root(); if (!r) return;
+        r.classList.toggle('ne-focus', !!on);
+        var b = document.getElementById('neFocusBtn');
+        if (b) { b.classList.toggle('active', !!on); var sp = b.querySelector('span'); if (sp) sp.textContent = on ? 'Thoát tập trung' : 'Tập trung'; }
+        try { window.localStorage.setItem(FKEY, on ? '1' : '0'); } catch (e) { /* bo qua */ }
+        setTimeout(function () { try { window.dispatchEvent(new Event('resize')); } catch (e) { /* bo qua */ } syncTop(); }, 60);
+    }
+
+    // vi tri dinh cua toolbar CKEditor = duoi header (64px) va thanh thao tac neu thanh nay dang dinh
+    function syncTop() {
+        var r = root(), bar = r && q('.tt-ed-actionbar', r); if (!bar) return;
+        var stuck = window.getComputedStyle(bar).position === 'sticky';
+        document.documentElement.style.setProperty('--ne-toolbar-top', (64 + (stuck ? bar.offsetHeight + 10 : 8)) + 'px');
+    }
+
+    function saveNow() {
+        var b = q('[id$="lbtSave"]');
+        if (b) b.click();
+    }
+    function openMedia() {
+        var r = root(); if (!r) return;
+        setFocus(false);
+        if (window.neShowSide) window.neShowSide('media');
+        var p = q('[data-side-pane="media"]', r);
+        if (p) {
+            if (window.matchMedia('(max-width:1199.98px)').matches) p.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            p.classList.remove('is-flash'); void p.offsetWidth; p.classList.add('is-flash');
+        }
+    }
+
+    // ---------------------------------------------------------------- CKEditor
+    function registerPlugin() {
+        if (!window.CKEDITOR || CKEDITOR.plugins.registered.nemedia) return;
+        CKEDITOR.plugins.add('nemedia', {
+            init: function (editor) {
+                editor.addCommand('neMedia', { canUndo: false, readOnly: 1, exec: openMedia });
+                editor.addCommand('neSave', { canUndo: false, readOnly: 1, exec: saveNow });
+                editor.ui.addButton('NeMedia', { label: 'Ảnh & tệp của bài', command: 'neMedia', toolbar: 'insert,0', icon: BASE + 'ne-media.svg' });
+                editor.setKeystroke(CKEDITOR.CTRL + 83, 'neSave');          // Ctrl+S
+            }
+        });
+    }
+    // Cau hinh rieng cho man soan tin (khong dung config.js dung chung voi cac module khac)
+    window.neEditorConfig = function () {
+        registerPlugin();
+        return {
+            height: Math.max(560, window.innerHeight - 280),
+            toolbarCanCollapse: false,
+            toolbarStartupExpanded: true,
+            toolbar: [
+                { name: 'format', items: ['Format'] },
+                { name: 'basic', items: ['Bold', 'Italic', 'Underline', 'Strike', 'RemoveFormat'] },
+                { name: 'lists', items: ['NumberedList', 'BulletedList', 'Blockquote'] },
+                { name: 'align', items: ['JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'] },
+                { name: 'links', items: ['Link', 'Unlink'] },
+                { name: 'insert', items: ['NeMedia', 'Image', 'Youtube', 'oembed', 'Table'] },
+                { name: 'history', items: ['Undo', 'Redo'] },
+                { name: 'view', items: ['Maximize', 'Source'] },
+                '/',
+                { name: 'style2', items: ['Style', 'TextColor', 'BGColor', 'Subscript', 'Superscript'] },
+                { name: 'para2', items: ['Outdent', 'Indent', 'HorizontalRule', 'SpecialChar', 'PageBreak'] },
+                { name: 'clip', items: ['PasteText', 'PasteFromWord', 'CopyFormatting', 'Find', 'Replace', 'ShowBlocks'] },
+                { name: 'biz', items: ['Templates', 'dangkydo', 'dangkydoen'] }
+            ],
+            // giu cac plugin cua config.js (extraPlugins cua instance ghi de config.js) va bat them dem tu
+            extraPlugins: 'youtube,oembed,filetools,uploadwidget,dangkydo,dangkydoen,chuky,chukyen,nemedia,wordcount',
+            removePlugins: 'easyimage',
+            format_tags: 'p;h2;h3;h4',
+            contentsCss: [CKEDITOR.basePath + 'contents.css', BASE + 'newsedit-content.css'],
+            bodyClass: 'ne-content',
+            wordcount: { showParagraphs: false, showWordCount: true, showCharCount: true, countSpacesAsChars: true, countHTML: false, maxWordCount: -1, maxCharCount: -1 }
+        };
+    };
+    if (window.CKEDITOR) {
+        window.CKEDITOR.on('instanceReady', function (ev) {
+            var c = window.NE_CFG;
+            if (c && ev.editor.name === c.editor) ev.editor.on('change', function () { setState('dirty', 'Chưa lưu'); });
+        });
+    }
+
+    // ---------------------------------------------------------------- dung giao dien
+    function init() {
+        var r = root(); if (!r) return;
+        var ul = q('.tt-ed-actions', r);
+        if (ul && !document.getElementById('neTools')) {
+            var li = document.createElement('li'); li.id = 'neTools'; li.className = 'ne-tools-li';
+            li.innerHTML = '<span id="neState" class="ne-state is-saved" role="status" aria-live="polite">Đã lưu</span>' +
+                '<button type="button" id="neFocusBtn" class="btn btn-sm btn-outline-light ne-focus-btn" title="Chế độ tập trung: ẩn khung bên phải, chỉ còn tiêu đề, tóm tắt và nội dung"><em class="icon ni ni-maximize"></em><span>Tập trung</span></button>';
+            var del = ul.querySelector('li[style*="float"]');
+            ul.insertBefore(li, del || null);
+            document.getElementById('neFocusBtn').addEventListener('click', function () { setFocus(!r.classList.contains('ne-focus')); });
+        }
+        var on = false; try { on = window.localStorage.getItem(FKEY) === '1'; } catch (e) { /* bo qua */ }
+        if (on) setFocus(true);
+        // chua luu khi go vao o nhap
+        r.addEventListener('input', function (e) { var t = e.target; if (t && /^(INPUT|TEXTAREA)$/.test(t.tagName) && t.type !== 'file') setState('dirty', 'Chưa lưu'); });
+        // dem ky tu tom tat
+        var s = q('textarea[id$="txtSummary"]', r);
+        if (s && !s.__neC) {
+            s.__neC = 1;
+            var c = document.createElement('div'); c.className = 'ne-count'; s.parentNode.appendChild(c);
+            var upd = function () { var n = s.value.length; c.textContent = n + ' ký tự' + (n > 160 ? ' — nên ≤ 160 để hiển thị tốt khi chia sẻ / trên Google' : ''); c.classList.toggle('is-over', n > 160); };
+            s.addEventListener('input', upd); upd();
+        }
+        // tieu de / tom tat: dung placeholder thay cho nhan noi (nhan de bi dai, lech khi chu to)
+        Array.prototype.forEach.call(r.querySelectorAll('.tt-card-write label.form-label-outlined'), function (l) {
+            var id = l.getAttribute('for'), inp = id && document.getElementById(id);
+            if (inp && !inp.placeholder) inp.placeholder = (l.textContent || '').trim();
+            l.classList.add('ne-label-hidden');
+        });
+        // bai moi chua co tieu de: dua con tro vao tieu de
+        var t = q('[id$="txtTitle"]', r); if (t && !t.value) { try { t.focus(); } catch (e) { /* bo qua */ } }
+        hookSave(); syncTop();
+        window.addEventListener('resize', syncTop);
+        window.addEventListener('load', function () { hookSave(); syncTop(); });
+        // Ctrl+S ngoai khung soan
+        document.addEventListener('keydown', function (e) { if ((e.ctrlKey || e.metaKey) && (e.key === 's' || e.key === 'S')) { e.preventDefault(); saveNow(); } });
+    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
 })();

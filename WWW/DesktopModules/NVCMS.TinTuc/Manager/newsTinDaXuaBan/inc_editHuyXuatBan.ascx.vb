@@ -431,6 +431,15 @@ Namespace DesktopModules.TinTuc.Manager.news
                     If Not BL.IsXBGroup(UserInfo) Then
                         txtCredit.Visible = False
                     End If
+                    'Chưa có chuyên mục nào được chọn: chọn tạm chuyên mục đầu tiên trong danh sách
+                    If ddlCategory.SelectedValue = "0" Then
+                        For Each itCat As ListItem In ddlCategory.Items
+                            If itCat.Value <> "0" AndAlso itCat.Value <> "" Then
+                                ddlCategory.SelectedValue = itCat.Value
+                                Exit For
+                            End If
+                        Next
+                    End If
                     hdf_Category.Value = ddlCategory.SelectedValue
                     'hdf_WF.Value = ddlWFTop.SelectedValue
                     Try
@@ -559,14 +568,24 @@ Namespace DesktopModules.TinTuc.Manager.news
                 ProcessModuleLoadException(Me, ex)
             End Try
         End Sub
-        ''' <summary>Giữ nguyên cột Note (đang dùng làm mật khẩu bài viết ở màn soạn tin) khi lưu từ màn không có ô nhập này.</summary>
+        ''' <summary>Giu nguyen cot Note (dang dung lam mat khau bai viet o man soan tin) khi luu tu man khong co o nhap nay.</summary>
         Private Function KeepNote(ByVal newsId As Integer, ByVal fromClient As String) As String
             If Not String.IsNullOrEmpty(fromClient) Then Return fromClient
+            If newsId <= 0 Then Return ""
             Try
-                If newsId > 0 Then
-                    Dim o As NV_NewsInfo = ctlNews.GetByID(newsId)
-                    If o IsNot Nothing Then Return If(o.Note, "")
-                End If
+                Dim o As NV_NewsInfo = ctlNews.GetByID(newsId)
+                If o IsNot Nothing AndAlso Not String.IsNullOrEmpty(o.Note) Then Return o.Note
+            Catch ex As Exception
+            End Try
+            Try
+                Using cn As New System.Data.SqlClient.SqlConnection(DotNetNuke.Common.Utilities.Config.GetConnectionString())
+                    Using cmd As New System.Data.SqlClient.SqlCommand("SELECT Note FROM dbo.NV_News WHERE NewId = @NewId", cn)
+                        cmd.Parameters.AddWithValue("@NewId", newsId)
+                        cn.Open()
+                        Dim v As Object = cmd.ExecuteScalar()
+                        If v IsNot Nothing AndAlso Not IsDBNull(v) Then Return Convert.ToString(v)
+                    End Using
+                End Using
             Catch ex As Exception
             End Try
             Return ""

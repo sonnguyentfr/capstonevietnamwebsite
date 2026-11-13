@@ -1,0 +1,20 @@
+/* Giao dien vung noi dung trong trinh soan thao (iframe CKEditor): doc de, gan voi bai thuc te.
+   Chi la giao dien soan thao, khong anh huong HTML luu vao bai. */
+html { background: #fff; }
+body.ne-content { max-width: 800px; margin: 0 auto; padding: 24px 22px 90px; font: 17px/1.75 -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; color: #1c2b46; background: #fff; }
+.ne-content p { margin: 0 0 1em; }
+.ne-content h2, .ne-content h3, .ne-content h4 { font-weight: 700; line-height: 1.35; color: #0f1b33; margin: 1.5em 0 .55em; }
+.ne-content h2 { font-size: 1.55em; }
+.ne-content h3 { font-size: 1.3em; }
+.ne-content h4 { font-size: 1.12em; }
+.ne-content a { color: #2563eb; }
+.ne-content blockquote { margin: 1.2em 0; padding: .5em 1.1em; border-left: 4px solid #6576ff; background: #f5f6ff; color: #364a63; font-style: italic; }
+.ne-content img { max-width: 100%; height: auto; }
+.ne-content figure { margin: 1.2em auto; text-align: center; }
+.ne-content figcaption { font-size: .85em; color: #6b7a99; margin-top: .4em; }
+.ne-content table { border-collapse: collapse; width: 100%; margin: 1em 0; }
+.ne-content td, .ne-content th { border: 1px solid #d5dae6; padding: 8px 10px; vertical-align: top; }
+.ne-content th { background: #f3f5fa; }
+.ne-content ul, .ne-content ol { margin: 0 0 1em; padding-left: 1.6em; }
+.ne-content hr { border: 0; border-top: 1px solid #d5dae6; margin: 1.6em 0; }
+::selection { background: #cfd6ff; }
