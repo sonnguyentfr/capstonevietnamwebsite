@@ -240,6 +240,9 @@ public class CopyStudentFromLadiJob
         var now = DateTime.Now;
         var isNewStudent = false;
 
+        // Cột yeu_cau_tu_van của sheet nằm trong JSON thong_tin_khac
+        var yeuCauTuVan = LadiConsultRequest.Extract(row.thong_tin_khac);
+
         int studentId;
         string? firstName;
         string? lastName;
@@ -257,7 +260,7 @@ public class CopyStudentFromLadiJob
             toEmail = existingByEmail.Email;
             studentCode = ResolveStudentCode(existingByEmail, codePrefix);
 
-            await LinkStudentToEventAsync(row, cat, studentId, studentCode, eventId, portalId, now);
+            await LinkStudentToEventAsync(row, cat, studentId, studentCode, eventId, portalId, now, yeuCauTuVan);
         }
         else
         {
@@ -272,7 +275,7 @@ public class CopyStudentFromLadiJob
                 toEmail = existingByPhone.Email;
                 studentCode = ResolveStudentCode(existingByPhone, codePrefix);
 
-                await LinkStudentToEventAsync(row, cat, studentId, studentCode, eventId, portalId, now);
+                await LinkStudentToEventAsync(row, cat, studentId, studentCode, eventId, portalId, now, yeuCauTuVan);
             }
             else
             {
@@ -318,10 +321,11 @@ public class CopyStudentFromLadiJob
     /// <summary>
     /// Gắn khách hàng đã tồn tại vào sự kiện: nếu đã đăng ký thì chỉ cập nhật
     /// nguồn, chưa đăng ký thì insert mới với Source = StatusCu (0).
+    /// Có yêu cầu tư vấn thì chèn lên đầu TuVanKhac (giữ nội dung cũ, như form tư vấn website).
     /// </summary>
     private async Task LinkStudentToEventAsync(
         LadipageRow row, EventCatRow cat, int studentId, string studentCode,
-        int eventId, int portalId, DateTime now)
+        int eventId, int portalId, DateTime now, string? yeuCauTuVan)
     {
         if (await _crm.EventStudentExistsAsync(eventId, studentId))
         {
@@ -334,6 +338,19 @@ public class CopyStudentFromLadiJob
             await _crm.InsertEventStudentAsync(
                 eventId, row.event_id ?? cat.id, studentId, studentCode,
                 SourceStatusCu, NguonLadi, now, portalId, row.link ?? string.Empty);
+        }
+
+        if (!string.IsNullOrWhiteSpace(yeuCauTuVan))
+        {
+            // Đoạn đầu nội dung dùng để chống chèn trùng khi job chạy lại bản ghi này
+            var encoded = LadiConsultRequest.Encode(yeuCauTuVan);
+            var dedupe = encoded.Length > 200 ? encoded[..200] : encoded;
+
+            await _crm.PrependTuVanKhacAsync(
+                studentId,
+                LadiConsultRequest.BuildExistingStudentLine(cat.CatName, yeuCauTuVan, now),
+                dedupe,
+                now);
         }
     }
 
@@ -356,8 +373,9 @@ public class CopyStudentFromLadiJob
             FollowUpStatus = 1,
             FollowUpDateUpdate = now,
 
-            // Job VB gán thong_tin_khac rồi ghi đè ngay bằng câu mô tả dưới đây
-            TuVanKhac = $"<mark>Khách đăng ký Online tại: {cat.CatName}</mark>.",
+            // Câu mô tả nguồn đăng ký (như job VB) + yêu cầu tư vấn từ cột yeu_cau_tu_van của sheet
+            TuVanKhac = LadiConsultRequest.BuildNewStudentTuVanKhac(
+                cat.CatName, LadiConsultRequest.Extract(row.thong_tin_khac)),
             TuVanHocVanmongmuon = string.Empty,
             TuVanNamdi = string.Empty,
             TuVanKyhoc = "0",

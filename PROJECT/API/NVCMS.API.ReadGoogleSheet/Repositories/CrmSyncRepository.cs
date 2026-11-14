@@ -153,6 +153,21 @@ namespace NVCMS.API.ReadGoogleSheet.Repositories
                 commandType: CommandType.StoredProcedure);
         }
 
+        public async Task PrependTuVanKhacAsync(int studentId, string line, string dedupeText, DateTime now)
+        {
+            using var conn = Open();
+            await conn.ExecuteAsync(
+                """
+                UPDATE Student_Info
+                SET    TuVanKhac = LEFT(@Line + CASE WHEN ISNULL(TuVanKhac, N'') = N'' THEN N''
+                                                     ELSE CHAR(13) + CHAR(10) + TuVanKhac END, 1000),
+                       TuVanEditDate = @Now
+                WHERE  id = @Id
+                  AND  CHARINDEX(@Dedupe, ISNULL(TuVanKhac, N'')) = 0
+                """,
+                new { Id = studentId, Line = line, Dedupe = dedupeText, Now = now });
+        }
+
         public async Task InsertFollowLogAsync(int studentId, string content, DateTime createdDate, int portalId)
         {
             using var conn = Open();

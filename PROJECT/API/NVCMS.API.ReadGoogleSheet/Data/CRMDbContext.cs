@@ -351,6 +351,7 @@ namespace NVCMS.API.ReadGoogleSheet.Data
                 e.Property(x => x.thong_tin_khac).HasColumnName("thong_tin_khac");
                 e.Property(x => x.is_update_crm).HasColumnName("is_update_crm");
                 e.Property(x => x.created_date).HasColumnName("created_date").HasColumnType("datetime");
+                e.Ignore(x => x.SheetRow);   // chỉ dùng để báo lỗi import, không có cột trong DB
             });
         }
     }

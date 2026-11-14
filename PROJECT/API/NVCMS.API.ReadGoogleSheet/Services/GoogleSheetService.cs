@@ -59,7 +59,7 @@ namespace NVCMS.API.ReadGoogleSheet.Services
                 {
                     var row = values[i];
                     var extraDict = new Dictionary<string, object>();
-                    var student = new student_from_ladipage();
+                    var student = new student_from_ladipage { SheetRow = i + 1 };
 
                     for (int col = 0; col < header.Count; col++)
                     {

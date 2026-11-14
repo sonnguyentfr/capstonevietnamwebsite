@@ -43,14 +43,23 @@ public class JobAlertService : IJobAlertService
             return;
         }
 
-        var recipients = _settings.AlertEmails;
-        if (string.IsNullOrWhiteSpace(recipients))
+        // Người nhận = AlertEmails chung + AlertEmailsByJob[jobName]; CC = AlertCcEmails
+        _settings.AlertEmailsByJob.TryGetValue(jobName, out var jobEmails);
+        var toList = SplitEmails(_settings.AlertEmails, jobEmails);
+        var ccList = SplitEmails(_settings.AlertCcEmails)
+            .Where(cc => !toList.Contains(cc, StringComparer.OrdinalIgnoreCase))
+            .ToList();
+
+        if (toList.Count == 0)
         {
             _logger.LogWarning(
-                "Job {JobName} có {Count} lỗi nhưng CrmSync:AlertEmails đang trống → không gửi mail",
-                jobName, failures.Count);
+                "Job {JobName} có {Count} lỗi nhưng CrmSync:AlertEmails / AlertEmailsByJob:{JobName} đang trống → không gửi mail",
+                jobName, failures.Count, jobName);
             return;
         }
+
+        var recipients = string.Join("; ", toList);
+        var cc = ccList.Count > 0 ? string.Join("; ", ccList) : null;
 
         try
         {
@@ -64,12 +73,12 @@ public class JobAlertService : IJobAlertService
                 recipients,
                 subject,
                 body,
-                ccEmail: null,
+                ccEmail: cc,
                 bccEmail: null);
 
             _logger.LogInformation(
-                "Đã gửi mail cảnh báo lỗi job {JobName} tới {Recipients} ({Count} lỗi)",
-                jobName, recipients, failures.Count);
+                "Đã gửi mail cảnh báo lỗi job {JobName} tới {Recipients} (cc: {Cc}) ({Count} lỗi)",
+                jobName, recipients, cc ?? "-", failures.Count);
         }
         catch (Exception ex)
         {
@@ -290,10 +299,19 @@ public class JobAlertService : IJobAlertService
         sb.Append($"""
             <tr>
               <td style="color:#52514e;vertical-align:top;white-space:nowrap;"><b>{H(label)}</b></td>
-              <td style="word-break:break-word;">{H(value)}</td>
+              <td style="word-break:break-word;white-space:pre-wrap;">{H(value)}</td>
             </tr>
             """);
     }
 
     private static string H(string? s) => WebUtility.HtmlEncode(s ?? string.Empty);
+
+    /// <summary>Gộp các chuỗi email (phân tách , hoặc ;), bỏ trùng, bỏ giá trị không có '@'.</summary>
+    private static List<string> SplitEmails(params string?[] lists)
+        => lists
+            .Where(s => !string.IsNullOrWhiteSpace(s))
+            .SelectMany(s => s!.Split(new[] { ',', ';' }, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
+            .Where(e => e.Contains('@'))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
 }

@@ -27,6 +27,13 @@ namespace NVCMS.API.ReadGoogleSheet.Repositories
 
         Task UpdateStudentCodeAsync(int studentId, string code);
 
+        /// <summary>
+        /// Chèn 1 dòng lên đầu Student_Info.TuVanKhac (giữ nội dung cũ, cắt 1000 ký tự như
+        /// WebView_TuVan_Upsert). Bỏ qua nếu TuVanKhac đã chứa <paramref name="dedupeText"/>
+        /// để job chạy lại không chèn trùng.
+        /// </summary>
+        Task PrependTuVanKhacAsync(int studentId, string line, string dedupeText, DateTime now);
+
         Task InsertFollowLogAsync(int studentId, string content, DateTime createdDate, int portalId);
 
         // ── NV_Events_Student ────────────────────────────────────────────────

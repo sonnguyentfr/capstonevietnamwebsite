@@ -112,17 +112,28 @@ public class ImportCrmDataJob
             catch (Exception ex)
             {
                 // Một sheet lỗi không được làm hỏng các sheet còn lại
+                var context = new Dictionary<string, string?>
+                {
+                    ["EventCatId"] = cat.id.ToString(),
+                    ["Tên nhóm sự kiện"] = cat.CatName,
+                    ["SpreadsheetId"] = cat.link_data_google_sheet,
+                    ["Range"] = cat.link_data_google_sheet_range
+                };
+
+                if (ex is SheetRowsRejectedException rejected)
+                {
+                    // Các dòng hợp lệ đã import; liệt kê từng dòng bị bỏ kèm giá trị các cột
+                    totalImported += rejected.ImportedCount;
+                    AddRejectedRows(context, rejected);
+                }
+
                 failures.Add(new JobFailure
                 {
-                    Step = $"Đọc Google Sheet của nhóm sự kiện \"{cat.CatName}\"",
+                    Step = ex is SheetRowsRejectedException r
+                        ? $"Import Google Sheet của nhóm sự kiện \"{cat.CatName}\": {r.Rows.Count} dòng bị bỏ"
+                        : $"Đọc Google Sheet của nhóm sự kiện \"{cat.CatName}\"",
                     FallbackSource = $"{JobName} → ICrmDataService.ImportFromGoogleSheetAsync",
-                    Context = new Dictionary<string, string?>
-                    {
-                        ["EventCatId"] = cat.id.ToString(),
-                        ["Tên nhóm sự kiện"] = cat.CatName,
-                        ["SpreadsheetId"] = cat.link_data_google_sheet,
-                        ["Range"] = cat.link_data_google_sheet_range
-                    },
+                    Context = context,
                     Exception = ex
                 });
 
@@ -138,5 +149,31 @@ public class ImportCrmDataJob
         _logger.LogInformation("ImportCrmDataJob xong: {Summary}", summary);
 
         await _alert.ReportAsync(JobName, failures, aborted: false, summary);
+    }
+
+    /// <summary>Số dòng bị bỏ tối đa hiển thị chi tiết trong 1 mail.</summary>
+    private const int MaxRejectedRowsInMail = 30;
+
+    /// <summary>Mỗi dòng sheet bị bỏ → 1 mục "Dòng N trên sheet": lý do + giá trị từng cột.</summary>
+    private static void AddRejectedRows(Dictionary<string, string?> context, SheetRowsRejectedException rejected)
+    {
+        context["Đã import"] = $"{rejected.ImportedCount} dòng hợp lệ";
+        context["Số dòng bị bỏ"] = rejected.Rows.Count.ToString();
+
+        var n = 0;
+        foreach (var row in rejected.Rows.Take(MaxRejectedRowsInMail))
+        {
+            n++;
+            var label = row.SheetRow.HasValue ? $"Dòng {row.SheetRow} trên sheet" : $"Dòng bị bỏ #{n}";
+
+            var lines = new List<string> { $"LỖI: {row.Problems}" };
+            lines.AddRange(row.Values.Select(v =>
+                $"{v.Key}: {(string.IsNullOrEmpty(v.Value) ? "(trống)" : v.Value)}"));
+
+            context[label] = string.Join("\n", lines);
+        }
+
+        if (rejected.Rows.Count > MaxRejectedRowsInMail)
+            context["…"] = $"Còn {rejected.Rows.Count - MaxRejectedRowsInMail} dòng nữa, xem log ứng dụng";
     }
 }

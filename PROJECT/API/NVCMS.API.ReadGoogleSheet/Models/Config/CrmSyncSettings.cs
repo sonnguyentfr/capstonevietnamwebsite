@@ -48,6 +48,17 @@ namespace NVCMS.API.ReadGoogleSheet.Models.Config
         /// <summary>Nơi nhận mail cảnh báo lỗi job, phân tách bằng dấu phẩy.</summary>
         public string AlertEmails { get; set; } = "it@capstonevietnam.com";
 
+        /// <summary>CC cho mọi mail cảnh báo lỗi job, phân tách bằng dấu phẩy hoặc chấm phẩy.</summary>
+        public string AlertCcEmails { get; set; } = "";
+
+        /// <summary>
+        /// Người nhận THÊM theo từng job (key = tên job: ImportCrmDataJob, CopyStudentFromLadiJob,
+        /// BirthdayMailJob), cộng với AlertEmails. Ví dụ lỗi đọc Google Sheet gửi thêm cho marketing.
+        /// Biến môi trường: CrmSync__AlertEmailsByJob__ImportCrmDataJob
+        /// </summary>
+        public Dictionary<string, string> AlertEmailsByJob { get; set; }
+            = new(StringComparer.OrdinalIgnoreCase);
+
         /// <summary>
         /// Số lỗi được mô tả chi tiết trong 1 mail cảnh báo. Phần vượt quá chỉ
         /// đếm số lượng, tránh mail quá dài khi lỗi hệ thống làm hỏng mọi bản ghi.

@@ -21,5 +21,42 @@ namespace NVCMS.API.ReadGoogleSheet.Repositories
 
             return lstdata;
         }
+
+        public async Task<List<(student_from_ladipage Record, Exception Error)>> AddRangeSkipFailuresAsync(
+            IReadOnlyList<student_from_ladipage> records)
+        {
+            var failed = new List<(student_from_ladipage, Exception)>();
+            if (records.Count == 0) return failed;
+
+            // 1. Thử cả lô (nhanh). SaveChanges chạy trong transaction nên lỗi thì rollback hết.
+            try
+            {
+                await _dbSet.AddRangeAsync(records);
+                await _context.SaveChangesAsync();
+                return failed;
+            }
+            catch (DbUpdateException)
+            {
+                _context.ChangeTracker.Clear();
+            }
+
+            // 2. Lô lỗi → insert từng dòng, dòng lỗi thì bỏ qua để các dòng khác vẫn vào
+            foreach (var record in records)
+            {
+                record.id = 0;   // xoá id tạm EF gán ở lần thử cả lô (cột IDENTITY)
+                _dbSet.Add(record);
+                try
+                {
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateException ex)
+                {
+                    _context.Entry(record).State = EntityState.Detached;
+                    failed.Add((record, ex));
+                }
+            }
+
+            return failed;
+        }
     }
 }

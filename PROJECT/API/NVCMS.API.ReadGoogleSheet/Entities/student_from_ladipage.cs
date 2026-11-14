@@ -22,5 +22,9 @@ namespace NVCMS.API.ReadGoogleSheet.Entities
         public string? thong_tin_khac { get; set; }                  // NVARCHAR(50) NULL
         public bool? is_update_crm { get; set; } = false;                 // NVARCHAR(50) NULL
         public DateTime? created_date { get; set; } = DateTime.Now;
+
+        /// <summary>Số dòng trên Google Sheet (chỉ dùng khi import để báo lỗi, không lưu DB).</summary>
+        [System.ComponentModel.DataAnnotations.Schema.NotMapped]
+        public int? SheetRow { get; set; }
     }
 }
