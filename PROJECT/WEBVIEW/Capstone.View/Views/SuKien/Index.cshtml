@@ -82,8 +82,18 @@
         else
         {
             <div class="events-empty" data-aos="fade-up">
-                <i class="fa-solid fa-calendar-xmark"></i>
-                <p>Hiện chưa có sự kiện sắp diễn ra. Vui lòng quay lại sau.</p>
+                <div class="events-empty__art" aria-hidden="true">
+                    <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="8" y="12" width="48" height="44" rx="9" fill="#fff" stroke="#a41034" stroke-width="3"/>
+                        <path d="M8 25h48" stroke="#a41034" stroke-width="3"/>
+                        <path d="M20 7v10M44 7v10" stroke="#a41034" stroke-width="3" stroke-linecap="round"/>
+                        <circle cx="32" cy="41" r="7.5" stroke="#a41034" stroke-width="3"/>
+                        <path d="M32 37v4.5l3 2" stroke="#a41034" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <h3 class="events-empty__title">Chưa có sự kiện sắp diễn ra</h3>
+                <p class="events-empty__text">Lịch hội thảo và triển lãm mới đang được cập nhật. Để lại thông tin, Capstone sẽ báo ngay khi có lịch phù hợp với bạn.</p>
+                <a class="events-empty__cta" href="/dang-ky-tu-van"><i class="fa-solid fa-paper-plane"></i> Nhận tư vấn miễn phí</a>
             </div>
         }
     </div>

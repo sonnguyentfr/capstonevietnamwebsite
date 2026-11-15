@@ -253,3 +253,19 @@
         </div>
     </div>
 </div>
+
+@* Key event GA4: chi tinh khi vua dang ky moi (TempData con va khong trung); refresh khong tinh lai *@
+@section Scripts {
+    @if (!string.IsNullOrEmpty(msg) && !((TempData["IsDuplicate"] as bool?) ?? false))
+    {
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                if (window.cvTrack) cvTrack('generate_lead', {
+                    lead_type: 'dang_ky_su_kien',
+                    form_name: 'dang_ky_su_kien',
+                    registration_event: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(catName ?? string.Empty))
+                });
+            });
+        </script>
+    }
+}

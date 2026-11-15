@@ -46,3 +46,15 @@
         </div>
     </div>
 </section>
+
+@* Key event GA4 – chi bat khi vua gui form xong (TempData con), refresh trang thi khong tinh lai *@
+@section Scripts {
+    @if (!string.IsNullOrEmpty(name))
+    {
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                if (window.cvTrack) cvTrack('generate_lead', { lead_type: 'tu_van_day_du', form_name: 'dang_ky_tu_van' });
+            });
+        </script>
+    }
+}

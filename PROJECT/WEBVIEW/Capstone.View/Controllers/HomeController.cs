@@ -1,4 +1,5 @@
-﻿using Capstone.View.Options;
+﻿using Capstone.View.Helpers;
+using Capstone.View.Options;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using NVCMS.WebView.Data.Contracts.Service;
@@ -34,6 +35,8 @@ public class HomeController : Controller
         {
             return Json(new { success = false, message = "Vui lòng nhập đúng thông tin." });
         }
+
+        model.NoiDung = LeadAttribution.AppendTo(model.NoiDung, Request);
 
         try
         {

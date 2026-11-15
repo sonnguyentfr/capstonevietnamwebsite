@@ -301,11 +301,17 @@ public class TruongService : ITruongService
             return list.ToList();
         });
 
-        return items
+        var pool = items
             .Select(MapCard)
             .Where(c => loaiSet.Count == 0 || loaiSet.Contains(c.Loai ?? string.Empty))
             .DistinctBy(t => t.Id)
-            .Take(pageSize);
+            .ToArray();
+
+        // Random thu tu moi lan tai trang (danh sach goc da cache 10 phut, chi xao tron ban sao
+        // nay nen khong anh huong cache va khong tao them truy van DB).
+        Random.Shared.Shuffle(pool);
+
+        return pool.Take(pageSize);
     }
 
     private NewsItemViewModel MapNewsItem(NewsModel n, NewsCategoryModel? cat) => new()

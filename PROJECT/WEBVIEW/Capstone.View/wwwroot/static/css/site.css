@@ -3184,3 +3184,321 @@ body {
 .landing-card-body ul {}
 .landing-card-body ul  li{
 }
+
+/* =====================================================================
+   LAYOUT REFINEMENT v2  (rà soát responsive toàn trang chủ)
+   Đặt cuối file để ghi đè main.min.css / global.min.css.
+
+   Nguyên nhân "to và thô" đã xử lý:
+   1) .container nở theo vw (63px + 77vw) -> ở 1920px rộng ~1550px. Nay chốt 1280/1360px.
+   2) body font-size = 1vw (>=1200px) -> chữ 12px ở 1200px nhưng 19px ở 1920px. Nay cố định 16px.
+   3) Tiêu đề section cố định 40px ở mọi màn hình desktop -> dùng clamp() co giãn.
+   4) .news-item { grid-column: span 3 } không có media query -> lưới tràn ngang < 1200px.
+   5) Card trường: logo 40px quá nhỏ, ảnh bìa thiếu hiển thị "No photo", 30 chấm phân trang.
+   ===================================================================== */
+
+/* ---------- 1. Khung nội dung & nhịp dọc ---------- */
+@media (min-width: 576px) {
+    .container { max-width: 100%; padding-left: 24px; padding-right: 24px; }
+}
+@media (min-width: 1200px) {
+    .container { max-width: 1280px; padding-left: 20px; padding-right: 20px; }
+    body { font-size: 16px; }
+}
+@media (min-width: 1600px) {
+    .container { max-width: 1360px; }
+}
+
+.section-large { padding-top: clamp(2.75rem, 2rem + 3vw, 5rem); padding-bottom: clamp(2.75rem, 2rem + 3vw, 5rem); }
+.section       { padding-top: clamp(2.25rem, 1.5rem + 2vw, 3.75rem); padding-bottom: clamp(2.25rem, 1.5rem + 2vw, 3.75rem); }
+
+/* ---------- 2. Typography tiêu đề section ---------- */
+.site-title {
+    font-size: clamp(1.625rem, 1.1rem + 1.4vw, 2.25rem);
+    line-height: 1.25;
+    letter-spacing: -.005em;
+}
+.site-title.uppercase { letter-spacing: .02em; }
+.site-title.text-center::after {
+    content: "";
+    display: block;
+    width: 56px;
+    height: 3px;
+    margin: .75rem auto 0;
+    border-radius: 3px;
+    background: rgb(164 16 52);
+}
+.site-sub-title { font-size: clamp(1.25rem, 1rem + .8vw, 1.75rem); }
+.site-desc { font-size: 1rem; line-height: 1.6; color: #4b5563; }
+.home-connectivity .site-desc,
+.home-courses .site-desc { max-width: 46rem; }
+
+/* Chip lọc quốc gia (Tất cả / Mỹ / Canada ...) */
+.home-connectivity .button { flex-wrap: wrap; gap: .5rem; }
+@media (max-width: 575.98px) {
+    .home-connectivity .button .btn-solid { padding: .4rem .85rem; font-size: .875rem; }
+}
+
+/* ---------- 3. Thanh dịch vụ nhanh dưới banner ---------- */
+@media (max-width: 1199.98px) {
+    .home-nav .nav-list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1px; background: rgba(255,255,255,.12); }
+    .home-nav .nav-list li { flex-basis: auto; min-width: 0; }
+    .home-nav .nav-list li a { height: 100%; padding: .85rem .5rem; font-size: .8125rem; line-height: 1.3; }
+}
+@media (max-width: 1199.98px) {
+    .home-nav .nav-list li { width: auto; max-width: none; margin: 0; padding: 0; }
+    .home-nav .nav-list li a { width: 100%; white-space: normal; flex-direction: column; gap: .35rem; justify-content: center; text-align: center; }
+}
+@media (max-width: 479.98px) {
+    .home-nav .nav-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* Ô quốc gia trên mobile: lưới 3x2 thay vì 6 dải mỏng; nút "Các quốc gia khác" tách khỏi lưới */
+.section_listquocgia .duhocnuocnao + .duhocnuocnao { margin-top: 12px; }
+@media (max-width: 767.98px) {
+    .section_listquocgia .duhocnuocnao.mt-8 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+    .section_listquocgia .duhocnuocnao .card { height: 150px; margin: 0 !important; border-radius: 10px; overflow: hidden; }
+    .section_listquocgia .duhocnuocnao .card:hover { flex-grow: 1; }
+    .section_listquocgia .duhocnuocnao .card .card__head { min-width: 100%; left: 0; bottom: 6px; font-size: .8125rem; }
+}
+
+/* ---------- 4. Trường đối tác (đại học / cao đẳng / trung học) ---------- */
+.truong-swiper-component { position: relative; padding: 0; }
+@media (min-width: 1200px) { .truong-swiper-component { padding: 0 56px; } }
+
+.truong-swiper-container { overflow: hidden; padding: 6px 2px 8px; margin: -6px -2px 0; }
+.truong-swiper-container .swiper-wrapper { align-items: stretch; }
+.truong-swiper-container .swiper-slide { height: auto; display: flex; }
+
+.school-card--slide {
+    width: 100%;
+    background: #fff;
+    border: 1px solid #e8ebf0;
+    border-radius: 14px;
+    box-shadow: 0 1px 2px rgba(16,24,40,.04), 0 6px 18px rgba(16,24,40,.06);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+}
+.school-card--slide:hover {
+    transform: translateY(-3px);
+    border-color: #dfe3ea;
+    box-shadow: 0 2px 4px rgba(16,24,40,.05), 0 14px 30px rgba(16,24,40,.12);
+}
+
+.school-card--slide .school-card__cover {
+    position: relative;
+    height: auto;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    background: #eef1f5;
+}
+.school-card--slide .school-card__cover img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .35s ease; }
+.school-card--slide:hover .school-card__cover img { transform: scale(1.05); }
+
+/* Chưa có ảnh bìa: nền thương hiệu nhạt thay cho ảnh "No photo" */
+.school-card__cover--empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #fbeff2 0%, #f3f5f9 100%);
+}
+.school-card__cover--empty > i { font-size: 2.75rem; color: rgb(164 16 52 / .28); }
+
+.school-card--slide .school-card__badge {
+    top: 12px; left: 12px;
+    background: rgba(15, 23, 42, .82);
+    -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px);
+    font-size: .6875rem; padding: 4px 10px;
+}
+
+.school-card--slide .school-card__body { padding: 0 1.1rem 1.1rem; flex: 1; display: flex; flex-direction: column; }
+
+/* Logo nổi lên giữa ảnh bìa và nội dung, đủ lớn để nhận diện */
+.school-card--slide .school-card__logo-wrap {
+    position: relative;
+    z-index: 2;
+    width: 64px; height: 64px;
+    margin: -32px 0 .75rem;
+    padding: 6px;
+    background: #fff;
+    border: 1px solid #e8ebf0;
+    border-radius: 14px;
+    box-shadow: 0 4px 12px rgba(16,24,40,.1);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+}
+.school-card--slide .school-card__logo-wrap img { width: 100%; height: 100%; object-fit: contain; }
+.school-card--slide .school-card__logo-wrap > i { font-size: 1.5rem; color: rgb(164 16 52 / .55); }
+
+.school-card--slide .school-card__name {
+    font-size: 1.0625rem;
+    font-weight: 700;
+    line-height: 1.35;
+    color: #111827;
+    margin: 0 0 .65rem;
+    min-height: 2.7em;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+.school-card--slide:hover .school-card__name { color: rgb(164 16 52); }
+
+.school-card--slide .school-card__meta { gap: .35rem; margin: auto 0 0; font-size: .8125rem; }
+.school-card--slide .school-card__meta-item {
+    display: inline-flex; align-items: center; gap: .35rem;
+    padding: .2rem .6rem;
+    background: #f3f4f6;
+    border-radius: 999px;
+    color: #4b5563;
+    line-height: 1.4;
+}
+.school-card--slide .school-card__meta-item i { font-size: .75rem; color: rgb(164 16 52 / .7); }
+.school-card--slide .school-card__tuition { background: #fdf2f4; color: rgb(140 12 44); font-weight: 600; }
+
+/* Nút điều hướng */
+.truong-swiper-component .ts-nav {
+    position: absolute; top: calc(50% - 12px);
+    transform: translateY(-50%);
+    z-index: 10;
+    width: 40px; height: 40px;
+    display: none;
+    align-items: center; justify-content: center;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 50%;
+    box-shadow: 0 2px 8px rgba(16,24,40,.12);
+    color: rgb(164 16 52);
+    cursor: pointer;
+    transition: background .2s, color .2s, opacity .2s;
+}
+.truong-swiper-component .ts-nav:hover { background: rgb(164 16 52); color: #fff; }
+.truong-swiper-component .ts-nav.swiper-button-disabled { opacity: .35; pointer-events: none; }
+.truong-swiper-component .truong-swiper-prev { left: 0; right: auto; }
+.truong-swiper-component .truong-swiper-next { right: 0; left: auto; }
+@media (min-width: 768px) { .truong-swiper-component .ts-nav { display: inline-flex; } }
+@media (min-width: 768px) and (max-width: 1199.98px) {
+    .truong-swiper-component .truong-swiper-prev { left: -6px; }
+    .truong-swiper-component .truong-swiper-next { right: -6px; }
+}
+
+/* Thanh tiến trình thay cho 30 chấm phân trang */
+.truong-swiper-component .ts-progress.swiper-pagination-progressbar {
+    position: relative !important;
+    top: auto; left: auto; bottom: auto;
+    width: 100%; max-width: 220px; height: 3px;
+    margin: 1.25rem auto 0;
+    border-radius: 3px;
+    background: #e5e7eb;
+}
+.truong-swiper-component .ts-progress .swiper-pagination-progressbar-fill { background: rgb(164 16 52); border-radius: 3px; }
+
+/* ---------- 5. Tin tức - Học bổng: sửa tràn ngang ---------- */
+.home-news.news-list-section .news-list > .news-item { grid-column: auto; }
+@media (min-width: 768px) and (max-width: 1023.98px) {
+    /* 2 cột; item lẻ cuối cùng trải full hàng để không bị hụt */
+    .home-news.news-list-section .news-list > .news-item:last-child:nth-child(odd) { grid-column: 1 / -1; }
+}
+@media (min-width: 1024px) {
+    .home-news.news-list-section .news-list { grid-template-columns: repeat(12, minmax(0, 1fr)); }
+    .home-news.news-list-section .news-list > .news-item { grid-column: span 3 / span 3; }
+    .home-news.news-list-section .news-list > .news-item:nth-child(-n+3) { grid-column: span 4 / span 4; }
+}
+.home-news .news-list { gap: clamp(1rem, .5rem + 1.4vw, 2rem); }
+
+/* ---------- 6. Dịch vụ & Đội ngũ cố vấn ---------- */
+.home-courses-list { gap: clamp(1rem, .5rem + 1.4vw, 2rem); }
+.home-courses-item {
+    border-radius: 14px;
+    box-shadow: 0 1px 2px rgba(16,24,40,.05), 0 8px 24px rgba(16,24,40,.08);
+    transition: transform .25s ease, box-shadow .25s ease;
+}
+.home-courses-item:hover { transform: translateY(-3px); box-shadow: 0 2px 4px rgba(16,24,40,.06), 0 16px 32px rgba(16,24,40,.14); }
+
+/* Đội ngũ cố vấn: 4 người / hàng từ 1024px; 3 (900px), 2 (560px), 1 cột (mobile) */
+.home-units .home-courses-list { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+@media (min-width: 560px)  { .home-units .home-courses-list { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 900px)  { .home-units .home-courses-list { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (min-width: 1024px) { .home-units .home-courses-list { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+.home-units .home-courses-item .image { aspect-ratio: 1 / 1; }
+.home-units .home-courses-item .image img { height: 100%; object-position: center top; }
+.home-units .home-courses-item .caption { padding: 1rem; }
+.home-units .home-courses-item .title {
+    font-size: .875rem;
+    line-height: 1.35;
+    display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden;
+}
+.home-units .home-courses-item p {
+    padding: .5rem 0 0;
+    font-size: .8125rem;
+    line-height: 1.5;
+    color: #4b5563;
+    display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+}
+
+/* ---------- 7. Khối giới thiệu & công cụ tìm trường ---------- */
+.home-about .university-name { font-size: clamp(2rem, 1.2rem + 2.4vw, 3.5rem); line-height: 1.1; }
+.school-finder-title { font-size: clamp(1.5rem, 1.1rem + 1.2vw, 2.25rem); }
+
+/* ---------- 8. Điều chỉnh sau rà soát lần 2 ---------- */
+
+/* Khối "Tìm trường phù hợp": nền xanh sát mép section trên/dưới, không để khoảng trắng
+   (rule .section-large ở trên đã vô tình thêm padding) */
+.school-finder-section.section-large { padding-top: 0; padding-bottom: 0; }
+
+/* Carousel trường: mỗi slide là 1 cột gồm 2 card -> hiển thị 2 dòng */
+.truong-swiper-component .ts-col { display: flex; flex-direction: column; gap: 16px; width: 100%; min-width: 0; }
+.truong-swiper-component .ts-col > .school-card--slide { flex: 1 1 auto; }
+@media (min-width: 768px) { .truong-swiper-component .ts-col { gap: 20px; } }
+@media (min-width: 1200px) { .truong-swiper-component .ts-col { gap: 24px; } }
+
+/* Danh mục tin (Tin tức - Học bổng) */
+.news-item .caption .news-cat {
+    display: inline-flex;
+    align-self: flex-start;
+    align-items: center;
+    max-width: 100%;
+    padding: .2rem .7rem;
+    border-radius: 999px;
+    background: rgb(164 16 52 / .09);
+    color: rgb(164 16 52);
+    font-size: .75rem;
+    font-weight: 600;
+    line-height: 1.4;
+    letter-spacing: .01em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Từ 1200px, main.min.css phủ caption lên ảnh cho cả tin thứ 4 (chỉ 3 tin đầu là ô lớn) nên tin thứ 4
+   bị gradient đen dù nằm ở hàng nhỏ -> trả tin thứ 4 về kiểu card thường như tin 5-7. */
+@media (min-width: 1200px) {
+    .home-news.news-list-section .news-list > .news-item:nth-child(4) .caption {
+        position: static;
+        justify-content: normal;
+        gap: calc(12/1920*100rem);
+        width: auto;
+        padding: calc(8/1920*100rem) calc(8/1920*100rem) calc(32/1920*100rem);
+        background: none;
+        border-bottom: 3px solid rgb(246 246 246);
+        border-radius: 0 0 calc(16/1920*100rem) calc(16/1920*100rem);
+        pointer-events: auto;
+    }
+    .home-news.news-list-section .news-list > .news-item:nth-child(4) .news-date { color: rgb(82 82 82); }
+    .home-news.news-list-section .news-list > .news-item:nth-child(4) .news-title {
+        color: #000;
+        font-size: clamp(13px, calc(14/1920*100rem), calc(15/1920*100rem));
+        line-height: 1.25;
+    }
+    /* danh mục nằm trên ảnh (3 tin lớn): nền kính mờ + chữ trắng cho dễ đọc */
+    .home-news .news-list > .news-item:nth-child(-n+3) .caption .news-cat {
+        background: rgba(255, 255, 255, .18);
+        color: #fff;
+        border: 1px solid rgba(255, 255, 255, .28);
+        -webkit-backdrop-filter: blur(6px);
+        backdrop-filter: blur(6px);
+    }
+}

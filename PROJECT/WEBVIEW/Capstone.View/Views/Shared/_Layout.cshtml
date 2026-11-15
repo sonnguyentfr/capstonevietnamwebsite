@@ -49,6 +49,34 @@
     <meta name="twitter:title"       content="@ViewData["Title"] - @_siteName">
     <meta name="twitter:description" content="@_metaDesc">
     <meta name="twitter:image"       content="@_metaImg">
+    @* Chuan hoa utm_* (chu thuong, gach ngang, medium theo chuan GA4) TRUOC khi GA doc URL, va luu
+       first/last touch vao cookie cv_ft / cv_lt de server ghi nguon vao lead. Phai dat truoc HeaderCode. *@
+    <script>
+    (function(){try{
+    var L=location,w=window,D=document;
+    var ALIAS={'paid_social':'paid-social','paidsocial':'paid-social','paid-social-media':'paid-social','social-media':'social','socialmedia':'social','e-mail':'email','mail':'email','newsletter':'email','qrcode':'qr','qr-code':'qr','ppc':'cpc','adwords':'cpc','google-ads':'cpc','banner':'display'};
+    function norm(v,med){v=(v||'').trim().toLowerCase().replace(/\s+/g,'-');return med&&ALIAS[v]?ALIAS[v]:v}
+    var P=new URLSearchParams(L.search),chg=false;
+    ['utm_source','utm_medium','utm_campaign','utm_term','utm_content'].forEach(function(k){var o=P.get(k);if(o===null)return;var n=norm(o,k==='utm_medium');if(n!==o){P.set(k,n);chg=true}});
+    if(chg&&w.history&&history.replaceState){var q=P.toString();history.replaceState(history.state,'',L.pathname+(q?'?'+q:'')+L.hash)}
+    function g(k){return P.get(k)||''}
+    var SEARCH=/(^|\.)(google|bing|yahoo|coccoc|duckduckgo|yandex|baidu)\./,SOCIAL=/(^|\.)(facebook|instagram|zalo|tiktok|youtube|linkedin|twitter|x)\.(com|me|vn)$|^t\.co$/;
+    var cur=null,s=g('utm_source'),m=g('utm_medium'),c=g('utm_campaign');
+    if(s||m||c){cur={s:s||'(not-set)',m:m||'(not-set)',c:c,t:g('utm_term'),n:g('utm_content')}}
+    else if(g('gclid')){cur={s:'google',m:'cpc'}}
+    else if(g('fbclid')){cur={s:'facebook',m:'social'}}
+    else if(D.referrer){var h='';try{h=new URL(D.referrer).hostname.replace(/^www\./,'')}catch(e){}
+      if(h&&h!==L.hostname.replace(/^www\./,'')){cur={s:h,m:SEARCH.test(h)?'organic':SOCIAL.test(h)?'social':'referral'}}}
+    function rc(n){var r=D.cookie.match(new RegExp('(?:^|; )'+n+'=([^;]*)'));return r?r[1]:''}
+    function wc(n,o,days){var a=[];for(var k in o){if(o[k])a.push(k+'='+encodeURIComponent(String(o[k]).slice(0,80)))}
+      D.cookie=n+'='+encodeURIComponent(a.join('&'))+'; max-age='+days*86400+'; path=/; SameSite=Lax'+(L.protocol==='https:'?'; Secure':'')}
+    var first=rc('cv_ft'),lp=L.pathname.slice(0,80);
+    if(cur){cur.lp=lp;wc('cv_lt',cur,30);
+      var firstDirect=first&&decodeURIComponent(first).indexOf('d=1')>-1;
+      if(!first||firstDirect)wc('cv_ft',cur,90)}
+    else if(!first){wc('cv_ft',{s:'(direct)',m:'(none)',lp:lp,d:1},90)}
+    }catch(e){}})();
+    </script>
     @* Inject custom <head> code from admin (Google Tag Manager, analytics, etc.) *@
     @if (!string.IsNullOrEmpty(_headerFooterData.HeaderCode))
     {
@@ -75,6 +103,7 @@
     <script src="/static/js/global.min.js"></script>
     <script src="/static/js/aos.js"></script>
     <script src="/static/js/main.min.js"></script>
+    <script src="/static/js/tracking.js" asp-append-version="true"></script>
     <script src="/static/js/site.js" asp-append-version="true"></script>
     @* Inject custom footer scripts from admin *@
     @if (!string.IsNullOrEmpty(_headerFooterData.FooterCode))

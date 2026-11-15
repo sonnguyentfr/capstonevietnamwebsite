@@ -1,3 +1,4 @@
+using Capstone.View.Helpers;
 using Capstone.View.Options;
 using Capstone.View.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -63,6 +64,10 @@ public class TuVanDangKyController : Controller
         if (!ModelState.IsValid)
             return View(await BuildPageAsync(input));
 
+        // Ghi nguon UTM (first/last touch) vao ghi chu lead; khoi phuc noi dung goc neu phai hien lai form
+        var originalTuVanKhac = input.TuVanKhac;
+        input.TuVanKhac = LeadAttribution.AppendTo(input.TuVanKhac, Request);
+
         TuVanDangKyResult result;
         try
         {
@@ -71,6 +76,7 @@ public class TuVanDangKyController : Controller
         catch (Exception ex) when (ex is not OperationCanceledException)
         {
             _logger.LogError(ex, "TuVanDangKy submit failed: Phone={Phone} Email={Email}", input.SoDienThoai, input.Email);
+            input.TuVanKhac = originalTuVanKhac;
             ModelState.AddModelError(string.Empty, "Có lỗi xảy ra khi gửi đăng ký. Vui lòng thử lại sau.");
             return View(await BuildPageAsync(input));
         }
@@ -101,6 +107,8 @@ public class TuVanDangKyController : Controller
                 .ToList();
             return Json(new { success = false, message = string.Join(" ", errors), errors });
         }
+
+        input.TuVanKhac = LeadAttribution.AppendTo(input.TuVanKhac, Request);
 
         try
         {

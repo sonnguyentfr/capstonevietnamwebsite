@@ -202,6 +202,7 @@
             return res.json();
         }).then(function (data) {
             if (data && data.success) {
+                if (window.cvTrack) cvTrack('generate_lead', { lead_type: 'tu_van_nhanh', form_name: 'tu_van_nhanh', source_page: (form.elements['NguonTrang'] || {}).value || '' });
                 form.hidden = true;
                 document.getElementById('tvn-done-msg').textContent = data.message;
                 document.getElementById('tvn-done').hidden = false;

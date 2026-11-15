@@ -27,16 +27,25 @@
     </div>
 </section>
 
-<!-- Hoi thao su kien -->
-<section class="home-story section-large bg-neutral-50 overflow-hidden">
-    <div class="container">
-        <h2 class="site-title text-center" data-aos="fade-right" data-aos-delay="300">Hội thảo - Sự kiện</h2>
-        @await Component.InvokeAsync("Events")
-        <div class="button justify-center mt-8" data-aos="fade-up" data-aos-delay="200">
-            <a class="btn-solid" href="/su-kien"><span>Xem thêm</span><i class="fa-solid fa-plus"></i></a>
+<!-- Hoi thao su kien: chi hien khi component Events co du lieu, khong co thi an ca section -->
+@{
+    var eventsContent = await Component.InvokeAsync("Events");
+    using var eventsWriter = new System.IO.StringWriter();
+    eventsContent.WriteTo(eventsWriter, System.Text.Encodings.Web.HtmlEncoder.Default);
+    var eventsHtml = eventsWriter.ToString();
+}
+@if (!string.IsNullOrWhiteSpace(eventsHtml))
+{
+    <section class="home-story section-large bg-neutral-50 overflow-hidden">
+        <div class="container">
+            <h2 class="site-title text-center" data-aos="fade-right" data-aos-delay="300">Hội thảo - Sự kiện</h2>
+            @Html.Raw(eventsHtml)
+            <div class="button justify-center mt-8" data-aos="fade-up" data-aos-delay="200">
+                <a class="btn-solid" href="/su-kien"><span>Xem thêm</span><i class="fa-solid fa-plus"></i></a>
+            </div>
         </div>
-    </div>
-</section>
+    </section>
+}
 <!-- Truong dai hoc cao dang -->
 <section class="home-connectivity section-large" style="border-top-width: 1px; border-bottom-width: 1px; border-color: rgb(152 152 152 / var(--tw-border-opacity));">
     <div class="container" data-aos="zoom-in" data-aos-delay="150">

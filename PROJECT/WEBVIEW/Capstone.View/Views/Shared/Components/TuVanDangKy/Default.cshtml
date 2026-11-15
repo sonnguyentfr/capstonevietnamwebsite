@@ -153,6 +153,7 @@
                             .then(function(response) { return response.json(); })
                             .then(function(result) {
                             if (result.success) {
+                            if (window.cvTrack) cvTrack('generate_lead', { lead_type: 'tu_van_trang_chu', form_name: 'tu_van_trang_chu' });
                             showToast(result.message, 'success');
                             form.reset();
                             } else {
