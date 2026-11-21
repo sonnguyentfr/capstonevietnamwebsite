@@ -1,20 +1,25 @@
-/* Giao dien vung noi dung trong trinh soan thao (iframe CKEditor): doc de, gan voi bai thuc te.
+/* Giao dien vung noi dung trong trinh soan thao (iframe CKEditor), giong NVCMS v3: nen xam, cot bai mau trang o giua.
    Chi la giao dien soan thao, khong anh huong HTML luu vao bai. */
-html { background: #fff; }
-body.ne-content { max-width: 800px; margin: 0 auto; padding: 24px 22px 90px; font: 17px/1.75 -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; color: #1c2b46; background: #fff; }
+@font-face { font-family: "Nunito"; font-style: normal; font-weight: 400; font-display: swap;
+  src: local("Nunito Regular"), local("Nunito-Regular"), url("/static/_admin/assets/fonts/Nunito-Regular.woff2") format("woff2"), url("/static/_admin/assets/fonts/Nunito-Regular.woff") format("woff"); }
+@font-face { font-family: "Nunito"; font-style: normal; font-weight: 700; font-display: swap;
+  src: local("Nunito Bold"), local("Nunito-Bold"), url("/static/_admin/assets/fonts/Nunito-Bold.woff2") format("woff2"), url("/static/_admin/assets/fonts/Nunito-Bold.woff") format("woff"); }
+html { background: #f5f6fa; height: 100%; }
+body.ne-content { box-sizing: border-box; max-width: 816px; margin: 0 auto; padding: 28px 28px 64px; min-height: 100%; background: #fff; color: #1c2b46; font-family: "Nunito", "Segoe UI", Roboto, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 1.75; word-wrap: break-word; overflow-wrap: break-word; }
+@media (max-width: 600px) { body.ne-content { padding: 14px 14px 48px; font-size: 17px; } }
 .ne-content p { margin: 0 0 1em; }
 .ne-content h2, .ne-content h3, .ne-content h4 { font-weight: 700; line-height: 1.35; color: #0f1b33; margin: 1.5em 0 .55em; }
-.ne-content h2 { font-size: 1.55em; }
-.ne-content h3 { font-size: 1.3em; }
-.ne-content h4 { font-size: 1.12em; }
-.ne-content a { color: #2563eb; }
-.ne-content blockquote { margin: 1.2em 0; padding: .5em 1.1em; border-left: 4px solid #6576ff; background: #f5f6ff; color: #364a63; font-style: italic; }
+.ne-content h2 { font-size: 1.35em; }
+.ne-content h3 { font-size: 1.18em; }
+.ne-content h4 { font-size: 1.05em; }
+.ne-content a { color: #1a5bb5; text-decoration: underline; }
+.ne-content blockquote { margin: 1.4em 0; padding: .6em 1.2em; border-left: 4px solid #6576ff; background: #f5f6fa; color: #364a63; font-style: italic; }
 .ne-content img { max-width: 100%; height: auto; }
-.ne-content figure { margin: 1.2em auto; text-align: center; }
+.ne-content figure { margin: 1.4em auto; text-align: center; }
 .ne-content figcaption { font-size: .85em; color: #6b7a99; margin-top: .4em; }
-.ne-content table { border-collapse: collapse; width: 100%; margin: 1em 0; }
-.ne-content td, .ne-content th { border: 1px solid #d5dae6; padding: 8px 10px; vertical-align: top; }
-.ne-content th { background: #f3f5fa; }
+.ne-content table { border-collapse: collapse; width: 100%; margin: 1.2em 0; }
+.ne-content td, .ne-content th { border: 1px solid #dbdfea; padding: 6px 10px; vertical-align: top; }
+.ne-content th { background: #f5f6fa; font-weight: 700; }
 .ne-content ul, .ne-content ol { margin: 0 0 1em; padding-left: 1.6em; }
-.ne-content hr { border: 0; border-top: 1px solid #d5dae6; margin: 1.6em 0; }
+.ne-content hr { border: 0; border-top: 1px solid #dbdfea; margin: 2em 0; }
 ::selection { background: #cfd6ff; }

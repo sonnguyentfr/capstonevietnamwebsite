@@ -10,8 +10,12 @@ namespace Capstone.View.Middleware;
 /// <summary>
 /// Chạy TRƯỚC UseRateLimiter:
 ///  - Chặn 403 User-Agent của tool scrape / crawler SEO không mong muốn, UA rỗng.
+///  - UA của bot preview mạng xã hội (AllowedUserAgents) không bao giờ bị chặn theo UA.
 ///  - UA xưng là Googlebot/Bingbot... thì xác minh bằng reverse DNS + forward DNS.
-///    Thật → gắn cờ VerifiedBot (rate limit nới hơn). Giả mạo → 403.
+///    Thật → gắn cờ VerifiedBot (rate limit nới hơn). Không xác minh được → coi như khách
+///    thường (KHÔNG 403, trừ khi bật BlockUnverifiedSearchBots) để không chặn nhầm Google.
+///  - IP khách lấy từ Connection.RemoteIpAddress, đã được TrustedProxyClientIpMiddleware
+///    đổi sang IP thật (CF-Connecting-IP) khi request đi qua Cloudflare.
 ///  - Gán khoá phân vùng rate limit (IP, IPv6 gộp /64) vào HttpContext.Items.
 /// </summary>
 public class BotGuardMiddleware
@@ -72,6 +76,8 @@ public class BotGuardMiddleware
         }
 
         var ip = context.Connection.RemoteIpAddress;
+        // Chuẩn hoá ::ffff:a.b.c.d → a.b.c.d, nếu không bước so khớp forward DNS luôn lệch
+        if (ip is { IsIPv4MappedToIPv6: true }) ip = ip.MapToIPv4();
         var key = PartitionKey(ip);
         context.Items[PartitionKeyItem] = key;
 
@@ -97,7 +103,11 @@ public class BotGuardMiddleware
         {
             var uaLower = ua.ToLowerInvariant();
 
-            var blocked = _opt.BlockedUserAgents.FirstOrDefault(b => uaLower.Contains(b));
+            // Bot preview link (Facebook, Zalo, LinkedIn...) được ưu tiên hơn danh sách chặn:
+            // vd. LinkedInBot có chứa "Apache-HttpClient" trong UA.
+            var allowed = _opt.AllowedUserAgents.Any(a => uaLower.Contains(a));
+
+            var blocked = allowed ? null : _opt.BlockedUserAgents.FirstOrDefault(b => uaLower.Contains(b));
             if (blocked is not null)
             {
                 await Block(context, ip, "ua:" + blocked, ua);
@@ -110,8 +120,14 @@ public class BotGuardMiddleware
                 var verified = await VerifyBotAsync(ip, bot.Suffixes);
                 if (verified == false)
                 {
-                    await Block(context, ip, "fake-bot:" + bot.Token, ua);
-                    return;
+                    if (_opt.BlockUnverifiedSearchBots)
+                    {
+                        await Block(context, ip, "fake-bot:" + bot.Token, ua);
+                        return;
+                    }
+                    // Mặc định: không chặn, chỉ không được ưu tiên → chịu rate limit / quota như khách thường
+                    _logger.LogWarning("BotGuard unverified search bot (not blocked) {Ip} {Path} token={Token} UA={UserAgent}",
+                        ip, context.Request.Path, bot.Token, ua);
                 }
                 if (verified == true)
                 {

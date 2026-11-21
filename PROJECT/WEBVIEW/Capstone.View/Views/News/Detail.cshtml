@@ -7,6 +7,22 @@
     var encodedUrl = Uri.EscapeDataString(pageUrl);
     var encodedTitle = Uri.EscapeDataString(Model.Title);
     var isDoiNgu = (Model.CategorySlug ?? string.Empty).StartsWith("gioi-thieu/doi-ngu", StringComparison.OrdinalIgnoreCase);
+
+    // ── Dữ liệu cho structured data (JSON-LD) ──
+    var siteRoot     = $"{Context.Request.Scheme}://{Context.Request.Host}";
+    var categoryPath = "/" + (Model.CategorySlug ?? string.Empty).Trim('/');
+    if (string.IsNullOrEmpty(pageUrl)) { pageUrl = siteRoot + Context.Request.Path; }
+    Func<string?, string> absUrl = u => string.IsNullOrWhiteSpace(u)
+        ? string.Empty
+        : (u.StartsWith("/") && !u.StartsWith("//") ? siteRoot + u : u);
+    var hfData  = await SiteHelper.GetHeaderFooterDataAsync(SiteOptions.Value.PortalId);
+    var logoUrl = string.IsNullOrEmpty(hfData.HeaderLogo)
+        ? siteRoot + "/static/img/logo.png"
+        : absUrl(hfData.HeaderLogo.Replace("/DATA", SiteOptions.Value.ServerFilesBaseUrl));
+    var crumbs = new List<(string Name, string? Url)>();
+    crumbs.Add(("Trang chủ", siteRoot + "/"));
+    if (categoryPath.Length > 1) { crumbs.Add((Model.CategoryName, siteRoot + categoryPath)); }
+    crumbs.Add((Model.Title, pageUrl));
 }
 
 @section Styles {
@@ -64,7 +80,7 @@ else if (!string.IsNullOrEmpty(Model.ImagePath))
             <nav class="breadcrumb nd-breadcrumb" aria-label="breadcrumb">
                 <a href="/">Trang chủ</a>
                 <i class="fa-solid fa-chevron-right"></i>
-                <a href="/">@Model.CategoryName</a>
+                <a href="@categoryPath">@Model.CategoryName</a>
             </nav>
         }
 
@@ -244,23 +260,17 @@ else if (!string.IsNullOrEmpty(Model.ImagePath))
 </div>
 
 @section Scripts {
-    <script type="application/ld+json">
-        {
-        "@@context": "https://schema.org",
-        "@@type": "NewsArticle",
-        "headline": "@Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.MetaTitle ?? Model.Title).Trim('"'))",
-        "description": "@Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.MetaDescription ?? string.Empty).Trim('"'))",
-        "image": "@(Model.MetaImage ?? Model.ImagePath ?? string.Empty)",
-        "datePublished": "@Model.PublishedDate.ToString("yyyy-MM-ddTHH:mm:ssZ")",
-        "author": { "@@type": "Person", "name": "@(Model.Tacgia ?? "Capstone Vietnam")" },
-        "publisher": {
-        "@@type": "Organization",
-        "name": "Capstone Vietnam",
-        "logo": { "@@type": "ImageObject", "url": "" }
-        },
-        "mainEntityOfPage": { "@@type": "WebPage", "@@id": "@pageUrl" }
-        }
-    </script>
+    @Html.Raw(SeoSchemaHelper.NewsArticle(
+        headline:         Model.MetaTitle ?? Model.Title,
+        url:              pageUrl,
+        datePublished:    Model.PublishedDate,
+        description:      Model.MetaDescription ?? Model.Summary,
+        imageUrl:         absUrl(Model.MetaImage ?? Model.ImagePath),
+        authorName:       Model.Tacgia,
+        section:          Model.CategoryName,
+        publisherUrl:     siteRoot + "/",
+        publisherLogoUrl: logoUrl))
+    @Html.Raw(SeoSchemaHelper.BreadcrumbList(crumbs))
     <script>
         // ── Copy link ──────────────────────────────────────────────
         function ndCopyLink() {

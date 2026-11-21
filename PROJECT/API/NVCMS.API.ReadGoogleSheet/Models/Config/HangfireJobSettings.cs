@@ -22,6 +22,14 @@
             TimeZone = "SE Asia Standard Time"
         };
 
+        /// <summary>FB-SYNC 19/11/2026: quét Facebook Page, tạo bài Tin tức. Mặc định TẮT - bật sau khi điền section FacebookSync.</summary>
+        public JobSetting FacebookPageSync { get; set; } = new()
+        {
+            Enabled = false,
+            Cron = "*/30 * * * *",
+            TimeZone = "SE Asia Standard Time"
+        };
+
         /// <summary>Xử lý lại webhook Zalo OA bị lỗi / bị kẹt PENDING. Mặc định bật, 5 phút/lần.</summary>
         public JobSetting ZaloOAWebhookReprocess { get; set; } = new()
         {

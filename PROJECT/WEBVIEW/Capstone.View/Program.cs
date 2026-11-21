@@ -56,7 +56,8 @@ builder.Services.AddHttpClient("ApiClient", client =>
 builder.Services.AddMemoryCache();
 
 // ── Chống scrape + rate limit theo IP (cấu hình: appsettings "RateLimiting") ────
-// Site chạy thẳng trên IIS, không qua proxy → dùng IP kết nối thật, KHÔNG tin
+// Site đứng sau Cloudflare → IP thật của khách lấy từ header CF-Connecting-IP, chỉ tin khi
+// kết nối đến từ dải IP Cloudflare (TrustedProxyClientIpMiddleware). KHÔNG tin
 // X-Forwarded-For (header này client tự đặt được để né limit).
 builder.Services.AddSiteRateLimiting(builder.Configuration);
 builder.Services.AddCors(options =>
@@ -77,6 +78,8 @@ builder.Services.AddCors(options =>
 
 
 var app = builder.Build();
+// Phải đứng đầu: đổi RemoteIpAddress từ IP Cloudflare sang IP thật của khách
+app.UseMiddleware<TrustedProxyClientIpMiddleware>();
 app.UseCors("AllowWebsite");
 // ── Response Compression — must be first ─────────────────────────────────────
 app.UseResponseCompression();

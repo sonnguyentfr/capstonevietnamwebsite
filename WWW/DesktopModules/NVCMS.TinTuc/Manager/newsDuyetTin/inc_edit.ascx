@@ -9,6 +9,7 @@
 <link rel="stylesheet" href="/Portals/_default/Skins/_admin/controls/newsedit.css" />
 <link rel="stylesheet" href="/DesktopModules/NVCMS.TinTuc/Manager/news/newsedit-v3.css" />
 <script src="/DesktopModules/NVCMS.TinTuc/Manager/news/newsedit-v3.js"></script>
+<script>window.NE_CFG = { editor: '<%=teContent.ClientID%>', itemId: '<%=hdf_itemid.ClientID%>', msg: '<%=lblMessage.ClientID%>' };</script>
 <link rel="stylesheet" href="/static/_admin/assets/css/libs/jstree.css?ver=2.7.1">
 <script src="/static/_admin/assets/js/libs/jstree.js?ver=2.7.0"></script>
 <style type="text/css">
@@ -1170,7 +1171,7 @@
 
     var elEditor = null;
 
-    var editor = CKEDITOR.replace('<%=teContent.ClientID %>');
+    var editor = CKEDITOR.replace('<%=teContent.ClientID %>', window.neEditorConfig ? window.neEditorConfig() : undefined);
     elEditor = editor.getData();
     editor.on('change', function (evt) {
         elEditor = editor.getData();

@@ -137,3 +137,51 @@
 
 .ne-v3 .ne-label-hidden { display: none !important; }
 .ne-v3 .tt-card-write ::placeholder { color: #a3adbf; font-weight: 600; }
+
+/* ---- de dung cho nguoi dung it quen may tinh: the Bat buoc / Khong bat buoc, chu ro hon, nut tin lien quan ---- */
+.ne-v3 .ne-badge { display: inline-block; margin-left: 8px; padding: 1px 8px; border-radius: 999px; font-size: 11px; font-weight: 700; line-height: 18px; white-space: nowrap; }
+.ne-v3 .ne-badge-req { background: #fde8e6; color: #c0392b; }
+.ne-v3 .ne-badge-opt { background: #eef0f4; color: #6b7a99; font-weight: 600; }
+.ne-v3 .tt-card-toggle { font-size: 15px; }
+.ne-v3 .tt-ed-main .overline-title, .ne-v3 .tt-ed-side .overline-title, .ne-v3 .tt-ed-side .overline-title-alt { text-transform: none; letter-spacing: 0; font-size: 13px; font-weight: 700; color: #364a63; }
+.ne-v3 .tt-ed-side .custom-control-label { font-size: 14px; }
+.ne-v3 .tt-ed-side .cauhinhtin .g { padding: 3px 14px 3px 0; }
+.ne-v3 .ne-hint { margin: .4rem 0 .6rem; line-height: 1.45; font-size: 12.5px; }
+.ne-v3 #divrelated a.insertRelated.ne-ins { display: inline-block; margin: 2px 4px 2px 0; padding: 2px 10px; border: 1px solid #c5cbe0; border-radius: 999px; background: #fff; color: #364a63; font-size: 12px; font-weight: 600; text-decoration: none; }
+.ne-v3 #divrelated a.insertRelated.ne-ins:hover { border-color: #6576ff; color: #6576ff; }
+.ne-v3 .ne-hide { display: none !important; }
+.ne-v3 .ne-school-auto { margin: 0 0 12px; padding: 10px 12px; background: #f5f7ff; border: 1px dashed #b9c3f5; border-radius: 8px; }
+.ne-v3 .ne-school-auto .ne-sa-row { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+.ne-v3 .ne-school-auto .ne-sa-toggle { margin: 0; display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; cursor: pointer; }
+.ne-v3 .ne-school-auto .ne-hint { margin-top: 8px; }
+.ne-v3 #neSchoolMsg:empty { display: none; }
+.ne-v3 #neSchoolMsg.is-ok { color: #1a7f37; font-weight: 600; }
+.ne-v3 #neSchoolMsg.is-none { color: #6b7a99; }
+.ne-toast { position: fixed; right: 20px; bottom: 24px; z-index: 100000; max-width: 360px; padding: 12px 16px; border-radius: 8px; background: #1f2b4d; color: #fff; font-size: 13px; line-height: 1.45; box-shadow: 0 6px 24px rgba(0, 0, 0, .25); cursor: pointer; opacity: 0; transform: translateY(12px); pointer-events: none; transition: opacity .2s, transform .2s; }
+.ne-toast.is-show { opacity: 1; transform: none; pointer-events: auto; }
+.ne-v3 .ne-content-label { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .5rem; margin: 0 0 .5rem; }
+.ne-v3 .ne-content-label .form-label { margin: 0; font-weight: 700; }
+.ne-v3 .ne-content-tools { display: flex; flex-wrap: wrap; gap: .4rem; }
+.ne-v3 .ne-content-tools .btn { display: inline-flex; align-items: center; gap: .4rem; }
+.ne-v3 .ne-dd { position: relative; display: inline-block; }
+.ne-v3 .ne-dd.is-open > .btn { background: #526484; border-color: #526484; color: #fff; }
+.ne-v3 .ne-dd-menu { display: none; position: absolute; right: 0; top: calc(100% + 4px); min-width: 240px; z-index: 1030; background: #fff; border: 1px solid #e5e9f2; border-radius: 6px; box-shadow: 0 8px 24px rgba(31, 43, 73, .15); padding: .35rem 0; }
+.ne-v3 .ne-dd.is-open .ne-dd-menu { display: block; }
+.ne-v3 .ne-dd-menu ul { list-style: none; margin: 0; padding: 0; }
+.ne-v3 .ne-dd-menu a { display: flex; align-items: center; gap: .65rem; padding: .55rem 1rem; font-size: 13px; line-height: 1.35; color: #526484; text-decoration: none; }
+.ne-v3 .ne-dd-menu a:hover, .ne-v3 .ne-dd-menu a:focus { background: #f5f6fa; color: #6576ff; }
+.ne-v3 .ne-dd-menu a .icon { flex: 0 0 auto; font-size: 18px; color: #8094ae; }
+.ne-v3 .ne-dd-menu a:hover .icon { color: #6576ff; }
+.ne-modal { position: fixed; top: 0; right: 0; bottom: 0; left: 0; z-index: 100001; display: flex; align-items: center; justify-content: center; padding: 16px; background: rgba(15, 27, 51, .5); }
+.ne-modal-box { display: flex; flex-direction: column; width: 100%; max-width: 640px; max-height: 88vh; background: #fff; border-radius: 10px; box-shadow: 0 18px 48px rgba(0, 0, 0, .3); }
+.ne-modal-head { display: flex; align-items: center; justify-content: space-between; padding: 14px 18px; border-bottom: 1px solid #e5e9f2; font-size: 15px; }
+.ne-modal-x { border: 0; background: none; font-size: 24px; line-height: 1; color: #8094ae; cursor: pointer; }
+.ne-modal-body { padding: 14px 18px; overflow: auto; }
+.ne-modal-hint, .ne-modal-empty { margin: 0 0 12px; font-size: 13px; color: #526484; line-height: 1.5; }
+.ne-modal-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; }
+.ne-pick { position: relative; display: block; padding: 0; border: 3px solid transparent; border-radius: 8px; background: #f5f6fa; overflow: hidden; cursor: pointer; }
+.ne-pick img { display: block; width: 100%; height: 90px; object-fit: cover; }
+.ne-pick.is-on { border-color: #6576ff; }
+.ne-pick-no { position: absolute; top: 6px; left: 6px; min-width: 22px; height: 22px; line-height: 22px; border-radius: 11px; background: #6576ff; color: #fff; font-size: 12px; font-weight: 700; text-align: center; }
+.ne-pick-no:empty { display: none; }
+.ne-modal-foot { display: flex; gap: .5rem; justify-content: flex-end; padding: 12px 18px; border-top: 1px solid #e5e9f2; }

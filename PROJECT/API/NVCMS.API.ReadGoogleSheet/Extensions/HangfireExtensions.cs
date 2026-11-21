@@ -30,7 +30,31 @@ namespace NVCMS.API.ReadGoogleSheet.Infrastructure
             // BIRTHDAY-MAIL 02/11/2026: thư chúc mừng sinh nhật khách CRM
             RegisterBirthdayMail(settings);
 
+            // FB-SYNC 19/11/2026: tự lấy bài từ Facebook Page về Tin tức
+            RegisterFacebookPageSync(settings);
+
             //RegisterZaloOAWebhookReprocess(settings);
+        }
+
+        private static void RegisterFacebookPageSync(HangfireJobSettings settings)
+        {
+            var cfg = settings.FacebookPageSync;
+
+            if (!cfg.Enabled)
+            {
+                // Tắt cờ trong appsettings là dừng hẳn job
+                RecurringJob.RemoveIfExists(FacebookPageSyncJob.JobId);
+                return;
+            }
+
+            RecurringJob.AddOrUpdate<FacebookPageSyncJob>(
+                FacebookPageSyncJob.JobId,
+                x => x.Execute(CancellationToken.None),
+                string.IsNullOrWhiteSpace(cfg.Cron) ? "*/30 * * * *" : cfg.Cron,
+                new RecurringJobOptions
+                {
+                    TimeZone = ResolveTimeZone(cfg.TimeZone)
+                });
         }
 
         private static void RegisterBirthdayMail(HangfireJobSettings settings)

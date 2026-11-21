@@ -34,6 +34,42 @@ public class RateLimitOptions
     /// <summary>Chặn 403 request không có User-Agent.</summary>
     public bool BlockEmptyUserAgent { get; set; } = true;
 
+    /// <summary>
+    /// UA xưng là Googlebot/Bingbot... nhưng reverse DNS không khớp: true = chặn 403, false = cho qua
+    /// như khách thường (vẫn chịu rate limit / quota). Để false cho an toàn SEO: nếu server không
+    /// thấy đúng IP thật hoặc không tra được DNS thì Googlebot thật cũng bị coi là giả.
+    /// </summary>
+    public bool BlockUnverifiedSearchBots { get; set; } = false;
+
+    /// <summary>
+    /// UA chứa 1 trong các chuỗi này (chữ thường) KHÔNG bị chặn theo BlockedUserAgents:
+    /// bot lấy preview khi share link lên mạng xã hội / app chat. Vẫn chịu rate limit như khách thường.
+    /// </summary>
+    public string[] AllowedUserAgents { get; set; } =
+    [
+        "facebookexternalhit", "facebookcatalog", "zalo", "linkedinbot", "twitterbot",
+        "telegrambot", "whatsapp", "slackbot", "discordbot", "skypeuripreview",
+        "pinterest", "viber", "line-poker", "redditbot"
+    ];
+
+    /// <summary>Header chứa IP thật của khách do proxy gắn (Cloudflare: CF-Connecting-IP). Rỗng = tắt.</summary>
+    public string ClientIpHeader { get; set; } = "CF-Connecting-IP";
+
+    /// <summary>
+    /// Dải IP proxy tin cậy: chỉ khi kết nối đến từ các dải này mới đọc ClientIpHeader.
+    /// Mặc định = dải IP Cloudflare (https://www.cloudflare.com/ips-v4 và /ips-v6, lấy ngày 2026-11-20).
+    /// Lưu ý: khai báo mục này trong appsettings sẽ ghi đè theo từng vị trí, nên phải ghi đủ cả danh sách.
+    /// </summary>
+    public string[] TrustedProxyNetworks { get; set; } =
+    [
+        "173.245.48.0/20", "103.21.244.0/22", "103.22.200.0/22", "103.31.4.0/22",
+        "141.101.64.0/18", "108.162.192.0/18", "190.93.240.0/20", "188.114.96.0/20",
+        "197.234.240.0/22", "198.41.128.0/17", "162.158.0.0/15", "104.16.0.0/13",
+        "104.24.0.0/14", "172.64.0.0/13", "131.0.72.0/22",
+        "2400:cb00::/32", "2606:4700::/32", "2803:f800::/32", "2405:b500::/32",
+        "2405:8100::/32", "2a06:98c0::/29", "2c0f:f248::/32"
+    ];
+
     /// <summary>User-Agent chứa 1 trong các chuỗi này (không phân biệt hoa thường) sẽ bị chặn 403.</summary>
     public string[] BlockedUserAgents { get; set; } =
     [

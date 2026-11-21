@@ -749,7 +749,26 @@
 }
 
 @section Scripts {
+    @{
+        // Breadcrumb cho Google: Trang chủ → Trường đối tác → Quốc gia → Trường
+        var sdRoot = $"{Context.Request.Scheme}://{Context.Request.Host}";
+        var sdCountrySlug = Model.Card.CountryId switch
+        {
+            38 => "my", 1 => "uc", 3 => "canada", 28 => "anh", 401 => "ireland", 23 => "thuy-si", 99 => "new-zealand",
+            _ => null
+        };
+        var sdCrumbs = new List<(string Name, string? Url)>();
+        sdCrumbs.Add(("Trang chủ", sdRoot + "/"));
+        sdCrumbs.Add(("Trường đối tác", sdRoot + "/truong-doi-tac"));
+        if (sdCountrySlug != null && !string.IsNullOrEmpty(Model.CountryName))
+        {
+            sdCrumbs.Add((Model.CountryName, sdRoot + "/truong-doi-tac/" + sdCountrySlug));
+        }
+        sdCrumbs.Add((Model.NameofSchool ?? string.Empty, ViewData["CanonicalUrl"]?.ToString() ?? sdRoot + Context.Request.Path));
+    }
+    @Html.Raw(SeoSchemaHelper.BreadcrumbList(sdCrumbs))
     @Html.Raw(SeoSchemaHelper.CollegeOrUniversity(
+        schemaType: SeoSchemaHelper.SchoolSchemaType(Model.Loai),
         name: Model.NameofSchool ?? string.Empty,
         description: Model.Tomtat,
         url: Model.Website,
@@ -760,6 +779,7 @@
         telephone: Model.Phone,
         email: Model.Email,
         foundingYear: Model.Namthanhlap,
-        sameAs: new[] { Model.Website }.Where(s => !string.IsNullOrWhiteSpace(s))!
+        sameAs: new[] { Model.Facebook, Model.Twitter, Model.Linkedin, Model.Youtube, Model.Instagram }
+            .Where(s => !string.IsNullOrWhiteSpace(s) && s!.StartsWith("http", StringComparison.OrdinalIgnoreCase))!
     ))
 }

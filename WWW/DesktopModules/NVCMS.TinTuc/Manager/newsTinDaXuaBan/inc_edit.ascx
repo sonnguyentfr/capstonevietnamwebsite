@@ -228,16 +228,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <div class="form-control-wrap">
-                            <textarea id="teContent" width="100%" runat="server" font-size="22px" height="1500px" validationgroup="InputValidate"></textarea>
-                        </div>
-                    </div>
-</div>
-</div>
-<div class="card card-bordered tt-card" id="ne-card-related">
-<div class="tt-card-head"><button type="button" class="tt-card-toggle" data-ne-toggle aria-expanded="true"><span>Tin liên quan</span><em class="icon ni ni-chevron-down tt-card-chev"></em></button></div>
-<div class="tt-card-body">
-                    <div class="form-group">
+                        <div class="overline-title-alt mb-2">Tin liên quan</div>
                         <div class="form-group">
                             <div class="form-control-wrap">
                                 <a id="page-popup" onclick="popupwindow(900,600); return false;" class="btn btn-xs btn-info"><em class="icon ni ni-reports-alt"></em><span>Chọn tin liên quan</span></a>
@@ -270,6 +261,16 @@
                             </div>
                         </div>
                     </div>
+                    <div class="card-title-group align-start pb-3 g-2">
+                        <div class="card-title card-title-sm">
+                            <h6 class="title">Nội dung bài viết</h6>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-control-wrap">
+                            <textarea id="teContent" width="100%" runat="server" font-size="22px" height="1500px" validationgroup="InputValidate"></textarea>
+                        </div>
+                    </div>
 </div>
 </div>
 <div class="card card-bordered tt-card" id="ne-card-extra">
@@ -285,6 +286,12 @@
                         <div class="form-control-wrap">
                             <label class="form-label" for="<%=txtTags.ClientID %>">Tag bài viết</label>
                             <asp:TextBox ID="txtTags" runat="server" CssClass="form-control" MaxLength="1000" data-role="tagsinput"></asp:TextBox>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-control-wrap">
+                            <asp:TextBox ID="txtSource" runat="server" CssClass="form-control form-control-xl form-control-outlined"></asp:TextBox>
+                            <label class="form-label-outlined" for="<%=txtSource.ClientID %>">Link đăng ký</label>
                         </div>
                     </div>
                     <div class="form-group">
@@ -315,19 +322,13 @@
                     </div>
 </div>
 </div>
-<div class="card card-bordered tt-card" id="ne-card-register">
+<div class="card card-bordered tt-card" id="ne-card-register" style="display: none">
 <div class="tt-card-head"><button type="button" class="tt-card-toggle" data-ne-toggle aria-expanded="true"><span>Link &amp; mật khẩu</span><em class="icon ni ni-chevron-down tt-card-chev"></em></button></div>
 <div class="tt-card-body">
 <div class="form-group"><div class="form-control-wrap">
 <asp:TextBox ID="txtSiteLink" runat="server" CssClass="form-control form-control-xl form-control-outlined" MaxLength="500" placeholder="https://"></asp:TextBox>
 <label class="form-label-outlined" for="<%=txtSiteLink.ClientID %>">Link đến site</label>
 </div></div>
-                    <div class="form-group">
-                        <div class="form-control-wrap">
-                            <asp:TextBox ID="txtSource" runat="server" CssClass="form-control form-control-xl form-control-outlined"></asp:TextBox>
-                            <label class="form-label-outlined" for="<%=txtSource.ClientID %>">Link đăng ký</label>
-                        </div>
-                    </div>
 <div class="form-group"><div class="form-control-wrap">
 <asp:TextBox ID="txtPostPassword" runat="server" CssClass="form-control form-control-xl form-control-outlined ne-pass" MaxLength="50" autocomplete="off"></asp:TextBox>
 <label class="form-label-outlined" for="<%=txtPostPassword.ClientID %>">Mật khẩu xem bài</label>

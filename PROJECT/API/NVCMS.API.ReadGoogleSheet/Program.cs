@@ -44,6 +44,8 @@ builder.Services.Configure<HangfireJobSettings>(builder.Configuration.GetSection
 builder.Services.Configure<CrmSyncSettings>(builder.Configuration.GetSection("CrmSync"));
 // BIRTHDAY-MAIL 02/11/2026: thư chúc mừng sinh nhật (link tracking, thiệp mặc định...)
 builder.Services.Configure<BirthdayMailSettings>(builder.Configuration.GetSection("BirthdayMail"));
+// FB-SYNC 19/11/2026: tự lấy bài từ Facebook Page về Tin tức
+builder.Services.Configure<FacebookSyncSettings>(builder.Configuration.GetSection("FacebookSync"));
 
 // Configure Swagger with JWT
 builder.Services.AddSwaggerGen(c =>
@@ -173,6 +175,10 @@ builder.Services.AddScoped<ISESService, SESService>();
 builder.Services.AddScoped<IBirthdayMailRepository, BirthdayMailRepository>();
 builder.Services.AddSingleton<BirthdayMailRenderer>();
 builder.Services.AddScoped<BirthdayMailService>();
+// FB-SYNC 19/11/2026
+builder.Services.AddHttpClient<FacebookGraphClient>(c => c.Timeout = TimeSpan.FromSeconds(60));
+builder.Services.AddScoped<FacebookNewsRepository>();
+builder.Services.AddScoped<FacebookPageSyncService>();
 
 // ── Hangfire ──────────────────────────────────────────────────────────────────
 var hangfireConn = builder.Configuration.GetConnectionString("DefaultCRMConnection")!;
@@ -214,6 +220,8 @@ builder.Services.AddTransient<ZaloOAWebhookReprocessJob>();
 builder.Services.AddTransient<ZaloOAHistoryImportJob>();
 // Thư chúc mừng sinh nhật (BIRTHDAY-MAIL 02/11/2026)
 builder.Services.AddTransient<BirthdayMailJob>();
+// Facebook Page -> Tin tức (FB-SYNC 19/11/2026)
+builder.Services.AddTransient<FacebookPageSyncJob>();
 
 // Add CORS if needed
 builder.Services.AddCors(options =>
