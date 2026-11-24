@@ -61,6 +61,15 @@ namespace NVCMS.API.ReadGoogleSheet.Models.Config
         /// <summary>Thêm dòng "Xem bài gốc trên Facebook" ở cuối bài.</summary>
         public bool AppendSourceLink { get; set; } = true;
 
+        /// <summary>Nhúng trình phát video Facebook vào bài khi bài có video.</summary>
+        public bool EmbedVideo { get; set; } = true;
+
+        /// <summary>Tiêu đề viết HOA toàn bộ thì đổi thành Viết Hoa Chữ Đầu Mỗi Từ.</summary>
+        public bool NormalizeUppercaseTitle { get; set; } = true;
+
+        /// <summary>Từ viết tắt giữ nguyên chữ hoa trong tiêu đề, bổ sung cho danh sách có sẵn (IELTS, SAT, USA...).</summary>
+        public string[] KeepUppercaseWords { get; set; } = Array.Empty<string>();
+
         /// <summary>Số ảnh tối đa tải về cho mỗi bài.</summary>
         public int MaxImagesPerPost { get; set; } = 10;
 

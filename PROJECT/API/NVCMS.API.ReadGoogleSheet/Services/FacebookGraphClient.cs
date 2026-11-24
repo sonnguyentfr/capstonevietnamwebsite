@@ -33,7 +33,7 @@ public class FacebookGraphClient
 
     private const string PostFields =
         "id,message,created_time,permalink_url,full_picture,status_type," +
-        "attachments{media_type,type,url,media,subattachments{media_type,type,url,media}}";
+        "attachments{media_type,type,url,media,target,subattachments{media_type,type,url,media,target}}";
 
     private static readonly JsonSerializerOptions JsonOptions = new() { PropertyNameCaseInsensitive = true };
 
@@ -138,6 +138,7 @@ public class FacebookGraphClient
         var hint = code switch
         {
             190 => " (Page Access Token hết hạn hoặc không hợp lệ - cần lấy token mới và cập nhật FacebookSync:PageAccessToken)",
+            210 => " (FacebookSync:PageAccessToken đang là mã loại User, không phải mã của Trang - lấy lại chuỗi access_token trong kết quả me/accounts)",
             10 or 200 => " (token thiếu quyền - cần pages_read_engagement / pages_show_list trên Page này)",
             4 or 17 or 32 or 613 => " (vượt giới hạn gọi API - job sẽ thử lại ở lần chạy sau)",
             _ => string.Empty

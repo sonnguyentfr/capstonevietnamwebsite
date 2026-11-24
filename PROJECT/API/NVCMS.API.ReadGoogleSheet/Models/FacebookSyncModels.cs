@@ -40,6 +40,7 @@ namespace NVCMS.API.ReadGoogleSheet.Models
         [JsonPropertyName("type")] public string? Type { get; set; }
         [JsonPropertyName("url")] public string? Url { get; set; }
         [JsonPropertyName("media")] public FbMedia? Media { get; set; }
+        [JsonPropertyName("target")] public FbTarget? Target { get; set; }
         [JsonPropertyName("subattachments")] public FbPagedResponse<FbAttachment>? Subattachments { get; set; }
     }
 
@@ -51,6 +52,13 @@ namespace NVCMS.API.ReadGoogleSheet.Models
     public class FbImage
     {
         [JsonPropertyName("src")] public string? Src { get; set; }
+        [JsonPropertyName("width")] public int Width { get; set; }
+        [JsonPropertyName("height")] public int Height { get; set; }
+    }
+
+    public class FbTarget
+    {
+        [JsonPropertyName("id")] public string? Id { get; set; }
     }
 
     /// <summary>Kết quả một lần chạy đồng bộ.</summary>

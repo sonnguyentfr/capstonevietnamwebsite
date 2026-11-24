@@ -33,6 +33,16 @@ public class FacebookPageSyncService
     private const string SettingImageVirtual = "settingAnhLuuTruVirtual";
 
     private const int TitleMaxLength = 160;
+    private const int MaxVideosPerPost = 2;
+
+    // Từ viết tắt thường gặp - giữ nguyên chữ hoa khi đổi tiêu đề viết HOA
+    private static readonly HashSet<string> DefaultKeepUpper = new(StringComparer.OrdinalIgnoreCase)
+    {
+        "USA", "US", "UK", "EU", "ASEAN", "VN", "HN", "HCM", "TPHCM", "TP",
+        "IELTS", "TOEFL", "SAT", "ACT", "GPA", "GMAT", "GRE", "PTE", "AP", "IB", "ESL",
+        "MBA", "STEM", "IT", "AI", "CEO", "PR", "FAQ", "OPT", "CPT",
+        "UC", "UCLA", "MIT", "NYU", "CSU", "K12", "F1", "J1"
+    };
     private const int SummaryMaxLength = 500;
 
     private static readonly Regex HashtagRegex = new(@"(?<![\p{L}\p{N}_&])#([\p{L}\p{N}_]+)", RegexOptions.Compiled);
@@ -254,7 +264,7 @@ public class FacebookPageSyncService
             null,                                   // ApprovalDate
             null,                                   // ReturnedDate
             null,                                   // CancelPublishDate
-            null,                                   // PublishedDate (đặt ở bước 5)
+            _settings.AutoPublish ? (object?)publishedDate : null, // PublishedDate = ngày đăng trên Facebook
             _settings.UserId,                       // UserId
             string.Empty,                           // Tacgia
             _settings.LanguageId,                   // LanguageId
@@ -278,6 +288,8 @@ public class FacebookPageSyncService
             await _repo.UpdateStatusAsync(newId, StatusChoXuatBan, _settings.UserId, ct);
             await _repo.UpdatePublishedDateAsync(newId, publishedDate, _settings.UserId, ct);
             await _repo.UpdateStatusAsync(newId, StatusDaXuatBan, _settings.UserId, ct);
+            // News_updateStatus có thể tự đặt ngày xuất bản = hiện tại -> đặt lại theo ngày đăng trên Facebook
+            await _repo.UpdatePublishedDateAsync(newId, publishedDate, _settings.UserId, ct);
         }
 
         return newId;
@@ -363,37 +375,119 @@ public class FacebookPageSyncService
         return saved;
     }
 
-    /// <summary>Ảnh của bài: ảnh trong album / ảnh đính kèm, không có thì dùng full_picture.</summary>
+    /// <summary>
+    /// Ảnh của bài: ảnh trong album / ảnh đính kèm. Bài chỉ có video thì dùng ảnh thumbnail của video
+    /// (làm ảnh đại diện), không có nữa thì dùng full_picture.
+    /// </summary>
     private static List<string> CollectImageUrls(FbPost post)
     {
-        var urls = new List<string>();
+        var photos = new List<string>();
+        var thumbs = new List<string>();
 
-        foreach (var att in post.Attachments?.Data ?? new List<FbAttachment>())
+        foreach (var att in FlattenAttachments(post))
         {
-            var subs = att.Subattachments?.Data;
-            if (subs is { Count: > 0 })
-            {
-                foreach (var sub in subs)
-                    AddImage(urls, sub);
-            }
-            else
-            {
-                AddImage(urls, att);
-            }
+            var src = att.Media?.Image?.Src;
+            if (string.IsNullOrWhiteSpace(src))
+                continue;
+
+            (IsVideo(att) ? thumbs : photos).Add(src);
         }
 
+        var urls = photos.Count > 0 ? photos : thumbs;
         if (urls.Count == 0 && !string.IsNullOrWhiteSpace(post.FullPicture))
             urls.Add(post.FullPicture);
 
         return urls.Distinct(StringComparer.Ordinal).ToList();
     }
 
-    private static void AddImage(List<string> urls, FbAttachment att)
+    /// <summary>Mọi tệp đính kèm của bài, album thì lấy từng mục con.</summary>
+    private static IEnumerable<FbAttachment> FlattenAttachments(FbPost post)
     {
-        // Video: Graph trả ảnh thumbnail trong media.image - vẫn dùng được làm ảnh đại diện
-        var src = att.Media?.Image?.Src;
-        if (!string.IsNullOrWhiteSpace(src))
-            urls.Add(src);
+        foreach (var att in post.Attachments?.Data ?? new List<FbAttachment>())
+        {
+            var subs = att.Subattachments?.Data;
+            if (subs is { Count: > 0 })
+            {
+                foreach (var sub in subs)
+                    yield return sub;
+            }
+            else
+            {
+                yield return att;
+            }
+        }
+    }
+
+    // ── Video ────────────────────────────────────────────────────────────────
+
+    private sealed record VideoEmbed(string Href, int Width, int Height);
+
+    private List<VideoEmbed> CollectVideos(FbPost post)
+    {
+        var videos = new List<VideoEmbed>();
+
+        foreach (var att in FlattenAttachments(post).Where(IsVideo))
+        {
+            var href = ResolveVideoHref(att, post);
+            if (href == null || videos.Any(v => v.Href == href))
+                continue;
+
+            videos.Add(new VideoEmbed(href, att.Media?.Image?.Width ?? 0, att.Media?.Image?.Height ?? 0));
+            if (videos.Count >= MaxVideosPerPost)
+                break;
+        }
+
+        return videos;
+    }
+
+    /// <summary>Địa chỉ video trên Facebook để đưa vào trình phát nhúng.</summary>
+    private string? ResolveVideoHref(FbAttachment att, FbPost post)
+    {
+        if (IsFacebookPageUrl(att.Url))
+            return att.Url;
+
+        var videoId = att.Target?.Id;
+        if (!string.IsNullOrEmpty(videoId) && videoId.All(char.IsDigit))
+            return $"https://www.facebook.com/{_settings.PageId.Trim()}/videos/{videoId}";
+
+        return IsFacebookPageUrl(post.PermalinkUrl) ? post.PermalinkUrl : null;
+    }
+
+    private static bool IsFacebookPageUrl(string? url)
+    {
+        if (string.IsNullOrWhiteSpace(url) || !Uri.TryCreate(url, UriKind.Absolute, out var u) || u.Scheme != Uri.UriSchemeHttps)
+            return false;
+
+        var host = u.Host.ToLowerInvariant();
+        if (host is "l.facebook.com" or "lm.facebook.com")
+            return false;   // link chuyển hướng ra ngoài, không phải video
+
+        return host == "facebook.com" || host.EndsWith(".facebook.com") || host == "fb.watch";
+    }
+
+    /// <summary>Khung phát video Facebook, co giãn theo bề ngang bài. Video dọc (reel) được thu hẹp và căn giữa.</summary>
+    private static string BuildVideoEmbedHtml(VideoEmbed video)
+    {
+        var ratio = 56.25;
+        var maxWidth = 800;
+
+        if (video.Width > 0 && video.Height > 0)
+        {
+            ratio = Math.Clamp(video.Height * 100.0 / video.Width, 40, 178);
+            if (video.Height > video.Width)
+                maxWidth = 360;
+        }
+
+        var src = "https://www.facebook.com/plugins/video.php?href=" + Uri.EscapeDataString(video.Href) + "&show_text=false";
+
+        return "<div class=\"fb-video\" style=\"max-width:" + maxWidth + "px;margin:0 auto 16px\">" +
+               "<div style=\"position:relative;height:0;overflow:hidden;padding-bottom:" +
+               ratio.ToString("0.##", CultureInfo.InvariantCulture) + "%\">" +
+               "<iframe src=\"" + WebUtility.HtmlEncode(src) + "\" " +
+               "style=\"position:absolute;top:0;left:0;width:100%;height:100%;border:0;overflow:hidden\" " +
+               "scrolling=\"no\" frameborder=\"0\" allowfullscreen=\"true\" loading=\"lazy\" " +
+               "allow=\"autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share\"></iframe>" +
+               "</div></div>\n";
     }
 
     private static bool HasVideo(FbPost post) =>
@@ -406,39 +500,63 @@ public class FacebookPageSyncService
 
     // ── Nội dung ─────────────────────────────────────────────────────────────
 
-    private sealed record ParsedMessage(string Title, string SummaryText, List<string> BodyLines, List<string> Hashtags);
+    private sealed record ParsedMessage(string Title, string SummaryText, List<List<string>> BodyBlocks, List<string> Hashtags);
 
     /// <summary>
     /// Tách bài Facebook thành: tiêu đề (dòng đầu), tóm tắt (đoạn kế tiếp), các đoạn nội dung, hashtag.
+    /// Đoạn = các dòng liền nhau; dòng trống (hoặc dòng chỉ có ký hiệu trang trí) mới ngắt đoạn.
+    /// Nhờ vậy danh sách gạch đầu dòng / dòng ngắn không bị tách thành từng đoạn cách xa nhau.
     /// </summary>
-    private static ParsedMessage ParseMessage(string message)
+    private ParsedMessage ParseMessage(string message)
     {
+        message = message.Normalize(NormalizationForm.FormC);
         var hashtags = ExtractHashtags(message).Distinct(StringComparer.OrdinalIgnoreCase).ToList();
 
-        var lines = message.Replace("\r\n", "\n").Replace('\r', '\n')
-            .Split('\n')
-            .Select(l => l.Trim())
-            .Where(l => l.Length > 0)
-            .Where(l => !IsHashtagOnlyLine(l))
-            .ToList();
+        var blocks = new List<List<string>>();
+        List<string>? current = null;
 
-        if (lines.Count == 0)
-            lines.Add(message.Trim());
+        foreach (var raw in message.Replace("\r\n", "\n").Replace('\r', '\n').Split('\n'))
+        {
+            var line = SpaceRegex.Replace(raw, " ").Trim();
+
+            if (line.Length > 0 && IsHashtagOnlyLine(line))
+                continue;
+
+            if (line.Length == 0 || !line.Any(char.IsLetterOrDigit))
+            {
+                current = null;   // dòng trống / dòng trang trí (-----, ***, toàn emoji) => ngắt đoạn
+                continue;
+            }
+
+            if (current == null)
+            {
+                current = new List<string>();
+                blocks.Add(current);
+            }
+
+            current.Add(line);
+        }
+
+        if (blocks.Count == 0)
+            blocks.Add(new List<string> { message.Trim() });
 
         // Tiêu đề: dòng đầu. Dài quá thì cắt, và giữ nguyên dòng đó trong nội dung để không mất chữ.
-        var firstLine = SpaceRegex.Replace(HashtagRegex.Replace(lines[0], "$1"), " ").Trim();
+        var firstLine = CleanTitle(blocks[0][0]);
         string title;
-        List<string> body;
         if (firstLine.Length <= TitleMaxLength)
         {
-            title = firstLine.TrimEnd('.', ':', '-', ' ');
-            body = lines.Skip(1).ToList();
+            title = firstLine;
+            blocks[0].RemoveAt(0);
+            if (blocks[0].Count == 0)
+                blocks.RemoveAt(0);
         }
         else
         {
             title = CutAtWord(firstLine, TitleMaxLength);
-            body = lines.ToList();
         }
+
+        if (_settings.NormalizeUppercaseTitle)
+            title = NormalizeUppercaseTitle(title);
 
         if (title.Length == 0)
             title = "Tin từ Facebook";
@@ -446,48 +564,120 @@ public class FacebookPageSyncService
         // Tóm tắt: đoạn đầu của nội dung. Vừa đủ ngắn thì lấy làm tóm tắt và bỏ khỏi nội dung (trang chi tiết
         // hiện tóm tắt ngay trên nội dung, để nguyên sẽ bị lặp).
         string summary;
-        if (body.Count == 0)
+        if (blocks.Count == 0)
         {
             summary = title;
         }
-        else if (body[0].Length <= SummaryMaxLength && body.Count > 1)
-        {
-            summary = body[0];
-            body = body.Skip(1).ToList();
-        }
         else
         {
-            summary = CutAtWord(body[0], Math.Min(SummaryMaxLength, 300));
+            var firstBlock = string.Join(" ", blocks[0]);
+            if (firstBlock.Length <= SummaryMaxLength && blocks.Count > 1)
+            {
+                summary = firstBlock;
+                blocks.RemoveAt(0);
+            }
+            else
+            {
+                summary = CutAtWord(firstBlock, Math.Min(SummaryMaxLength, 300));
+            }
         }
 
-        return new ParsedMessage(title, summary, body, hashtags);
+        return new ParsedMessage(title, summary, blocks, hashtags);
     }
+
+    /// <summary>Bỏ dấu # và emoji / ký hiệu trang trí ở đầu, cuối tiêu đề.</summary>
+    private static string CleanTitle(string line)
+    {
+        var text = SpaceRegex.Replace(HashtagRegex.Replace(line, "$1"), " ").Trim();
+
+        var start = 0;
+        while (start < text.Length && !char.IsLetterOrDigit(text[start]) && "\"“‘'([".IndexOf(text[start]) < 0)
+            start++;
+
+        var end = text.Length;
+        while (end > start && !char.IsLetterOrDigit(text[end - 1]) && "?!%)]\"”’'".IndexOf(text[end - 1]) < 0)
+            end--;
+
+        return text[start..end].Trim();
+    }
+
+    /// <summary>
+    /// Tiêu đề viết HOA toàn bộ (từ 70% chữ cái trở lên) => Viết Hoa Chữ Đầu Mỗi Từ.
+    /// Từ viết tắt quen thuộc và từ có chữ số (IELTS, USA, K12...) được giữ nguyên.
+    /// </summary>
+    private string NormalizeUppercaseTitle(string title)
+    {
+        var letters = title.Count(char.IsLetter);
+        if (letters < 4 || title.Count(char.IsUpper) * 100 < letters * 70)
+            return title;
+
+        var culture = CultureInfo.GetCultureInfo("vi-VN");
+        var sb = new StringBuilder(title.Length);
+        var i = 0;
+
+        // Duyệt từng cụm chữ/số liền nhau; dấu cách, dấu chấm, gạch nối... giữ nguyên
+        // (nên "TP.HCM" và "IELTS/SAT" vẫn được nhận ra là từ viết tắt)
+        while (i < title.Length)
+        {
+            if (!char.IsLetterOrDigit(title[i]))
+            {
+                sb.Append(title[i++]);
+                continue;
+            }
+
+            var start = i;
+            while (i < title.Length && char.IsLetterOrDigit(title[i]))
+                i++;
+
+            var run = title[start..i];
+            var afterApostrophe = start > 0 && (title[start - 1] == '\'' || title[start - 1] == '’');
+
+            if (run.Any(char.IsDigit) || IsKeepUpperWord(run))
+            {
+                sb.Append(run);
+            }
+            else
+            {
+                var lower = run.ToLower(culture);
+                sb.Append(afterApostrophe ? lower : char.ToUpper(lower[0], culture) + lower[1..]);
+            }
+        }
+
+        return sb.ToString();
+    }
+
+    private bool IsKeepUpperWord(string word) =>
+        DefaultKeepUpper.Contains(word) ||
+        (_settings.KeepUppercaseWords?.Any(w => string.Equals((w ?? string.Empty).Trim(), word, StringComparison.OrdinalIgnoreCase)) ?? false);
 
     private string BuildContentHtml(ParsedMessage parsed, List<string> contentImages, FbPost post)
     {
         var sb = new StringBuilder();
         var altText = WebUtility.HtmlEncode(parsed.Title);
 
-        foreach (var line in parsed.BodyLines)
-            sb.Append("<p>").Append(Linkify(line)).Append("</p>\n");
+        // Video đặt đầu bài
+        if (_settings.EmbedVideo)
+        {
+            foreach (var video in CollectVideos(post))
+                sb.Append(BuildVideoEmbedHtml(video));
+        }
+
+        // Mỗi đoạn một thẻ p, các dòng trong đoạn xuống hàng bằng br (không tạo khoảng trống giữa các dòng)
+        foreach (var block in parsed.BodyBlocks)
+            sb.Append("<p>").Append(string.Join("<br />\n", block.Select(Linkify))).Append("</p>\n");
 
         foreach (var img in contentImages)
         {
             sb.Append("<p style=\"text-align:center\"><img src=\"")
               .Append(WebUtility.HtmlEncode(img))
-              .Append("\" alt=\"").Append(altText).Append("\" /></p>\n");
+              .Append("\" alt=\"").Append(altText).Append("\" style=\"max-width:100%;height:auto\" /></p>\n");
         }
 
         var permalink = post.PermalinkUrl;
-        if (!string.IsNullOrWhiteSpace(permalink) && IsHttpUrl(permalink))
+        if (_settings.AppendSourceLink && !string.IsNullOrWhiteSpace(permalink) && IsHttpUrl(permalink))
         {
-            var href = WebUtility.HtmlEncode(permalink);
-            if (HasVideo(post))
-                sb.Append("<p><a href=\"").Append(href)
-                  .Append("\" target=\"_blank\" rel=\"noopener\">Xem video trên Facebook</a></p>\n");
-            else if (_settings.AppendSourceLink)
-                sb.Append("<p><em>Nguồn: <a href=\"").Append(href)
-                  .Append("\" target=\"_blank\" rel=\"noopener\">Xem bài gốc trên Facebook</a></em></p>\n");
+            sb.Append("<p><em>Nguồn: <a href=\"").Append(WebUtility.HtmlEncode(permalink))
+              .Append("\" target=\"_blank\" rel=\"noopener\">Xem bài gốc trên Facebook</a></em></p>\n");
         }
 
         return sb.ToString();
